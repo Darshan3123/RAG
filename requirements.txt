@@ -1,0 +1,16 @@
+# ── Scraper ───────────────────────────────────────────────
+playwright>=1.44.0
+PyMuPDF>=1.24.0
+Pillow>=10.0.0
+pdf2image>=1.17.0
+pytesseract>=0.3.10
+
+# ── RAG — Embeddings (local, no API key needed) ───────────
+sentence-transformers>=3.0.0
+
+# ── RAG — Vector Store ────────────────────────────────────
+chromadb>=0.5.0
+
+# ── RAG — LLM (pick one or both) ─────────────────────────
+openai>=1.30.0
+requests>=2.31.0
