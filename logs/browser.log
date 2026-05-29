@@ -752,3 +752,186 @@ waiting for event "download"
 2026-05-29 11:00:45 | DEBUG    | browser | Downloaded: GeM-Bidding-9255010.pdf
 2026-05-29 11:00:51 | DEBUG    | browser | Downloaded: GeM-Bidding-9307798.pdf
 2026-05-29 11:01:00 | INFO     | browser | Browser closed
+2026-05-29 14:18:47 | INFO     | browser | Browser launched (stealth mode)
+2026-05-29 14:18:47 | INFO     | browser | Opening: https://bidplus.gem.gov.in/all-bids
+2026-05-29 14:18:59 | INFO     | browser | GeM listing page loaded
+2026-05-29 14:19:03 | DEBUG    | browser | Filters reset
+2026-05-29 14:19:03 | INFO     | browser | Selecting filter: Product Bid/RAs
+2026-05-29 14:19:09 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 14:19:13 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 14:19:18 | DEBUG    | browser | Downloaded: GeM-Bidding-9244666.pdf
+2026-05-29 14:19:55 | DEBUG    | browser | Downloaded: GeM-Bidding-9339248.pdf
+2026-05-29 14:20:01 | DEBUG    | browser | Downloaded: GeM-Bidding-9083580.pdf
+2026-05-29 14:20:08 | DEBUG    | browser | Downloaded: GeM-Bidding-9347802.pdf
+2026-05-29 14:20:16 | DEBUG    | browser | Downloaded: GeM-Bidding-9238148.pdf
+2026-05-29 14:20:29 | DEBUG    | browser | Filters reset
+2026-05-29 14:20:29 | INFO     | browser | Selecting filter: Service Bid/RAs
+2026-05-29 14:20:34 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 14:20:38 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 14:20:40 | DEBUG    | browser | Downloaded: GeM-Bidding-9314834.pdf
+2026-05-29 14:20:52 | DEBUG    | browser | Downloaded: GeM-Bidding-9292005.pdf
+2026-05-29 14:20:59 | DEBUG    | browser | Downloaded: GeM-Bidding-9321828.pdf
+2026-05-29 14:21:06 | DEBUG    | browser | Downloaded: GeM-Bidding-9235430.pdf
+2026-05-29 14:21:13 | DEBUG    | browser | Downloaded: GeM-Bidding-9189323.pdf
+2026-05-29 14:21:27 | DEBUG    | browser | Filters reset
+2026-05-29 14:21:27 | INFO     | browser | Selecting filter: Bid To RAs
+2026-05-29 14:21:32 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 14:21:36 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 14:21:40 | DEBUG    | browser | Downloaded: GeM-Bidding-9339874.pdf
+2026-05-29 14:21:49 | DEBUG    | browser | Downloaded: GeM-Bidding-9265404.pdf
+2026-05-29 14:21:56 | DEBUG    | browser | Downloaded: GeM-Bidding-8962716.pdf
+2026-05-29 14:22:05 | DEBUG    | browser | Downloaded: GeM-Bidding-9097586.pdf
+2026-05-29 14:22:18 | DEBUG    | browser | Downloaded: GeM-Bidding-9355117.pdf
+2026-05-29 14:22:31 | DEBUG    | browser | Filters reset
+2026-05-29 14:22:31 | INFO     | browser | Selecting filter: Product Custom Bid/RAs
+2026-05-29 14:22:36 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 14:22:42 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 14:22:46 | DEBUG    | browser | Downloaded: GeM-Bidding-9217371.pdf
+2026-05-29 14:22:54 | DEBUG    | browser | Downloaded: GeM-Bidding-8609258.pdf
+2026-05-29 14:23:04 | DEBUG    | browser | Downloaded: GeM-Bidding-9149767.pdf
+2026-05-29 14:23:11 | DEBUG    | browser | Downloaded: GeM-Bidding-9255403.pdf
+2026-05-29 14:23:19 | DEBUG    | browser | Downloaded: GeM-Bidding-8985772.pdf
+2026-05-29 14:23:35 | DEBUG    | browser | Filters reset
+2026-05-29 14:23:35 | INFO     | browser | Selecting filter: BOQ Bids
+2026-05-29 14:23:42 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 14:23:46 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 14:23:50 | DEBUG    | browser | Downloaded: GeM-Bidding-9176971.pdf
+2026-05-29 14:23:57 | DEBUG    | browser | Downloaded: GeM-Bidding-9156803.pdf
+2026-05-29 14:24:06 | DEBUG    | browser | Downloaded: GeM-Bidding-9160880.pdf
+2026-05-29 14:24:26 | DEBUG    | browser | Downloaded: GeM-Bidding-9323417.pdf
+2026-05-29 14:24:33 | DEBUG    | browser | Downloaded: GeM-Bidding-8833579.pdf
+2026-05-29 14:24:47 | DEBUG    | browser | Filters reset
+2026-05-29 14:24:47 | INFO     | browser | Selecting filter: Rate Contract Bids
+2026-05-29 14:24:50 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 14:24:55 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 14:24:59 | DEBUG    | browser | Downloaded: GeM-Bidding-9246838.pdf
+2026-05-29 14:25:06 | DEBUG    | browser | Downloaded: GeM-Bidding-9301536.pdf
+2026-05-29 14:25:14 | DEBUG    | browser | Downloaded: GeM-Bidding-9280824.pdf
+2026-05-29 14:25:22 | DEBUG    | browser | Downloaded: GeM-Bidding-9260934.pdf
+2026-05-29 14:25:33 | DEBUG    | browser | Downloaded: GeM-Bidding-9262054.pdf
+2026-05-29 14:25:46 | DEBUG    | browser | Filters reset
+2026-05-29 14:25:46 | INFO     | browser | Selecting filter: Global Tender
+2026-05-29 14:25:52 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 14:25:56 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 14:26:00 | DEBUG    | browser | Downloaded: GeM-Bidding-9246893.pdf
+2026-05-29 14:26:08 | DEBUG    | browser | Downloaded: GeM-Bidding-9255239.pdf
+2026-05-29 14:26:14 | DEBUG    | browser | Downloaded: GeM-Bidding-9295700.pdf
+2026-05-29 14:26:23 | DEBUG    | browser | Downloaded: GeM-Bidding-9206750.pdf
+2026-05-29 14:26:31 | DEBUG    | browser | Downloaded: GeM-Bidding-9351575.pdf
+2026-05-29 14:26:42 | DEBUG    | browser | Filters reset
+2026-05-29 14:26:42 | INFO     | browser | Selecting filter: Limited Tender
+2026-05-29 14:26:47 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 14:26:51 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 14:26:54 | DEBUG    | browser | Downloaded: GeM-Bidding-9288965.pdf
+2026-05-29 14:27:01 | DEBUG    | browser | Downloaded: GeM-Bidding-9274828.pdf
+2026-05-29 14:27:09 | DEBUG    | browser | Downloaded: GeM-Bidding-9285232.pdf
+2026-05-29 14:27:16 | DEBUG    | browser | Downloaded: GeM-Bidding-9282986.pdf
+2026-05-29 14:27:23 | DEBUG    | browser | Downloaded: GeM-Bidding-9338361.pdf
+2026-05-29 14:27:34 | DEBUG    | browser | Filters reset
+2026-05-29 14:27:34 | INFO     | browser | Selecting filter: Single Tender
+2026-05-29 14:27:40 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 14:27:44 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 14:27:48 | DEBUG    | browser | Downloaded: GeM-Bidding-9276166.pdf
+2026-05-29 14:27:57 | DEBUG    | browser | Downloaded: GeM-Bidding-9275157.pdf
+2026-05-29 14:28:04 | DEBUG    | browser | Downloaded: GeM-Bidding-9305565.pdf
+2026-05-29 14:28:12 | DEBUG    | browser | Downloaded: GeM-Bidding-9336077.pdf
+2026-05-29 14:28:19 | DEBUG    | browser | Downloaded: GeM-Bidding-9335937.pdf
+2026-05-29 14:28:25 | INFO     | browser | Browser closed
+2026-05-29 15:36:51 | INFO     | browser | Browser launched (stealth mode)
+2026-05-29 15:36:51 | INFO     | browser | Opening: https://bidplus.gem.gov.in/all-bids
+2026-05-29 15:37:02 | INFO     | browser | GeM listing page loaded
+2026-05-29 15:37:08 | DEBUG    | browser | Filters reset
+2026-05-29 15:37:08 | INFO     | browser | Selecting filter: Product Bid/RAs
+2026-05-29 15:37:12 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 15:37:18 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 15:37:23 | DEBUG    | browser | Downloaded: GeM-Bidding-9339874.pdf
+2026-05-29 15:38:02 | DEBUG    | browser | Filters reset
+2026-05-29 15:38:02 | INFO     | browser | Selecting filter: Service Bid/RAs
+2026-05-29 15:38:08 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 15:38:13 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 15:38:17 | DEBUG    | browser | Downloaded: GeM-Bidding-9261078.pdf
+2026-05-29 15:38:30 | DEBUG    | browser | Filters reset
+2026-05-29 15:38:30 | INFO     | browser | Selecting filter: Bid To RAs
+2026-05-29 15:38:34 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 15:38:39 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 15:38:42 | DEBUG    | browser | Downloaded: GeM-Bidding-9142889.pdf
+2026-05-29 15:38:57 | DEBUG    | browser | Filters reset
+2026-05-29 15:38:57 | INFO     | browser | Selecting filter: Product Custom Bid/RAs
+2026-05-29 15:39:01 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 15:39:06 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 15:39:10 | DEBUG    | browser | Downloaded: GeM-Bidding-9116578.pdf
+2026-05-29 15:39:24 | DEBUG    | browser | Filters reset
+2026-05-29 15:39:24 | INFO     | browser | Selecting filter: BOQ Bids
+2026-05-29 15:39:28 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 15:39:31 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 15:39:36 | DEBUG    | browser | Downloaded: GeM-Bidding-9176971.pdf
+2026-05-29 15:39:50 | DEBUG    | browser | Filters reset
+2026-05-29 15:39:50 | INFO     | browser | Selecting filter: Rate Contract Bids
+2026-05-29 15:39:55 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 15:40:00 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 15:40:03 | DEBUG    | browser | Downloaded: GeM-Bidding-9301536.pdf
+2026-05-29 15:40:16 | DEBUG    | browser | Filters reset
+2026-05-29 15:40:16 | INFO     | browser | Selecting filter: Global Tender
+2026-05-29 15:40:23 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 15:40:28 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 15:40:32 | DEBUG    | browser | Downloaded: GeM-Bidding-9246893.pdf
+2026-05-29 15:40:45 | DEBUG    | browser | Filters reset
+2026-05-29 15:40:45 | INFO     | browser | Selecting filter: Limited Tender
+2026-05-29 15:40:49 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 15:40:54 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 15:40:58 | DEBUG    | browser | Downloaded: GeM-Bidding-9238148.pdf
+2026-05-29 15:41:10 | DEBUG    | browser | Filters reset
+2026-05-29 15:41:10 | INFO     | browser | Selecting filter: Single Tender
+2026-05-29 15:41:16 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 15:41:20 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 15:41:25 | DEBUG    | browser | Downloaded: GeM-Bidding-9299629.pdf
+2026-05-29 15:41:34 | INFO     | browser | Browser closed
+2026-05-29 16:01:07 | INFO     | browser | Browser launched (stealth mode)
+2026-05-29 16:01:07 | INFO     | browser | Opening: https://bidplus.gem.gov.in/all-bids
+2026-05-29 16:01:19 | INFO     | browser | GeM listing page loaded
+2026-05-29 16:01:23 | DEBUG    | browser | Filters reset
+2026-05-29 16:01:23 | INFO     | browser | Selecting filter: Product Bid/RAs
+2026-05-29 16:01:28 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 16:01:34 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 16:01:38 | DEBUG    | browser | Downloaded: GeM-Bidding-8356022.pdf
+2026-05-29 16:02:15 | DEBUG    | browser | Filters reset
+2026-05-29 16:02:15 | INFO     | browser | Selecting filter: Service Bid/RAs
+2026-05-29 16:02:21 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 16:02:26 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 16:02:29 | DEBUG    | browser | Downloaded: GeM-Bidding-9286165.pdf
+2026-05-29 16:02:42 | DEBUG    | browser | Filters reset
+2026-05-29 16:02:42 | INFO     | browser | Selecting filter: Bid To RAs
+2026-05-29 16:02:47 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 16:02:53 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 16:02:58 | DEBUG    | browser | Downloaded: GeM-Bidding-9280655.pdf
+2026-05-29 16:03:12 | DEBUG    | browser | Filters reset
+2026-05-29 16:03:12 | INFO     | browser | Selecting filter: Product Custom Bid/RAs
+2026-05-29 16:03:19 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 16:03:23 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 16:03:28 | DEBUG    | browser | Downloaded: GeM-Bidding-8336925.pdf
+2026-05-29 16:03:41 | DEBUG    | browser | Filters reset
+2026-05-29 16:03:41 | INFO     | browser | Selecting filter: BOQ Bids
+2026-05-29 16:03:46 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 16:03:51 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 16:03:54 | DEBUG    | browser | Downloaded: GeM-Bidding-9074004.pdf
+2026-05-29 16:04:06 | DEBUG    | browser | Filters reset
+2026-05-29 16:04:06 | INFO     | browser | Selecting filter: Rate Contract Bids
+2026-05-29 16:04:12 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 16:04:17 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 16:04:25 | DEBUG    | browser | Downloaded: GeM-Bidding-9301536.pdf
+2026-05-29 16:04:35 | DEBUG    | browser | Filters reset
+2026-05-29 16:04:35 | INFO     | browser | Selecting filter: Global Tender
+2026-05-29 16:04:39 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 16:04:45 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 16:04:51 | DEBUG    | browser | Downloaded: GeM-Bidding-9246893.pdf
+2026-05-29 16:05:04 | DEBUG    | browser | Filters reset
+2026-05-29 16:05:04 | INFO     | browser | Selecting filter: Limited Tender
+2026-05-29 16:05:08 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 16:05:12 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 16:05:18 | DEBUG    | browser | Downloaded: GeM-Bidding-9238148.pdf
+2026-05-29 16:05:32 | DEBUG    | browser | Filters reset
+2026-05-29 16:05:32 | INFO     | browser | Selecting filter: Single Tender
+2026-05-29 16:05:37 | INFO     | browser | Selecting filter: Ongoing Bids/RA
+2026-05-29 16:05:41 | DEBUG    | browser | Ongoing Bids/RA filter applied
+2026-05-29 16:05:44 | DEBUG    | browser | Downloaded: GeM-Bidding-9290004.pdf
+2026-05-29 16:05:52 | INFO     | browser | Browser closed

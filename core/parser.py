@@ -1,12 +1,13 @@
 # =========================================================
 # core/parser.py
 # PDF extraction + field parsing
-# FIX: Extract dates correctly (may span 2 different days)
+# FIX: Extract dates correctly with better regex patterns
 # =========================================================
 import re
 import os
 import sys
 import fitz
+from datetime import datetime
 from config.settings import TESSERACT_CMD
 from utils.logger import get_logger
 
@@ -53,9 +54,79 @@ def clean_text(text: str) -> str:
 
 
 # =========================================================
-# PARSE ALL FIELDS FROM PDF TEXT
-# FIX: Search entire PDF for dates (they may be far apart)
+# FIX: Extract dates with CORRECT order and labels
 # =========================================================
+def _extract_dates(pdf_text: str) -> tuple[str, str]:
+    """
+    Extract start_date and end_date from PDF.
+    Look for explicit labels first:
+    - "Bid Opening Date/Time" or "Bid Opening Date" → start_date
+    - "Bid End Date/Time" or "Bid End Date" → end_date
+    
+    Returns: (start_date, end_date) as "DD-MM-YYYY HH:MM:SS"
+    """
+    start_date = ""
+    end_date = ""
+    
+    # Pattern 1: Look for explicit "Bid Opening Date / Time" label
+    # Label may appear with or without spaces around /
+    opening_match = re.search(
+        r"(?:Bid\s+Opening\s+Date|Opening\s+Date|Bid\s+Opening)\s*(?:/|and)\s*Time\s+(\d{2}-\d{2}-\d{4})\s+(\d{2}:\d{2}:\d{2})",
+        pdf_text,
+        re.IGNORECASE
+    )
+    if opening_match:
+        start_date = f"{opening_match.group(1)} {opening_match.group(2)}"
+        log.debug(f"Found opening date via label: {start_date}")
+    
+    # Pattern 2: Look for explicit "Bid End Date / Time" label
+    ending_match = re.search(
+        r"(?:Bid\s+End\s+Date|End\s+Date|Bid\s+End)\s*(?:/|and)\s*Time\s+(\d{2}-\d{2}-\d{4})\s+(\d{2}:\d{2}:\d{2})",
+        pdf_text,
+        re.IGNORECASE
+    )
+    if ending_match:
+        end_date = f"{ending_match.group(1)} {ending_match.group(2)}"
+        log.debug(f"Found end date via label: {end_date}")
+    
+    # If labels didn't work, try alternate patterns
+    if not start_date or not end_date:
+        # Find ALL dates in PDF
+        all_dates = re.findall(
+            r"(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2}):(\d{2})",
+            pdf_text
+        )
+        
+        if all_dates:
+            log.debug(f"Found {len(all_dates)} dates in PDF")
+            
+            # Convert to comparable format
+            dates_list = []
+            for day, month, year, hour, minute, second in all_dates:
+                date_str = f"{day}-{month}-{year} {hour}:{minute}:{second}"
+                try:
+                    date_obj = datetime.strptime(date_str, "%d-%m-%Y %H:%M:%S")
+                    dates_list.append((date_obj, date_str))
+                except:
+                    pass
+            
+            if dates_list:
+                # Sort by datetime
+                dates_list.sort(key=lambda x: x[0])
+                
+                if not start_date and len(dates_list) > 0:
+                    # First date = opening date (earliest)
+                    start_date = dates_list[0][1]
+                    log.debug(f"Using earliest date as opening: {start_date}")
+                
+                if not end_date and len(dates_list) > 0:
+                    # Last date = end date (latest)
+                    end_date = dates_list[-1][1]
+                    log.debug(f"Using latest date as end: {end_date}")
+    
+    return start_date, end_date
+
+
 def parse_bid_data(pdf_text: str) -> dict:
     d = {}
 
@@ -113,40 +184,15 @@ def parse_bid_data(pdf_text: str) -> dict:
     )
     d["department"] = clean_text(m.group(1)) if m else ""
 
-    # --- DATES: FIX - Search ENTIRE PDF (dates may be far apart) ---
-    # Look for "Bid End Date/Time" label with date
-    # Pattern: "Bid End Date / Time" followed by DD-MM-YYYY HH:MM:SS
-    end_date_match = re.search(
-        r"Bid\s+End\s+Date\s*/\s*Time\s+(\d{2}-\d{2}-\d{4}\s+\d{2}:\d{2}:\d{2})",
-        pdf_text,  # SEARCH ENTIRE PDF, not just first 10000
-        re.IGNORECASE
-    )
-    d["end_date"] = clean_text(end_date_match.group(1)) if end_date_match else ""
-
-    # Look for "Bid Opening Date/Time" label with date
-    # May be on a DIFFERENT DATE than end_date
-    start_date_match = re.search(
-        r"Bid\s+Opening\s+Date\s*/\s*Time\s+(\d{2}-\d{2}-\d{4}\s+\d{2}:\d{2}:\d{2})",
-        pdf_text,  # SEARCH ENTIRE PDF
-        re.IGNORECASE
-    )
-    d["start_date"] = clean_text(start_date_match.group(1)) if start_date_match else ""
-
-    # If labels not found, look for any two dates in chronological order
-    # and assume first = opening, second = deadline
-    if not d["start_date"] or not d["end_date"]:
-        dates = re.findall(r"\d{2}-\d{2}-\d{4}\s+\d{2}:\d{2}:\d{2}", pdf_text)
-        if len(dates) >= 2:
-            if not d["start_date"]:
-                d["start_date"] = dates[0]
-            if not d["end_date"]:
-                # Take the LAST date found (likely the end date)
-                d["end_date"] = dates[-1]
+    # --- DATES: Use fixed extraction function ---
+    start_date, end_date = _extract_dates(pdf_text)
+    d["start_date"] = start_date
+    d["end_date"] = end_date
 
     # --- Estimated Bid Value ---
     m = re.search(
         r"Estimated\s+Bid\s+Value\s+(\d[\d,\.]+)",
-        pdf_text,  # Search entire PDF
+        pdf_text,
         re.IGNORECASE
     )
     d["estimated_value"] = clean_text(m.group(1)) if m else ""
@@ -154,7 +200,7 @@ def parse_bid_data(pdf_text: str) -> dict:
     # --- Type of Bid (Two Packet / Single Packet) ---
     m = re.search(
         r"Type of Bid\s+([\w][\w\s]+?)(?=\s{2,}|\s*(?:तकनीक|Primary|GEM/|\d{2}-\d{2}))",
-        pdf_text,  # Search entire PDF
+        pdf_text,
         re.IGNORECASE
     )
     d["bid_packet_type"] = clean_text(m.group(1)) if m else ""
@@ -195,3 +241,68 @@ def get_product_type_from_card(card, bid_type_name: str) -> str:
     except Exception as e:
         log.debug(f"Product type card: {e}")
     return PRODUCT_TYPE_MAP.get(bid_type_name, bid_type_name)
+
+
+# =========================================================
+# SCRAPE DATES FROM CARD HTML (not from PDF)
+# Portal card shows: "Start Date: DD-MM-YYYY HH:MM AM/PM"
+#                    "End Date:   DD-MM-YYYY HH:MM AM/PM"
+# =========================================================
+def get_dates_from_card(card) -> tuple[str, str]:
+    """
+    Extract Start Date and End Date directly from the
+    bid listing card on the GeM portal HTML.
+    Returns: (start_date, end_date) as "DD-MM-YYYY HH:MM:SS"
+    """
+    start_date = ""
+    end_date   = ""
+
+    try:
+        text = card.inner_text()
+
+        # Match "Start Date: DD-MM-YYYY HH:MM AM/PM"
+        start_m = re.search(
+            r"Start\s+Date\s*[:\-]?\s*"
+            r"(\d{2}-\d{2}-\d{4})\s+"
+            r"(\d{1,2}:\d{2})\s*(AM|PM)?",
+            text,
+            re.IGNORECASE
+        )
+        if start_m:
+            date_part = start_m.group(1)
+            time_part = _to_24h(start_m.group(2), start_m.group(3) or "")
+            start_date = f"{date_part} {time_part}"
+
+        # Match "End Date: DD-MM-YYYY HH:MM AM/PM"
+        end_m = re.search(
+            r"End\s+Date\s*[:\-]?\s*"
+            r"(\d{2}-\d{2}-\d{4})\s+"
+            r"(\d{1,2}:\d{2})\s*(AM|PM)?",
+            text,
+            re.IGNORECASE
+        )
+        if end_m:
+            date_part = end_m.group(1)
+            time_part = _to_24h(end_m.group(2), end_m.group(3) or "")
+            end_date = f"{date_part} {time_part}"
+
+    except Exception as e:
+        log.debug(f"Card date scrape error: {e}")
+
+    return start_date, end_date
+
+
+def _to_24h(time_str: str, ampm: str) -> str:
+    """Convert '3:44 PM' → '15:44:00', '10:07 AM' → '10:07:00'"""
+    try:
+        parts = time_str.strip().split(":")
+        hour  = int(parts[0])
+        mins  = int(parts[1]) if len(parts) > 1 else 0
+        ampm  = ampm.strip().upper()
+        if ampm == "PM" and hour != 12:
+            hour += 12
+        elif ampm == "AM" and hour == 12:
+            hour = 0
+        return f"{hour:02d}:{mins:02d}:00"
+    except:
+        return f"{time_str}:00"

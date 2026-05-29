@@ -784,3 +784,111 @@
 2026-05-29 11:01:00 | INFO     | scheduler |   Total new: 45
 2026-05-29 11:01:00 | INFO     | scheduler | Single run complete. Exiting.
 2026-05-29 11:01:00 | INFO     | scheduler | Scheduler stopped.
+2026-05-29 14:18:44 | INFO     | scheduler | 
+2026-05-29 14:18:44 | INFO     | scheduler | ============================================================
+2026-05-29 14:18:44 | INFO     | scheduler | GEM BID SCRAPER SCHEDULER STARTED
+2026-05-29 14:18:44 | INFO     | scheduler | Interval: every 60 minutes
+2026-05-29 14:18:44 | INFO     | scheduler | Database: D:\Projects\gem_scraper\storage\gem_bids.db
+2026-05-29 14:18:44 | INFO     | scheduler | ============================================================
+2026-05-29 14:18:44 | INFO     | scheduler | 
+▶  Run started at 2026-05-29 14:18:44
+2026-05-29 14:28:25 | INFO     | scheduler | 
+2026-05-29 14:28:25 | INFO     | scheduler | 🆕  NEW BIDS DETECTED THIS RUN
+2026-05-29 14:28:25 | INFO     | scheduler | ============================================================
+2026-05-29 14:28:25 | INFO     | scheduler |   [Single Tender] GEM/2026/B/7546103 | LOOP POWERED INDICATOR (LCP) , MTL661 , LOOP | Dept: Indian Oil Corporation Limited | End: 29-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Single Tender] GEM/2026/B/7546233 | RECON TRANSMISSION ASSEMBLY WITH TORQUE | Dept: Nmdc Limited | End: 29-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Single Tender] GEM/2026/B/7518621 | Customized AMC/CMC for Pre-owned Products - TMC fo | Dept: Nlc India Limited | End: 29-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Single Tender] GEM/2026/B/7491207 | Customized AMC/CMC for Pre-owned Products - | Dept: Indian Oil Corporation Limited | End: 15-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Single Tender] GEM/2026/B/7492127 | Technical Specification as per RFQ no 10 , Technic | Dept: Indian Oil Corporation Limited | End: 29-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Limited Tender] GEM/2026/B/7548266 | DGR Empanelled ESM Security Services | Dept: Department Of Heavy Industry | End: 29-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Limited Tender] GEM/2026/B/7498207 | SOCKET WRENCH 10X12 / 54.28. 045-1 , SOCKET WRENCH | Dept: Department Of Defence Production | End: 29-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Limited Tender] GEM/2026/B/7500136 | Calibration Services - As per scope of work; Tempe | Dept:  | End: 29-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Limited Tender] GEM/2026/B/7490903 | Supply of Counter weight for Insulator pilot fitti | Dept: Power Grid Corporation Of India Limited | End: 21-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Limited Tender] GEM/2026/B/7503471 | Design, Manufacturing, Supply &Commissioning of Po | Dept: Hooghly Cochin Shipyard Limited | End: 15-05-2026 19:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Global Tender] GEM/2026/B/7560028 | GlobalTenderCategory (Q3) | Dept: Space | End: 10-06-2026 12:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Global Tender] GEM/2026/B/7429899 | GlobalTenderCategory (Q3) | Dept: Department Of Scientific And Industrial  | End: 18-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Global Tender] GEM/2026/B/7509648 | GlobalTenderCategory (Q3) | Dept: Department Of Health And Family Welfare | End: 03-06-2026 10:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Global Tender] GEM/2026/B/7473435 | GlobalTenderCategory (Q3) | Dept: Space | End: 25-05-2026 16:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Global Tender] GEM/2026/B/7465807 | GlobalTenderCategory (Q3) | Dept: Department Of Health Research | End: 14-05-2026 13:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Rate Contract Bids] GEM/2026/B/7479402 | Magma and massecuite pump Rotor type 6 Inch By 6 I | Dept: Cane Development (ganna Vikas Vibhag) De | End: 18-05-2026 13:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Rate Contract Bids] GEM/2026/B/7478455 | Jointing Compressed Asbestos Fiber jointing sheets | Dept: Cane Development (ganna Vikas Vibhag) De | End: 18-05-2026 11:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Rate Contract Bids] GEM/2026/B/7496302 | NonIBR ERW APH tubes confBS6323 PartV 1982 Grade1 | Dept: Cane Development (ganna Vikas Vibhag) De | End: 23-05-2026 14:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Rate Contract Bids] GEM/2026/B/7514993 | Bleaching powder , Lime powder , Rubber Gloves , P | Dept: Urban Development Directorate Of Uttarak | End: 28-05-2026 11:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Rate Contract Bids] GEM/2026/B/7465759 | 0.09mm by 2.30mmby .25 mm , 0.06mm by 2.20mm by.27 | Dept: Cane Development (ganna Vikas Vibhag) De | End: 15-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [BOQ Bids] GEM/2026/B/7105734 | CHECK LIST PUBLIC AREA as per specification , Dail | Dept: India Tourism Development Corporation Li | End: 03-03-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [BOQ Bids] GEM/2026/B/7534659 | 61 oblique 1 dash 61oblique JCB dash333 oblique Y4 | Dept: Department Of Military Affairs | End: 23-05-2026 20:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [BOQ Bids] GEM/2026/B/7389632 | Triglyceride Kit , Uric acid kit , HDL Direct , ER | Dept: Department Of Military Affairs | End: 21-04-2026 11:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [BOQ Bids] GEM/2026/B/7386008 | GS71-200-00898 , GS71-200-00946 , GS71-200-00899 , | Dept: Department Of Defence Production | End: 25-04-2026 11:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [BOQ Bids] GEM/2026/B/7403302 | Firewall hardware , Log analyzer licenses , ZTNA a | Dept: Department Of Defence Production | End: 09-04-2026 17:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Product Custom Bid/RAs] GEM/2026/B/7239254 | TYRE: 24.00X35, 48PR, E-4 TL(item-10: 402109090274 | Dept: Steel Authority Of India Limited | End: 07-03-2026 11:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Product Custom Bid/RAs] GEM/2026/B/7473585 | DEVELOPMENT & SUPPLY OF CHARGE AIR COOLER | Dept: Department Of Defence Research & Develop | End: 18-05-2026 11:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Product Custom Bid/RAs] GEM/2026/B/7380365 | Titanium Heater with Junction Box (Details as per  | Dept: Department Of Heavy Industry | End: 06-04-2026 14:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Product Custom Bid/RAs] GEM/2025/B/6909377 | 150 LPH WATER STORAGE COOLER | Dept: Department Of Higher Education | End: 15-12-2025 17:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Product Custom Bid/RAs] GEM/2026/B/7439340 | PILLAR BRICKS TO SIZE 700MM x 115MM x 115MM AS PER | Dept: Department Of Defence Production | End: 04-05-2026 17:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Bid To RAs] GEM/2026/B/7563222 | Tea CTC (V2) (Defence) (Q2) | Dept: Department Of Defence | End: 23-05-2026 14:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Bid To RAs] GEM/2026/B/7335937 | Material Code_76908016320_1_1000072319_UOM_EA , | Dept: Materials | End: 30-03-2026 14:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Bid To RAs] GEM/2026/B/7218587 | ACTIVATED ALUMINA FOR AIR DRYERS CONFORMING TO IS | Dept: Materials | End: 06-03-2026 19:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Bid To RAs] GEM/2026/B/7482374 | PORTABLE MUSCLE OXYGEN MEASUREMENT SYSTEM | Dept: Department Of Defence Research & Develop | End: 11-05-2026 12:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Bid To RAs] GEM/2026/B/7549614 | Large Cardamom (Badi Elaichi) as per IS 13446 (Q4) | Dept: Department Of Military Affairs | End: 19-05-2026 15:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Service Bid/RAs] GEM/2026/B/7414313 | Hiring of Earth Moving Equipments, Material Handli | Dept: Department Of Military Affairs | End: 07-05-2026 20:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Service Bid/RAs] GEM/2026/B/7455537 | Custom Bid for Services - Hiring of Load Carrier 9 | Dept: Department Of Military Affairs | End: 18-05-2026 21:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Service Bid/RAs] GEM/2026/B/7533191 | Repair and Overhauling Service - L-96 for H-187 at | Dept: Department Of Defence | End: 23-05-2026 11:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Service Bid/RAs] GEM/2026/B/7506290 | Custom Bid for Services - DISPATCH OF EXPORT | Dept: Department Of Defence Production | End: 15-05-2026 20:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Service Bid/RAs] GEM/2026/B/7526808 | Short Term Cab & Taxi Hiring Services - SUV; Outst | Dept: Department Of Military Affairs | End: 21-05-2026 18:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Product Bid/RAs] GEM/2026/B/7457889 | Gas Cooler (Tag No. 073-E-401) , Mandatory Spares  | Dept: Indian Oil Corporation Limited | End: 01-05-2026 16:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Product Bid/RAs] GEM/2026/B/7556613 | Refined Sunflower Oil (V4) (Defence) (Q3) | Dept: Department Of Military Affairs | End: 25-05-2026 10:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Product Bid/RAs] GEM/2026/B/7324059 | CONICAL EPOXY NUT M-12 TO DRG TR24030N ITEM 20 & S | Dept: Department Of Heavy Industry | End: 17-03-2026 14:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Product Bid/RAs] GEM/2026/B/7549045 | Refined Sunflower Oil (V4) (Defence) (Q3) | Dept: Department Of Military Affairs | End: 25-05-2026 10:00:00
+2026-05-29 14:28:25 | INFO     | scheduler |   [Product Bid/RAs] GEM/2026/B/7463764 | Microbial Fuel Test Kit (Q3) | Dept: Department Of Military Affairs | End: 02-05-2026 12:00:00
+2026-05-29 14:28:25 | INFO     | scheduler | ============================================================
+2026-05-29 14:28:25 | INFO     | scheduler |   Total new: 45
+2026-05-29 14:28:25 | INFO     | scheduler | Single run complete. Exiting.
+2026-05-29 14:28:25 | INFO     | scheduler | Scheduler stopped.
+2026-05-29 15:36:49 | INFO     | scheduler | 
+2026-05-29 15:36:49 | INFO     | scheduler | ============================================================
+2026-05-29 15:36:49 | INFO     | scheduler | GEM BID SCRAPER SCHEDULER STARTED
+2026-05-29 15:36:49 | INFO     | scheduler | Interval: every 60 minutes
+2026-05-29 15:36:49 | INFO     | scheduler | Database: D:\Projects\gem_scraper\storage\gem_bids.db
+2026-05-29 15:36:49 | INFO     | scheduler | ============================================================
+2026-05-29 15:36:49 | INFO     | scheduler | 
+▶  Run started at 2026-05-29 15:36:49
+2026-05-29 15:41:34 | INFO     | scheduler | 
+2026-05-29 15:41:34 | INFO     | scheduler | 🆕  NEW BIDS DETECTED THIS RUN
+2026-05-29 15:41:34 | INFO     | scheduler | ============================================================
+2026-05-29 15:41:34 | INFO     | scheduler |   [Single Tender] GEM/2026/B/7513226 | 9040M26D01 Procurement of M/s POWER BUILD PVT. LTD | Dept: Indian Oil Corporation Limited | End: 22-05-2026 16:00:00
+2026-05-29 15:41:34 | INFO     | scheduler |   [Limited Tender] GEM/2026/B/7457889 | Gas Cooler (Tag No. 073-E-401) , Mandatory Spares  | Dept: Indian Oil Corporation Limited | End: 01-05-2026 16:00:00
+2026-05-29 15:41:34 | INFO     | scheduler |   [Global Tender] GEM/2026/B/7465807 | GlobalTenderCategory (Q3) | Dept: Department Of Health Research | End: 14-05-2026 13:00:00
+2026-05-29 15:41:34 | INFO     | scheduler |   [Rate Contract Bids] GEM/2026/B/7514993 | Bleaching powder , Lime powder , Rubber Gloves , P | Dept: Urban Development Directorate Of Uttarak | End: 28-05-2026 11:00:00
+2026-05-29 15:41:34 | INFO     | scheduler |   [BOQ Bids] GEM/2026/B/7403302 | Firewall hardware , Log analyzer licenses , ZTNA a | Dept: Department Of Defence Production | End: 09-04-2026 17:00:00
+2026-05-29 15:41:34 | INFO     | scheduler |   [Product Custom Bid/RAs] GEM/2026/B/7352222 | Supply & Installation of P-4 LED Module screen | Dept: Steel Authority Of India Limited | End: 23-03-2026 15:00:00
+2026-05-29 15:41:34 | INFO     | scheduler |   [Bid To RAs] GEM/2026/B/7374550 | TUBE INNER 7.50X16 , TUBE INNER 195 65 R15 , TUBE | Dept: Department Of Military Affairs | End: 05-05-2026 14:00:00
+2026-05-29 15:41:34 | INFO     | scheduler |   [Service Bid/RAs] GEM/2026/B/7478561 | Repair and Overhauling Service - Tractors (V1); AI | Dept: Department Of Military Affairs | End: 14-05-2026 11:00:00
+2026-05-29 15:41:34 | INFO     | scheduler |   [Product Bid/RAs] GEM/2026/B/7549614 | Large Cardamom (Badi Elaichi) as per IS 13446 (Q4) | Dept: Department Of Military Affairs | End: 19-05-2026 15:00:00
+2026-05-29 15:41:34 | INFO     | scheduler | ============================================================
+2026-05-29 15:41:34 | INFO     | scheduler |   Total new: 9
+2026-05-29 15:41:34 | INFO     | scheduler | Single run complete. Exiting.
+2026-05-29 15:41:34 | INFO     | scheduler | Scheduler stopped.
+2026-05-29 16:01:05 | INFO     | scheduler | 
+2026-05-29 16:01:05 | INFO     | scheduler | ============================================================
+2026-05-29 16:01:05 | INFO     | scheduler | GEM BID SCRAPER SCHEDULER STARTED
+2026-05-29 16:01:05 | INFO     | scheduler | Interval: every 60 minutes
+2026-05-29 16:01:05 | INFO     | scheduler | Database: D:\Projects\gem_scraper\storage\gem_bids.db
+2026-05-29 16:01:05 | INFO     | scheduler | ============================================================
+2026-05-29 16:01:05 | INFO     | scheduler | 
+▶  Run started at 2026-05-29 16:01:05
+2026-05-29 16:05:52 | INFO     | scheduler | 
+2026-05-29 16:05:52 | INFO     | scheduler | 🆕  NEW BIDS DETECTED THIS RUN
+2026-05-29 16:05:52 | INFO     | scheduler | ============================================================
+2026-05-29 16:05:52 | INFO     | scheduler |   [Single Tender] GEM/2026/B/7504415 | Customized AMC/CMC for Pre-owned Products - | Dept: Indian Oil Corporation Limited | End: 29-05-2026 17:00:00
+2026-05-29 16:05:52 | INFO     | scheduler |   [Limited Tender] GEM/2026/B/7457889 | Gas Cooler (Tag No. 073-E-401) , Mandatory Spares  | Dept: Indian Oil Corporation Limited | End: 29-05-2026 16:14:00
+2026-05-29 16:05:52 | INFO     | scheduler |   [Global Tender] GEM/2026/B/7465807 | GlobalTenderCategory (Q3) | Dept: Department Of Health Research | End: 30-05-2026 13:00:00
+2026-05-29 16:05:52 | INFO     | scheduler |   [Rate Contract Bids] GEM/2026/B/7514993 | Bleaching powder , Lime powder , Rubber Gloves , P | Dept: Urban Development Directorate Of Uttarak | End: 29-05-2026 18:00:00
+2026-05-29 16:05:52 | INFO     | scheduler |   [BOQ Bids] GEM/2026/B/7316090 | Onion , Potato , Tomato , Cabbage , Cauliflower , | Dept: Tribal Development Department Gujarat | End: 29-05-2026 16:16:00
+2026-05-29 16:05:52 | INFO     | scheduler |   [Product Custom Bid/RAs] GEM/2025/B/6670870 | VFD MODULE 75KW , 22 KW VVVF 45A MIN | Dept: Rashtriya Ispat Nigam Limited | End: 29-05-2026 16:06:00
+2026-05-29 16:05:52 | INFO     | scheduler |   [Bid To RAs] GEM/2026/B/7496145 | copper conductor of size 2.5 sqmm single core FRLS | Dept: Department Of Military Affairs | End: 29-05-2026 16:03:00
+2026-05-29 16:05:52 | INFO     | scheduler |   [Service Bid/RAs] GEM/2026/B/7500982 | Customized AMC/CMC for Pre-owned Products - NAVEEN | Dept: Agriculture Marketing And Export Departm | End: 29-05-2026 16:03:00
+2026-05-29 16:05:52 | INFO     | scheduler |   [Product Bid/RAs] GEM/2025/B/6687707 | Complete assembly of 80NB double disc slide ADV ,  | Dept: Materials Management | End: 29-05-2026 16:02:00
+2026-05-29 16:05:52 | INFO     | scheduler | ============================================================
+2026-05-29 16:05:52 | INFO     | scheduler |   Total new: 9
+2026-05-29 16:05:52 | INFO     | scheduler | Single run complete. Exiting.
+2026-05-29 16:05:52 | INFO     | scheduler | Scheduler stopped.

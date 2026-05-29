@@ -10,6 +10,7 @@ from core.browser import GemBrowser
 from core.parser import (
     extract_pdf_text, parse_bid_data,
     get_ra_from_card, get_product_type_from_card,
+    get_dates_from_card,
     clean_text,
 )
 from storage.database import BidDatabase
@@ -73,11 +74,13 @@ def scrape_bid_type(
                 try:
                     card = cards.nth(i)
 
-                    # extract RA + product type from card HTML
+                    # extract RA + product type + DATES from card HTML
                     ra_no        = get_ra_from_card(card)
                     product_type = get_product_type_from_card(
                         card, bid_type_name
                     )
+                    # FIX: scrape dates from card HTML (not PDF)
+                    card_start, card_end = get_dates_from_card(card)
 
                     # extract links
                     doc_url, corr_url = (
@@ -116,8 +119,9 @@ def scrape_bid_type(
                         "full_item_name":  parsed.get("full_item_name", ""),
                         "quantity":        parsed.get("quantity", ""),
                         "department":      parsed.get("department", ""),
-                        "start_date":      parsed.get("start_date", ""),
-                        "end_date":        parsed.get("end_date", ""),
+                        # Use card dates (accurate) over PDF dates (unreliable)
+                        "start_date":      card_start or parsed.get("start_date", ""),
+                        "end_date":        card_end   or parsed.get("end_date", ""),
                         "estimated_value": parsed.get("estimated_value", ""),
                         "bid_packet_type": parsed.get("bid_packet_type", ""),
                         "document_url":    doc_url,

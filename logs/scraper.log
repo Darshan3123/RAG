@@ -1144,3 +1144,254 @@
 2026-05-29 11:01:00 | INFO     | scraper | ============================================================
 2026-05-29 11:01:00 | INFO     | scraper | RUN COMPLETE | Scraped: 45 | New: 45 | Errors: 0 | Total in DB: 45
 2026-05-29 11:01:00 | INFO     | scraper | ============================================================
+2026-05-29 14:18:44 | INFO     | scraper | 
+2026-05-29 14:18:44 | INFO     | scraper | ============================================================
+2026-05-29 14:18:44 | INFO     | scraper | FULL SCRAPE RUN STARTED
+2026-05-29 14:18:44 | INFO     | scraper | ============================================================
+2026-05-29 14:18:59 | INFO     | scraper | ==================================================
+2026-05-29 14:18:59 | INFO     | scraper | BID TYPE: Product Bid/RAs
+2026-05-29 14:18:59 | INFO     | scraper | ==================================================
+2026-05-29 14:19:13 | INFO     | scraper |   Page 1 | Collected 0/5
+2026-05-29 14:19:13 | INFO     | scraper |   Cards found: 10
+2026-05-29 14:19:49 | INFO     | scraper |   [1/5] GEM/2026/B/7463764 | Type: Product | RA: GEM/2026/R/673635 | NEW
+2026-05-29 14:19:57 | INFO     | scraper |   [2/5] GEM/2026/B/7549045 | Type: Product | RA: GEM/2026/R/673536 | NEW
+2026-05-29 14:20:03 | INFO     | scraper |   [3/5] GEM/2026/B/7324059 | Type: Product | RA: GEM/2026/R/673499 | NEW
+2026-05-29 14:20:11 | INFO     | scraper |   [4/5] GEM/2026/B/7556613 | Type: Product | RA: GEM/2026/R/673542 | NEW
+2026-05-29 14:20:19 | INFO     | scraper |   [5/5] GEM/2026/B/7457889 | Type: Product | RA: GEM/2026/R/673435 | NEW
+2026-05-29 14:20:24 | INFO     | scraper |   DONE 'Product Bid/RAs': scraped=5 | new=5 | errors=0 | 85.15s
+2026-05-29 14:20:24 | INFO     | scraper | ==================================================
+2026-05-29 14:20:24 | INFO     | scraper | BID TYPE: Service Bid/RAs
+2026-05-29 14:20:24 | INFO     | scraper | ==================================================
+2026-05-29 14:20:38 | INFO     | scraper |   Page 1 | Collected 0/5
+2026-05-29 14:20:38 | INFO     | scraper |   Cards found: 10
+2026-05-29 14:20:46 | INFO     | scraper |   [1/5] GEM/2026/B/7526808 | Type: Service | RA: GEM/2026/R/673645 | NEW
+2026-05-29 14:20:54 | INFO     | scraper |   [2/5] GEM/2026/B/7506290 | Type: Service | RA: GEM/2026/R/673477 | NEW
+2026-05-29 14:21:01 | INFO     | scraper |   [3/5] GEM/2026/B/7533191 | Type: Service | RA: GEM/2026/R/673589 | NEW
+2026-05-29 14:21:08 | INFO     | scraper |   [4/5] GEM/2026/B/7455537 | Type: Service | RA: GEM/2026/R/673655 | NEW
+2026-05-29 14:21:15 | INFO     | scraper |   [5/5] GEM/2026/B/7414313 | Type: Service | RA: GEM/2026/R/673601 | NEW
+2026-05-29 14:21:22 | INFO     | scraper |   DONE 'Service Bid/RAs': scraped=5 | new=5 | errors=0 | 57.72s
+2026-05-29 14:21:22 | INFO     | scraper | ==================================================
+2026-05-29 14:21:22 | INFO     | scraper | BID TYPE: Bid To RAs
+2026-05-29 14:21:22 | INFO     | scraper | ==================================================
+2026-05-29 14:21:36 | INFO     | scraper |   Page 1 | Collected 0/5
+2026-05-29 14:21:36 | INFO     | scraper |   Cards found: 10
+2026-05-29 14:21:42 | INFO     | scraper |   [1/5] GEM/2026/B/7549614 | Type: Bid To RA | RA: GEM/2026/R/673596 | NEW
+2026-05-29 14:21:51 | INFO     | scraper |   [2/5] GEM/2026/B/7482374 | Type: Bid To RA | RA: GEM/2026/R/673472 | NEW
+2026-05-29 14:21:58 | INFO     | scraper |   [3/5] GEM/2026/B/7218587 | Type: Bid To RA | RA: GEM/2026/R/673273 | NEW
+2026-05-29 14:22:08 | INFO     | scraper |   [4/5] GEM/2026/B/7335937 | Type: Bid To RA | RA: GEM/2026/R/672941 | NEW
+2026-05-29 14:22:14 | INFO     | scraper |   Page 2 | Collected 4/5
+2026-05-29 14:22:14 | INFO     | scraper |   Cards found: 10
+2026-05-29 14:22:20 | INFO     | scraper |   [5/5] GEM/2026/B/7563222 | Type: Bid To RA | RA: GEM/2026/R/673478 | NEW
+2026-05-29 14:22:26 | INFO     | scraper |   DONE 'Bid To RAs': scraped=5 | new=5 | errors=0 | 64.65s
+2026-05-29 14:22:26 | INFO     | scraper | ==================================================
+2026-05-29 14:22:26 | INFO     | scraper | BID TYPE: Product Custom Bid/RAs
+2026-05-29 14:22:26 | INFO     | scraper | ==================================================
+2026-05-29 14:22:42 | INFO     | scraper |   Page 1 | Collected 0/5
+2026-05-29 14:22:42 | INFO     | scraper |   Cards found: 10
+2026-05-29 14:22:48 | INFO     | scraper |   [1/5] GEM/2026/B/7439340 | Type: Product | RA: GEM/2026/R/673229 | NEW
+2026-05-29 14:22:57 | INFO     | scraper |   [2/5] GEM/2025/B/6909377 | Type: Product | RA: GEM/2026/R/673650 | NEW
+2026-05-29 14:23:05 | INFO     | scraper |   [3/5] GEM/2026/B/7380365 | Type: Product | RA: GEM/2026/R/673391 | NEW
+2026-05-29 14:23:13 | INFO     | scraper |   [4/5] GEM/2026/B/7473585 | Type: Product | RA: GEM/2026/R/672982 | NEW
+2026-05-29 14:23:22 | INFO     | scraper |   [5/5] GEM/2026/B/7239254 | Type: Product | RA: GEM/2026/R/673583 | NEW
+2026-05-29 14:23:30 | INFO     | scraper |   DONE 'Product Custom Bid/RAs': scraped=5 | new=5 | errors=0 | 63.96s
+2026-05-29 14:23:30 | INFO     | scraper | ==================================================
+2026-05-29 14:23:30 | INFO     | scraper | BID TYPE: BOQ Bids
+2026-05-29 14:23:30 | INFO     | scraper | ==================================================
+2026-05-29 14:23:46 | INFO     | scraper |   Page 1 | Collected 0/5
+2026-05-29 14:23:46 | INFO     | scraper |   Cards found: 10
+2026-05-29 14:23:53 | INFO     | scraper |   [1/5] GEM/2026/B/7403302 | Type: BOQ | RA: GEM/2026/R/673568 | NEW
+2026-05-29 14:24:00 | INFO     | scraper |   [2/5] GEM/2026/B/7386008 | Type: BOQ | RA: GEM/2026/R/673628 | NEW
+2026-05-29 14:24:20 | INFO     | scraper |   [3/5] GEM/2026/B/7389632 | Type: BOQ | RA: GEM/2026/R/672715 | NEW
+2026-05-29 14:24:28 | INFO     | scraper |   [4/5] GEM/2026/B/7534659 | Type: BOQ | RA: GEM/2026/R/673607 | NEW
+2026-05-29 14:24:36 | INFO     | scraper |   [5/5] GEM/2026/B/7105734 | Type: BOQ | RA: GEM/2026/R/673615 | NEW
+2026-05-29 14:24:42 | INFO     | scraper |   DONE 'BOQ Bids': scraped=5 | new=5 | errors=0 | 72.12s
+2026-05-29 14:24:42 | INFO     | scraper | ==================================================
+2026-05-29 14:24:42 | INFO     | scraper | BID TYPE: Rate Contract Bids
+2026-05-29 14:24:42 | INFO     | scraper | ==================================================
+2026-05-29 14:24:55 | INFO     | scraper |   Page 1 | Collected 0/5
+2026-05-29 14:24:55 | INFO     | scraper |   Cards found: 10
+2026-05-29 14:25:00 | INFO     | scraper |   [1/5] GEM/2026/B/7465759 | Type: Rate Contract | RA: N/A | NEW
+2026-05-29 14:25:08 | INFO     | scraper |   [2/5] GEM/2026/B/7514993 | Type: Rate Contract | RA: N/A | NEW
+2026-05-29 14:25:16 | INFO     | scraper |   [3/5] GEM/2026/B/7496302 | Type: Rate Contract | RA: N/A | NEW
+2026-05-29 14:25:25 | INFO     | scraper |   [4/5] GEM/2026/B/7478455 | Type: Rate Contract | RA: N/A | NEW
+2026-05-29 14:25:35 | INFO     | scraper |   [5/5] GEM/2026/B/7479402 | Type: Rate Contract | RA: N/A | NEW
+2026-05-29 14:25:42 | INFO     | scraper |   DONE 'Rate Contract Bids': scraped=5 | new=5 | errors=0 | 59.05s
+2026-05-29 14:25:42 | INFO     | scraper | ==================================================
+2026-05-29 14:25:42 | INFO     | scraper | BID TYPE: Global Tender
+2026-05-29 14:25:42 | INFO     | scraper | ==================================================
+2026-05-29 14:25:56 | INFO     | scraper |   Page 1 | Collected 0/5
+2026-05-29 14:25:56 | INFO     | scraper |   Cards found: 9
+2026-05-29 14:26:03 | INFO     | scraper |   [1/5] GEM/2026/B/7465807 | Type: Global Tender | RA: N/A | NEW
+2026-05-29 14:26:09 | INFO     | scraper |   [2/5] GEM/2026/B/7473435 | Type: Global Tender | RA: N/A | NEW
+2026-05-29 14:26:16 | INFO     | scraper |   [3/5] GEM/2026/B/7509648 | Type: Global Tender | RA: N/A | NEW
+2026-05-29 14:26:24 | INFO     | scraper |   [4/5] GEM/2026/B/7429899 | Type: Global Tender | RA: N/A | NEW
+2026-05-29 14:26:32 | INFO     | scraper |   [5/5] GEM/2026/B/7560028 | Type: Global Tender | RA: N/A | NEW
+2026-05-29 14:26:38 | INFO     | scraper |   DONE 'Global Tender': scraped=5 | new=5 | errors=0 | 56.52s
+2026-05-29 14:26:38 | INFO     | scraper | ==================================================
+2026-05-29 14:26:38 | INFO     | scraper | BID TYPE: Limited Tender
+2026-05-29 14:26:38 | INFO     | scraper | ==================================================
+2026-05-29 14:26:51 | INFO     | scraper |   Page 1 | Collected 0/5
+2026-05-29 14:26:51 | INFO     | scraper |   Cards found: 10
+2026-05-29 14:26:56 | INFO     | scraper |   [1/5] GEM/2026/B/7503471 | Type: Limited Tender | RA: N/A | NEW
+2026-05-29 14:27:03 | INFO     | scraper |   [2/5] GEM/2026/B/7490903 | Type: Limited Tender | RA: N/A | NEW
+2026-05-29 14:27:10 | INFO     | scraper |   [3/5] GEM/2026/B/7500136 | Type: Limited Tender | RA: N/A | NEW
+2026-05-29 14:27:18 | INFO     | scraper |   [4/5] GEM/2026/B/7498207 | Type: Limited Tender | RA: N/A | NEW
+2026-05-29 14:27:25 | INFO     | scraper |   [5/5] GEM/2026/B/7548266 | Type: Limited Tender | RA: N/A | NEW
+2026-05-29 14:27:31 | INFO     | scraper |   DONE 'Limited Tender': scraped=5 | new=5 | errors=0 | 53.06s
+2026-05-29 14:27:31 | INFO     | scraper | ==================================================
+2026-05-29 14:27:31 | INFO     | scraper | BID TYPE: Single Tender
+2026-05-29 14:27:31 | INFO     | scraper | ==================================================
+2026-05-29 14:27:44 | INFO     | scraper |   Page 1 | Collected 0/5
+2026-05-29 14:27:44 | INFO     | scraper |   Cards found: 10
+2026-05-29 14:27:49 | INFO     | scraper |   [1/5] GEM/2026/B/7492127 | Type: Single Tender | RA: N/A | NEW
+2026-05-29 14:27:58 | INFO     | scraper |   [2/5] GEM/2026/B/7491207 | Type: Single Tender | RA: N/A | NEW
+2026-05-29 14:28:06 | INFO     | scraper |   [3/5] GEM/2026/B/7518621 | Type: Single Tender | RA: N/A | NEW
+2026-05-29 14:28:13 | INFO     | scraper |   [4/5] GEM/2026/B/7546233 | Type: Single Tender | RA: N/A | NEW
+2026-05-29 14:28:20 | INFO     | scraper |   [5/5] GEM/2026/B/7546103 | Type: Single Tender | RA: N/A | NEW
+2026-05-29 14:28:25 | INFO     | scraper |   DONE 'Single Tender': scraped=5 | new=5 | errors=0 | 54.15s
+2026-05-29 14:28:25 | INFO     | scraper | 
+2026-05-29 14:28:25 | INFO     | scraper | ============================================================
+2026-05-29 14:28:25 | INFO     | scraper | RUN COMPLETE | Scraped: 45 | New: 45 | Errors: 0 | Total in DB: 45
+2026-05-29 14:28:25 | INFO     | scraper | ============================================================
+2026-05-29 15:36:49 | INFO     | scraper | 
+2026-05-29 15:36:49 | INFO     | scraper | ============================================================
+2026-05-29 15:36:49 | INFO     | scraper | FULL SCRAPE RUN STARTED
+2026-05-29 15:36:49 | INFO     | scraper | ============================================================
+2026-05-29 15:37:02 | INFO     | scraper | ==================================================
+2026-05-29 15:37:02 | INFO     | scraper | BID TYPE: Product Bid/RAs
+2026-05-29 15:37:02 | INFO     | scraper | ==================================================
+2026-05-29 15:37:18 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 15:37:18 | INFO     | scraper |   Cards found: 10
+2026-05-29 15:37:49 | INFO     | scraper |   [1/1] GEM/2026/B/7549614 | Type: Product | RA: GEM/2026/R/673596 | NEW
+2026-05-29 15:37:57 | INFO     | scraper |   DONE 'Product Bid/RAs': scraped=1 | new=1 | errors=0 | 54.91s
+2026-05-29 15:37:57 | INFO     | scraper | ==================================================
+2026-05-29 15:37:57 | INFO     | scraper | BID TYPE: Service Bid/RAs
+2026-05-29 15:37:57 | INFO     | scraper | ==================================================
+2026-05-29 15:38:13 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 15:38:13 | INFO     | scraper |   Cards found: 10
+2026-05-29 15:38:18 | INFO     | scraper |   [1/1] GEM/2026/B/7478561 | Type: Service | RA: GEM/2026/R/673688 | NEW
+2026-05-29 15:38:26 | INFO     | scraper |   DONE 'Service Bid/RAs': scraped=1 | new=1 | errors=0 | 29.49s
+2026-05-29 15:38:26 | INFO     | scraper | ==================================================
+2026-05-29 15:38:26 | INFO     | scraper | BID TYPE: Bid To RAs
+2026-05-29 15:38:26 | INFO     | scraper | ==================================================
+2026-05-29 15:38:39 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 15:38:39 | INFO     | scraper |   Cards found: 10
+2026-05-29 15:38:43 | INFO     | scraper |   [1/1] GEM/2026/B/7374550 | Type: Bid To RA | RA: GEM/2026/R/673664 | NEW
+2026-05-29 15:38:51 | INFO     | scraper |   DONE 'Bid To RAs': scraped=1 | new=1 | errors=0 | 25.2s
+2026-05-29 15:38:51 | INFO     | scraper | ==================================================
+2026-05-29 15:38:51 | INFO     | scraper | BID TYPE: Product Custom Bid/RAs
+2026-05-29 15:38:51 | INFO     | scraper | ==================================================
+2026-05-29 15:39:06 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 15:39:06 | INFO     | scraper |   Cards found: 10
+2026-05-29 15:39:10 | INFO     | scraper |   [1/1] GEM/2026/B/7352222 | Type: Product | RA: GEM/2026/R/673614 | NEW
+2026-05-29 15:39:18 | INFO     | scraper |   DONE 'Product Custom Bid/RAs': scraped=1 | new=1 | errors=0 | 26.19s
+2026-05-29 15:39:18 | INFO     | scraper | ==================================================
+2026-05-29 15:39:18 | INFO     | scraper | BID TYPE: BOQ Bids
+2026-05-29 15:39:18 | INFO     | scraper | ==================================================
+2026-05-29 15:39:31 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 15:39:31 | INFO     | scraper |   Cards found: 10
+2026-05-29 15:39:37 | INFO     | scraper |   [1/1] GEM/2026/B/7403302 | Type: BOQ | RA: GEM/2026/R/673568 | NEW
+2026-05-29 15:39:44 | INFO     | scraper |   DONE 'BOQ Bids': scraped=1 | new=1 | errors=0 | 26.66s
+2026-05-29 15:39:44 | INFO     | scraper | ==================================================
+2026-05-29 15:39:44 | INFO     | scraper | BID TYPE: Rate Contract Bids
+2026-05-29 15:39:44 | INFO     | scraper | ==================================================
+2026-05-29 15:40:00 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 15:40:00 | INFO     | scraper |   Cards found: 10
+2026-05-29 15:40:05 | INFO     | scraper |   [1/1] GEM/2026/B/7514993 | Type: Rate Contract | RA: N/A | NEW
+2026-05-29 15:40:12 | INFO     | scraper |   DONE 'Rate Contract Bids': scraped=1 | new=1 | errors=0 | 27.96s
+2026-05-29 15:40:12 | INFO     | scraper | ==================================================
+2026-05-29 15:40:12 | INFO     | scraper | BID TYPE: Global Tender
+2026-05-29 15:40:12 | INFO     | scraper | ==================================================
+2026-05-29 15:40:28 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 15:40:28 | INFO     | scraper |   Cards found: 9
+2026-05-29 15:40:33 | INFO     | scraper |   [1/1] GEM/2026/B/7465807 | Type: Global Tender | RA: N/A | NEW
+2026-05-29 15:40:41 | INFO     | scraper |   DONE 'Global Tender': scraped=1 | new=1 | errors=0 | 28.21s
+2026-05-29 15:40:41 | INFO     | scraper | ==================================================
+2026-05-29 15:40:41 | INFO     | scraper | BID TYPE: Limited Tender
+2026-05-29 15:40:41 | INFO     | scraper | ==================================================
+2026-05-29 15:40:54 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 15:40:54 | INFO     | scraper |   Cards found: 10
+2026-05-29 15:40:59 | INFO     | scraper |   [1/1] GEM/2026/B/7457889 | Type: Limited Tender | RA: GEM/2026/R/673435 | NEW
+2026-05-29 15:41:07 | INFO     | scraper |   DONE 'Limited Tender': scraped=1 | new=1 | errors=0 | 26.0s
+2026-05-29 15:41:07 | INFO     | scraper | ==================================================
+2026-05-29 15:41:07 | INFO     | scraper | BID TYPE: Single Tender
+2026-05-29 15:41:07 | INFO     | scraper | ==================================================
+2026-05-29 15:41:20 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 15:41:20 | INFO     | scraper |   Cards found: 10
+2026-05-29 15:41:26 | INFO     | scraper |   [1/1] GEM/2026/B/7513226 | Type: Single Tender | RA: N/A | NEW
+2026-05-29 15:41:34 | INFO     | scraper |   DONE 'Single Tender': scraped=1 | new=1 | errors=0 | 27.08s
+2026-05-29 15:41:34 | INFO     | scraper | 
+2026-05-29 15:41:34 | INFO     | scraper | ============================================================
+2026-05-29 15:41:34 | INFO     | scraper | RUN COMPLETE | Scraped: 9 | New: 9 | Errors: 0 | Total in DB: 9
+2026-05-29 15:41:34 | INFO     | scraper | ============================================================
+2026-05-29 16:01:05 | INFO     | scraper | 
+2026-05-29 16:01:05 | INFO     | scraper | ============================================================
+2026-05-29 16:01:05 | INFO     | scraper | FULL SCRAPE RUN STARTED
+2026-05-29 16:01:05 | INFO     | scraper | ============================================================
+2026-05-29 16:01:19 | INFO     | scraper | ==================================================
+2026-05-29 16:01:19 | INFO     | scraper | BID TYPE: Product Bid/RAs
+2026-05-29 16:01:19 | INFO     | scraper | ==================================================
+2026-05-29 16:01:34 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 16:01:34 | INFO     | scraper |   Cards found: 10
+2026-05-29 16:02:06 | INFO     | scraper |   [1/1] GEM/2025/B/6687707 | Type: Product | RA: GEM/2026/R/673725 | NEW
+2026-05-29 16:02:11 | INFO     | scraper |   DONE 'Product Bid/RAs': scraped=1 | new=1 | errors=0 | 52.59s
+2026-05-29 16:02:11 | INFO     | scraper | ==================================================
+2026-05-29 16:02:11 | INFO     | scraper | BID TYPE: Service Bid/RAs
+2026-05-29 16:02:11 | INFO     | scraper | ==================================================
+2026-05-29 16:02:26 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 16:02:26 | INFO     | scraper |   Cards found: 10
+2026-05-29 16:02:30 | INFO     | scraper |   [1/1] GEM/2026/B/7500982 | Type: Service | RA: GEM/2026/R/673707 | NEW
+2026-05-29 16:02:36 | INFO     | scraper |   DONE 'Service Bid/RAs': scraped=1 | new=1 | errors=0 | 25.07s
+2026-05-29 16:02:36 | INFO     | scraper | ==================================================
+2026-05-29 16:02:36 | INFO     | scraper | BID TYPE: Bid To RAs
+2026-05-29 16:02:36 | INFO     | scraper | ==================================================
+2026-05-29 16:02:53 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 16:02:53 | INFO     | scraper |   Cards found: 10
+2026-05-29 16:03:03 | INFO     | scraper |   [1/1] GEM/2026/B/7496145 | Type: Bid To RA | RA: GEM/2026/R/673714 | NEW
+2026-05-29 16:03:09 | INFO     | scraper |   DONE 'Bid To RAs': scraped=1 | new=1 | errors=0 | 32.15s
+2026-05-29 16:03:09 | INFO     | scraper | ==================================================
+2026-05-29 16:03:09 | INFO     | scraper | BID TYPE: Product Custom Bid/RAs
+2026-05-29 16:03:09 | INFO     | scraper | ==================================================
+2026-05-29 16:03:23 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 16:03:23 | INFO     | scraper |   Cards found: 10
+2026-05-29 16:03:30 | INFO     | scraper |   [1/1] GEM/2025/B/6670870 | Type: Product | RA: GEM/2026/R/673308 | NEW
+2026-05-29 16:03:36 | INFO     | scraper |   DONE 'Product Custom Bid/RAs': scraped=1 | new=1 | errors=0 | 27.28s
+2026-05-29 16:03:36 | INFO     | scraper | ==================================================
+2026-05-29 16:03:36 | INFO     | scraper | BID TYPE: BOQ Bids
+2026-05-29 16:03:36 | INFO     | scraper | ==================================================
+2026-05-29 16:03:51 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 16:03:51 | INFO     | scraper |   Cards found: 10
+2026-05-29 16:03:56 | INFO     | scraper |   [1/1] GEM/2026/B/7316090 | Type: BOQ | RA: GEM/2026/R/673226 | NEW
+2026-05-29 16:04:03 | INFO     | scraper |   DONE 'BOQ Bids': scraped=1 | new=1 | errors=0 | 26.83s
+2026-05-29 16:04:03 | INFO     | scraper | ==================================================
+2026-05-29 16:04:03 | INFO     | scraper | BID TYPE: Rate Contract Bids
+2026-05-29 16:04:03 | INFO     | scraper | ==================================================
+2026-05-29 16:04:17 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 16:04:17 | INFO     | scraper |   Cards found: 10
+2026-05-29 16:04:27 | INFO     | scraper |   [1/1] GEM/2026/B/7514993 | Type: Rate Contract | RA: N/A | NEW
+2026-05-29 16:04:32 | INFO     | scraper |   DONE 'Rate Contract Bids': scraped=1 | new=1 | errors=0 | 29.31s
+2026-05-29 16:04:32 | INFO     | scraper | ==================================================
+2026-05-29 16:04:32 | INFO     | scraper | BID TYPE: Global Tender
+2026-05-29 16:04:32 | INFO     | scraper | ==================================================
+2026-05-29 16:04:45 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 16:04:45 | INFO     | scraper |   Cards found: 9
+2026-05-29 16:04:54 | INFO     | scraper |   [1/1] GEM/2026/B/7465807 | Type: Global Tender | RA: N/A | NEW
+2026-05-29 16:05:00 | INFO     | scraper |   DONE 'Global Tender': scraped=1 | new=1 | errors=0 | 28.11s
+2026-05-29 16:05:00 | INFO     | scraper | ==================================================
+2026-05-29 16:05:00 | INFO     | scraper | BID TYPE: Limited Tender
+2026-05-29 16:05:00 | INFO     | scraper | ==================================================
+2026-05-29 16:05:12 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 16:05:12 | INFO     | scraper |   Cards found: 10
+2026-05-29 16:05:19 | INFO     | scraper |   [1/1] GEM/2026/B/7457889 | Type: Limited Tender | RA: GEM/2026/R/673435 | NEW
+2026-05-29 16:05:26 | INFO     | scraper |   DONE 'Limited Tender': scraped=1 | new=1 | errors=0 | 25.76s
+2026-05-29 16:05:26 | INFO     | scraper | ==================================================
+2026-05-29 16:05:26 | INFO     | scraper | BID TYPE: Single Tender
+2026-05-29 16:05:26 | INFO     | scraper | ==================================================
+2026-05-29 16:05:41 | INFO     | scraper |   Page 1 | Collected 0/1
+2026-05-29 16:05:41 | INFO     | scraper |   Cards found: 10
+2026-05-29 16:05:45 | INFO     | scraper |   [1/1] GEM/2026/B/7504415 | Type: Single Tender | RA: N/A | NEW
+2026-05-29 16:05:52 | INFO     | scraper |   DONE 'Single Tender': scraped=1 | new=1 | errors=0 | 26.32s
+2026-05-29 16:05:52 | INFO     | scraper | 
+2026-05-29 16:05:52 | INFO     | scraper | ============================================================
+2026-05-29 16:05:52 | INFO     | scraper | RUN COMPLETE | Scraped: 9 | New: 9 | Errors: 0 | Total in DB: 9
+2026-05-29 16:05:52 | INFO     | scraper | ============================================================
