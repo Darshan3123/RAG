@@ -1,0 +1,17 @@
+# Environment — never commit secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# Project outputs
+downloads/
+logs/
+storage/gem_bids.db
+storage/gem_bids.json
+storage/chroma_db/

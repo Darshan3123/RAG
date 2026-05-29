@@ -46,6 +46,7 @@ def scrape_bid_type(
     try:
         browser.reset_filters()
         browser.select_bid_type(bid_type_name)
+        browser.select_ongoing_bids()  # Only scrape ACTIVE bids
     except Exception as e:
         log.error(f"Filter error for '{bid_type_name}': {e}")
         return stats

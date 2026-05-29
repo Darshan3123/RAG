@@ -1,0 +1,931 @@
+2026-05-26 17:42:16 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (0 chunks)
+2026-05-26 17:44:30 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7306031
+2026-05-26 17:44:44 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7502063
+2026-05-26 17:44:57 | DEBUG    | vector_store | Upserted 42 chunks for GEM/2025/B/6996014
+2026-05-26 17:45:12 | DEBUG    | vector_store | Upserted 52 chunks for GEM/2026/B/7465610
+2026-05-26 17:45:24 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2025/B/7021779
+2026-05-26 17:45:38 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2025/B/7008160
+2026-05-26 17:45:58 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7460517
+2026-05-26 17:46:09 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7463
+2026-05-26 17:46:28 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2025/B/6859671
+2026-05-26 17:46:41 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7120696
+2026-05-26 17:47:08 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7477050
+2026-05-26 17:47:20 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7086556
+2026-05-26 17:47:31 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7303430
+2026-05-26 17:47:39 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7504185
+2026-05-26 17:47:48 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7503480
+2026-05-26 17:47:59 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7499285
+2026-05-26 17:48:13 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7481350
+2026-05-26 17:48:25 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7479037
+2026-05-26 17:48:35 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7462785
+2026-05-26 17:48:46 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7460256
+2026-05-26 17:49:12 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2026/B/7482709
+2026-05-26 17:49:21 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7523628
+2026-05-26 17:49:41 | DEBUG    | vector_store | Upserted 161 chunks for GEM/2026/B/7382732
+2026-05-26 17:49:51 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7432560
+2026-05-26 17:50:01 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7513146
+2026-05-26 17:50:14 | DEBUG    | vector_store | Upserted 66 chunks for GEM/2026/B/7417029
+2026-05-26 17:50:30 | DEBUG    | vector_store | Upserted 62 chunks for GEM/2025/B/6937012
+2026-05-26 17:50:40 | DEBUG    | vector_store | Upserted 47 chunks for GEM/2026/B/7268255
+2026-05-26 17:50:48 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7485827
+2026-05-26 17:50:56 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7461528
+2026-05-26 17:51:22 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2025/B/6812056
+2026-05-26 17:51:29 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7504365
+2026-05-26 17:51:38 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7504206
+2026-05-26 17:51:46 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7503109
+2026-05-26 17:51:53 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7502651
+2026-05-26 17:52:02 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7501521
+2026-05-26 17:52:10 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7501435
+2026-05-26 17:52:23 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7500250
+2026-05-26 17:52:35 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7500220
+2026-05-26 17:52:43 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7498190
+2026-05-26 17:53:06 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7514898
+2026-05-26 17:53:16 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7514716
+2026-05-26 17:53:25 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7510269
+2026-05-26 17:53:34 | DEBUG    | vector_store | Upserted 44 chunks for GEM/2026/B/7501045
+2026-05-26 17:53:55 | DEBUG    | vector_store | Upserted 138 chunks for GEM/2026/B/7499633
+2026-05-26 17:54:05 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7497122
+2026-05-26 17:54:14 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7494843
+2026-05-26 17:54:24 | DEBUG    | vector_store | Upserted 46 chunks for GEM/2026/B/7492610
+2026-05-26 17:54:33 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7501124
+2026-05-26 17:54:48 | DEBUG    | vector_store | Upserted 54 chunks for GEM/2026/B/7506622
+2026-05-26 17:55:11 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2026/B/7514614
+2026-05-26 17:55:21 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7479083
+2026-05-26 17:55:29 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7509230
+2026-05-26 17:55:45 | DEBUG    | vector_store | Upserted 66 chunks for GEM/2026/B/7509634
+2026-05-26 17:55:56 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7488203
+2026-05-26 17:56:15 | DEBUG    | vector_store | Upserted 80 chunks for GEM/2026/B/7514993
+2026-05-26 17:56:25 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7526325
+2026-05-26 17:56:43 | DEBUG    | vector_store | Upserted 79 chunks for GEM/2026/B/7525919
+2026-05-26 17:56:59 | DEBUG    | vector_store | Upserted 63 chunks for GEM/2026/B/7532717
+2026-05-26 17:57:14 | DEBUG    | vector_store | Upserted 55 chunks for GEM/2026/B/7544252
+2026-05-26 17:57:42 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7465807
+2026-05-26 17:57:50 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7473435
+2026-05-26 17:58:00 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7509648
+2026-05-26 17:58:08 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7429899
+2026-05-26 17:58:14 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7560028
+2026-05-26 17:58:25 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7475057
+2026-05-26 17:58:35 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7530104
+2026-05-26 17:58:48 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7499373
+2026-05-26 17:58:58 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7588495
+2026-05-26 17:59:46 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2026/B/7501559
+2026-05-26 17:59:54 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7501526
+2026-05-26 18:00:03 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7531528
+2026-05-26 18:00:12 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7560267
+2026-05-26 18:00:21 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7552342
+2026-05-26 18:00:28 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7578341
+2026-05-26 18:00:36 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7524635
+2026-05-26 18:00:48 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7519521
+2026-05-26 18:00:58 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7520307
+2026-05-26 18:01:16 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7311446
+2026-05-26 18:01:47 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7501467
+2026-05-26 18:02:09 | DEBUG    | vector_store | Upserted 158 chunks for GEM/2026/B/7546274
+2026-05-26 18:02:18 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7579099
+2026-05-26 18:02:27 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7512626
+2026-05-26 18:02:36 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7520859
+2026-05-26 18:02:43 | DEBUG    | vector_store | Upserted 19 chunks for GEM/2026/B/7518305
+2026-05-26 18:02:52 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7518093
+2026-05-26 18:03:02 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7501945
+2026-05-26 18:03:10 | DEBUG    | vector_store | Upserted 19 chunks for GEM/2026/B/7520545
+2026-05-26 18:03:20 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7517987
+2026-05-26 18:07:21 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 18:07:44 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 18:09:50 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 18:41:45 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 18:48:14 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 19:12:27 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 19:16:01 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 19:18:54 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 21:27:48 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 21:34:53 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 21:35:31 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-26 21:39:08 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 10:12:21 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 10:16:55 | INFO     | vector_store | Starting full re-index from SQLite...
+2026-05-27 10:16:55 | INFO     | vector_store | Upserting 89 bids into vector store...
+2026-05-27 10:16:55 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 10:17:11 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7517987
+2026-05-27 10:17:12 | DEBUG    | vector_store | Upserted 19 chunks for GEM/2026/B/7520545
+2026-05-27 10:17:13 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7501945
+2026-05-27 10:17:14 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7518093
+2026-05-27 10:17:14 | DEBUG    | vector_store | Upserted 19 chunks for GEM/2026/B/7518305
+2026-05-27 10:17:16 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7520859
+2026-05-27 10:17:16 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7512626
+2026-05-27 10:17:17 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7579099
+2026-05-27 10:17:21 | DEBUG    | vector_store | Upserted 158 chunks for GEM/2026/B/7546274
+2026-05-27 10:17:22 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7501467
+2026-05-27 10:17:22 | INFO     | vector_store |   Indexed 10/89
+2026-05-27 10:17:23 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7311446
+2026-05-27 10:17:24 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7520307
+2026-05-27 10:17:25 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7519521
+2026-05-27 10:17:26 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7524635
+2026-05-27 10:17:26 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7578341
+2026-05-27 10:17:27 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7552342
+2026-05-27 10:17:28 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7560267
+2026-05-27 10:17:29 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7531528
+2026-05-27 10:17:30 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7501526
+2026-05-27 10:17:31 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2026/B/7501559
+2026-05-27 10:17:31 | INFO     | vector_store |   Indexed 20/89
+2026-05-27 10:17:32 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7588495
+2026-05-27 10:17:32 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7499373
+2026-05-27 10:17:33 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7530104
+2026-05-27 10:17:35 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7475057
+2026-05-27 10:17:35 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7560028
+2026-05-27 10:17:36 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7429899
+2026-05-27 10:17:37 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7509648
+2026-05-27 10:17:37 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7473435
+2026-05-27 10:17:38 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7465807
+2026-05-27 10:17:40 | DEBUG    | vector_store | Upserted 55 chunks for GEM/2026/B/7544252
+2026-05-27 10:17:40 | INFO     | vector_store |   Indexed 30/89
+2026-05-27 10:17:41 | DEBUG    | vector_store | Upserted 63 chunks for GEM/2026/B/7532717
+2026-05-27 10:17:43 | DEBUG    | vector_store | Upserted 79 chunks for GEM/2026/B/7525919
+2026-05-27 10:17:44 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7526325
+2026-05-27 10:17:46 | DEBUG    | vector_store | Upserted 80 chunks for GEM/2026/B/7514993
+2026-05-27 10:17:47 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7488203
+2026-05-27 10:17:49 | DEBUG    | vector_store | Upserted 66 chunks for GEM/2026/B/7509634
+2026-05-27 10:17:50 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7509230
+2026-05-27 10:17:51 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7479083
+2026-05-27 10:17:53 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2026/B/7514614
+2026-05-27 10:17:54 | DEBUG    | vector_store | Upserted 54 chunks for GEM/2026/B/7506622
+2026-05-27 10:17:54 | INFO     | vector_store |   Indexed 40/89
+2026-05-27 10:17:55 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7501124
+2026-05-27 10:17:57 | DEBUG    | vector_store | Upserted 46 chunks for GEM/2026/B/7492610
+2026-05-27 10:17:58 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7494843
+2026-05-27 10:17:59 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7497122
+2026-05-27 10:18:02 | DEBUG    | vector_store | Upserted 138 chunks for GEM/2026/B/7499633
+2026-05-27 10:18:03 | DEBUG    | vector_store | Upserted 44 chunks for GEM/2026/B/7501045
+2026-05-27 10:18:04 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7510269
+2026-05-27 10:18:05 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7514716
+2026-05-27 10:18:06 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7514898
+2026-05-27 10:18:07 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7498190
+2026-05-27 10:18:07 | INFO     | vector_store |   Indexed 50/89
+2026-05-27 10:18:08 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7500220
+2026-05-27 10:18:09 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7500250
+2026-05-27 10:18:10 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7501435
+2026-05-27 10:18:11 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7501521
+2026-05-27 10:18:12 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7502651
+2026-05-27 10:18:13 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7503109
+2026-05-27 10:18:13 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7504206
+2026-05-27 10:18:14 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7504365
+2026-05-27 10:18:15 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2025/B/6812056
+2026-05-27 10:18:16 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7461528
+2026-05-27 10:18:16 | INFO     | vector_store |   Indexed 60/89
+2026-05-27 10:18:17 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7485827
+2026-05-27 10:18:18 | DEBUG    | vector_store | Upserted 47 chunks for GEM/2026/B/7268255
+2026-05-27 10:18:20 | DEBUG    | vector_store | Upserted 62 chunks for GEM/2025/B/6937012
+2026-05-27 10:18:22 | DEBUG    | vector_store | Upserted 66 chunks for GEM/2026/B/7417029
+2026-05-27 10:18:23 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7513146
+2026-05-27 10:18:24 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7432560
+2026-05-27 10:18:35 | DEBUG    | vector_store | Upserted 161 chunks for GEM/2026/B/7382732
+2026-05-27 10:18:39 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7523628
+2026-05-27 10:18:43 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2026/B/7482709
+2026-05-27 10:18:46 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7460256
+2026-05-27 10:18:46 | INFO     | vector_store |   Indexed 70/89
+2026-05-27 10:18:49 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7462785
+2026-05-27 10:18:52 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7479037
+2026-05-27 10:18:54 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7481350
+2026-05-27 10:18:58 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7499285
+2026-05-27 10:19:00 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7503480
+2026-05-27 10:19:02 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7504185
+2026-05-27 10:19:04 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7303430
+2026-05-27 10:19:08 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7086556
+2026-05-27 10:19:10 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7477050
+2026-05-27 10:19:13 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7120696
+2026-05-27 10:19:13 | INFO     | vector_store |   Indexed 80/89
+2026-05-27 10:19:18 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2025/B/6859671
+2026-05-27 10:19:21 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7463
+2026-05-27 10:19:23 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7460517
+2026-05-27 10:19:28 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2025/B/7008160
+2026-05-27 10:19:30 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2025/B/7021779
+2026-05-27 10:19:34 | DEBUG    | vector_store | Upserted 52 chunks for GEM/2026/B/7465610
+2026-05-27 10:19:38 | DEBUG    | vector_store | Upserted 42 chunks for GEM/2025/B/6996014
+2026-05-27 10:19:41 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7502063
+2026-05-27 10:19:45 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7306031
+2026-05-27 10:19:45 | INFO     | vector_store | Vector store upsert complete — total chunks: 3699
+2026-05-27 10:19:45 | INFO     | vector_store | Re-index complete.
+2026-05-27 10:29:18 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 10:31:29 | INFO     | vector_store | Starting full re-index from SQLite...
+2026-05-27 10:31:29 | INFO     | vector_store | Upserting 89 bids into vector store...
+2026-05-27 10:31:30 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 10:31:48 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7517987
+2026-05-27 10:31:49 | DEBUG    | vector_store | Upserted 19 chunks for GEM/2026/B/7520545
+2026-05-27 10:31:50 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7501945
+2026-05-27 10:31:51 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7518093
+2026-05-27 10:31:51 | DEBUG    | vector_store | Upserted 19 chunks for GEM/2026/B/7518305
+2026-05-27 10:31:52 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7520859
+2026-05-27 10:31:53 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7512626
+2026-05-27 10:31:53 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7579099
+2026-05-27 10:31:56 | DEBUG    | vector_store | Upserted 158 chunks for GEM/2026/B/7546274
+2026-05-27 10:31:58 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7501467
+2026-05-27 10:31:58 | INFO     | vector_store |   Indexed 10/89
+2026-05-27 10:31:59 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7311446
+2026-05-27 10:31:59 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7520307
+2026-05-27 10:32:00 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7519521
+2026-05-27 10:32:01 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7524635
+2026-05-27 10:32:02 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7578341
+2026-05-27 10:32:02 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7552342
+2026-05-27 10:32:03 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7560267
+2026-05-27 10:32:04 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7531528
+2026-05-27 10:32:05 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7501526
+2026-05-27 10:32:06 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2026/B/7501559
+2026-05-27 10:32:06 | INFO     | vector_store |   Indexed 20/89
+2026-05-27 10:32:06 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7588495
+2026-05-27 10:32:07 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7499373
+2026-05-27 10:32:08 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7530104
+2026-05-27 10:32:09 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7475057
+2026-05-27 10:32:09 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7560028
+2026-05-27 10:32:10 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7429899
+2026-05-27 10:32:11 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7509648
+2026-05-27 10:32:11 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7473435
+2026-05-27 10:32:12 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7465807
+2026-05-27 10:32:14 | DEBUG    | vector_store | Upserted 55 chunks for GEM/2026/B/7544252
+2026-05-27 10:32:14 | INFO     | vector_store |   Indexed 30/89
+2026-05-27 10:32:15 | DEBUG    | vector_store | Upserted 63 chunks for GEM/2026/B/7532717
+2026-05-27 10:32:17 | DEBUG    | vector_store | Upserted 79 chunks for GEM/2026/B/7525919
+2026-05-27 10:32:18 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7526325
+2026-05-27 10:32:19 | DEBUG    | vector_store | Upserted 80 chunks for GEM/2026/B/7514993
+2026-05-27 10:32:20 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7488203
+2026-05-27 10:32:22 | DEBUG    | vector_store | Upserted 66 chunks for GEM/2026/B/7509634
+2026-05-27 10:32:23 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7509230
+2026-05-27 10:32:24 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7479083
+2026-05-27 10:32:25 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2026/B/7514614
+2026-05-27 10:32:26 | DEBUG    | vector_store | Upserted 54 chunks for GEM/2026/B/7506622
+2026-05-27 10:32:26 | INFO     | vector_store |   Indexed 40/89
+2026-05-27 10:32:27 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7501124
+2026-05-27 10:32:28 | DEBUG    | vector_store | Upserted 46 chunks for GEM/2026/B/7492610
+2026-05-27 10:32:29 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7494843
+2026-05-27 10:32:30 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7497122
+2026-05-27 10:32:33 | DEBUG    | vector_store | Upserted 138 chunks for GEM/2026/B/7499633
+2026-05-27 10:32:35 | DEBUG    | vector_store | Upserted 44 chunks for GEM/2026/B/7501045
+2026-05-27 10:32:35 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7510269
+2026-05-27 10:32:36 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7514716
+2026-05-27 10:32:37 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7514898
+2026-05-27 10:32:38 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7498190
+2026-05-27 10:32:38 | INFO     | vector_store |   Indexed 50/89
+2026-05-27 10:32:39 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7500220
+2026-05-27 10:32:40 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7500250
+2026-05-27 10:32:41 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7501435
+2026-05-27 10:32:42 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7501521
+2026-05-27 10:32:43 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7502651
+2026-05-27 10:32:44 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7503109
+2026-05-27 10:32:44 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7504206
+2026-05-27 10:32:45 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7504365
+2026-05-27 10:32:46 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2025/B/6812056
+2026-05-27 10:32:47 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7461528
+2026-05-27 10:32:47 | INFO     | vector_store |   Indexed 60/89
+2026-05-27 10:32:48 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7485827
+2026-05-27 10:32:49 | DEBUG    | vector_store | Upserted 47 chunks for GEM/2026/B/7268255
+2026-05-27 10:32:51 | DEBUG    | vector_store | Upserted 62 chunks for GEM/2025/B/6937012
+2026-05-27 10:32:53 | DEBUG    | vector_store | Upserted 66 chunks for GEM/2026/B/7417029
+2026-05-27 10:32:54 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7513146
+2026-05-27 10:32:55 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7432560
+2026-05-27 10:32:59 | DEBUG    | vector_store | Upserted 161 chunks for GEM/2026/B/7382732
+2026-05-27 10:33:00 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7523628
+2026-05-27 10:33:01 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2026/B/7482709
+2026-05-27 10:33:02 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7460256
+2026-05-27 10:33:02 | INFO     | vector_store |   Indexed 70/89
+2026-05-27 10:33:03 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7462785
+2026-05-27 10:33:04 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7479037
+2026-05-27 10:33:05 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7481350
+2026-05-27 10:33:06 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7499285
+2026-05-27 10:33:06 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7503480
+2026-05-27 10:33:07 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7504185
+2026-05-27 10:33:08 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7303430
+2026-05-27 10:33:09 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7086556
+2026-05-27 10:33:10 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7477050
+2026-05-27 10:33:11 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7120696
+2026-05-27 10:33:11 | INFO     | vector_store |   Indexed 80/89
+2026-05-27 10:33:12 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2025/B/6859671
+2026-05-27 10:33:15 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7463
+2026-05-27 10:33:18 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7460517
+2026-05-27 10:33:23 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2025/B/7008160
+2026-05-27 10:33:27 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2025/B/7021779
+2026-05-27 10:33:32 | DEBUG    | vector_store | Upserted 52 chunks for GEM/2026/B/7465610
+2026-05-27 10:33:36 | DEBUG    | vector_store | Upserted 42 chunks for GEM/2025/B/6996014
+2026-05-27 10:33:41 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7502063
+2026-05-27 10:33:46 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7306031
+2026-05-27 10:33:46 | INFO     | vector_store | Vector store upsert complete — total chunks: 3699
+2026-05-27 10:33:46 | INFO     | vector_store | Re-index complete.
+2026-05-27 10:47:58 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 10:50:42 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 11:06:54 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 11:10:21 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 11:11:22 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 11:13:00 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 12:05:09 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 12:05:16 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 13:53:43 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 13:58:30 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 14:01:48 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 14:04:18 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 15:15:15 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3699 chunks)
+2026-05-27 15:18:13 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7418765
+2026-05-27 15:18:51 | DEBUG    | vector_store | Upserted 181 chunks for GEM/2026/B/7352909
+2026-05-27 15:19:03 | DEBUG    | vector_store | Upserted 61 chunks for GEM/2026/B/7158674
+2026-05-27 15:19:12 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7523776
+2026-05-27 15:20:24 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7221931
+2026-05-27 15:21:30 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7239280
+2026-05-27 15:23:01 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7534996
+2026-05-27 15:23:30 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2026/B/7253172
+2026-05-27 15:23:38 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7441848
+2026-05-27 15:23:48 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7412749
+2026-05-27 15:23:57 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7233748
+2026-05-27 15:24:05 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7414651
+2026-05-27 15:24:13 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7327051
+2026-05-27 15:24:22 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7500709
+2026-05-27 15:24:39 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7334075
+2026-05-27 15:24:50 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7456448
+2026-05-27 15:25:13 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7446040
+2026-05-27 15:25:22 | DEBUG    | vector_store | Upserted 49 chunks for GEM/2026/B/7449720
+2026-05-27 15:25:33 | DEBUG    | vector_store | Upserted 49 chunks for GEM/2025/B/6839900
+2026-05-27 15:25:42 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7489249
+2026-05-27 15:25:53 | DEBUG    | vector_store | Upserted 46 chunks for GEM/2026/B/7479875
+2026-05-27 15:26:07 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7408096
+2026-05-27 15:26:17 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7221092
+2026-05-27 15:26:24 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7173460
+2026-05-27 15:26:33 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2025/B/7040937
+2026-05-27 15:26:44 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7138563
+2026-05-27 15:27:10 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7252469
+2026-05-27 15:27:19 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7452818
+2026-05-27 15:27:28 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7280162
+2026-05-27 15:27:41 | DEBUG    | vector_store | Upserted 76 chunks for GEM/2026/B/7427788
+2026-05-27 15:27:57 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7388978
+2026-05-27 15:28:09 | DEBUG    | vector_store | Upserted 68 chunks for GEM/2026/B/7157755
+2026-05-27 15:28:16 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7445381
+2026-05-27 15:28:24 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7396682
+2026-05-27 15:28:35 | DEBUG    | vector_store | Upserted 44 chunks for GEM/2026/B/7505505
+2026-05-27 15:28:43 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7400122
+2026-05-27 15:29:11 | DEBUG    | vector_store | Upserted 70 chunks for GEM/2025/B/6891065
+2026-05-27 15:29:20 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7511795
+2026-05-27 15:29:29 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7473903
+2026-05-27 15:29:55 | DEBUG    | vector_store | Upserted 220 chunks for GEM/2026/B/7360084
+2026-05-27 15:30:06 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7501894
+2026-05-27 15:30:17 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7509486
+2026-05-27 15:30:27 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7509404
+2026-05-27 15:30:41 | DEBUG    | vector_store | Upserted 70 chunks for GEM/2026/B/7509354
+2026-05-27 15:30:53 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7509269
+2026-05-27 15:31:10 | DEBUG    | vector_store | Upserted 63 chunks for GEM/2026/B/7526630
+2026-05-27 15:32:36 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7465759
+2026-05-27 15:32:46 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7496302
+2026-05-27 15:34:43 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7480568
+2026-05-27 15:34:55 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7545615
+2026-05-27 15:35:06 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7535480
+2026-05-27 15:35:19 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7484529
+2026-05-27 15:35:31 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7466047
+2026-05-27 15:35:40 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7520337
+2026-05-27 15:35:51 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7565146
+2026-05-27 15:36:07 | DEBUG    | vector_store | Upserted 62 chunks for GEM/2026/B/7479274
+2026-05-27 15:36:19 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7522041
+2026-05-27 15:36:36 | DEBUG    | vector_store | Upserted 19 chunks for GEM/2026/B/7522173
+2026-05-27 15:37:02 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7509445
+2026-05-27 15:37:35 | DEBUG    | vector_store | Upserted 101 chunks for GEM/2026/B/7456044
+2026-05-27 15:37:50 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7531412
+2026-05-27 15:38:05 | DEBUG    | vector_store | Upserted 22 chunks for GEM/2026/B/7470435
+2026-05-27 15:38:26 | DEBUG    | vector_store | Upserted 55 chunks for GEM/2026/B/7509507
+2026-05-27 15:38:40 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7508743
+2026-05-27 15:39:16 | DEBUG    | vector_store | Upserted 119 chunks for GEM/2026/B/7521289
+2026-05-27 15:39:29 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7475874
+2026-05-27 15:39:41 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7517979
+2026-05-27 15:39:54 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7540641
+2026-05-27 17:29:26 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (6756 chunks)
+2026-05-27 17:31:09 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7410481
+2026-05-27 17:31:14 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7173460
+2026-05-27 17:31:20 | DEBUG    | vector_store | Upserted 64 chunks for GEM/2026/B/7223285
+2026-05-27 17:31:26 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2025/B/7021779
+2026-05-27 17:31:34 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7445381
+2026-05-27 17:31:40 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2025/B/6839900
+2026-05-27 17:31:48 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7252469
+2026-05-27 17:31:54 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7189456
+2026-05-27 17:32:03 | DEBUG    | vector_store | Upserted 66 chunks for GEM/2026/B/7417029
+2026-05-27 17:32:10 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7408096
+2026-05-27 17:32:31 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7441848
+2026-05-27 17:32:37 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7412749
+2026-05-27 17:32:45 | DEBUG    | vector_store | Upserted 55 chunks for GEM/2026/B/7253172
+2026-05-27 17:32:51 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7086556
+2026-05-27 17:32:57 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7194932
+2026-05-27 17:33:04 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7334075
+2026-05-27 17:33:14 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7414651
+2026-05-27 17:33:22 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7233748
+2026-05-27 17:33:29 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7327051
+2026-05-27 17:33:37 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7456448
+2026-05-27 17:34:03 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7479475
+2026-05-27 17:34:16 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7477270
+2026-05-27 17:34:25 | DEBUG    | vector_store | Upserted 44 chunks for GEM/2026/B/7367517
+2026-05-27 17:34:34 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7444155
+2026-05-27 17:34:42 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7415642
+2026-05-27 17:34:48 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2025/B/6445678
+2026-05-27 17:34:57 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2025/B/7040937
+2026-05-27 17:35:06 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2025/B/7008974
+2026-05-27 17:35:20 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7505505
+2026-05-27 17:35:30 | DEBUG    | vector_store | Upserted 57 chunks for GEM/2026/B/7416412
+2026-05-27 17:35:57 | DEBUG    | vector_store | Upserted 68 chunks for GEM/2026/B/7157755
+2026-05-27 17:36:10 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2026/B/7136603
+2026-05-27 17:36:19 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2025/B/7042279
+2026-05-27 17:36:36 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7462644
+2026-05-27 17:36:45 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7459696
+2026-05-27 17:36:54 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7457230
+2026-05-27 17:37:04 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7435485
+2026-05-27 17:37:13 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7430129
+2026-05-27 17:37:21 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7347434
+2026-05-27 17:37:34 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7507444
+2026-05-27 17:38:11 | DEBUG    | vector_store | Upserted 238 chunks for GEM/2026/B/7389632
+2026-05-27 17:38:27 | DEBUG    | vector_store | Upserted 109 chunks for GEM/2026/B/7327972
+2026-05-27 17:38:35 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7503947
+2026-05-27 17:38:47 | DEBUG    | vector_store | Upserted 60 chunks for GEM/2026/B/7500200
+2026-05-27 17:38:57 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7432617
+2026-05-27 17:39:05 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7344536
+2026-05-27 17:39:41 | DEBUG    | vector_store | Upserted 346 chunks for GEM/2026/B/7496031
+2026-05-27 17:39:55 | DEBUG    | vector_store | Upserted 94 chunks for GEM/2026/B/7542088
+2026-05-27 17:40:03 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7531864
+2026-05-27 17:40:19 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7507841
+2026-05-27 17:40:41 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7488203
+2026-05-27 17:40:56 | DEBUG    | vector_store | Upserted 80 chunks for GEM/2026/B/7514993
+2026-05-27 17:41:05 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7526325
+2026-05-27 17:41:17 | DEBUG    | vector_store | Upserted 79 chunks for GEM/2026/B/7525919
+2026-05-27 17:41:28 | DEBUG    | vector_store | Upserted 62 chunks for GEM/2026/B/7532717
+2026-05-27 17:41:40 | DEBUG    | vector_store | Upserted 55 chunks for GEM/2026/B/7544252
+2026-05-27 17:41:50 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7465759
+2026-05-27 17:41:57 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7496302
+2026-05-27 17:42:08 | DEBUG    | vector_store | Upserted 49 chunks for GEM/2026/B/7478455
+2026-05-27 17:42:18 | DEBUG    | vector_store | Upserted 49 chunks for GEM/2026/B/7479402
+2026-05-27 17:42:43 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7465807
+2026-05-27 17:42:49 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7473435
+2026-05-27 17:42:58 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7509648
+2026-05-27 17:43:03 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7429899
+2026-05-27 17:43:11 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7560028
+2026-05-27 17:43:20 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7475057
+2026-05-27 17:43:29 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7530104
+2026-05-27 17:43:36 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7499373
+2026-05-27 17:43:45 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7588495
+2026-05-27 21:17:04 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (8703 chunks)
+2026-05-27 21:17:30 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7482363
+2026-05-27 21:17:42 | DEBUG    | vector_store | Upserted 41 chunks for GEM/2026/B/7438690
+2026-05-27 21:17:53 | DEBUG    | vector_store | Upserted 58 chunks for GEM/2026/B/7502486
+2026-05-27 21:18:04 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7498952
+2026-05-27 21:18:13 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7484117
+2026-05-27 21:18:22 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7479169
+2026-05-27 21:18:30 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7478621
+2026-05-27 21:18:38 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7477116
+2026-05-27 21:18:45 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7470361
+2026-05-27 21:18:58 | DEBUG    | vector_store | Upserted 62 chunks for GEM/2026/B/7460032
+2026-05-27 21:19:20 | DEBUG    | vector_store | Upserted 22 chunks for GEM/2026/B/7516245
+2026-05-27 21:19:27 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7514181
+2026-05-27 21:19:35 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7512177
+2026-05-27 21:19:43 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7511720
+2026-05-27 21:19:52 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7511527
+2026-05-27 21:20:04 | DEBUG    | vector_store | Upserted 63 chunks for GEM/2026/B/7550554
+2026-05-27 21:20:13 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7527385
+2026-05-27 21:20:21 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7488531
+2026-05-27 21:20:30 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7488456
+2026-05-27 21:20:37 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7445679
+2026-05-27 21:21:01 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7432093
+2026-05-27 21:21:13 | DEBUG    | vector_store | Upserted 54 chunks for GEM/2026/B/7561178
+2026-05-27 21:21:21 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7287849
+2026-05-27 21:21:35 | DEBUG    | vector_store | Upserted 75 chunks for https://bidplus.gem.gov.in/showbidDocument/9326382
+2026-05-27 21:21:47 | DEBUG    | vector_store | Upserted 74 chunks for https://bidplus.gem.gov.in/showbidDocument/9326454
+2026-05-27 21:21:57 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7468724
+2026-05-27 21:22:08 | DEBUG    | vector_store | Upserted 73 chunks for https://bidplus.gem.gov.in/showbidDocument/9326495
+2026-05-27 21:22:15 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7428100
+2026-05-27 21:22:26 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7450918
+2026-05-27 21:22:34 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7538981
+2026-05-27 21:22:56 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7446304
+2026-05-27 21:23:06 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7439202
+2026-05-27 21:23:15 | DEBUG    | vector_store | Upserted 42 chunks for GEM/2026/B/7365477
+2026-05-27 21:23:26 | DEBUG    | vector_store | Upserted 60 chunks for GEM/2026/B/7494711
+2026-05-27 21:23:40 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7527450
+2026-05-27 21:23:48 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7508134
+2026-05-27 21:23:55 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7508040
+2026-05-27 21:24:03 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7511380
+2026-05-27 21:24:12 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7486214
+2026-05-27 21:24:27 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7431402
+2026-05-27 21:24:52 | DEBUG    | vector_store | Upserted 65 chunks for GEM/2026/B/7512339
+2026-05-27 21:25:07 | DEBUG    | vector_store | Upserted 103 chunks for GEM/2026/B/7511762
+2026-05-27 21:25:16 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7511546
+2026-05-27 21:25:25 | DEBUG    | vector_store | Upserted 46 chunks for GEM/2026/B/7511203
+2026-05-27 21:25:33 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7511186
+2026-05-27 21:25:43 | DEBUG    | vector_store | Upserted 42 chunks for GEM/2026/B/7497582
+2026-05-27 21:25:53 | DEBUG    | vector_store | Upserted 57 chunks for GEM/2026/B/7494258
+2026-05-27 21:26:27 | DEBUG    | vector_store | Upserted 357 chunks for GEM/2026/B/7493091
+2026-05-27 21:34:09 | DEBUG    | vector_store | Upserted 164 chunks for GEM/2026/B/7493052
+2026-05-27 21:35:57 | DEBUG    | vector_store | Upserted 349 chunks for GEM/2026/B/7492575
+2026-05-27 21:39:34 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2026/B/7536554
+2026-05-27 21:39:47 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7570256
+2026-05-27 21:39:58 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7551866
+2026-05-27 21:40:09 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7551811
+2026-05-27 21:40:21 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7471797
+2026-05-27 21:40:31 | DEBUG    | vector_store | Upserted 22 chunks for GEM/2026/B/7510767
+2026-05-27 21:40:43 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7541281
+2026-05-27 21:40:54 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7540662
+2026-05-27 21:41:06 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7566086
+2026-05-27 21:41:18 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7551914
+2026-05-27 21:41:47 | DEBUG    | vector_store | Upserted 61 chunks for GEM/2026/B/7469914
+2026-05-27 21:41:59 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7485747
+2026-05-27 21:42:09 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7516629
+2026-05-27 21:42:20 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7431993
+2026-05-27 21:42:29 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7545644
+2026-05-27 21:42:36 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7557695
+2026-05-27 21:42:45 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7485894
+2026-05-27 21:42:57 | DEBUG    | vector_store | Upserted 75 chunks for GEM/2026/B/7456612
+2026-05-27 21:43:03 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7513658
+2026-05-27 21:43:11 | DEBUG    | vector_store | Upserted 42 chunks for GEM/2026/B/7445473
+2026-05-27 21:46:55 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (12172 chunks)
+2026-05-27 21:47:20 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7480414
+2026-05-27 21:47:30 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7464004
+2026-05-27 21:47:38 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7456498
+2026-05-27 21:47:55 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7581586
+2026-05-27 21:48:03 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7581449
+2026-05-27 21:48:11 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7581136
+2026-05-27 21:48:19 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7581126
+2026-05-27 21:48:27 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7581075
+2026-05-27 21:49:47 | DEBUG    | vector_store | Upserted 78 chunks for https://bidplus.gem.gov.in/showbidDocument/9326545
+2026-05-27 21:51:22 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7461345
+2026-05-27 21:51:47 | DEBUG    | vector_store | Upserted 44 chunks for GEM/2026/B/7513922
+2026-05-27 21:51:57 | DEBUG    | vector_store | Upserted 73 chunks for GEM/2026/B/7496552
+2026-05-27 21:52:05 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7488463
+2026-05-27 21:52:17 | DEBUG    | vector_store | Upserted 67 chunks for GEM/2026/B/7485762
+2026-05-27 21:52:28 | DEBUG    | vector_store | Upserted 64 chunks for GEM/2026/B/7458999
+2026-05-27 21:53:07 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7537989
+2026-05-27 21:56:43 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7511847
+2026-05-27 21:56:49 | DEBUG    | vector_store | Upserted 19 chunks for GEM/2026/B/7507789
+2026-05-27 21:58:16 | DEBUG    | vector_store | Upserted 18 chunks for GEM/2026/B/7526414
+2026-05-27 22:07:47 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (12899 chunks)
+2026-05-27 22:12:12 | INFO     | vector_store | Starting full re-index from SQLite...
+2026-05-27 22:12:12 | INFO     | vector_store | Upserting 158 bids into vector store...
+2026-05-27 22:12:12 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (12899 chunks)
+2026-05-27 22:12:29 | DEBUG    | vector_store | Upserted 18 chunks for GEM/2026/B/7526414
+2026-05-27 22:12:30 | DEBUG    | vector_store | Upserted 19 chunks for GEM/2026/B/7507789
+2026-05-27 22:12:31 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7511847
+2026-05-27 22:12:32 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7537989
+2026-05-27 22:12:38 | DEBUG    | vector_store | Upserted 64 chunks for GEM/2026/B/7458999
+2026-05-27 22:12:43 | DEBUG    | vector_store | Upserted 67 chunks for GEM/2026/B/7485762
+2026-05-27 22:12:46 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7488463
+2026-05-27 22:12:52 | DEBUG    | vector_store | Upserted 73 chunks for GEM/2026/B/7496552
+2026-05-27 22:12:56 | DEBUG    | vector_store | Upserted 44 chunks for GEM/2026/B/7513922
+2026-05-27 22:12:58 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7461345
+2026-05-27 22:12:58 | INFO     | vector_store |   Indexed 10/158
+2026-05-27 22:13:05 | DEBUG    | vector_store | Upserted 78 chunks for https://bidplus.gem.gov.in/showbidDocument/9326545
+2026-05-27 22:13:07 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7581075
+2026-05-27 22:13:09 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7581126
+2026-05-27 22:13:11 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7581136
+2026-05-27 22:13:13 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7581449
+2026-05-27 22:13:15 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7581586
+2026-05-27 22:13:17 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7456498
+2026-05-27 22:13:19 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7464004
+2026-05-27 22:13:22 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7480414
+2026-05-27 22:13:26 | DEBUG    | vector_store | Upserted 42 chunks for GEM/2026/B/7445473
+2026-05-27 22:13:26 | INFO     | vector_store |   Indexed 20/158
+2026-05-27 22:13:28 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7513658
+2026-05-27 22:13:34 | DEBUG    | vector_store | Upserted 75 chunks for GEM/2026/B/7456612
+2026-05-27 22:13:36 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7485894
+2026-05-27 22:13:38 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7557695
+2026-05-27 22:13:42 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7545644
+2026-05-27 22:13:44 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7431993
+2026-05-27 22:13:46 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7516629
+2026-05-27 22:13:48 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7485747
+2026-05-27 22:13:53 | DEBUG    | vector_store | Upserted 61 chunks for GEM/2026/B/7469914
+2026-05-27 22:13:56 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7551914
+2026-05-27 22:13:56 | INFO     | vector_store |   Indexed 30/158
+2026-05-27 22:13:58 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7566086
+2026-05-27 22:14:00 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7540662
+2026-05-27 22:14:02 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7541281
+2026-05-27 22:14:04 | DEBUG    | vector_store | Upserted 22 chunks for GEM/2026/B/7510767
+2026-05-27 22:14:07 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7471797
+2026-05-27 22:14:09 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7551811
+2026-05-27 22:14:10 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7551866
+2026-05-27 22:14:13 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7570256
+2026-05-27 22:14:17 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2026/B/7536554
+2026-05-27 22:14:45 | DEBUG    | vector_store | Upserted 349 chunks for GEM/2026/B/7492575
+2026-05-27 22:14:45 | INFO     | vector_store |   Indexed 40/158
+2026-05-27 22:14:58 | DEBUG    | vector_store | Upserted 164 chunks for GEM/2026/B/7493052
+2026-05-27 22:15:28 | DEBUG    | vector_store | Upserted 357 chunks for GEM/2026/B/7493091
+2026-05-27 22:15:33 | DEBUG    | vector_store | Upserted 57 chunks for GEM/2026/B/7494258
+2026-05-27 22:15:36 | DEBUG    | vector_store | Upserted 42 chunks for GEM/2026/B/7497582
+2026-05-27 22:15:40 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7511186
+2026-05-27 22:15:44 | DEBUG    | vector_store | Upserted 46 chunks for GEM/2026/B/7511203
+2026-05-27 22:15:47 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7511546
+2026-05-27 22:15:55 | DEBUG    | vector_store | Upserted 103 chunks for GEM/2026/B/7511762
+2026-05-27 22:16:01 | DEBUG    | vector_store | Upserted 65 chunks for GEM/2026/B/7512339
+2026-05-27 22:16:06 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7431402
+2026-05-27 22:16:06 | INFO     | vector_store |   Indexed 50/158
+2026-05-27 22:16:09 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7486214
+2026-05-27 22:16:12 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7511380
+2026-05-27 22:16:14 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7508040
+2026-05-27 22:16:16 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7508134
+2026-05-27 22:16:19 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7527450
+2026-05-27 22:16:24 | DEBUG    | vector_store | Upserted 60 chunks for GEM/2026/B/7494711
+2026-05-27 22:16:27 | DEBUG    | vector_store | Upserted 42 chunks for GEM/2026/B/7365477
+2026-05-27 22:16:30 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7439202
+2026-05-27 22:16:32 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7446304
+2026-05-27 22:16:35 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7538981
+2026-05-27 22:16:35 | INFO     | vector_store |   Indexed 60/158
+2026-05-27 22:16:38 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7450918
+2026-05-27 22:16:40 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7428100
+2026-05-27 22:16:46 | DEBUG    | vector_store | Upserted 73 chunks for https://bidplus.gem.gov.in/showbidDocument/9326495
+2026-05-27 22:16:49 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7468724
+2026-05-27 22:16:55 | DEBUG    | vector_store | Upserted 74 chunks for https://bidplus.gem.gov.in/showbidDocument/9326454
+2026-05-27 22:17:01 | DEBUG    | vector_store | Upserted 75 chunks for https://bidplus.gem.gov.in/showbidDocument/9326382
+2026-05-27 22:17:03 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7287849
+2026-05-27 22:17:08 | DEBUG    | vector_store | Upserted 54 chunks for GEM/2026/B/7561178
+2026-05-27 22:17:10 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7432093
+2026-05-27 22:17:12 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7445679
+2026-05-27 22:17:12 | INFO     | vector_store |   Indexed 70/158
+2026-05-27 22:17:14 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7488456
+2026-05-27 22:17:17 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7488531
+2026-05-27 22:17:19 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7527385
+2026-05-27 22:17:24 | DEBUG    | vector_store | Upserted 63 chunks for GEM/2026/B/7550554
+2026-05-27 22:17:26 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7511527
+2026-05-27 22:17:29 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7511720
+2026-05-27 22:17:31 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7512177
+2026-05-27 22:17:33 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7514181
+2026-05-27 22:17:35 | DEBUG    | vector_store | Upserted 22 chunks for GEM/2026/B/7516245
+2026-05-27 22:17:41 | DEBUG    | vector_store | Upserted 62 chunks for GEM/2026/B/7460032
+2026-05-27 22:17:41 | INFO     | vector_store |   Indexed 80/158
+2026-05-27 22:17:43 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7470361
+2026-05-27 22:17:47 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7477116
+2026-05-27 22:17:49 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7478621
+2026-05-27 22:17:53 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7479169
+2026-05-27 22:17:56 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7484117
+2026-05-27 22:17:59 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7498952
+2026-05-27 22:18:04 | DEBUG    | vector_store | Upserted 58 chunks for GEM/2026/B/7502486
+2026-05-27 22:18:07 | DEBUG    | vector_store | Upserted 41 chunks for GEM/2026/B/7438690
+2026-05-27 22:18:10 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7482363
+2026-05-27 22:18:13 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7588495
+2026-05-27 22:18:13 | INFO     | vector_store |   Indexed 90/158
+2026-05-27 22:18:14 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7499373
+2026-05-27 22:18:17 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7530104
+2026-05-27 22:18:21 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7475057
+2026-05-27 22:18:23 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7560028
+2026-05-27 22:18:25 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7429899
+2026-05-27 22:18:28 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7509648
+2026-05-27 22:18:29 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7473435
+2026-05-27 22:18:34 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7465807
+2026-05-27 22:18:38 | DEBUG    | vector_store | Upserted 49 chunks for GEM/2026/B/7479402
+2026-05-27 22:18:42 | DEBUG    | vector_store | Upserted 49 chunks for GEM/2026/B/7478455
+2026-05-27 22:18:42 | INFO     | vector_store |   Indexed 100/158
+2026-05-27 22:18:45 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7496302
+2026-05-27 22:18:50 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7465759
+2026-05-27 22:18:56 | DEBUG    | vector_store | Upserted 55 chunks for GEM/2026/B/7544252
+2026-05-27 22:19:03 | DEBUG    | vector_store | Upserted 62 chunks for GEM/2026/B/7532717
+2026-05-27 22:19:11 | DEBUG    | vector_store | Upserted 79 chunks for GEM/2026/B/7525919
+2026-05-27 22:19:14 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7526325
+2026-05-27 22:19:22 | DEBUG    | vector_store | Upserted 80 chunks for GEM/2026/B/7514993
+2026-05-27 22:19:26 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7488203
+2026-05-27 22:19:29 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7507841
+2026-05-27 22:19:33 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7531864
+2026-05-27 22:19:33 | INFO     | vector_store |   Indexed 110/158
+2026-05-27 22:19:43 | DEBUG    | vector_store | Upserted 94 chunks for GEM/2026/B/7542088
+2026-05-27 22:20:17 | DEBUG    | vector_store | Upserted 346 chunks for GEM/2026/B/7496031
+2026-05-27 22:20:20 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7344536
+2026-05-27 22:20:25 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7432617
+2026-05-27 22:20:30 | DEBUG    | vector_store | Upserted 60 chunks for GEM/2026/B/7500200
+2026-05-27 22:20:34 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7503947
+2026-05-27 22:20:42 | DEBUG    | vector_store | Upserted 109 chunks for GEM/2026/B/7327972
+2026-05-27 22:21:01 | DEBUG    | vector_store | Upserted 238 chunks for GEM/2026/B/7389632
+2026-05-27 22:21:04 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7507444
+2026-05-27 22:21:06 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7347434
+2026-05-27 22:21:06 | INFO     | vector_store |   Indexed 120/158
+2026-05-27 22:21:09 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7430129
+2026-05-27 22:21:13 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7435485
+2026-05-27 22:21:16 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7457230
+2026-05-27 22:21:18 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7459696
+2026-05-27 22:21:21 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7462644
+2026-05-27 22:21:25 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2025/B/7042279
+2026-05-27 22:21:29 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2026/B/7136603
+2026-05-27 22:21:34 | DEBUG    | vector_store | Upserted 68 chunks for GEM/2026/B/7157755
+2026-05-27 22:21:39 | DEBUG    | vector_store | Upserted 57 chunks for GEM/2026/B/7416412
+2026-05-27 22:21:42 | DEBUG    | vector_store | Upserted 43 chunks for GEM/2026/B/7505505
+2026-05-27 22:21:42 | INFO     | vector_store |   Indexed 130/158
+2026-05-27 22:21:46 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2025/B/7008974
+2026-05-27 22:21:49 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2025/B/7040937
+2026-05-27 22:21:51 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2025/B/6445678
+2026-05-27 22:21:54 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7415642
+2026-05-27 22:21:56 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7444155
+2026-05-27 22:22:00 | DEBUG    | vector_store | Upserted 44 chunks for GEM/2026/B/7367517
+2026-05-27 22:22:02 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7477270
+2026-05-27 22:22:05 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7479475
+2026-05-27 22:22:08 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7456448
+2026-05-27 22:22:10 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7327051
+2026-05-27 22:22:10 | INFO     | vector_store |   Indexed 140/158
+2026-05-27 22:22:13 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7233748
+2026-05-27 22:22:15 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7414651
+2026-05-27 22:22:18 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7334075
+2026-05-27 22:22:21 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7194932
+2026-05-27 22:22:24 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7086556
+2026-05-27 22:22:28 | DEBUG    | vector_store | Upserted 55 chunks for GEM/2026/B/7253172
+2026-05-27 22:22:31 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7412749
+2026-05-27 22:22:33 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7441848
+2026-05-27 22:22:35 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7408096
+2026-05-27 22:22:41 | DEBUG    | vector_store | Upserted 66 chunks for GEM/2026/B/7417029
+2026-05-27 22:22:41 | INFO     | vector_store |   Indexed 150/158
+2026-05-27 22:22:45 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7189456
+2026-05-27 22:22:49 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7252469
+2026-05-27 22:22:53 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2025/B/6839900
+2026-05-27 22:22:55 | DEBUG    | vector_store | Upserted 33 chunks for GEM/2026/B/7445381
+2026-05-27 22:22:58 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2025/B/7021779
+2026-05-27 22:23:03 | DEBUG    | vector_store | Upserted 64 chunks for GEM/2026/B/7223285
+2026-05-27 22:23:06 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7173460
+2026-05-27 22:23:08 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7410481
+2026-05-27 22:23:08 | INFO     | vector_store | Vector store upsert complete — total chunks: 12899
+2026-05-27 22:23:08 | INFO     | vector_store | Re-index complete.
+2026-05-27 22:28:58 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (12899 chunks)
+2026-05-27 22:40:38 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (12899 chunks)
+2026-05-27 22:52:30 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (0 chunks)
+2026-05-27 22:52:47 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7482363
+2026-05-27 22:52:53 | DEBUG    | vector_store | Upserted 41 chunks for GEM/2026/B/7438690
+2026-05-27 22:52:59 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7516629
+2026-05-27 22:53:06 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7514278
+2026-05-27 22:53:54 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (125 chunks)
+2026-05-27 22:54:09 | DEBUG    | vector_store | Upserted 58 chunks for GEM/2026/B/7502486
+2026-05-27 22:54:16 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7498952
+2026-05-27 22:54:21 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7484117
+2026-05-27 22:54:40 | DEBUG    | vector_store | Upserted 22 chunks for GEM/2026/B/7516245
+2026-05-27 22:54:48 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7514181
+2026-05-27 22:54:55 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7512177
+2026-05-27 22:55:01 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7511720
+2026-05-27 22:55:08 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7511527
+2026-05-27 22:55:28 | DEBUG    | vector_store | Upserted 54 chunks for GEM/2026/B/7561178
+2026-05-27 22:55:34 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7287849
+2026-05-27 22:55:41 | DEBUG    | vector_store | Upserted 75 chunks for https://bidplus.gem.gov.in/showbidDocument/9326382
+2026-05-27 22:55:50 | DEBUG    | vector_store | Upserted 74 chunks for https://bidplus.gem.gov.in/showbidDocument/9326454
+2026-05-27 22:55:57 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7432093
+2026-05-27 22:56:23 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7511194
+2026-05-27 22:56:28 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7510162
+2026-05-27 22:56:36 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7506691
+2026-05-27 22:56:42 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7500730
+2026-05-27 22:57:04 | DEBUG    | vector_store | Upserted 65 chunks for GEM/2026/B/7512339
+2026-05-27 22:57:13 | DEBUG    | vector_store | Upserted 103 chunks for GEM/2026/B/7511762
+2026-05-27 22:57:19 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7511546
+2026-05-27 22:57:25 | DEBUG    | vector_store | Upserted 46 chunks for GEM/2026/B/7511203
+2026-05-27 22:57:31 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7511186
+2026-05-27 22:57:52 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7488203
+2026-05-27 22:57:59 | DEBUG    | vector_store | Upserted 80 chunks for GEM/2026/B/7514993
+2026-05-27 22:58:06 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7526325
+2026-05-27 22:58:13 | DEBUG    | vector_store | Upserted 79 chunks for GEM/2026/B/7525919
+2026-05-27 22:58:20 | DEBUG    | vector_store | Upserted 62 chunks for GEM/2026/B/7532717
+2026-05-27 22:58:40 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7465807
+2026-05-27 22:58:48 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7473435
+2026-05-27 22:58:57 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7509648
+2026-05-27 22:59:05 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7429899
+2026-05-27 22:59:12 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7560028
+2026-05-27 22:59:36 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2026/B/7536554
+2026-05-27 22:59:46 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7570256
+2026-05-27 22:59:54 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7551866
+2026-05-27 23:00:01 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7551811
+2026-05-27 23:00:10 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7471797
+2026-05-27 23:00:32 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7485747
+2026-05-27 23:00:43 | DEBUG    | vector_store | Upserted 61 chunks for GEM/2026/B/7469914
+2026-05-27 23:00:50 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7485894
+2026-05-27 23:00:58 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7545644
+2026-05-27 23:01:06 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7557695
+2026-05-27 23:18:33 | INFO     | vector_store | Starting full re-index from SQLite...
+2026-05-27 23:18:33 | INFO     | vector_store | Upserting 47 bids into vector store...
+2026-05-27 23:18:33 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1848 chunks)
+2026-05-27 23:18:47 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7557695
+2026-05-27 23:18:48 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7545644
+2026-05-27 23:18:48 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7485894
+2026-05-27 23:18:50 | DEBUG    | vector_store | Upserted 61 chunks for GEM/2026/B/7469914
+2026-05-27 23:18:51 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7485747
+2026-05-27 23:18:51 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7471797
+2026-05-27 23:18:52 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7551811
+2026-05-27 23:18:53 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7551866
+2026-05-27 23:18:53 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7570256
+2026-05-27 23:18:55 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2026/B/7536554
+2026-05-27 23:18:55 | INFO     | vector_store |   Indexed 10/47
+2026-05-27 23:18:55 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7560028
+2026-05-27 23:18:56 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7429899
+2026-05-27 23:18:57 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7509648
+2026-05-27 23:18:57 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7473435
+2026-05-27 23:18:59 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7465807
+2026-05-27 23:19:00 | DEBUG    | vector_store | Upserted 62 chunks for GEM/2026/B/7532717
+2026-05-27 23:19:02 | DEBUG    | vector_store | Upserted 79 chunks for GEM/2026/B/7525919
+2026-05-27 23:19:03 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7526325
+2026-05-27 23:19:05 | DEBUG    | vector_store | Upserted 80 chunks for GEM/2026/B/7514993
+2026-05-27 23:19:06 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7488203
+2026-05-27 23:19:06 | INFO     | vector_store |   Indexed 20/47
+2026-05-27 23:19:07 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7511186
+2026-05-27 23:19:08 | DEBUG    | vector_store | Upserted 46 chunks for GEM/2026/B/7511203
+2026-05-27 23:19:09 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7511546
+2026-05-27 23:19:11 | DEBUG    | vector_store | Upserted 103 chunks for GEM/2026/B/7511762
+2026-05-27 23:19:13 | DEBUG    | vector_store | Upserted 65 chunks for GEM/2026/B/7512339
+2026-05-27 23:19:13 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7500730
+2026-05-27 23:19:15 | DEBUG    | vector_store | Upserted 50 chunks for GEM/2026/B/7506691
+2026-05-27 23:19:15 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7510162
+2026-05-27 23:19:16 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7511194
+2026-05-27 23:19:17 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7432093
+2026-05-27 23:19:17 | INFO     | vector_store |   Indexed 30/47
+2026-05-27 23:19:18 | DEBUG    | vector_store | Upserted 74 chunks for https://bidplus.gem.gov.in/showbidDocument/9326454
+2026-05-27 23:19:20 | DEBUG    | vector_store | Upserted 75 chunks for https://bidplus.gem.gov.in/showbidDocument/9326382
+2026-05-27 23:19:21 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7287849
+2026-05-27 23:19:22 | DEBUG    | vector_store | Upserted 54 chunks for GEM/2026/B/7561178
+2026-05-27 23:19:23 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7511527
+2026-05-27 23:19:23 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7511720
+2026-05-27 23:19:24 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7512177
+2026-05-27 23:19:25 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7514181
+2026-05-27 23:19:25 | DEBUG    | vector_store | Upserted 22 chunks for GEM/2026/B/7516245
+2026-05-27 23:19:26 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7484117
+2026-05-27 23:19:26 | INFO     | vector_store |   Indexed 40/47
+2026-05-27 23:19:27 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7498952
+2026-05-27 23:19:28 | DEBUG    | vector_store | Upserted 58 chunks for GEM/2026/B/7502486
+2026-05-27 23:19:29 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7514278
+2026-05-27 23:19:29 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7516629
+2026-05-27 23:19:31 | DEBUG    | vector_store | Upserted 41 chunks for GEM/2026/B/7438690
+2026-05-27 23:19:31 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7482363
+2026-05-27 23:19:33 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7306031
+2026-05-27 23:19:33 | INFO     | vector_store | Vector store upsert complete — total chunks: 1899
+2026-05-27 23:19:33 | INFO     | vector_store | Re-index complete.
+2026-05-27 23:20:08 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-27 23:22:15 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-27 23:23:18 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-27 23:24:30 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-28 09:51:34 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-28 10:10:57 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-28 10:33:29 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-28 10:45:06 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-28 10:48:01 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-28 11:24:58 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-29 10:42:17 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (1899 chunks)
+2026-05-29 10:43:28 | DEBUG    | vector_store | Upserted 126 chunks for GEM/2026/B/7497531
+2026-05-29 10:43:38 | DEBUG    | vector_store | Upserted 81 chunks for GEM/2026/B/7084406
+2026-05-29 10:43:46 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7460442
+2026-05-29 10:43:54 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7519853
+2026-05-29 10:44:01 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7330786
+2026-05-29 10:44:26 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7489623
+2026-05-29 10:44:33 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7364689
+2026-05-29 10:44:42 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7402812
+2026-05-29 10:44:51 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7233748
+2026-05-29 10:44:59 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7086556
+2026-05-29 10:45:21 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7522917
+2026-05-29 10:45:28 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7424557
+2026-05-29 10:45:35 | DEBUG    | vector_store | Upserted 41 chunks for GEM/2026/B/7439340
+2026-05-29 10:45:42 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7380365
+2026-05-29 10:45:49 | DEBUG    | vector_store | Upserted 37 chunks for GEM/2026/B/7476070
+2026-05-29 10:46:12 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7472359
+2026-05-29 10:46:20 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7428408
+2026-05-29 10:46:28 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2025/B/6066137
+2026-05-29 10:46:34 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7440372
+2026-05-29 10:46:42 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7502578
+2026-05-29 10:47:02 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7486487
+2026-05-29 10:47:17 | DEBUG    | vector_store | Upserted 136 chunks for GEM/2026/B/7503330
+2026-05-29 10:47:26 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7500134
+2026-05-29 10:47:35 | DEBUG    | vector_store | Upserted 77 chunks for GEM/2026/B/7498652
+2026-05-29 10:47:43 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7498587
+2026-05-29 10:48:04 | DEBUG    | vector_store | Upserted 55 chunks for GEM/2026/B/7544252
+2026-05-29 10:48:13 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7465759
+2026-05-29 10:48:24 | DEBUG    | vector_store | Upserted 80 chunks for GEM/2026/B/7514993
+2026-05-29 10:48:33 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7496302
+2026-05-29 10:48:41 | DEBUG    | vector_store | Upserted 49 chunks for GEM/2026/B/7478455
+2026-05-29 10:49:08 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7465807
+2026-05-29 10:49:16 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7473435
+2026-05-29 10:49:23 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7509648
+2026-05-29 10:49:33 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7429899
+2026-05-29 10:49:40 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7560028
+2026-05-29 10:49:59 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7504393
+2026-05-29 10:50:05 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7543353
+2026-05-29 10:50:13 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7543288
+2026-05-29 10:50:18 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7531199
+2026-05-29 10:52:51 | INFO     | vector_store | ChromaDB ready — collection 'gem_bids' (3317 chunks)
+2026-05-29 10:53:03 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2026/B/7486487
+2026-05-29 10:53:10 | DEBUG    | vector_store | Upserted 32 chunks for GEM/2026/B/7517509
+2026-05-29 10:53:18 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7516749
+2026-05-29 10:53:24 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7516594
+2026-05-29 10:53:31 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7516335
+2026-05-29 10:54:01 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7462344
+2026-05-29 10:54:09 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7405837
+2026-05-29 10:54:16 | DEBUG    | vector_store | Upserted 34 chunks for GEM/2025/B/6699132
+2026-05-29 10:54:24 | DEBUG    | vector_store | Upserted 40 chunks for GEM/2026/B/7501386
+2026-05-29 10:54:32 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7500802
+2026-05-29 10:54:57 | DEBUG    | vector_store | Upserted 21 chunks for GEM/2026/B/7499165
+2026-05-29 10:55:04 | DEBUG    | vector_store | Upserted 45 chunks for GEM/2026/B/7424264
+2026-05-29 10:55:11 | DEBUG    | vector_store | Upserted 56 chunks for GEM/2026/B/7478220
+2026-05-29 10:55:19 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7471556
+2026-05-29 10:55:25 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7540567
+2026-05-29 10:55:53 | DEBUG    | vector_store | Upserted 31 chunks for GEM/2026/B/7502578
+2026-05-29 10:55:59 | DEBUG    | vector_store | Upserted 38 chunks for GEM/2026/B/7500031
+2026-05-29 10:56:06 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7463579
+2026-05-29 10:56:13 | DEBUG    | vector_store | Upserted 30 chunks for GEM/2026/B/7460150
+2026-05-29 10:56:21 | DEBUG    | vector_store | Upserted 48 chunks for GEM/2026/B/7453006
+2026-05-29 10:56:49 | DEBUG    | vector_store | Upserted 91 chunks for GEM/2026/B/7508186
+2026-05-29 10:56:57 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7502046
+2026-05-29 10:57:05 | DEBUG    | vector_store | Upserted 66 chunks for GEM/2026/B/7492967
+2026-05-29 10:57:12 | DEBUG    | vector_store | Upserted 35 chunks for GEM/2026/B/7492689
+2026-05-29 10:57:22 | DEBUG    | vector_store | Upserted 136 chunks for GEM/2026/B/7503330
+2026-05-29 10:57:48 | DEBUG    | vector_store | Upserted 55 chunks for GEM/2026/B/7544252
+2026-05-29 10:57:53 | DEBUG    | vector_store | Upserted 51 chunks for GEM/2026/B/7465759
+2026-05-29 10:58:00 | DEBUG    | vector_store | Upserted 80 chunks for GEM/2026/B/7514993
+2026-05-29 10:58:07 | DEBUG    | vector_store | Upserted 39 chunks for GEM/2026/B/7496302
+2026-05-29 10:58:13 | DEBUG    | vector_store | Upserted 49 chunks for GEM/2026/B/7478455
+2026-05-29 10:58:39 | DEBUG    | vector_store | Upserted 53 chunks for GEM/2026/B/7465807
+2026-05-29 10:58:46 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7473435
+2026-05-29 10:58:53 | DEBUG    | vector_store | Upserted 36 chunks for GEM/2026/B/7509648
+2026-05-29 10:58:59 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7429899
+2026-05-29 10:59:06 | DEBUG    | vector_store | Upserted 20 chunks for GEM/2026/B/7560028
+2026-05-29 10:59:31 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7543353
+2026-05-29 10:59:38 | DEBUG    | vector_store | Upserted 27 chunks for GEM/2026/B/7543288
+2026-05-29 10:59:45 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7531199
+2026-05-29 10:59:51 | DEBUG    | vector_store | Upserted 26 chunks for GEM/2026/B/7571573
+2026-05-29 10:59:57 | DEBUG    | vector_store | Upserted 23 chunks for GEM/2026/B/7552151
+2026-05-29 11:00:26 | DEBUG    | vector_store | Upserted 28 chunks for GEM/2026/B/7529289
+2026-05-29 11:00:35 | DEBUG    | vector_store | Upserted 143 chunks for GEM/2026/B/7488019
+2026-05-29 11:00:40 | DEBUG    | vector_store | Upserted 24 chunks for GEM/2026/B/7499828
+2026-05-29 11:00:46 | DEBUG    | vector_store | Upserted 29 chunks for GEM/2026/B/7473234
+2026-05-29 11:00:52 | DEBUG    | vector_store | Upserted 25 chunks for GEM/2026/B/7520648

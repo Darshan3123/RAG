@@ -1,0 +1,2 @@
+2026-05-27 22:53:08 | DEBUG    | parser | RA card scrape: Locator.inner_text: Connection closed while reading from the driver
+2026-05-29 10:50:20 | DEBUG    | parser | RA card scrape: Locator.inner_text: Connection closed while reading from the driver

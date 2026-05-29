@@ -116,6 +116,24 @@ class GemBrowser:
         human_mouse_move(self.list_page)
 
     # -------------------------------------------------------
+    # SELECT "ONGOING BIDS/RA" FILTER
+    # Only scrape active/open bids, not completed ones
+    # -------------------------------------------------------
+    def select_ongoing_bids(self):
+        """Click the 'Ongoing Bids/RA' checkbox to filter only active bids"""
+        log.info("Selecting filter: Ongoing Bids/RA")
+        try:
+            label = self.list_page.locator(
+                "label:has-text('Ongoing Bids/RA')"
+            )
+            label.click()
+            sleep_filter_click()
+            human_mouse_move(self.list_page)
+            log.debug("Ongoing Bids/RA filter applied")
+        except Exception as e:
+            log.warning(f"Could not select Ongoing Bids/RA filter: {e}")
+
+    # -------------------------------------------------------
     # DOWNLOAD PDF  (with retry)
     # -------------------------------------------------------
     def download_pdf(

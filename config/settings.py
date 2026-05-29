@@ -1,24 +1,57 @@
 # =========================================================
 # config/settings.py
-# Central config — change values here, nothing else needed
+# All configuration is loaded from the .env file at the
+# project root.  Change values there — not here.
 # =========================================================
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load .env from project root (one level above this file)
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
+
+# Propagate HF_TOKEN to the environment so huggingface_hub picks it up
+_hf_token = os.getenv("HF_TOKEN", "")
+if _hf_token:
+    os.environ["HF_TOKEN"] = _hf_token
+    os.environ["HUGGING_FACE_HUB_TOKEN"] = _hf_token  # legacy key
+
+
+# ---------------------------------------------------------
+# HELPERS
+# ---------------------------------------------------------
+def _int(key: str, default: int) -> int:
+    return int(os.getenv(key, default))
+
+def _float(key: str, default: float) -> float:
+    return float(os.getenv(key, default))
+
+def _str(key: str, default: str = "") -> str:
+    return os.getenv(key, default)
+
+def _path(key: str, default: str) -> str:
+    """Resolve a path relative to BASE_DIR unless it's absolute."""
+    raw = os.getenv(key, default)
+    p   = Path(raw)
+    return str(p if p.is_absolute() else BASE_DIR / p)
+
 
 # ---------------------------------------------------------
 # SCHEDULER
 # ---------------------------------------------------------
-SCRAPE_INTERVAL_MINUTES = 60        # run every 60 min
-MAX_RETRIES_PER_BID     = 3         # retry failed bids
-RETRY_DELAY_SECONDS     = 10        # wait between retries
+SCRAPE_INTERVAL_MINUTES = _int("SCRAPE_INTERVAL_MINUTES", 60)
+MAX_RETRIES_PER_BID     = _int("MAX_RETRIES_PER_BID", 3)
+RETRY_DELAY_SECONDS     = _int("RETRY_DELAY_SECONDS", 10)
 
 # ---------------------------------------------------------
 # ANTI-BOT  (human-like delays in seconds)
 # ---------------------------------------------------------
-PAGE_LOAD_WAIT          = (4, 8)    # random range
-BETWEEN_CARDS_WAIT      = (1, 3)
-BETWEEN_PAGES_WAIT      = (3, 6)
-FILTER_CLICK_WAIT       = (3, 6)
-PDF_DOWNLOAD_WAIT       = (2, 4)
+PAGE_LOAD_WAIT     = (_float("PAGE_LOAD_WAIT_MIN",     4), _float("PAGE_LOAD_WAIT_MAX",     8))
+BETWEEN_CARDS_WAIT = (_float("BETWEEN_CARDS_WAIT_MIN", 1), _float("BETWEEN_CARDS_WAIT_MAX", 3))
+BETWEEN_PAGES_WAIT = (_float("BETWEEN_PAGES_WAIT_MIN", 3), _float("BETWEEN_PAGES_WAIT_MAX", 6))
+FILTER_CLICK_WAIT  = (_float("FILTER_CLICK_WAIT_MIN",  3), _float("FILTER_CLICK_WAIT_MAX",  6))
+PDF_DOWNLOAD_WAIT  = (_float("PDF_DOWNLOAD_WAIT_MIN",  2), _float("PDF_DOWNLOAD_WAIT_MAX",  4))
 
 # User-Agent pool — rotated per browser launch
 USER_AGENTS = [
@@ -45,8 +78,8 @@ VIEWPORTS = [
 # ---------------------------------------------------------
 # SCRAPER TARGETS
 # ---------------------------------------------------------
-GEM_BASE_URL   = "https://bidplus.gem.gov.in"
-GEM_ALL_BIDS   = f"{GEM_BASE_URL}/all-bids"
+GEM_BASE_URL = _str("GEM_BASE_URL", "https://bidplus.gem.gov.in")
+GEM_ALL_BIDS = f"{GEM_BASE_URL}/all-bids"
 
 BID_TYPES = [
     "Product Bid/RAs",
@@ -60,60 +93,48 @@ BID_TYPES = [
     "Single Tender",
 ]
 
-# How many bids to collect per type per run
-TARGET_PER_TYPE  = 10
-MAX_EMPTY_PAGES  = 5
+TARGET_PER_TYPE = _int("TARGET_PER_TYPE", 10)
+MAX_EMPTY_PAGES = _int("MAX_EMPTY_PAGES", 5)
 
 # ---------------------------------------------------------
 # PATHS
 # ---------------------------------------------------------
-BASE_DIR      = os.path.dirname(os.path.dirname(__file__))
-DOWNLOAD_DIR  = os.path.join(BASE_DIR, "downloads")
-LOG_DIR       = os.path.join(BASE_DIR, "logs")
-DB_PATH       = os.path.join(BASE_DIR, "storage", "gem_bids.db")
-JSON_OUT_PATH = os.path.join(BASE_DIR, "storage", "gem_bids.json")
+DOWNLOAD_DIR  = _path("DOWNLOAD_DIR",  "downloads")
+LOG_DIR       = _path("LOG_DIR",       "logs")
+DB_PATH       = _path("DB_PATH",       "storage/gem_bids.db")
+JSON_OUT_PATH = _path("JSON_OUT_PATH", "storage/gem_bids.json")
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 os.makedirs(LOG_DIR,      exist_ok=True)
-os.makedirs(os.path.join(BASE_DIR, "storage"), exist_ok=True)
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
 # ---------------------------------------------------------
-# TESSERACT (Windows path — ignored on Linux)
+# TESSERACT  (Windows path — ignored on Linux/Mac)
 # ---------------------------------------------------------
-TESSERACT_CMD = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+TESSERACT_CMD = _str(
+    "TESSERACT_CMD",
+    r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+)
 
 # ---------------------------------------------------------
 # RAG SETTINGS
 # ---------------------------------------------------------
-# Embedding model — runs fully LOCAL, no API key needed
-# Options: "all-MiniLM-L6-v2" (fast, 384-dim)
-#          "all-mpnet-base-v2" (slower, better, 768-dim)
-RAG_EMBEDDING_MODEL  = "all-MiniLM-L6-v2"
+RAG_EMBEDDING_MODEL = _str("RAG_EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+CHROMA_DIR          = _path("CHROMA_DIR", "storage/chroma_db")
+CHROMA_COLLECTION   = _str("CHROMA_COLLECTION", "gem_bids")
+RAG_TOP_K           = _int("RAG_TOP_K", 5)
+RAG_CHUNK_SIZE      = _int("RAG_CHUNK_SIZE", 800)
+RAG_CHUNK_OVERLAP   = _int("RAG_CHUNK_OVERLAP", 100)
 
-# ChromaDB persistent path
-CHROMA_DIR           = os.path.join(BASE_DIR, "storage", "chroma_db")
+RAG_LLM_PROVIDER = _str("RAG_LLM_PROVIDER", "ollama")
 
-# Collection name inside ChromaDB
-CHROMA_COLLECTION    = "gem_bids"
+# OpenAI  (used only when RAG_LLM_PROVIDER=openai)
+OPENAI_API_KEY = _str("OPENAI_API_KEY", "")
+OPENAI_MODEL   = _str("OPENAI_MODEL",   "gpt-4o-mini")
 
-# How many chunks to retrieve per query
-RAG_TOP_K            = 5
-
-# Max characters per chunk when splitting long PDF text
-RAG_CHUNK_SIZE       = 800
-RAG_CHUNK_OVERLAP    = 100
-
-# LLM for answering — set to "" to disable LLM, use retrieval only
-# Options: "openai" | "ollama" | ""  (retrieval-only)
-RAG_LLM_PROVIDER     = "ollama"    # change to "openai" if you have a key
-
-# OpenAI settings (used only if RAG_LLM_PROVIDER = "openai")
-OPENAI_API_KEY       = os.getenv("OPENAI_API_KEY", "")
-OPENAI_MODEL         = "gpt-4o-mini"
-
-# Ollama settings (used only if RAG_LLM_PROVIDER = "ollama")
-OLLAMA_BASE_URL      = "http://localhost:11434"
-OLLAMA_MODEL         = "llama3"
+# Ollama  (used only when RAG_LLM_PROVIDER=ollama)
+OLLAMA_BASE_URL = _str("OLLAMA_BASE_URL", "http://localhost:11434")
+OLLAMA_MODEL    = _str("OLLAMA_MODEL",    "llama3")
 
 os.makedirs(CHROMA_DIR, exist_ok=True)
 
