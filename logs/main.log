@@ -16,3 +16,9 @@
 2026-05-29 14:18:43 | INFO     | main | Mode: single scrape run
 2026-05-29 15:36:48 | INFO     | main | Mode: single scrape run
 2026-05-29 16:01:03 | INFO     | main | Mode: single scrape run
+2026-05-29 16:25:22 | INFO     | main | Mode: single scrape run
+2026-05-29 16:35:24 | INFO     | main | Mode: single scrape run
+2026-05-29 16:40:29 | INFO     | main | Mode: single scrape run
+2026-05-29 16:44:39 | INFO     | main | Mode: single scrape run
+2026-05-29 16:47:14 | INFO     | main | Process interrupted by user (Ctrl+C). Shutting down gracefully...
+2026-05-29 16:47:22 | INFO     | main | Mode: single scrape run

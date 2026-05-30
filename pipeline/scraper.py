@@ -1,6 +1,14 @@
 # =========================================================
 # pipeline/scraper.py
 # Orchestrates one complete scraping run across all bid types
+#
+# IMPROVEMENT (this revision):
+#   - Item name / quantity / department / dates are now read
+#     STRAIGHT FROM THE CARD HTML (popover `data-content`),
+#     so they are no longer truncated like
+#       "Onion , Potato , Tomato , Cabbage , Cauliflower ,"
+#   - PDF parsing is kept ONLY as a fallback and for fields
+#     the card does not expose (estimated_value, bid_packet_type).
 # =========================================================
 import time
 from config.settings import (
@@ -9,8 +17,7 @@ from config.settings import (
 from core.browser import GemBrowser
 from core.parser import (
     extract_pdf_text, parse_bid_data,
-    get_ra_from_card, get_product_type_from_card,
-    get_dates_from_card,
+    get_card_details,
     clean_text,
 )
 from storage.database import BidDatabase
@@ -18,6 +25,18 @@ from utils.antibot import sleep_between_cards
 from utils.logger import get_logger
 
 log = get_logger("scraper")
+
+
+def _pick(card_val: str, pdf_val: str) -> str:
+    """Prefer card value (untruncated, accurate); fall back to PDF."""
+    cv = (card_val or "").strip()
+    pv = (pdf_val or "").strip()
+    if cv:
+        # If both available, take whichever is longer (more complete)
+        if pv and len(pv) > len(cv) * 1.5:
+            return pv
+        return cv
+    return pv
 
 
 # =========================================================
@@ -29,36 +48,31 @@ def scrape_bid_type(
     bid_type_name: str,
     seen_urls: set,
 ) -> dict:
-    """
-    Scrapes one bid type filter.
-    Returns stats dict: {scraped, new, errors}
-    """
     stats = {"scraped": 0, "new": 0, "errors": 0}
-    collected  = 0
-    page_num   = 1
+    collected = 0
+    page_num = 1
     empty_pages = 0
-    t_start    = time.time()
+    t_start = time.time()
 
-    log.info(f"{'='*50}")
+    log.info(f"{'=' * 50}")
     log.info(f"BID TYPE: {bid_type_name}")
-    log.info(f"{'='*50}")
+    log.info(f"{'=' * 50}")
 
-    # -- select filter --
     try:
         browser.reset_filters()
         browser.select_bid_type(bid_type_name)
-        browser.select_ongoing_bids()  # Only scrape ACTIVE bids
+        browser.select_ongoing_bids()
     except Exception as e:
         log.error(f"Filter error for '{bid_type_name}': {e}")
         return stats
 
-    # -- page loop --
     while collected < TARGET_PER_TYPE:
-        log.info(
-            f"  Page {page_num} | "
-            f"Collected {collected}/{TARGET_PER_TYPE}"
-        )
-        cards       = browser.get_cards()
+        log.info(f"  Page {page_num} | Collected {collected}/{TARGET_PER_TYPE}")
+
+        # Make sure all cards are rendered before reading them
+        browser.wait_for_cards()
+
+        cards = browser.get_cards()
         total_cards = cards.count()
         log.info(f"  Cards found: {total_cards}")
 
@@ -67,42 +81,29 @@ def scrape_bid_type(
         if total_cards == 0:
             empty_pages += 1
         else:
-            # -- card loop --
             for i in range(total_cards):
                 if collected >= TARGET_PER_TYPE:
                     break
                 try:
                     card = cards.nth(i)
 
-                    # extract RA + product type + DATES from card HTML
-                    ra_no        = get_ra_from_card(card)
-                    product_type = get_product_type_from_card(
-                        card, bid_type_name
-                    )
-                    # FIX: scrape dates from card HTML (not PDF)
-                    card_start, card_end = get_dates_from_card(card)
+                    # ── 1. PULL EVERY POSSIBLE FIELD FROM CARD HTML ──
+                    card_data = get_card_details(card, bid_type_name)
 
-                    # extract links
-                    doc_url, corr_url = (
-                        browser.extract_card_links(card)
-                    )
-
+                    doc_url, corr_url = browser.extract_card_links(card)
                     if not doc_url:
                         continue
                     if doc_url in seen_urls:
                         continue
                     seen_urls.add(doc_url)
 
-                    # download PDF
+                    # ── 2. DOWNLOAD + PARSE PDF (fallback fields) ──
                     pdf_path = browser.download_pdf(doc_url)
                     if not pdf_path:
-                        log.warning(
-                            f"  Skipping — download failed: {doc_url}"
-                        )
+                        log.warning(f"  Skipping — download failed: {doc_url}")
                         stats["errors"] += 1
                         continue
 
-                    # extract + parse text
                     pdf_text = extract_pdf_text(pdf_path)
                     if len(pdf_text.strip()) < 50:
                         log.warning("  Skipping — empty PDF text")
@@ -110,18 +111,21 @@ def scrape_bid_type(
 
                     parsed = parse_bid_data(pdf_text)
 
-                    # build final record
+                    # ── 3. MERGE — prefer card data ──
                     bid = {
                         "bid_type":        bid_type_name,
-                        "product_type":    product_type,
-                        "bid_no":          parsed.get("bid_no", ""),
-                        "ra_no":           ra_no,
-                        "full_item_name":  parsed.get("full_item_name", ""),
-                        "quantity":        parsed.get("quantity", ""),
-                        "department":      parsed.get("department", ""),
-                        # Use card dates (accurate) over PDF dates (unreliable)
-                        "start_date":      card_start or parsed.get("start_date", ""),
-                        "end_date":        card_end   or parsed.get("end_date", ""),
+                        "product_type":    card_data["product_type"],
+                        "bid_no":          card_data["bid_no"] or parsed.get("bid_no", ""),
+                        "ra_no":           card_data["ra_no"],
+                        "full_item_name":  _pick(card_data["full_item_name"],
+                                                 parsed.get("full_item_name", "")),
+                        "quantity":        _pick(card_data["quantity"],
+                                                 parsed.get("quantity", "")),
+                        "department":      _pick(card_data["department"],
+                                                 parsed.get("department", "")),
+                        "start_date":      card_data["start_date"] or parsed.get("start_date", ""),
+                        "end_date":        card_data["end_date"]   or parsed.get("end_date", ""),
+                        # estimated_value + bid_packet_type only in PDF
                         "estimated_value": parsed.get("estimated_value", ""),
                         "bid_packet_type": parsed.get("bid_packet_type", ""),
                         "document_url":    doc_url,
@@ -129,19 +133,17 @@ def scrape_bid_type(
                         "full_pdf_text":   clean_text(pdf_text),
                     }
 
-                    # save to DB (returns True if NEW)
                     is_new = db.upsert(bid)
                     if is_new:
                         stats["new"] += 1
-
                     collected += 1
                     stats["scraped"] += 1
 
                     log.info(
                         f"  [{collected}/{TARGET_PER_TYPE}] "
                         f"{bid['bid_no']} | "
-                        f"Type: {product_type} | "
-                        f"RA: {ra_no or 'N/A'} | "
+                        f"Item: {bid['full_item_name'][:50]}... | "
+                        f"Qty: {bid['quantity'] or 'N/A'} | "
                         f"{'NEW' if is_new else 'seen'}"
                     )
                     sleep_between_cards()
@@ -150,62 +152,42 @@ def scrape_bid_type(
                     log.error(f"  Card {i} error: {e}")
                     stats["errors"] += 1
 
-        # -- empty page tracking --
         if collected == before:
             empty_pages += 1
-            log.info(
-                f"  No new bids on page. "
-                f"Empty streak: {empty_pages}/{MAX_EMPTY_PAGES}"
-            )
+            log.info(f"  No new bids on page. Empty streak: {empty_pages}/{MAX_EMPTY_PAGES}")
         else:
             empty_pages = 0
 
         if empty_pages >= MAX_EMPTY_PAGES:
-            log.info(
-                f"  Stopping '{bid_type_name}' — "
-                f"{MAX_EMPTY_PAGES} empty pages reached"
-            )
+            log.info(f"  Stopping '{bid_type_name}' — {MAX_EMPTY_PAGES} empty pages reached")
             break
 
-        # -- next page --
         if not browser.go_next_page():
             log.info("  No more pages.")
             break
         page_num += 1
 
     duration = round(time.time() - t_start, 2)
-    db.log_run(
-        bid_type_name,
-        stats["scraped"],
-        stats["new"],
-        stats["errors"],
-        duration,
-    )
+    db.log_run(bid_type_name, stats["scraped"], stats["new"], stats["errors"], duration)
     log.info(
         f"  DONE '{bid_type_name}': "
-        f"scraped={stats['scraped']} | "
-        f"new={stats['new']} | "
-        f"errors={stats['errors']} | "
-        f"{duration}s"
+        f"scraped={stats['scraped']} | new={stats['new']} | "
+        f"errors={stats['errors']} | {duration}s"
     )
     return stats
 
 
 # =========================================================
-# FULL SCRAPE RUN  (called by scheduler every hour)
+# FULL SCRAPE RUN
 # =========================================================
 def run_full_scrape(db: BidDatabase) -> dict:
-    """
-    Opens one browser session, iterates all bid types,
-    saves to DB, exports JSON, returns summary stats.
-    """
     run_stats = {
         "total_scraped": 0,
         "total_new":     0,
         "total_errors":  0,
         "by_type":       {},
     }
-    seen_urls = set()          # dedup within this run
+    seen_urls = set()
 
     log.info("")
     log.info("=" * 60)
@@ -215,38 +197,27 @@ def run_full_scrape(db: BidDatabase) -> dict:
     try:
         with GemBrowser() as browser:
             browser.open_gem()
-
             for bid_type in BID_TYPES:
                 try:
-                    type_stats = scrape_bid_type(
-                        browser, db, bid_type, seen_urls
-                    )
+                    type_stats = scrape_bid_type(browser, db, bid_type, seen_urls)
                     run_stats["total_scraped"] += type_stats["scraped"]
                     run_stats["total_new"]     += type_stats["new"]
                     run_stats["total_errors"]  += type_stats["errors"]
                     run_stats["by_type"][bid_type] = type_stats
                 except Exception as e:
-                    log.error(
-                        f"Fatal error on bid type "
-                        f"'{bid_type}': {e}"
-                    )
-
+                    log.error(f"Fatal error on bid type '{bid_type}': {e}")
     except Exception as e:
         log.critical(f"Browser session failed: {e}")
 
-    # export fresh JSON after every run
     db.export_json()
 
     db_stats = db.stats()
     log.info("")
     log.info("=" * 60)
     log.info(
-        f"RUN COMPLETE | "
-        f"Scraped: {run_stats['total_scraped']} | "
-        f"New: {run_stats['total_new']} | "
-        f"Errors: {run_stats['total_errors']} | "
+        f"RUN COMPLETE | Scraped: {run_stats['total_scraped']} | "
+        f"New: {run_stats['total_new']} | Errors: {run_stats['total_errors']} | "
         f"Total in DB: {db_stats['total']}"
     )
     log.info("=" * 60)
-
     return run_stats

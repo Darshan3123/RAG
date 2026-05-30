@@ -1,0 +1,428 @@
+{
+  "_index": "tenderresults",
+  "_id": "11131626",
+  "_version": 1,
+  "_score": 0,
+  "_source": {
+    "tender_result_id": "TRzg7Ew-828315",
+    "authority": "Brihan Mumbai Electric Supply And Transport Undertaking",
+    "city": "Dadar",
+    "completion_date": "180 days",
+    "contract_date": 1779235200000,
+    "contract_value": 221295.8,
+    "due_date": 1777852800000,
+    "enter_date": 1776384000000,
+    "open_date": 1778025600000,
+    "our_ref_no": 55127512,
+    "ownership": "Local Bodies",
+    "product": "Printing Work",
+    "pub_date": 1776384000000,
+    "ref_url": "https://mahatenders.gov.in",
+    "search_text": "Paper and Printing Services, Printing Related Service, Printing Work",
+    "sector": "Heavy Industries And Public Enterprises",
+    "state": "Maharashtra",
+    "tender_reference_id": "2026_BEST_1295894_1",
+    "tender_no": "DMM(G)/03/81628/707/2025-26/C",
+    "tender_random_no": "A7BDFE4E-ACE4-4678-BF37-B94C95A186BE",
+    "tender_status": "AOC",
+    "tender_value": 0,
+    "work_desc": "Brihan Mumbai Electric Supply And Transport Undertaking has published Tender for Printing & Supply Of Office Files In Green To Suit Filing On Both Side , Items : , Office Files In Green To Suit Filing On Both Side. Last date of submission for this tender is 2026-05-04. This is a Printing Work tender in Dadar, Maharashtra",
+    "bidder_list": [
+      {
+        "technical_bid_status": 1,
+        "financial_bid_status": 0,
+        "aoc_status": 2,
+        "bid_amount": 259811.2,
+        "bidder_name": "matushree corporation",
+        "rank": 3
+      },
+      {
+        "technical_bid_status": 1,
+        "financial_bid_status": 0,
+        "aoc_status": 2,
+        "bid_amount": 241291.6,
+        "bidder_name": "uneek enterprises",
+        "rank": 2
+      },
+      {
+        "technical_bid_status": 1,
+        "financial_bid_status": 1,
+        "aoc_status": 1,
+        "bid_amount": 221295.8,
+        "bidder_name": "vinod stationers & xerox",
+        "rank": 1
+      }
+    ],
+    "s3_document_path": [
+      {
+        "download_id": "TDDiEJlp-4634",
+        "file_name": "Tender Document"
+      },
+      {
+        "download_id": "TDD7wUNT-5931",
+        "file_name": "Tender Document 2"
+      },
+      {
+        "download_id": "TDDMNr4M-0985",
+        "file_name": "Tender Document 3"
+      },
+      {
+        "download_id": "TDD5JnoA-0535",
+        "file_name": "Tender Document 4"
+      },
+      {
+        "download_id": "TDDoAkDm-7779",
+        "file_name": "Tender Document 5"
+      }
+    ],
+    "category": "Paper And Printing Services",
+    "sub_category": "Printing Related Service",
+    "product_name": "Printing Work",
+    "created_at": 1779373846944,
+    "updated_at": 1779373846962,
+    "procurement_source_name": "Maharashtra Tenders Portal",
+    "platforms": [
+      "eProcure"
+    ],
+    "file_download": false,
+    "followed": false,
+    "tresult_id": 11131626,
+    "isAccessible": false
+  },
+  "highlight": {
+    "tender_result_id.keyword": [
+      "@opensearch-dashboards-highlighted-field@TRzg7Ew-828315@/opensearch-dashboards-highlighted-field@"
+    ],
+    "tender_result_id": [
+      "@opensearch-dashboards-highlighted-field@TRzg7Ew@/opensearch-dashboards-highlighted-field@-@opensearch-dashboards-highlighted-field@828315@/opensearch-dashboards-highlighted-field@"
+    ]
+  }
+},
+{
+"_index": "tenderresults",
+"_id": "11117565",
+"_version": 2,
+"_score": 0,
+"_source": {
+"tender_result_id": "TRdPQTG-964212",
+"authority": "Tamil Nadu Generation And Distribution Corporation Limited",
+"city": "Salem",
+"completion_date": "60 days",
+"contract_date": 1779235200000,
+"contract_value": 139620,
+"due_date": 1731456000000,
+"enter_date": 1730160000000,
+"open_date": 1731542400000,
+"our_ref_no": 45963029,
+"ownership": "Boards / Undertakings / Psu",
+"product": "Printing Work",
+"pub_date": 1730073600000,
+"ref_url": "https://tntenders.gov.in",
+"search_text": "Paper and Printing Services, Printing Related Service, Printing Work",
+"sector": "Power",
+"state": "Tamil Nadu",
+"tender_reference_id": "2024_EB_497358_1",
+"tender_no": "CE MTPS-I SE PA MM AE1 O.T. NO.561/2024-25",
+"tender_random_no": "C1701438-0B55-4D15-905A-D195482CBF18",
+"tender_status": "AOC",
+"tender_value": 0,
+"work_desc": "Tamil Nadu Generation And Distribution Corporation Limited has published E-Tender For The Printing And Supply Of Various Registers And Tear Off Pads. Last date of submission for this tender is 2024-11-13. This is a Printing Work tender in Salem, Tamil Nadu",
+"bidder_list": [
+{
+"technical_bid_status": 1,
+"financial_bid_status": 1,
+"aoc_status": 1,
+"bid_amount": 14560,
+"bidder_name": "sree thangam industries",
+"rank": 1
+},
+{
+"technical_bid_status": 1,
+"financial_bid_status": 1,
+"aoc_status": 1,
+"bid_amount": 125060,
+"bidder_name": "sri sarathi computer offset printing press",
+"rank": 1
+}
+],
+"s3_document_path": [
+{
+"download_id": "TDDiOXUf-2421",
+"file_name": "Tender Document"
+},
+{
+"download_id": "TDDbIMJU-5414",
+"file_name": "Tender Document 2"
+},
+{
+"download_id": "TDDqNfgr-1251",
+"file_name": "Tender Document 3"
+},
+{
+"download_id": "TDDEjCOo-3454",
+"file_name": "Tender Document 4"
+},
+{
+"download_id": "TDDqj5Lg-5572",
+"file_name": "Tender Document 5"
+},
+{
+"download_id": "TDDbpBMn-3143",
+"file_name": "Tender Document 6"
+},
+{
+"download_id": "TDDba5YH-2582",
+"file_name": "Tender Document 7"
+}
+],
+"category": "Paper And Printing Services",
+"sub_category": "Printing Related Service",
+"product_name": "Printing Work",
+"created_at": 1779373913397,
+"updated_at": 1779373913415,
+"procurement_source_name": "Government Of Tamil Nadu Tenders",
+"platforms": [
+"eProcure"
+],
+"file_download": false,
+"followed": false,
+"tresult_id": 11117565,
+"isAccessible": false
+},
+"highlight": {
+"tender_result_id.keyword": [
+"@opensearch-dashboards-highlighted-field@TRdPQTG-964212@/opensearch-dashboards-highlighted-field@"
+],
+"tender_result_id": [
+"@opensearch-dashboards-highlighted-field@TRdPQTG@/opensearch-dashboards-highlighted-field@-@opensearch-dashboards-highlighted-field@964212@/opensearch-dashboards-highlighted-field@"
+]
+}
+},
+{
+"_index": "tenderresults",
+"_id": "11131350",
+"_version": 1,
+"_score": 0,
+"_source": {
+"tender_result_id": "TRy9RxI-273266",
+"authority": "Public Works Department",
+"city": "Thiruvananthapuram",
+"completion_date": "240 days",
+"contract_date": 1779235200000,
+"contract_value": 7319682,
+"due_date": 1772064000000,
+"enter_date": 1771372800000,
+"open_date": 1772236800000,
+"our_ref_no": 54093926,
+"ownership": "Government Departments",
+"product": "Printing Work",
+"pub_date": 1771286400000,
+"ref_url": "https://etenders.kerala.gov.in",
+"search_text": "Paper and Printing Services, Printing Related Service, Printing Work",
+"sector": "Housing Urban And Rular Development",
+"state": "Kerala",
+"tender_reference_id": "2026_PWD_837289_1",
+"tender_no": "PWD/BLDG/TR/19561/2025_6_1_1",
+"tender_random_no": "8D8B1A13-0E47-4685-957E-9B77310A6226",
+"tender_status": "AOC",
+"tender_value": 8254219,
+"work_desc": "Public Works Department has published Tender for General-Govt.Press Mannanthala- Rewiring Of Binding & Printing Area-Rewiring Work-General Electrical Work. Last date of submission for this tender is 2026-02-26. This is a Printing Work tender in Thiruvananthapuram, Kerala",
+"bidder_list": [
+{
+"technical_bid_status": 1,
+"financial_bid_status": 1,
+"aoc_status": 1,
+"bid_amount": 7319682,
+"bidder_name": "hi elect enterprises",
+"rank": 1
+},
+{
+"technical_bid_status": 1,
+"financial_bid_status": 1,
+"aoc_status": 0,
+"bid_amount": 7917151.5,
+"bidder_name": "mas electricals",
+"rank": 2
+}
+],
+"s3_document_path": [
+{
+"download_id": "TDDfRASq-4262",
+"file_name": "Tender Document"
+},
+{
+"download_id": "TDDi3j6D-2500",
+"file_name": "Tender Document 2"
+},
+{
+"download_id": "TDDP2xkI-3167",
+"file_name": "Tender Document 3"
+},
+{
+"download_id": "TDDWWSEz-3536",
+"file_name": "Tender Document 4"
+},
+{
+"download_id": "TDD745NV-3456",
+"file_name": "Tender Document 5"
+},
+{
+"download_id": "TDDV853N-8153",
+"file_name": "Tender Document 6"
+}
+],
+"category": "Paper And Printing Services",
+"sub_category": "Printing Related Service",
+"product_name": "Printing Work",
+"created_at": 1779373929918,
+"updated_at": 1779373929939,
+"procurement_source_name": "Government Of Kerala E-tender Portal",
+"platforms": [
+"eProcure"
+],
+"file_download": false,
+"followed": false,
+"tresult_id": 11131350,
+"isAccessible": false
+},
+"highlight": {
+"tender_result_id.keyword": [
+"@opensearch-dashboards-highlighted-field@TRy9RxI-273266@/opensearch-dashboards-highlighted-field@"
+],
+"tender_result_id": [
+"@opensearch-dashboards-highlighted-field@TRy9RxI@/opensearch-dashboards-highlighted-field@-@opensearch-dashboards-highlighted-field@273266@/opensearch-dashboards-highlighted-field@"
+]
+}
+},
+{
+"_index": "tenderresults",
+"_id": "11109724",
+"_version": 1,
+"_score": 0,
+"_source": {
+"tender_result_id": "TRayoaP-027679",
+"authority": "Health And Family Welfare Department",
+"city": "Kolkata",
+"completion_date": "365 days",
+"contract_date": 1779148800000,
+"contract_value": 2.25,
+"due_date": 1755129600000,
+"enter_date": 1752278400000,
+"open_date": 1755475200000,
+"our_ref_no": 50120060,
+"ownership": "Government Departments",
+"product": "Signage",
+"pub_date": 1752192000000,
+"ref_url": "https://wbtenders.gov.in/nicgep/app",
+"search_text": "Services, Advertisement Services, Signage",
+"sector": "Health And Family Welfare",
+"state": "West Bengal",
+"tender_reference_id": "2025_HFW_876914_1",
+"tender_no": "WBHF/SSKM/MSVP/7340/2025",
+"tender_random_no": "8F166575-F7D4-4692-87AA-63892EBAFDFC",
+"tender_status": "AOC",
+"tender_value": 0,
+"work_desc": "Health And Family Welfare Department has published  E- Tender (2Nd Call) Notice Inviting For Procurement Of The Signage Items For The Forms And Stationery Store Of Ipgmer-Sskm Hospital-Acrylic Sheet With Vinyl Printing. Last date of submission for this tender is 2025-08-14. This is a Signage tender in Kolkata, West Bengal",
+"bidder_list": [
+{
+"technical_bid_status": 0,
+"financial_bid_status": 2,
+"aoc_status": 2,
+"bid_amount": 0,
+"bidder_name": "annapurna enterprise",
+"rank": 0
+},
+{
+"technical_bid_status": 1,
+"financial_bid_status": 0,
+"aoc_status": 2,
+"bid_amount": 4.25,
+"bidder_name": "behala wholesale consumers co-operative society ltd.",
+"rank": 3
+},
+{
+"technical_bid_status": 1,
+"financial_bid_status": 0,
+"aoc_status": 2,
+"bid_amount": 3.95,
+"bidder_name": "k.p.k.wholesale consumers co-operative socity ltd.",
+"rank": 2
+},
+{
+"technical_bid_status": 0,
+"financial_bid_status": 2,
+"aoc_status": 2,
+"bid_amount": 0,
+"bidder_name": "m/s megha sign and glow",
+"rank": 0
+},
+{
+"technical_bid_status": 0,
+"financial_bid_status": 2,
+"aoc_status": 2,
+"bid_amount": 0,
+"bidder_name": "printtouch india",
+"rank": 0
+},
+{
+"technical_bid_status": 1,
+"financial_bid_status": 1,
+"aoc_status": 1,
+"bid_amount": 2.25,
+"bidder_name": "s s enterprise",
+"rank": 1
+},
+{
+"technical_bid_status": 0,
+"financial_bid_status": 2,
+"aoc_status": 2,
+"bid_amount": 0,
+"bidder_name": "sunrise media and effects private limited",
+"rank": 0
+}
+],
+"s3_document_path": [
+{
+"download_id": "TDDy5ydn-6759",
+"file_name": "Tender Document"
+},
+{
+"download_id": "TDDoAYQK-4270",
+"file_name": "Tender Document 2"
+},
+{
+"download_id": "TDDE0IQe-9296",
+"file_name": "Tender Document 3"
+},
+{
+"download_id": "TDDd6lSU-7339",
+"file_name": "Tender Document 4"
+},
+{
+"download_id": "TDDueeVz-4074",
+"file_name": "Tender Document 5"
+}
+],
+"category": "Services",
+"sub_category": "Advertisement Services",
+"product_name": "Signage",
+"created_at": 1779287440335,
+"updated_at": 1779287440355,
+"procurement_source_name": "Government Of West Bengal Tenders",
+"platforms": [
+"eProcure"
+],
+"file_download": false,
+"followed": false,
+"tresult_id": 11109724,
+"isAccessible": false
+},
+"highlight": {
+"tender_result_id.keyword": [
+"@opensearch-dashboards-highlighted-field@TRayoaP-027679@/opensearch-dashboards-highlighted-field@"
+],
+"tender_result_id": [
+"@opensearch-dashboards-highlighted-field@TRayoaP@/opensearch-dashboards-highlighted-field@-@opensearch-dashboards-highlighted-field@027679@/opensearch-dashboards-highlighted-field@"
+]
+}
+}

@@ -98,3 +98,9 @@
 2026-05-29 15:37:47 | INFO     | embedder | Embedding model ready
 2026-05-29 16:01:53 | INFO     | embedder | Loading embedding model: all-MiniLM-L6-v2
 2026-05-29 16:02:03 | INFO     | embedder | Embedding model ready
+2026-05-29 16:46:52 | INFO     | embedder | Loading embedding model: all-MiniLM-L6-v2
+2026-05-29 16:48:53 | INFO     | embedder | Loading embedding model: all-MiniLM-L6-v2
+2026-05-29 16:49:34 | INFO     | embedder | Embedding model ready
+2026-05-29 17:00:07 | INFO     | embedder | Loading embedding model: all-MiniLM-L6-v2
+2026-05-29 17:01:48 | INFO     | embedder | Loading embedding model: all-MiniLM-L6-v2
+2026-05-29 17:02:00 | INFO     | embedder | Embedding model ready

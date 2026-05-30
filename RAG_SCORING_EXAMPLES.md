@@ -1,7 +1,7 @@
 # RAG Scoring Deep Dive — Visual Guide
 
 > How exactly are scores calculated? Step-by-step examples  
-> **Last Updated**: May 29, 2026
+> **Last Updated**: May 2026
 
 ---
 
@@ -34,9 +34,14 @@
     │  ├─ distance = cosine_distance(query, chunk_vec)
     │  └─ semantic_score = 1 - distance
     │
-    ├─ Calculate Keyword Score
-    │  ├─ Find query keywords in bid fields
-    │  ├─ Apply field weights
+    ├─ Calculate Keyword Score  (_keyword_score)
+    │  ├─ Split query into words
+    │  ├─ Remove stop words (for, the, a, an, and, or, in, of, is)
+    │  ├─ Find matches in bid metadata fields:
+    │  │    full_item_name (weight 3.0)
+    │  │    department     (weight 1.5)
+    │  │    bid_type       (weight 1.0)
+    │  │    product_type   (weight 1.0)
     │  └─ keyword_score = total_matches / max_possible
     │
     └─ Calculate Hybrid Score
@@ -59,6 +64,7 @@
 ┌──────────────────────────────────────┐
 │ [Optional] Send to LLM for answer    │
 │ or return retrieval-only results     │
+│ (with semantic + keyword breakdown)  │
 └──────────────────────────────────────┘
 ```
 
@@ -71,7 +77,6 @@
 ```
 Query: "Laptops"
 top_k: 5
-RAG_TOP_K=5
 
 Stored in database:
 Bid 1: Item="Dell Laptops", Dept="IT", Type="Product", Value="50 Lakhs"
@@ -86,7 +91,7 @@ Bid 5: Item="Network Switches", Dept="IT", Type="Product", Value="30 Lakhs"
 ```
 Query text: "Laptops"
 ↓
-Encode using SentenceTransformer
+Encode using SentenceTransformer (all-MiniLM-L6-v2)
 ↓
 Query vector: [0.324, -0.156, 0.892, ..., 0.045]  (384 dims)
 ```
@@ -115,36 +120,34 @@ Raw fetch (20 chunks):
 Distance from query: 0.12
 Semantic score = 1 - 0.12 = 0.88
 
-Keyword Analysis:
-Query words: {"laptop", "laptops"}  (after stop word removal)
+Keyword Analysis (_keyword_score):
+Query words after stop word removal: {"laptops"}
 
 Field matching:
 ┌─ full_item_name: "Dell Laptops"
 │  Words: {"dell", "laptops"}
-│  Matches: {"laptops"} = 1 match
-│  Contribution: 3.0 × (1/2) = 1.5
+│  Matches: {"laptops"} = 1 match out of 1 query word
+│  Contribution: 3.0 × (1/1) = 3.0
 │
 ├─ department: "IT"
 │  Words: {"it"}
 │  Matches: {} = 0 matches
 │  Contribution: 0
 │
-├─ bid_type: "Product"
-│  Words: {"product"}
-│  Matches: {} = 0 matches
+├─ bid_type: "Product Bid/RAs"
+│  Matches: {} = 0
 │  Contribution: 0
 │
 └─ product_type: "Product"
-   Words: {"product"}
-   Matches: {} = 0 matches
+   Matches: {} = 0
    Contribution: 0
 
-Total keyword score = 1.5 / 6.5 = 0.23
+Total keyword score = min(1.0, 3.0 / 6.5) = 0.46
 (max_possible = 3.0 + 1.5 + 1.0 + 1.0 = 6.5)
 
-✓ Hybrid Score = (0.88 × 0.6) + (0.23 × 0.4)
-              = 0.528 + 0.092
-              = 0.620
+✓ Hybrid Score = (0.88 × 0.6) + (0.46 × 0.4)
+              = 0.528 + 0.184
+              = 0.712
 ```
 
 #### **Chunk: Bid 2 (Office Furniture)**
@@ -154,18 +157,13 @@ Distance from query: 0.89
 Semantic score = 1 - 0.89 = 0.11
 
 Keyword Analysis:
-Query words: {"laptop", "laptops"}
+Query words: {"laptops"}
 
 Field matching:
 ┌─ full_item_name: "Office Furniture"
 │  Words: {"office", "furniture"}
 │  Matches: {} = 0 matches
 │  Contribution: 0
-│
-├─ department: "Admin"
-├─ bid_type: "Product"
-└─ product_type: "Product"
-   All: 0 matches
 
 Total keyword score = 0 / 6.5 = 0.00
 
@@ -181,22 +179,19 @@ Distance from query: 0.35
 Semantic score = 1 - 0.35 = 0.65
 
 Keyword Analysis:
-Query words: {"laptop", "laptops"}
+Query words: {"laptops"}
 
 Field matching:
 ┌─ full_item_name: "Laptop Bags"
 │  Words: {"laptop", "bags"}
-│  Matches: {"laptop"} = 1 match
-│  Contribution: 3.0 × (1/2) = 1.5
-│
-└─ department: "Stationery"
-   (no match)
+│  Matches: {} = 0 (query has "laptops", field has "laptop" — no exact match)
+│  Contribution: 0
 
-Total keyword score = 1.5 / 6.5 = 0.23
+Total keyword score = 0 / 6.5 = 0.00
 
-✓ Hybrid Score = (0.65 × 0.6) + (0.23 × 0.4)
-              = 0.390 + 0.092
-              = 0.482  ← Still less than Bid 1
+✓ Hybrid Score = (0.65 × 0.6) + (0.00 × 0.4)
+              = 0.390 + 0.000
+              = 0.390  ← Semantic only
 ```
 
 #### **Chunk: Bid 4 (Computer Hardware)**
@@ -206,15 +201,13 @@ Distance from query: 0.42
 Semantic score = 1 - 0.42 = 0.58
 
 Keyword Analysis:
-Query words: {"laptop", "laptops"}
+Query words: {"laptops"}
 
 Field matching:
 ┌─ full_item_name: "Computer Hardware"
 │  Words: {"computer", "hardware"}
-│  Matches: {} = 0 matches (not "laptop")
+│  Matches: {} = 0 matches
 │  Contribution: 0
-│
-└─ (no other matches)
 
 Total keyword score = 0 / 6.5 = 0.00
 
@@ -229,16 +222,9 @@ Total keyword score = 0 / 6.5 = 0.00
 Distance from query: 0.68
 Semantic score = 1 - 0.68 = 0.32
 
-Keyword Analysis:
-Query words: {"laptop", "laptops"}
+No keyword matches.
 
-No matches in any field.
-
-Total keyword score = 0 / 6.5 = 0.00
-
-✗ Hybrid Score = (0.32 × 0.6) + (0.00 × 0.4)
-              = 0.192 + 0.000
-              = 0.192
+✗ Hybrid Score = (0.32 × 0.6) + (0.00 × 0.4) = 0.192
 ```
 
 ### Step 4: Aggregate by Bid ID
@@ -246,11 +232,11 @@ Total keyword score = 0 / 6.5 = 0.00
 For each bid, keep the highest scoring chunk:
 
 ```
-Bid 1: Max chunk score = 0.620 ✓ Winner!
-Bid 2: Max chunk score = 0.066
-Bid 3: Max chunk score = 0.482
+Bid 1: Max chunk score = 0.712 ✓ Winner!
+Bid 3: Max chunk score = 0.390
 Bid 4: Max chunk score = 0.348
 Bid 5: Max chunk score = 0.192
+Bid 2: Max chunk score = 0.066
 ```
 
 ### Step 5: Sort and Return Top-K
@@ -259,15 +245,15 @@ Bid 5: Max chunk score = 0.192
 Results (top_k=5, sorted by hybrid score):
 
 1. Bid 1 (Dell Laptops)
-   ├─ Score: 0.620 (62.0%)
+   ├─ Score: 0.712 (71.2%)
    ├─ Semantic: 0.88 (88%)
-   ├─ Keyword: 0.23 (23%)
+   ├─ Keyword: 0.46 (46%)
    └─ Type: Product | Dept: IT | Value: 50 Lakhs
 
 2. Bid 3 (Laptop Bags)
-   ├─ Score: 0.482 (48.2%)
+   ├─ Score: 0.390 (39.0%)
    ├─ Semantic: 0.65 (65%)
-   ├─ Keyword: 0.23 (23%)
+   ├─ Keyword: 0.00 (0%)
    └─ Type: Product | Dept: Stationery | Value: 2 Lakhs
 
 3. Bid 4 (Computer Hardware)
@@ -292,23 +278,23 @@ Results (top_k=5, sorted by hybrid score):
 ### Analysis
 
 **Why Bid 1 wins**:
-- ✓ Exact keyword match ("Laptops")
+- ✓ Exact keyword match ("laptops" in item name)
 - ✓ High semantic similarity (0.88)
-- ✓ Relevant department (IT)
+- ✓ Keyword score boosted by high field weight (3.0 for item name)
 
 **Why Bid 3 is second**:
-- ✓ Keyword match ("Laptop")
-- ✓ Moderate semantic match (0.65)
-- ✗ Wrong department (Stationery, not IT)
+- ✓ Moderate semantic match (0.65, "laptop bags" is related)
+- ✗ No keyword match (query "laptops" ≠ field word "laptop")
+- Purely semantic result
 
 **Why Bid 4 is third**:
-- ✓ High semantic match (0.58, related to laptops)
-- ✗ No keyword match (not called "laptop")
+- ✓ Moderate semantic match (0.58, hardware is related)
+- ✗ No keyword match
 - ✓ Right department (IT)
 
 ---
 
-## Example 2: Complex Query — "IT Department Hardware Procurement"
+## Example 2: Multi-Word Query — "IT Department Hardware Procurement"
 
 ### Setup
 
@@ -322,16 +308,14 @@ top_k: 5
 ```
 Raw query: "IT Department Hardware Procurement"
 ↓
-Stop word removal: Remove "of", "the", "for"
+Stop word removal: Remove "of", "the", "for", "in", "is"
 ↓
-Query words: {"IT", "Department", "Hardware", "Procurement"}
+Query words: {"it", "department", "hardware", "procurement"}
 ↓
 Query vector: [0.451, -0.234, 0.567, ..., -0.123]
 ```
 
 ### Semantic Scores
-
-Let's say ChromaDB returns:
 
 ```
 Bid A: "Dell Servers IT Equipment"
@@ -350,43 +334,41 @@ Bid C: "IT Infrastructure Procurement Services"
 ### Keyword Scores
 
 ```
-Bid A: "Dell Servers IT Equipment"
-  full_item_name: "Dell Servers IT Equipment"
-  Words: {"dell", "servers", "it", "equipment"}
-  Query matches: {"IT"} = 1/4 words match
+Bid A: full_item_name="Dell Servers IT Equipment", department="IT"
+  
+  full_item_name words: {"dell", "servers", "it", "equipment"}
+  Query matches: {"it"} = 1 out of 4 query words
   Contribution: 3.0 × (1/4) = 0.75
   
-  department: "IT"
-  Words: {"it"}
-  Query matches: {"IT"} = 1/1 words match
-  Contribution: 1.5 × (1/1) = 1.5
+  department words: {"it"}
+  Query matches: {"it"} = 1 out of 4 query words
+  Contribution: 1.5 × (1/4) = 0.375
   
-  keyword_score = (0.75 + 1.5) / 6.5 = 0.35
+  keyword_score = min(1.0, (0.75 + 0.375) / 6.5) = 0.173
 
-Bid C: "IT Infrastructure Procurement Services"
-  full_item_name: "IT Infrastructure Procurement Services"
-  Words: {"it", "infrastructure", "procurement", "services"}
-  Query matches: {"IT", "Procurement"} = 2/4 words match
+Bid C: full_item_name="IT Infrastructure Procurement Services", department="Finance"
+  
+  full_item_name words: {"it", "infrastructure", "procurement", "services"}
+  Query matches: {"it", "procurement"} = 2 out of 4 query words
   Contribution: 3.0 × (2/4) = 1.5
   
-  department: "Finance"
-  Words: {"finance"}
+  department words: {"finance"}
   Query matches: {} = 0
   Contribution: 0
   
-  keyword_score = 1.5 / 6.5 = 0.23
+  keyword_score = min(1.0, 1.5 / 6.5) = 0.231
 ```
 
 ### Hybrid Calculation
 
 ```
 Bid A:
-  hybrid = (0.82 × 0.6) + (0.35 × 0.4)
-         = 0.492 + 0.140
-         = 0.632
+  hybrid = (0.82 × 0.6) + (0.173 × 0.4)
+         = 0.492 + 0.069
+         = 0.561
 
 Bid C:
-  hybrid = (0.92 × 0.6) + (0.23 × 0.4)
+  hybrid = (0.92 × 0.6) + (0.231 × 0.4)
          = 0.552 + 0.092
          = 0.644
 
@@ -396,8 +378,8 @@ Result: Bid C ranks higher!
 ### Key Insight
 
 **Bid C wins because**:
-- Slightly better semantic match (0.92 vs 0.82)
-- Both have good keyword matching
+- Better semantic match (0.92 vs 0.82) — "IT Infrastructure Procurement" is semantically closer
+- Better keyword match (2 words match vs 1 word match)
 - Hybrid balances both factors
 
 This shows how hybrid scoring prevents missing results that are semantically perfect but lack exact keywords.
@@ -430,20 +412,18 @@ Bid Y: (0.45 × 0.6) + (0.10 × 0.4) = 0.27 + 0.04 = 0.31
 ```
 Bid X: (0.95 × 0.8) + (0.90 × 0.2) = 0.76 + 0.18 = 0.94 ✓ Still wins
 Bid Y: (0.45 × 0.8) + (0.10 × 0.2) = 0.36 + 0.02 = 0.38
-Difference: +0.07 for X, +0.07 for Y (same impact)
 ```
 
 **More keyword (40% semantic, 60% keyword)**:
 ```
 Bid X: (0.95 × 0.4) + (0.90 × 0.6) = 0.38 + 0.54 = 0.92 ✓ Still wins
 Bid Y: (0.45 × 0.4) + (0.10 × 0.6) = 0.18 + 0.06 = 0.24
-Difference: -0.01 for X, -0.07 for Y (Y loses more)
 ```
 
-### When Weights Matter
+### When Weights Matter Most
 
 ```
-Query: "computer" (could mean many things)
+Query: "computer" (ambiguous — could mean many things)
 
 Bid A: "Laptop Computer" (perfect keyword match)
   Semantic: 0.70
@@ -453,20 +433,20 @@ Bid B: "IT Hardware Infrastructure" (semantically related)
   Semantic: 0.85
   Keyword: 0.10
 
-With 60/40 weights:
+With 60/40 weights (default):
   Bid A: (0.70 × 0.6) + (0.95 × 0.4) = 0.42 + 0.38 = 0.80
   Bid B: (0.85 × 0.6) + (0.10 × 0.4) = 0.51 + 0.04 = 0.55
   → Bid A wins (correct! exact match)
 
-With 80/20 weights:
+With 80/20 weights (semantic heavy):
   Bid A: (0.70 × 0.8) + (0.95 × 0.2) = 0.56 + 0.19 = 0.75
   Bid B: (0.85 × 0.8) + (0.10 × 0.2) = 0.68 + 0.02 = 0.70
-  → Bid A still wins (by less margin)
+  → Bid A still wins (by smaller margin — Bid B creeps up)
 
-With 40/60 weights:
+With 40/60 weights (keyword heavy):
   Bid A: (0.70 × 0.4) + (0.95 × 0.6) = 0.28 + 0.57 = 0.85
   Bid B: (0.85 × 0.4) + (0.10 × 0.6) = 0.34 + 0.06 = 0.40
-  → Bid A wins even stronger (keyword matters most)
+  → Bid A wins even stronger (keyword dominates)
 ```
 
 ---
@@ -476,13 +456,8 @@ With 40/60 weights:
 ### Query: "IT Department Laptops"
 
 ```
-Bid: "Dell Laptops"
-  full_item_name: "Dell Laptops"
-  department: "IT"
-  bid_type: "Product"
-  product_type: "Product"
-
-Query words: {"IT", "Department", "Laptops"}
+Bid: "Dell Laptops", department="IT"
+Query words: {"it", "department", "laptops"}
 ```
 
 ### With Default Weights
@@ -495,19 +470,17 @@ fields_text = {
     "product_type": 1.0,
 }
 
-full_item_name matches:
+full_item_name: "Dell Laptops"
   Words: {"dell", "laptops"}
-  Matches: {"laptops"} = 1/3
+  Matches: {"laptops"} = 1 out of 3 query words
   Score: 3.0 × (1/3) = 1.0
 
-department matches:
+department: "IT"
   Words: {"it"}
-  Matches: {"it"} = 1/3
+  Matches: {"it"} = 1 out of 3 query words
   Score: 1.5 × (1/3) = 0.5
 
-bid_type, product_type: No matches
-
-Total: 1.5 / 6.5 = 0.23
+Total: min(1.0, 1.5 / 6.5) = 0.23
 ```
 
 ### With Adjusted Weights (Prioritize Department)
@@ -520,16 +493,12 @@ fields_text = {
     "product_type": 1.0,
 }
 
-department matches:
+department: "IT"
   Score: 3.0 × (1/3) = 1.0  (was 0.5)
 
-Total: 2.0 / 7.5 = 0.27  (was 0.23)
-↑ Department matches now contribute more
+Total: min(1.0, 2.0 / 8.0) = 0.25  (was 0.23)
+↑ Department matches now contribute more to ranking
 ```
-
-### Result
-
-With higher department weight, bids from IT department score higher, even if item names don't match perfectly.
 
 ---
 
@@ -550,11 +519,9 @@ Pattern: Scores 0.7-0.9 for relevant results
          Scores < 0.3 for irrelevant results
 ```
 
-### Pattern 2: Skewed Semantic (Semantic Heavy)
+### Pattern 2: Semantic Heavy (weights 0.8/0.2)
 
 ```
-If weights are (0.8, 0.2):
-
 Top 5 scores:
 1. 0.82
 2. 0.78
@@ -562,16 +529,13 @@ Top 5 scores:
 4. 0.58
 5. 0.51
 
-Pattern: Narrower spread
-         Only semantic similarity matters
+Pattern: Narrower spread, only semantic similarity matters
          May miss keyword-exact matches
 ```
 
-### Pattern 3: Skewed Keyword (Keyword Heavy)
+### Pattern 3: Keyword Heavy (weights 0.3/0.7)
 
 ```
-If weights are (0.3, 0.7):
-
 Top 5 scores:
 1. 0.91  (high keyword match)
 2. 0.65  (medium keyword match)
@@ -581,8 +545,32 @@ Top 5 scores:
 
 Pattern: Drops suddenly after keyword-matched results
          Synonym/related results ranked lower
-         More precise but misses intent-based matches
 ```
+
+---
+
+## Score Breakdown in Retrieval-Only Mode
+
+When `RAG_LLM_PROVIDER=""`, each result shows the full breakdown:
+
+```
+1. Bid No    : GEM/2026/B/7382409
+   Item      : Dell Laptops 15 inch
+   Dept      : Ministry of Electronics
+   Type      : Product Bid/RAs
+   End Date  : 11-01-2026 16:00:00
+   Est. Value: 5000000 INR
+   URL       : https://bidplus.gem.gov.in/...
+   ──────────────────────────────────────
+   Overall Score : 71.20%
+     • Semantic (60%)  : 88.00%
+     • Keyword  (40%)  : 46.00%
+```
+
+This breakdown helps you understand:
+- **High semantic, low keyword**: Semantically related but no exact word match
+- **Low semantic, high keyword**: Exact words present but different meaning
+- **Both high**: Strong match on all fronts
 
 ---
 
@@ -593,18 +581,12 @@ Pattern: Drops suddenly after keyword-matched results
 ```
 Query: "Bids"
 
-Bid A: "Product Bid/RAs - Software"
-  Semantic: 0.45 (just the word "bid")
-  Keyword: 0.15 (word "bid" in field, but low weight)
-  Hybrid: 0.35
+All bids will have similar low scores because:
+- "bids" is too generic for semantic differentiation
+- "bids" appears in bid_type fields but with low weight
 
-Bid B: "Government Service Bids"
-  Semantic: 0.48
-  Keyword: 0.15
-  Hybrid: 0.37
-
-Result: Very close scores (0.35 vs 0.37)
-Why: Query too generic, semantic only source of differentiation
+Result: Very close scores, ordering mostly random
+Fix: Use a more specific query
 ```
 
 ### Scenario: Specific Query
@@ -626,38 +608,48 @@ Result: Clear winner (0.75 vs 0.23)
 Why: Specific query has strong keyword signals + semantic match
 ```
 
+### Scenario: Stop Words Only
+
+```
+Query: "for the"
+
+Query words after stop word removal: {} (empty!)
+→ _keyword_score returns 0.5 (neutral)
+→ Only semantic score differentiates results
+
+Fix: Use meaningful query words
+```
+
 ---
 
 ## Debugging Scores
 
 When results don't seem right:
 
-### Check 1: Semantic Score Breakdown
+### Check 1: Score Breakdown in Chat
 
 ```bash
-# In chat mode:
 python main.py --chat
 You > /search "your query"
 
-# Look for output like:
-# Overall Score : 45%
-#   • Semantic (60%)  : 65%
-#   • Keyword  (40%)  : 15%
-
-# If Semantic very low (< 30%): Wrong embedding model or query
-# If Keyword very low (< 20%): Words not in bid fields
+# Output shows:
+# • [GEM/2026/B/123]  Dell Laptops  | End: 11-01-2026  | 71.20%
+# (full_item_name shown, not raw chunk text)
 ```
 
-### Check 2: Field Extraction
+### Check 2: Retrieval-Only Mode
 
-```python
-# File: rag/vector_store.py, line ~105
+```bash
+# Set in .env:
+RAG_LLM_PROVIDER=
 
-# Add debug logging:
-log.debug(f"Query words: {query_words}")
-log.debug(f"Field matches: {total_score}/{max_possible}")
+# Then run:
+python main.py --ask "your query"
 
-# Rerun and check logs
+# Output shows full breakdown:
+# Overall Score : 71%
+#   • Semantic (60%)  : 88%
+#   • Keyword  (40%)  : 46%
 ```
 
 ### Check 3: Vector Store Health
@@ -669,10 +661,6 @@ python main.py --stats
 # - Vector store chunks: > SQLite bids
 # - Ratio: 3-5:1
 # - No error messages
-
-# Bad indicators:
-# - chunks < bids (data loss?)
-# - chunks > 100x bids (index corruption?)
 ```
 
 ---
@@ -688,14 +676,16 @@ python main.py --stats
 └─────────────────────────────────────────────────────┘
 
 ┌────────────────────────────────────────────────────────┐
-│ KEYWORD SCORING                                        │
+│ KEYWORD SCORING  (_keyword_score)                      │
 ├────────────────────────────────────────────────────────┤
-│ For each field:                                        │
-│   matches = count(query_words ∩ field_words)         │
-│   contribution = field_weight × (matches / n_queries) │
-│                                                        │
-│ keyword_score = min(1.0, Σcontribution / Σweights)    │
-│ Range: 0 (no matches) to 1 (all matches in all fields)│
+│ 1. Remove stop words from query                        │
+│    stop_words = {for, the, a, an, and, or, in, of, is} │
+│ 2. If all words removed → return 0.5 (neutral)         │
+│ 3. For each field:                                     │
+│    matches = count(query_words ∩ field_words)          │
+│    contribution = field_weight × (matches / n_queries) │
+│ 4. keyword_score = min(1.0, Σcontribution / Σweights)  │
+│ Range: 0 (no matches) to 1 (all matches in all fields) │
 └────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────┐
@@ -704,7 +694,7 @@ python main.py --stats
 │ hybrid = (semantic × 0.6) + (keyword × 0.4)         │
 │ Range: 0 (completely irrelevant) to 1 (perfect)     │
 │                                                      │
-│ Can adjust weights:                                  │
+│ Adjust weights:                                      │
 │ hybrid = (semantic × w_s) + (keyword × w_k)         │
 │ where: w_s + w_k = 1.0                              │
 └──────────────────────────────────────────────────────┘
@@ -712,10 +702,8 @@ python main.py --stats
 ┌──────────────────────────────────────────────────────┐
 │ FIELD WEIGHT SCORING                                 │
 ├──────────────────────────────────────────────────────┤
-│ score_component = field_weight × (matches / n_query) │
-│                                                      │
 │ Default weights:                                     │
-│  full_item_name: 3.0                                 │
+│  full_item_name: 3.0  (highest — item name match)   │
 │  department: 1.5                                     │
 │  bid_type: 1.0                                       │
 │  product_type: 1.0                                   │
@@ -730,16 +718,17 @@ python main.py --stats
 To manually calculate scores:
 
 ```python
-# Formula:
-def calculate_hybrid_score(semantic, keyword, w_semantic=0.6, w_keyword=0.4):
-    return (semantic * w_semantic) + (keyword * w_keyword)
+# Hybrid formula:
+def calculate_hybrid_score(semantic, keyword, w_s=0.6, w_k=0.4):
+    return (semantic * w_s) + (keyword * w_k)
 
-# Example:
-calculate_hybrid_score(0.87, 0.23)  # Returns 0.614
+# Examples:
+calculate_hybrid_score(0.88, 0.46)  # Returns 0.712 (Bid 1 from Example 1)
+calculate_hybrid_score(0.65, 0.00)  # Returns 0.390 (Bid 3 from Example 1)
 
 # Try different weights:
-calculate_hybrid_score(0.87, 0.23, w_semantic=0.7, w_keyword=0.3)  # 0.638
-calculate_hybrid_score(0.87, 0.23, w_semantic=0.5, w_keyword=0.5)  # 0.590
+calculate_hybrid_score(0.88, 0.46, w_s=0.7, w_k=0.3)  # 0.754
+calculate_hybrid_score(0.88, 0.46, w_s=0.5, w_k=0.5)  # 0.670
 ```
 
 ---
@@ -748,10 +737,10 @@ calculate_hybrid_score(0.87, 0.23, w_semantic=0.5, w_keyword=0.5)  # 0.590
 
 The RAG scoring system is:
 
-1. **Transparent**: You can see both components (semantic + keyword)
+1. **Transparent**: You can see both components (semantic + keyword) in retrieval-only mode
 2. **Tunable**: Adjust weights to match your intent
 3. **Debuggable**: Scores tell you what's matching and why
 4. **Balanced**: Combines different matching strategies
+5. **Stop-word aware**: Common words don't pollute keyword matching
 
 **Key principle**: No single signal (semantic or keyword) is perfect. Hybrid gives best of both worlds.
-

@@ -119,12 +119,26 @@ TESSERACT_CMD = _str(
 # ---------------------------------------------------------
 # RAG SETTINGS
 # ---------------------------------------------------------
-RAG_EMBEDDING_MODEL = _str("RAG_EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+# Embedding model.  Recommended for English bid text:
+#   BAAI/bge-base-en-v1.5    (best quality, ~110M params)
+#   BAAI/bge-small-en-v1.5   (faster, lower memory)
+#   all-MiniLM-L6-v2         (legacy, fastest, lowest quality)
+RAG_EMBEDDING_MODEL = _str("RAG_EMBEDDING_MODEL", "BAAI/bge-base-en-v1.5")
 CHROMA_DIR          = _path("CHROMA_DIR", "storage/chroma_db")
 CHROMA_COLLECTION   = _str("CHROMA_COLLECTION", "gem_bids")
 RAG_TOP_K           = _int("RAG_TOP_K", 5)
 RAG_CHUNK_SIZE      = _int("RAG_CHUNK_SIZE", 800)
 RAG_CHUNK_OVERLAP   = _int("RAG_CHUNK_OVERLAP", 100)
+
+# Hybrid retrieval
+RAG_FETCH_K       = _int("RAG_FETCH_K", 40)      # chunks fetched per leg
+RAG_DENSE_WEIGHT  = _float("RAG_DENSE_WEIGHT", 0.6)
+RAG_BM25_WEIGHT   = _float("RAG_BM25_WEIGHT", 0.4)
+
+# Cross-encoder reranker.  Single biggest score booster.
+# Default model is small + CPU-friendly.
+RAG_USE_RERANKER  = _str("RAG_USE_RERANKER", "true").lower() in ("1", "true", "yes", "on")
+RAG_RERANKER_MODEL = _str("RAG_RERANKER_MODEL", "BAAI/bge-reranker-base")
 
 RAG_LLM_PROVIDER = _str("RAG_LLM_PROVIDER", "ollama")
 

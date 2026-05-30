@@ -188,6 +188,32 @@ class GemBrowser:
         return self.list_page.locator("div.card")
 
     # -------------------------------------------------------
+    # WAIT FOR CARDS TO BE PRESENT
+    # Bootstrap popovers populate `data-content` only after
+    # the card list finishes rendering — give the DOM time.
+    # -------------------------------------------------------
+    def wait_for_cards(self, timeout_ms: int = 15_000):
+        try:
+            self.list_page.wait_for_selector(
+                "div.card", state="attached", timeout=timeout_ms
+            )
+            # Make sure the popover trigger attribute is filled in.
+            # On some pages the framework injects `data-content` a
+            # tick after the card appears.
+            self.list_page.wait_for_function(
+                """() => {
+                    const cards = document.querySelectorAll('div.card');
+                    if (!cards.length) return false;
+                    const hasPopover = Array.from(cards).some(c =>
+                        c.querySelector('[data-content], [data-original-title]'));
+                    return hasPopover;
+                }""",
+                timeout=timeout_ms,
+            )
+        except Exception as e:
+            log.debug(f"wait_for_cards: {e}")
+
+    # -------------------------------------------------------
     # EXTRACT LINKS FROM A CARD
     # Returns (document_url, corrigendum_url)
     # -------------------------------------------------------

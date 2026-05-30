@@ -1,7 +1,7 @@
 # RAG System — Visual Reference & Architecture Diagrams
 
 > Quick visual guides for understanding the system  
-> **Last Updated**: May 29, 2026
+> **Last Updated**: May 2026
 
 ---
 
@@ -17,106 +17,94 @@
 │                                                                  │
 │  GeM           ┌─────────────┐                                  │
 │  Website ────→ │  Scraper    │────┐                            │
-│                │ (browser.py) │   │                            │
-│                └─────────────┘    │                            │
-│                                   ▼                            │
-│                          ┌─────────────┐                       │
-│                          │  Parser     │────┐                  │
+│  (active bids  │ (browser.py) │   │                            │
+│   only via     └─────────────┘    │                            │
+│   Ongoing                         ▼                            │
+│   Bids/RA                ┌─────────────┐                       │
+│   filter)                │  Parser     │────┐                  │
 │                          │(parser.py)  │    │                  │
 │                          └─────────────┘    │                  │
-│                                             ▼                  │
-│                           PDF → SQLite ← New Bids             │
-│                           Text   DB       (database.py)       │
-│                            ↓                                   │
-│                    ┌─────────────────┐                        │
-│                    │ RAG Indexing    │                        │
-│                    │ (embedder.py)   │                        │
-│                    └────────┬────────┘                        │
-│                             │                                  │
-│          ┌──────────────────┼──────────────────┐               │
-│          ▼                  ▼                  ▼               │
-│    ┌──────────┐      ┌────────────┐    ┌────────────┐        │
-│    │ Chunks   │      │ Embeddings │    │  Metadata  │        │
-│    │ (Text)   │      │ (Vectors)  │    │ (Fields)   │        │
-│    └────┬─────┘      └──────┬─────┘    └──────┬─────┘        │
-│         │                   │                  │               │
-│         └───────────────────┼──────────────────┘               │
-│                             ▼                                  │
-│                    ┌─────────────────┐                        │
-│                    │   ChromaDB      │                        │
-│                    │  Vector Store   │                        │
-│                    │ (chroma_db/)    │                        │
-│                    └────────┬────────┘                        │
-│                             │                                  │
-└─────────────────────────────┼──────────────────────────────────┘
-                              │
-                    OUTPUT → QUERY
-                    ────────  ─────
-                              │
-┌─────────────────────────────┼──────────────────────────────────┐
-│                    QUERY PIPELINE                               │
-├─────────────────────────────┼──────────────────────────────────┤
-│                             │                                   │
-│  User Query (string)        ▼                                   │
-│      │                 ┌──────────┐                            │
-│      │                 │ Embed    │                            │
-│      │                 │ Query    │                            │
-│      │                 └─────┬────┘                            │
-│      │                       ▼                                  │
-│      │              Query Vector (384 dims)                    │
-│      │                       │                                  │
-│      │        ┌──────────────┴──────────────┐                  │
-│      │        ▼                             ▼                  │
-│      │   ┌──────────────┐         ┌────────────────┐          │
-│      │   │ Semantic     │         │  Keyword       │          │
-│      │   │ Similarity   │         │  Matching      │          │
-│      │   │ (Cosine)     │         │  (TF-IDF)      │          │
-│      │   └──────┬───────┘         └────────┬───────┘          │
-│      │          │ 0.0-1.0                  │ 0.0-1.0         │
-│      │          │ (semantic_score)         │ (keyword_score) │
-│      │          └──────────────┬───────────┘                  │
-│      │                         ▼                               │
-│      │              ┌──────────────────┐                      │
-│      │              │ Hybrid Score     │                      │
-│      │              │ (0.6 + 0.4)      │                      │
-│      │              │ = 0.0-1.0        │                      │
-│      │              └────────┬─────────┘                      │
-│      │                       ▼                                  │
-│      │         ┌───────────────────────┐                       │
-│      │         │ Sort by Score         │                       │
-│      │         │ Return Top-K          │                       │
-│      │         └─────────┬─────────────┘                       │
-│      │                   ▼                                      │
-│      │          Top-K Relevant Bids                            │
-│      │          (with scores)                                  │
-│      │                   │                                      │
-│      └─────────┬─────────┘                                     │
-│              ┌─▼────────┐                                      │
-│              │ Format   │                                      │
-│              │ Results  │                                      │
-│              └─┬────────┘                                      │
-│                ├─→ Direct (retrieval-only)                     │
-│                │   Print bids + scores                        │
-│                │                                              │
-│                └─→ With LLM                                   │
-│                    ┌──────────────┐                           │
-│                    │ Send to LLM  │                           │
-│                    │ (OpenAI or   │                           │
-│                    │ Ollama)      │                           │
-│                    └──────┬───────┘                           │
-│                           ▼                                    │
-│                  Generate Natural                             │
-│                  Language Answer                              │
-│                           │                                    │
-└───────────────────────────┼────────────────────────────────────┘
-                            │
-                            ▼
-                      ┌────────────────┐
-                      │ OUTPUT         │
-                      │ - Answer text  │
-                      │ - Source bids  │
-                      │ - Scores       │
-                      └────────────────┘
+│                          ↑ dates from       ▼                  │
+│                          card HTML   SQLite DB                 │
+│                                      (database.py)            │
+│                                             ↓                  │
+│                                    ┌─────────────────────┐    │
+│                                    │ RAG Indexing        │    │
+│                                    │ (embedder.py)       │    │
+│                                    └────────┬────────────┘    │
+│                                             ↓                  │
+│                                    ┌─────────────────────┐    │
+│                                    │   ChromaDB          │    │
+│                                    │  Vector Store       │    │
+│                                    │ (chroma_db/)        │    │
+│                                    └────────┬────────────┘    │
+└─────────────────────────────────────────────┼──────────────────┘
+                                              │
+                              QUERY PIPELINE  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  User Query ──→ Exit Check ──→ Smart top_k ──→ Embed Query     │
+│                                                      │          │
+│                              ┌───────────────────────┘          │
+│                              ▼                                   │
+│                    ┌──────────────────┐                         │
+│                    │  Hybrid Search   │                         │
+│                    │  Semantic (60%)  │                         │
+│                    │  Keyword  (40%)  │                         │
+│                    └────────┬─────────┘                         │
+│                             ▼                                    │
+│                    Deduplicate → Sort → Top-K                   │
+│                             │                                    │
+│              ┌──────────────┴──────────────┐                    │
+│              ▼                             ▼                    │
+│        LLM Answer                  Retrieval-Only               │
+│     (Ollama/OpenAI)              (score breakdown)              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Scraper Flow: Active Bids + Card Dates
+
+```
+SCRAPER PIPELINE (pipeline/scraper.py)
+════════════════════════════════════════════════════════════════
+
+For each BID_TYPE in settings:
+        │
+        ▼
+┌─────────────────────────┐
+│ browser.reset_filters() │
+└────────┬────────────────┘
+         │
+         ▼
+┌──────────────────────────────┐
+│ browser.select_bid_type()    │  e.g. "Product Bid/RAs"
+└────────┬─────────────────────┘
+         │
+         ▼
+┌──────────────────────────────┐
+│ browser.select_ongoing_bids()│  ← NEW: filters active bids only
+│ Clicks "Ongoing Bids/RA"     │       (expired bids skipped)
+└────────┬─────────────────────┘
+         │
+         ▼
+  For each card on page:
+         │
+         ├─ get_ra_from_card()          ← RA number from card HTML
+         ├─ get_product_type_from_card() ← product type from card HTML
+         ├─ get_dates_from_card()        ← START + END dates from card HTML
+         │    ├─ Matches "Start Date: DD-MM-YYYY HH:MM AM/PM"
+         │    ├─ Matches "End Date: DD-MM-YYYY HH:MM AM/PM"
+         │    └─ Converts to 24h via _to_24h()
+         │
+         ├─ browser.extract_card_links() ← document_url + corrigendum_url
+         ├─ browser.download_pdf()
+         ├─ extract_pdf_text()           ← PyMuPDF + OCR fallback
+         ├─ parse_bid_data()             ← regex field extraction
+         │
+         └─ Build bid record:
+              start_date = card_start OR pdf_start  (card preferred)
+              end_date   = card_end   OR pdf_end    (card preferred)
 ```
 
 ---
@@ -134,20 +122,23 @@ HYBRID SCORING FORMULA
                 ┌──────────────┴──────────────┐
                 │                             │
                 ▼                             ▼
-         ┌─────────────────┐         ┌──────────────┐
-         │ SEMANTIC TRACK  │         │ KEYWORD TRACK│
-         └────────┬────────┘         └──────┬───────┘
+         ┌─────────────────┐         ┌──────────────────┐
+         │ SEMANTIC TRACK  │         │  KEYWORD TRACK   │
+         └────────┬────────┘         │  _keyword_score()│
+                  │                  └──────┬───────────┘
                   │                         │
          1. Embed query vector       1. Split query to words
-            (384 dims)               2. Remove stop words
-         2. Cosine distance to       3. Find matches in:
-            each chunk vector           - full_item_name (w=3.0)
-         3. Convert to score            - department (w=1.5)
-            score = 1 - distance        - bid_type (w=1.0)
-                                         - product_type (w=1.0)
-                  │                   4. Calculate match %
-                  │                   5. Apply field weights
-                  │                   6. Normalize 0-1
+            (384 dims)               2. Remove stop words:
+         2. Cosine distance to          {for,the,a,an,and,
+            each chunk vector            or,in,of,is}
+         3. Convert to score         3. If all stop words →
+            score = 1 - distance        return 0.5 (neutral)
+                                     4. Find matches in:
+                                        full_item_name (w=3.0)
+                                        department     (w=1.5)
+                                        bid_type       (w=1.0)
+                                        product_type   (w=1.0)
+                  │                   5. Normalize 0-1
                   │                      │
          semantic_score        keyword_score
          (0.0 to 1.0)          (0.0 to 1.0)
@@ -155,15 +146,15 @@ HYBRID SCORING FORMULA
                   └──────────────┬───────┘
                                  ▼
                   ┌─────────────────────────┐
-                  │  COMBINE (60% + 40%)   │
-                  │                        │
-                  │ hybrid = (semantic *   │
-                  │          0.6) +        │
-                  │          (keyword *    │
-                  │          0.4)          │
-                  │                        │
-                  │ Result: 0.0 to 1.0     │
-                  └────────────┬───────────┘
+                  │  COMBINE (60% + 40%)    │
+                  │                         │
+                  │ hybrid = (semantic *    │
+                  │          0.6) +         │
+                  │          (keyword *     │
+                  │          0.4)           │
+                  │                         │
+                  │ Result: 0.0 to 1.0      │
+                  └────────────┬────────────┘
                                │
                                ▼
                         FINAL SCORE
@@ -178,42 +169,43 @@ HYBRID SCORING FORMULA
 STAGE 1: INGEST
 ════════════════════════════════════════════════════════════════
 
-  PDF Document (from GeM website)
+  GeM Portal Card HTML
           │
-          ▼
-  ┌─────────────────┐
-  │ Extract Text    │
-  │ (PyMuPDF)       │ + OCR fallback if needed
-  └────────┬────────┘
-           │
-           ▼
-  Raw PDF Text: "Bid No: GEM/2024/B/123 Item: Laptops..."
-           │
-           ▼
-  ┌──────────────────────┐
-  │ Parse Fields         │
-  │ (regex patterns)     │ Extract: bid_no, item_name,
-  └────────┬─────────────┘          department, dates, value
-           │
-           ▼
-  Structured Data:
-  {
-    "bid_no": "GEM/2024/B/123",
-    "full_item_name": "Dell Laptops",
-    "department": "IT",
-    "end_date": "15-12-2024 05:00:00",
-    "estimated_value": "50 Lakhs",
-    "full_pdf_text": "Bid No: GEM/2024/B/123..."
-  }
-           │
-           ▼
-  ┌──────────────────────┐
-  │ Store in SQLite      │ Dedup check: new bid?
-  └────────┬─────────────┘
-           │
-           ▼
-  New Bid? YES → Continue to Stage 2
-            NO → Stop (already indexed)
+          ├─ get_dates_from_card()
+          │    start_date = "11-12-2025 16:30:00"  (24h format)
+          │    end_date   = "11-01-2026 16:00:00"
+          │
+          └─ PDF Document (downloaded)
+                   │
+                   ▼
+          ┌─────────────────┐
+          │ extract_pdf_text│  PyMuPDF → OCR fallback
+          └────────┬────────┘
+                   │
+                   ▼
+          ┌──────────────────────┐
+          │ parse_bid_data()     │  regex extraction
+          └────────┬─────────────┘
+                   │
+                   ▼
+          Structured Data:
+          {
+            "bid_no":          "GEM/2026/B/7382409",
+            "full_item_name":  "All in One PC (V2)",
+            "department":      "Ministry of Electronics",
+            "start_date":      "11-12-2025 16:30:00",  ← from card
+            "end_date":        "11-01-2026 16:00:00",  ← from card
+            "estimated_value": "13000000",
+            "full_pdf_text":   "Bid No: GEM/2026/B/..."
+          }
+                   │
+                   ▼
+          ┌──────────────────────┐
+          │ database.upsert()    │  dedup check: new bid?
+          └────────┬─────────────┘
+                   │
+          New Bid? YES → Continue to Stage 2
+                    NO → Stop (already indexed)
 
 ────────────────────────────────────────────────────────────────
 
@@ -224,43 +216,31 @@ STAGE 2: INDEX
            │
            ▼
   ┌──────────────────────────┐
-  │ Build Bid Document       │
-  │ Combine structured +     │ "Bid Number: GEM/2024/B/123
-  │ PDF text into one        │  RA Number: ...
-  │ rich string              │  Item: Dell Laptops
-  └────────┬─────────────────┘  ... [full PDF text]"
+  │ build_bid_document()     │  "Bid Number: GEM/2026/B/7382409
+  │ Combine structured +     │   RA Number: ...
+  │ PDF text into one string │   Item: All in One PC (V2)
+  └────────┬─────────────────┘   ... [full PDF text]"
            │
            ▼
   ┌──────────────────────────┐
-  │ Chunk Text               │
-  │ Split into overlapping   │ Chunk 1: chars 0-800
-  │ windows                  │ Chunk 2: chars 700-1500
-  └────────┬─────────────────┘ Chunk 3: chars 1400-2200
-           │                   ... etc (overlap=100)
-           ▼
-  List of 5-10 chunks
-  (depends on PDF size)
+  │ chunk_text()             │  Chunk 1: chars 0-800
+  │ Overlapping windows      │  Chunk 2: chars 700-1500
+  └────────┬─────────────────┘  Chunk 3: chars 1400-2200
            │
            ▼
   ┌──────────────────────────┐
-  │ Embed Chunks             │
-  │ Convert each chunk to    │ Chunk 1: [0.23, -0.45, ...]
-  │ 384-dim vector           │ Chunk 2: [0.31, -0.22, ...]
-  └────────┬─────────────────┘ Chunk 3: [0.19, -0.51, ...]
-           │
-           ▼
-  ┌──────────────────────────┐
-  │ Upsert to ChromaDB       │
-  │ Store:                   │ ID: "GEM/2024/B/123__chunk_0"
-  │ - IDs                    │ Embedding: [0.23, -0.45, ...]
-  │ - Embeddings             │ Text: "Bid Number: ... Item: ..."
-  │ - Documents (chunks)     │ Metadata: {bid_no, dept, ...}
-  │ - Metadata               │
+  │ embed_texts()            │  Chunk 1: [0.23, -0.45, ...]
+  │ sentence-transformers    │  Chunk 2: [0.31, -0.22, ...]
   └────────┬─────────────────┘
            │
            ▼
-  ChromaDB Collection Updated
-  Now searchable!
+  ┌──────────────────────────┐
+  │ col.upsert()             │  ID: "GEM/2026/B/7382409__chunk_0"
+  │ ChromaDB                 │  Embedding: [0.23, -0.45, ...]
+  └────────┬─────────────────┘  Metadata: {bid_no, dept, dates...}
+           │
+           ▼
+  ChromaDB Collection Updated — Now searchable!
 
 ────────────────────────────────────────────────────────────────
 
@@ -271,51 +251,39 @@ STAGE 3: SEARCH
            │
            ▼
   ┌─────────────────────┐
-  │ Embed Query         │ Query vector: [0.27, -0.38, ...]
+  │ is_exit() check     │  ← checked FIRST before anything
+  │ quit/bye/exit/done? │
+  └────────┬────────────┘
+           │ (not exit)
+           ▼
+  ┌─────────────────────┐
+  │ _smart_top_k()      │  listing intent? → 15
+  │ intent detection    │  focused lookup? → k//2
+  └────────┬────────────┘  default         → 5
+           │
+           ▼
+  ┌─────────────────────┐
+  │ embed_query()       │  Query vector: [0.27, -0.38, ...]
   └────────┬────────────┘
            │
            ▼
   ┌──────────────────────────┐
-  │ ChromaDB Query           │
-  │ Find nearest chunks by   │ Returns 20 chunks
-  │ cosine distance          │ (fetch more than top_k
-  └────────┬─────────────────┘  to account for dedup)
-           │
-           ▼
-  Raw Results:
-  - Bid 1 chunk 0: distance=0.12, score=(1-0.12)=0.88
-  - Bid 1 chunk 1: distance=0.15, score=(1-0.15)=0.85
-  - Bid 2 chunk 0: distance=0.91, score=(1-0.91)=0.09
-  - ... more chunks
-           │
-           ▼
-  ┌──────────────────────────┐
-  │ Calculate Keyword Scores │ For each chunk's metadata
-  │ (TF-IDF style)           │
+  │ ChromaDB query           │  Returns fetch_n = top_k * 4 chunks
+  │ cosine distance search   │
   └────────┬─────────────────┘
            │
            ▼
-  Hybrid Scores:
-  - Bid 1 chunk 0: (0.88*0.6) + (0.95*0.4) = 0.906 ✓
-  - Bid 1 chunk 1: (0.85*0.6) + (0.93*0.4) = 0.882 ✓
-  - Bid 2 chunk 0: (0.09*0.6) + (0.10*0.4) = 0.094 ✗
+  For each chunk:
+    semantic_score = 1 - distance
+    keyword_score  = _keyword_score(query, metadata)
+    hybrid_score   = (semantic * 0.6) + (keyword * 0.4)
            │
            ▼
   ┌──────────────────────────┐
-  │ Deduplicate by Bid ID    │
-  │ Keep highest score       │ Bid 1: 0.906 (from chunk 0)
-  │ per bid                  │ Bid 2: 0.094 (from chunk 0)
-  └────────┬─────────────────┘ Bid 3: 0.542 ...
-           │
-           ▼
-  ┌──────────────────────────┐
-  │ Sort by Score            │ Result 1: Bid 1 (0.906)
-  │ Return Top-K             │ Result 2: Bid 3 (0.542)
-  └────────┬─────────────────┘ Result 3: Bid 5 (0.381)
-           │                   Result 4: Bid 2 (0.094)
-           │                   Result 5: Bid 7 (0.078)
-           ▼
-  Top-K Results (top_k=5)
+  │ Deduplicate by bid_no    │  Keep highest hybrid score per bid
+  │ Sort descending          │
+  │ Return top_k             │
+  └────────┬─────────────────┘
 
 ────────────────────────────────────────────────────────────────
 
@@ -324,30 +292,29 @@ STAGE 4: GENERATE (Optional)
 
   Top-K Results
            │
-           ├─ If RAG_LLM_PROVIDER = "" → Go to OUTPUT (retrieval-only)
+           ├─ RAG_LLM_PROVIDER = "" → Retrieval-only output
+           │   Shows: bid details + score breakdown
+           │   Overall Score : 72%
+           │     • Semantic (60%)  : 85%
+           │     • Keyword  (40%)  : 52%
            │
-           └─ If RAG_LLM_PROVIDER = "ollama" or "openai"
+           └─ RAG_LLM_PROVIDER = "ollama" or "openai"
                       │
                       ▼
            ┌──────────────────────────┐
-           │ Format Prompt            │
-           │ Combine:                 │ "Bid No: GEM/2024/B/123
-           │ - Question               │  Item: Dell Laptops
-           │ - Top-K bids             │  Dept: IT
-           │ - System instructions    │  ... [all top-K bids]
+           │ build_prompt()           │  Max 8 bids in prompt
+           │ Format bids + question   │
            └────────┬─────────────────┘
                     │
                     ▼
            ┌──────────────────────────┐
-           │ Send to LLM              │ Call Ollama or OpenAI API
-           │ (HTTP request)           │ with full prompt
+           │ Call LLM                 │  Ollama or OpenAI API
+           │ temperature=0.0          │  (deterministic output)
            └────────┬─────────────────┘
                     │
                     ▼
            Natural Language Answer
-           "Based on the retrieved bids,
-            here are the IT department
-            laptop procurement options..."
+           (structured bid format)
 ```
 
 ---
@@ -366,7 +333,6 @@ Model Selection Trade-offs
 │ 22 MB    │ ⚡⚡⚡   │ 8/10   │ Low    │ Yes      │ 8/10    │
 └──────────┴──────────┴─────────┴────────┴──────────┴─────────┘
 Best for: Speed, basic CPU machines, most use cases
-Use when: Default choice unless specific needs
 
 ┌─────────────────────────────────────────────────────────────┐
 │ all-mpnet-base-v2 (ACCURATE) 🎯                            │
@@ -376,7 +342,6 @@ Use when: Default choice unless specific needs
 │ 430 MB   │ ⚡⚡     │ 9/10   │ High   │ ~1 min   │ 9/10    │
 └──────────┴──────────┴─────────┴────────┴──────────┴─────────┘
 Best for: Accuracy over speed, better semantic understanding
-Use when: Results not good enough with MiniLM
 Drawback: 20x slower, reindex required
 
 ┌─────────────────────────────────────────────────────────────┐
@@ -387,17 +352,6 @@ Drawback: 20x slower, reindex required
 │ 33 MB    │ ⚡⚡     │ 8.5/10 │ Low    │ Yes      │ 8.5/10  │
 └──────────┴──────────┴─────────┴────────┴──────────┴─────────┘
 Best for: Balance between MiniLM and mpnet
-Use when: MiniLM too weak, mpnet too slow
-
-┌─────────────────────────────────────────────────────────────┐
-│ paraphrase-multilingual-MiniLM-L12-v2 🌍                   │
-├──────────┬──────────┬─────────┬────────┬──────────┬─────────┤
-│ Size     │ Speed    │ Quality │ Memory │ Download │ Score   │
-├──────────┼──────────┼─────────┼────────┼──────────┼─────────┤
-│ 63 MB    │ ⚡⚡     │ 8/10   │ Medium │ ~30 sec  │ 7/10    │
-└──────────┴──────────┴─────────┴────────┴──────────┴─────────┘
-Best for: Multi-language support
-Use when: Queries or docs might be in different languages
 ```
 
 ---
@@ -405,7 +359,7 @@ Use when: Queries or docs might be in different languages
 ## Query Intent Detection
 
 ```
-SMART TOP_K SELECTION
+SMART TOP_K SELECTION  (_smart_top_k in query_engine.py)
 ════════════════════════════════════════════════════════════════
 
 User Query Input
@@ -424,12 +378,14 @@ LISTING INTENT?            FOCUSED INTENT?        DEFAULT
 Keywords:                  Keywords:              Standard
 - all                      - bid number           top_k
 - every                    - bid no               value
-- list                     - specific
-- show all                 - find bid
-- how many                 - this bid
-- complete list
+- list                     - GEM/YYYY
+- show all                 - specific
+- how many                 - find bid
+- complete list            - this bid
 - give me all
 - display all
+- what bids
+- which bids
     │                          │                      │
     ▼                          ▼                      ▼
 top_k = 15              top_k = top_k // 2      top_k = 5
@@ -438,66 +394,6 @@ top_k = 15              top_k = top_k // 2      top_k = 5
 Example:                Example:                 Example:
 "Show all IT bids"      "Find bid GEM/2024"      "IT bids"
 → top_k = 15            → top_k = 2-3            → top_k = 5
-→ Comprehensive         → Precise                → Balanced
-→ May include noise     → Only best matches      → Good mix
-
-Result: Adaptive behavior based on query intent
-        Minimum manual tuning needed
-```
-
----
-
-## Configuration Decision Tree
-
-```
-WHERE DO I START?
-════════════════════════════════════════════════════════════════
-
-                           START
-                            │
-                ┌───────────┴───────────┐
-                │                       │
-                ▼                       ▼
-        Results look       Results look
-        good?              bad?
-            │                   │
-            ▼                   ▼
-        ┌─────────┐         ┌─────────────────┐
-        │ SKIP TO │         │ WHAT'S WRONG?   │
-        │PROD SET │         └────────┬────────┘
-        └─────────┘                  │
-                          ┌─────────┬┴─────────┐
-                          │         │         │
-                          ▼         ▼         ▼
-                    Too    Wrong   Too
-                    broad  type    slow
-                    │      │       │
-            ┌───────┴──┐   │   ┌───┴──────┐
-            ▼          ▼   ▼   ▼          ▼
-          Try:       Try: Try:
-        1. Lower   1. Boost 1. Remove
-          top_k     type     LLM
-        2. Boost     weight
-           semantic 2. Add  2. Fewer
-        3. Filter  filter   chunks
-                   3. Lower
-                     keyword
-                     weight
-
-        Did it improve?
-            │
-        ┌───┴───┐
-        │       │
-        ▼       ▼
-       YES      NO
-        │       │
-        ▼       ▼
-      Keep    Revert
-      Try     Try
-      next    different
-      change  change
-
-Iterate until happy!
 ```
 
 ---
@@ -533,41 +429,10 @@ Prevent dupes               │ python main.py --reindex
 No results?                 │ python main.py --reindex
                             │ python main.py --stats
                             │ Check RAG_TOP_K not too low
-```
 
----
-
-## Scoring Dynamics (Visual)
-
-```
-How different factor combinations affect results:
-
-                    HIGH SEMANTIC (0.8)
-                    ↑
-                    │
-        BROAD       │  Finds many related      NARROW
-        RESULTS     │  concepts, may be        RESULTS
-                    │  vague in specifics
-                    │
-                    │         ★ DEFAULT
-                    │     (0.6 semantic)
-                    │
-                    │  Good balance: specific
-                    │  AND related concepts
-                    │
-        ────────────┼──────────────────────────────────
-        NO EXACT    │      HIGH KEYWORD (0.8)
-        MATCHES     │
-        BUT         │  Requires exact words,
-        CONCEPTS    │  misses synonyms
-        SIMILAR     │
-                    │   LOW KEYWORD (0.2)
-                    │  Fuzzy matches, lots of noise
-                    │
-                    ▼
-        LOW SEMANTIC (0.3)
-
-Positioning in this space determines result characteristics.
+Active bids only            │ Already handled automatically
+                            │ browser.select_ongoing_bids()
+                            │ called in scraper for every bid type
 ```
 
 ---
@@ -585,31 +450,29 @@ Output looks like:
 │ GeM Bid Scraper — Stats              │
 ├──────────────────────────────────────┤
 │ SQLite total bids      : 542         │
+│ New (unseen)           : 12          │
+│ Total runs logged      : 38          │
 │ Vector store chunks    : 1847        │
-│ Ratio                  : 3.4:1       │  ← Important!
+│ ChromaDB path          : storage/... │
 └──────────────────────────────────────┘
 
 INTERPRETATION:
 ───────────────
 
-Ratio 2-6:1    ✓ HEALTHY
-               Each bid has 2-6 chunks (normal with overlap)
-               Continue using normally
+chunks:bids ratio 2-6:1   ✓ HEALTHY
+                           Each bid has 2-6 chunks (normal)
 
-Ratio > 10:1   ⚠️  SUSPICIOUS
-               Too many chunks per bid
-               Possible: Duplicate chunks in index
-               Fix: python main.py --reindex
+ratio > 10:1              ⚠️  SUSPICIOUS
+                           Too many chunks per bid
+                           Fix: python main.py --reindex
 
-Ratio < 1:1    ❌ ERROR
-               More bids than chunks (impossible!)
-               Possible: Data corruption
-               Fix: python main.py --reindex
+ratio < 1:1               ❌ ERROR
+                           More bids than chunks
+                           Fix: python main.py --reindex
 
-Chunks not    ❌ NOT INDEXING
-growing with   New bids scraped but not indexed
-new bids       Check: Logs for errors
-               Fix: Rescrape + verify indexing
+chunks not growing        ❌ NOT INDEXING
+with new bids              Check logs for errors
+                           Fix: Rescrape + verify indexing
 ```
 
 ---
@@ -617,41 +480,72 @@ new bids       Check: Logs for errors
 ## Quick Parameter Impact Matrix
 
 ```
-Parameter          Impact Area             Impact Level
+Parameter          Impact Area             Requires Reindex?
 ═════════════════════════════════════════════════════════════
 
-RAG_TOP_K          Result count            MEDIUM
+RAG_TOP_K          Result count            NO
                    Precision/Recall
-                   Query speed
 
-RAG_CHUNK_SIZE     Indexing speed          HIGH (if changed)
-                   Context per chunk       Requires reindex
+RAG_CHUNK_SIZE     Indexing speed          YES
+                   Context per chunk
                    Index size
 
-RAG_CHUNK_OVERLAP  Context preservation    MEDIUM
-                   Index size              Requires reindex
-                   Retrieval quality
+RAG_CHUNK_OVERLAP  Context preservation    YES
+                   Index size
 
-Semantic weight    Result relevance        HIGH
-                   Synonym matching        No reindex
-                   Result ordering
+Semantic weight    Result relevance        NO
+                   Synonym matching
 
-Keyword weight     Exact match priority    HIGH
-                   Field sensitivity       No reindex
+Keyword weight     Exact match priority    NO
+                   Field sensitivity
 
-Field weights      Type/dept importance    HIGH
-                   Keyword scoring         No reindex
+Field weights      Type/dept importance    NO
+(_keyword_score)   Keyword scoring
 
-Embedding model    Accuracy                CRITICAL
-                   Speed                   Requires reindex
-                   Language support
+Embedding model    Accuracy                YES
+                   Speed
 
-LLM provider       Answer quality          MEDIUM (cosmetic)
-                   Query speed             No reindex
-                   Cost
+LLM provider       Answer quality          NO
+                   Query speed
 
-Top-K at query     Result count            MEDIUM
-time               Overrides config        No reindex
+select_ongoing_    Scrapes active bids     N/A (scraper setting)
+bids()             only (no expired)
+
+get_dates_from_    Date accuracy           N/A (scraper setting)
+card()             Card HTML > PDF dates
+```
+
+---
+
+## File Purpose Quick Reference
+
+```
+CODEBASE ORGANIZATION
+════════════════════════════════════════════════════════════════
+
+FOR TUNING:
+  config/settings.py ........... All configuration values (.env)
+  rag/vector_store.py ......... Hybrid scoring + _keyword_score
+  rag/query_engine.py ......... Query logic + smart top_k + exit
+
+FOR UNDERSTANDING:
+  rag/embedder.py ............ Embedding & chunking logic
+  rag/llm.py ................. LLM integration + score breakdown
+  storage/database.py ........ SQLite operations + auto RAG index
+  core/parser.py ............ PDF parsing + card date extraction
+  core/browser.py ........... Playwright + ongoing bids filter
+
+FOR RUNNING:
+  main.py .................... All commands here
+  pipeline/scraper.py ....... Scraping logic (active bids only)
+  pipeline/scheduler.py ..... Hourly loop + new bid alerts
+
+FOR REFERENCE:
+  RAG_ARCHITECTURE_GUIDE.md .. How system works (theory)
+  RAG_SCORING_EXAMPLES.md ... Scoring with real examples
+  RAG_TUNING_GUIDE.md ....... How to tune (practical)
+  RAG_QUICK_START.md ........ Fast reference (commands)
+  RAG_VISUAL_REFERENCE.md ... This file (diagrams)
 ```
 
 ---
@@ -686,61 +580,14 @@ Something went wrong?
         │  ├─→ python main.py --reindex
         │  └─→ Try: Lower top_k to 1
         │
-        └─ "Can't find query docs"
-           ├─→ Use: /search command (retrieval only)
-           ├─→ Check: Filters are correct
-           └─→ Try: Simpler query
+        ├─ "Exit not working in chat"
+        │  └─→ is_exit() checked before query in query_engine.py
+        │
+        ├─ "/search shows garbled text"
+        │  └─→ search_only() enriches full_item_name in query_engine.py
+        │
+        └─ "Dates look wrong"
+           └─→ Dates come from card HTML (get_dates_from_card)
+               PDF dates used only as fallback
+               Check: card HTML has Start Date / End Date labels
 ```
-
----
-
-## File Purpose Quick Reference
-
-```
-CODEBASE ORGANIZATION
-════════════════════════════════════════════════════════════════
-
-FOR TUNING:
-  config/settings.py ........... All configuration values (.env)
-  rag/vector_store.py ......... Hybrid scoring formula (line ~158)
-  rag/query_engine.py ......... Query logic + smart top_k
-
-FOR UNDERSTANDING:
-  rag/embedder.py ............ Embedding & chunking logic
-  rag/llm.py ................. LLM integration
-  storage/database.py ........ SQLite operations
-  core/parser.py ............ PDF parsing
-
-FOR RUNNING:
-  main.py .................... All commands here
-  pipeline/scraper.py ....... Scraping logic (if tweaking scraper)
-
-FOR REFERENCE (You created these):
-  RAG_ARCHITECTURE_GUIDE.md .. How system works (theory)
-  RAG_SCORING_EXAMPLES.md ... Scoring with real examples
-  RAG_TUNING_GUIDE.md ....... How to tune (practical)
-  RAG_QUICK_START.md ........ Fast reference (commands)
-  (This file) ............... Visual diagrams
-```
-
----
-
-## Summary of Visual References
-
-This document contains:
-
-1. **System Architecture** (Top-level overview)
-2. **Scoring Components** (How scores calculated)
-3. **Data Flow** (From PDF to results, stage by stage)
-4. **Embedding Models** (Comparison table)
-5. **Query Intent Detection** (Smart top_k selection)
-6. **Configuration Decision Tree** (What to change)
-7. **Performance Map** (Goals to changes)
-8. **Scoring Dynamics** (Visual positioning)
-9. **Index Health Monitoring** (Stats interpretation)
-10. **Parameter Impact Matrix** (What each change does)
-11. **Help Decision Tree** (Troubleshooting)
-12. **File Organization** (Where to find things)
-
-**Total**: 12 visual reference guides covering all aspects of the system!
-

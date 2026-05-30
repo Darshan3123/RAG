@@ -129,34 +129,43 @@ def run_reindex():
 if __name__ == "__main__":
     args = sys.argv[1:]
 
-    if "--stats" in args:
-        print_stats()
+    try:
+        if "--stats" in args:
+            print_stats()
 
-    elif "--reindex" in args:
-        log.info("Mode: full vector store re-index")
-        run_reindex()
+        elif "--reindex" in args:
+            log.info("Mode: full vector store re-index")
+            run_reindex()
 
-    elif "--ask" in args:
-        idx      = args.index("--ask")
-        question = args[idx + 1] if idx + 1 < len(args) else ""
-        filter_str = None
-        if "--filter" in args:
-            fi         = args.index("--filter")
-            filter_str = args[fi + 1] if fi + 1 < len(args) else None
-        if question:
-            run_ask(question, filter_str)
+        elif "--ask" in args:
+            idx      = args.index("--ask")
+            question = args[idx + 1] if idx + 1 < len(args) else ""
+            filter_str = None
+            if "--filter" in args:
+                fi         = args.index("--filter")
+                filter_str = args[fi + 1] if fi + 1 < len(args) else None
+            if question:
+                run_ask(question, filter_str)
+            else:
+                print('Usage: python main.py --ask "your question"')
+
+        elif "--chat" in args:
+            run_chat()
+
+        elif "--once" in args:
+            log.info("Mode: single scrape run")
+            from pipeline.scheduler import start_scheduler
+            start_scheduler(run_once=True)
+
         else:
-            print('Usage: python main.py --ask "your question"')
-
-    elif "--chat" in args:
-        run_chat()
-
-    elif "--once" in args:
-        log.info("Mode: single scrape run")
-        from pipeline.scheduler import start_scheduler
-        start_scheduler(run_once=True)
-
-    else:
-        log.info("Mode: continuous hourly loop")
-        from pipeline.scheduler import start_scheduler
-        start_scheduler(run_once=False)
+            log.info("Mode: continuous hourly loop")
+            from pipeline.scheduler import start_scheduler
+            start_scheduler(run_once=False)
+            
+    except KeyboardInterrupt:
+        print("\n")
+        log.info("Process interrupted by user (Ctrl+C). Shutting down gracefully...")
+        try:
+            sys.exit(130)  # Standard Linux exit code for SIGINT
+        except SystemExit:
+            os._exit(130)

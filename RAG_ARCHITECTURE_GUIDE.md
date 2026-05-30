@@ -21,7 +21,8 @@
 
 Your system is a **Retrieval Augmented Generation (RAG)** pipeline for GeM (Government e-Marketplace) bid information. It combines:
 
-- **Data Collection**: Web scraping of bid PDFs from GeM website
+- **Data Collection**: Web scraping of bid PDFs from GeM website (active bids only)
+- **Card-Based Date Extraction**: Dates scraped from listing card HTML for accuracy
 - **Vector Embeddings**: Converting bid text to high-dimensional vectors for similarity search
 - **Hybrid Search**: Combining semantic similarity + keyword matching
 - **LLM Integration**: Optional AI-powered answer generation (OpenAI or Ollama)
@@ -39,9 +40,9 @@ Your system is a **Retrieval Augmented Generation (RAG)** pipeline for GeM (Gove
 │  │ (browser.py)│   │(parser.py)   │   │(database.py)     │  │
 │  └─────────────┘   └──────────────┘   └──────────────────┘  │
 │         ↓                                        ↓          │
-│    Downloads PDFs                    Stores bid metadata    │
-│                                      in SQLite              │
-│                                             ↓               │
+│  Downloads PDFs                    Stores bid metadata      │
+│  Filters active bids               in SQLite                │
+│  Scrapes dates from cards                   ↓               │
 │                                    ┌─────────────────────┐  │
 │                                    │  RAG Pipeline       │  │
 │                                    ├─────────────────────┤  │
@@ -70,19 +71,24 @@ Your system is a **Retrieval Augmented Generation (RAG)** pipeline for GeM (Gove
 ```
 1. SCRAPER (pipeline/scraper.py)
    ├─ Filters by bid type (Product, Service, etc.)
-   ├─ Fetches active bids only
+   ├─ Applies "Ongoing Bids/RA" filter → active bids only
    ├─ Downloads PDF documents
-   └─ Extracts raw text
+   ├─ Scrapes start_date + end_date from card HTML (accurate)
+   └─ Extracts raw text from PDFs
 
 2. PARSER (core/parser.py)
-   ├─ Extracts structured fields from PDF text
-   ├─ Fields extracted:
+   ├─ get_dates_from_card(): Scrapes dates from listing card HTML
+   │  ├─ Matches "Start Date: DD-MM-YYYY HH:MM AM/PM"
+   │  ├─ Matches "End Date: DD-MM-YYYY HH:MM AM/PM"
+   │  └─ Converts to 24-hour format via _to_24h()
+   ├─ extract_pdf_text(): Extracts text via PyMuPDF (OCR fallback)
+   ├─ parse_bid_data(): Extracts structured fields from PDF text
    │  ├─ bid_no (GEM/2024/B/12345)
    │  ├─ bid_type (Product Bid/RAs, Service Bid/RAs, etc.)
    │  ├─ full_item_name (What is being bid on)
    │  ├─ department (Government dept)
    │  ├─ quantity
-   │  ├─ start_date, end_date
+   │  ├─ start_date, end_date (PDF fallback only)
    │  ├─ estimated_value
    │  ├─ bid_packet_type (Single/Two packet)
    │  └─ full_pdf_text (entire PDF content)
@@ -112,39 +118,46 @@ Your system is a **Retrieval Augmented Generation (RAG)** pipeline for GeM (Gove
    ├─ Optional filter: f:product_type=Product
    └─ Optional top_k override
 
-2. SMART TOP_K SELECTION (query_engine.py)
+2. EXIT DETECTION (query_engine.py) — checked FIRST
+   ├─ Checked before any query processing
+   ├─ Exit words: quit, exit, q, bye, goodbye, stop, close, end, done, ok bye
+   └─ If matched → exit immediately (no query made)
+
+3. SMART TOP_K SELECTION (query_engine.py)
    ├─ Detects query intent:
-   │  ├─ Listing intent (all, every, list, show) → top_k = 15
-   │  ├─ Focused lookup (specific bid, find bid) → top_k = k/2
+   │  ├─ Listing intent (all, every, list, show, how many, what bids, etc.)
+   │  │  → top_k = max(default, 15)
+   │  ├─ Focused lookup (specific bid, find bid, bid number, GEM/YYYY)
+   │  │  → top_k = max(1, default // 2)
    │  └─ Generic → top_k = default (5)
    └─ Ensures better results for different query types
 
-3. VECTOR SEARCH (vector_store.py)
+4. VECTOR SEARCH (vector_store.py)
    ├─ Embed query using same model
    ├─ Fetch top_k*4 raw chunks from ChromaDB
    │  (over-fetch to account for deduplication)
    ├─ For each chunk, calculate:
    │  ├─ Semantic score: cosine similarity (0-1)
-   │  └─ Keyword score: TF-IDF style matching
+   │  └─ Keyword score: TF-IDF style matching on structured fields
    ├─ Combine: hybrid_score = (semantic * 0.6) + (keyword * 0.4)
-   ├─ Deduplicate by bid_no (keep highest score)
+   ├─ Deduplicate by bid_no (keep highest score per bid)
    └─ Sort by hybrid score, return top_k
 
-4. LLM INTEGRATION (llm.py)
+5. LLM INTEGRATION (llm.py)
    ├─ If RAG_LLM_PROVIDER = "openai" or "ollama"
-   │  ├─ Format retrieved bids into structured prompt
+   │  ├─ Format retrieved bids into structured prompt (max 8 bids)
    │  ├─ Send to LLM with system instructions
    │  ├─ LLM formats response with exact template
    │  └─ Return formatted answer
-   └─ If no LLM provider: return retrieval-only results
+   └─ If no LLM provider: return retrieval-only results with score breakdown
 
-5. OUTPUT
+6. OUTPUT
    ├─ Sources: List of retrieved bids with:
    │  ├─ bid_no, department, full_item_name
    │  ├─ end_date, estimated_value
    │  ├─ relevance_score (hybrid score)
    │  └─ document_url
-   └─ Answer: LLM-generated or retrieval-only
+   └─ Answer: LLM-generated or retrieval-only with score breakdown
 ```
 
 ---
@@ -212,7 +225,7 @@ RAG_CHUNK_OVERLAP=100                   # Overlap between chunks
 
 ### 2. Vector Store (rag/vector_store.py)
 
-**Purpose**: Store bid embeddings and perform similarity search.
+**Purpose**: Store bid embeddings and perform hybrid similarity search.
 
 **Technology**: ChromaDB (embedded vector database)
 - Persistent storage in `storage/chroma_db/`
@@ -239,7 +252,7 @@ upsert_bid(bid):
        - Metadatas: bid fields (bid_no, department, etc.)
 ```
 
-#### b) **Search (Hybrid)**
+#### b) **Hybrid Search**
 
 The search function performs **hybrid scoring** combining:
 
@@ -248,8 +261,9 @@ The search function performs **hybrid scoring** combining:
    - Range: 0 to 1 (1 = perfect match)
    - Formula: `1 - cosine_distance`
 
-2. **Keyword Score** (40% weight):
+2. **Keyword Score** (40% weight) — `_keyword_score()`:
    - TF-IDF style matching on structured fields
+   - Removes common stop words from query before matching
    - Matches query words against: item_name, department, bid_type, product_type
    - Field weights:
      - `full_item_name`: 3.0 (highest weight)
@@ -293,22 +307,32 @@ Result: Bid 1 (0.902) ranked before Bid 2 (0.572)
 
 **Components**:
 
-#### a) **Smart Top-K Selection**
+#### a) **Exit Detection (checked first)**
+```python
+EXIT_WORDS = {"quit", "exit", "q", "bye", "goodbye",
+              "stop", "close", "end", "done", "ok bye"}
+
+is_exit(text) → bool
+# Called BEFORE any query processing in --chat mode
+# Prevents accidental queries when user wants to quit
+```
+
+#### b) **Smart Top-K Selection**
 ```python
 _smart_top_k(question):
     if question contains listing intent words:
-        (all, every, list, show all, how many, etc.)
+        (all, every, list, show all, how many, what bids, which bids, etc.)
         → return max(default_k, 15)
     
     elif question contains focused lookup words:
-        (bid number, specific, find bid, etc.)
+        (bid number, specific, find bid, GEM/YYYY, etc.)
         → return max(1, default_k // 2)
     
     else:
         → return default_k
 ```
 
-#### b) **Ask Function**
+#### c) **Ask Function**
 ```python
 ask(question, filters=None, top_k=None):
     1. Determine top_k using smart selection
@@ -317,19 +341,20 @@ ask(question, filters=None, top_k=None):
     4. Call LLM with results (if configured)
     5. Extract sources with:
        - bid_no, bid_type, product_type
-       - full_item_name (cleaned)
+       - full_item_name (cleaned via _extract_item)
        - department, end_date, estimated_value
        - document_url
        - relevance_score (the hybrid score)
     6. Return structured response
 ```
 
-#### c) **Search-Only Function**
+#### d) **Search-Only Function**
 ```python
 search_only(query, filters=None, top_k=None):
     - Similar to ask() but without LLM
-    - Just returns raw retrieval results
-    - Useful for /search command in chat
+    - Returns raw retrieval results
+    - Enriches each result with clean full_item_name
+    - Used by /search command in chat mode
 ```
 
 ---
@@ -352,24 +377,22 @@ search_only(query, filters=None, top_k=None):
 
 3. **None** (Retrieval-only)
    - No LLM provider
-   - Returns formatted retrieval results
+   - Returns formatted retrieval results with **full score breakdown**
    - Always works, no dependencies
 
-**Flow**:
-
-```python
-call_llm(question, chunks):
-    1. build_prompt(question, chunks)
-       - Formats chunks into structured blocks
-       - Includes system instructions
-       - Max 8 bids per prompt (configurable)
-    
-    2. Call appropriate provider:
-       - OpenAI: Uses chat completions API
-       - Ollama: Uses HTTP /api/generate endpoint
-       - Fallback: Parse prompt as table
-    
-    3. Return LLM response or fallback
+**Score Breakdown in Retrieval-Only Mode**:
+```
+1. Bid No    : GEM/2026/B/7382409
+   Item      : All in One PC (V2)
+   Dept      : Ministry of Electronics
+   Type      : Product Bid/RAs
+   End Date  : 11-01-2026 16:00:00
+   Est. Value: 13000000 INR
+   URL       : https://bidplus.gem.gov.in/...
+   ──────────────────────────────────────
+   Overall Score : 72.00%
+     • Semantic (60%)  : 85.00%
+     • Keyword  (40%)  : 52.00%
 ```
 
 **System Prompt**:
@@ -426,13 +449,13 @@ For each chunk in vector store:
 - Works well with normalized embeddings
 - Fast to compute
 
-#### Step 3: Keyword Scoring
+#### Step 3: Keyword Scoring (`_keyword_score`)
 ```
 For each bid metadata:
     1. Extract query keywords (remove stop words)
+       Stop words removed: for, the, a, an, and, or, in, of, is
        Query: "laptop bids"
        Keywords: {"laptop", "bids"}
-       (Removed: "show", "me")
     
     2. Check structured fields:
        - full_item_name: "Dell Laptop 15 inch"
@@ -455,6 +478,8 @@ For each bid metadata:
        total_score = 1.5
        max_possible = 3.0 + 1.5 + 1.0 + 1.0 = 6.5
        keyword_score = min(1.0, 1.5 / 6.5) = 0.23
+    
+    Note: Returns 0.5 (neutral) if all query words are stop words
 ```
 
 #### Step 4: Hybrid Score
@@ -536,18 +561,6 @@ RAG_CHUNK_OVERLAP=100
 | **CHUNK_SIZE** | 800 | When documents have long, context-dependent information | When docs are structured with short fields |
 | **CHUNK_OVERLAP** | 100 | When context boundary matters (e.g., info spans edges) | When indexing speed is critical & memory is limited |
 
-**Examples**:
-
-```
-Scenario 1: Detailed technical specs spread across pages
-  → Increase CHUNK_SIZE to 1200, CHUNK_OVERLAP to 200
-     Reason: Keeps complete info in one chunk
-
-Scenario 2: Bid metadata is concise and well-structured
-  → Decrease CHUNK_SIZE to 500, CHUNK_OVERLAP to 50
-     Reason: Each chunk captures complete info
-```
-
 ### 2. Embedding Model
 
 ```env
@@ -563,11 +576,6 @@ RAG_EMBEDDING_MODEL=all-MiniLM-L6-v2
 | `all-MiniLM-L12-v2` | 384 | 33 MB | ⚡⚡ | Better | More layers, same size |
 | `paraphrase-multilingual-MiniLM-L12-v2` | 384 | 63 MB | ⚡ | Good | Multi-language support |
 
-**When to change**:
-- Current model too slow? → Use `all-MiniLM-L6-v2` (even faster)
-- Results not accurate enough? → Try `all-mpnet-base-v2` (more accurate)
-- Need multi-language? → Use `paraphrase-multilingual-*`
-
 **Important**: Changing this requires rebuilding the index!
 ```bash
 python main.py --reindex
@@ -578,11 +586,6 @@ python main.py --reindex
 ```env
 # Number of top results to return
 RAG_TOP_K=5
-
-# Smart top_k adjustments:
-# - Listing intent:     max(top_k, 15)
-# - Focused lookup:     max(1, top_k // 2)
-# - Default:            top_k
 ```
 
 **When to tune**:
@@ -597,7 +600,7 @@ RAG_TOP_K=10      # Returns more results (may include noise)
 
 ### 4. Hybrid Scoring Weights
 
-**File**: `rag/vector_store.py` line ~90
+**File**: `rag/vector_store.py` (search function, hybrid score line)
 
 Current:
 ```python
@@ -607,25 +610,16 @@ hybrid_score = (semantic_score * 0.6) + (keyword_score * 0.4)
 **To adjust weights**:
 
 ```python
-# Make keyword matching more important (e.g., exact department must match)
+# Make keyword matching more important
 hybrid_score = (semantic_score * 0.5) + (keyword_score * 0.5)
 
-# Make semantic matching more important (e.g., intent over exact words)
+# Make semantic matching more important
 hybrid_score = (semantic_score * 0.7) + (keyword_score * 0.3)
 ```
 
-**When to adjust**:
-
-| Scenario | Change | Reason |
-|----------|--------|--------|
-| Too many irrelevant results | 0.6→0.7 semantic, 0.4→0.3 keyword | Semantic similarity isn't enough; need exact matches |
-| Missing relevant results | 0.6→0.5 semantic, 0.4→0.5 keyword | Keyword matching could find results semantic misses |
-| Different departments in results | 0.6 semantic, 0.4→0.5 keyword | Boost keyword to enforce department filtering |
-| Too narrow/specific results | 0.6→0.7 semantic, 0.4→0.3 keyword | Let semantic similarity find broader matches |
-
 ### 5. Keyword Field Weights
 
-**File**: `rag/vector_store.py` line ~105
+**File**: `rag/vector_store.py` (`_keyword_score` function)
 
 ```python
 fields_text = {
@@ -634,21 +628,6 @@ fields_text = {
     "bid_type": 1.0,
     "product_type": 1.0,
 }
-```
-
-**When to adjust**:
-
-```python
-# Example: Make department matching more important
-fields_text = {
-    "full_item_name": 3.0,
-    "department": 2.5,        # ← Increased from 1.5
-    "bid_type": 1.0,
-    "product_type": 1.0,
-}
-
-# Use case: Queries like "IT department bids"
-#          Should strongly prefer IT department matches
 ```
 
 ### 6. LLM Provider Settings
@@ -668,47 +647,11 @@ OLLAMA_MODEL=llama3
 
 **Provider comparison**:
 
-| Provider | Setup | Cost | Speed | Quality | Customization |
-|----------|-------|------|-------|---------|---------------|
-| **ollama** | Install locally | Free | Medium | Good | Full control |
-| **openai** | API key | $$ | Fast | Excellent | Limited |
-| **None** | N/A | Free | Fast | N/A | N/A (retrieval-only) |
-
-### 7. Query Time Settings (query_engine.py)
-
-Smart top_k adjustment patterns (lines ~20-26):
-
-```python
-# Broad listing queries get higher top_k
-_LIST_INTENT = re.compile(
-    r"\b(all|every|list|show all|how many|complete list|"
-    r"give me all|show me|display all|what bids|which bids)\b",
-    re.IGNORECASE,
-)
-→ Increases top_k to 15 (get comprehensive results)
-
-# Focused queries get lower top_k
-_FOCUSED_INTENT = re.compile(
-    r"\b(bid number|bid no|GEM/\d{4}|specific|"
-    r"one bid|find bid|this bid)\b",
-    re.IGNORECASE,
-)
-→ Decreases top_k to k//2 (get only most relevant)
-```
-
-**To customize intent detection**:
-
-```python
-# Add patterns for your specific use cases
-
-# Example: If you see pattern "budget X"
-r"\b(budget|value|price|cost|estimate)\b"
-→ Could trigger higher keyword weight or different top_k
-
-# Example: If you see "recent bids"
-r"\b(recent|new|latest|today|this week)\b"
-→ Could add date-based filtering
-```
+| Provider | Setup | Cost | Speed | Quality |
+|----------|-------|------|-------|---------|
+| **ollama** | Install locally | Free | Medium | Good |
+| **openai** | API key | $$ | Fast | Excellent |
+| **None** | N/A | Free | Fast | N/A (retrieval-only with score breakdown) |
 
 ---
 
@@ -716,25 +659,13 @@ r"\b(recent|new|latest|today|this week)\b"
 
 ### 1. Indexing Performance
 
-**Bottle**: Embedding generation (can be slow for large PDFs)
-
-**Optimizations**:
-
 ```python
 # Use batch processing (already done in code)
 embeddings = model.encode(
     texts,
     batch_size=32,        # Process 32 chunks at once
-    show_progress_bar=False,
     normalize_embeddings=True,  # Cosine-ready
 )
-
-# To speed up further:
-batch_size=64          # Larger batches (if memory allows)
-
-# On GPU machines:
-# - Move model to GPU automatically
-# - 10x+ speedup possible
 ```
 
 **Specific tuning**:
@@ -748,56 +679,23 @@ RAG_EMBEDDING_MODEL=all-mpnet-base-v2  # Accurate but slower
 
 ### 2. Search Performance
 
-**Bottle**: ChromaDB query (usually fast, but can be slow with huge datasets)
-
-**Optimizations**:
-
 ```python
 # Current code already optimizes:
 fetch_n = min(top_k * 4, total)  # Limit raw fetch to account for dedup
-
-# For very large datasets (>100k bids):
-fetch_n = min(top_k * 2, total)  # Reduce fetch (faster, less dedup)
 ```
 
-### 3. Query Time Caching
-
-**Add caching for repeated queries**:
-
-```python
-from functools import lru_cache
-
-@lru_cache(maxsize=100)
-def search_cached(query: str, top_k: int = 5):
-    return search(query, top_k=top_k)
-
-# Benefits:
-# - Exact repeats return instant results
-# - Memory: ~100 queries cached
-# - Trade-off: Stale results if data changes frequently
-```
-
-### 4. Filtering Performance
+### 3. Filtering Performance
 
 **Using filters reduces search space**:
 
-```python
-# Slow: Search all ~50k chunks
-results = engine.ask("IT bids")
+```bash
+# Slow: Search all chunks
+python main.py --ask "IT bids"
 
-# Fast: Search only IT department chunks
-results = engine.ask(
-    "IT bids",
-    filters={"department": "IT Department"}
-)
+# Fast: Search only Product type chunks
+python main.py --ask "IT bids" --filter product_type=Product
 
 # Why faster: ChromaDB applies filter before similarity search
-# Result set: 50k → 5k → top_k (much faster)
-```
-
-**In main.py**:
-```bash
-python main.py --ask "bids" --filter department=IT
 ```
 
 ---
@@ -808,91 +706,50 @@ python main.py --ask "bids" --filter department=IT
 
 #### Issue 1: "Vector store is empty"
 
-**Cause**: No bids indexed yet
-
-**Solution**:
 ```bash
-# Rebuild index from existing SQLite bids
 python main.py --reindex
-
 # Or: Run full scrape first
 python main.py --once
 ```
 
 #### Issue 2: Results are irrelevant or too narrow
 
-**Root Cause Analysis**:
-
 ```
 Likely causes:
-1. Hybrid weights too biased toward keyword (set 0.4→0.3)
+1. Hybrid weights too biased toward keyword
    → Try: hybrid_score = (semantic * 0.7) + (keyword * 0.3)
 
-2. top_k too small (only looking at 1-2 results)
+2. top_k too small
    → Try: RAG_TOP_K=10
 
 3. Embedding model too generic
-   → Try: all-mpnet-base-v2 (better quality)
+   → Try: all-mpnet-base-v2 (better quality, requires reindex)
 
 4. Query is too specific/ambiguous
    → Try: Broaden query ("IT hardware" → "IT equipment")
 ```
 
-**Debugging steps**:
-```bash
-# 1. See raw search results (no LLM)
-python main.py --ask "your query" | grep "Overall Score"
-
-# 2. Check score breakdown
-# Scores should be 0.3-0.9 range
-# If all 0.1-0.2: embedding model mismatch or wrong query
-
-# 3. Try simpler query
-python main.py --ask "laptops"
-```
-
 #### Issue 3: Same bid appears multiple times
 
-**Cause**: Overlap causes multiple chunks per bid, code should deduplicate but bug possible
-
-**Check**:
 ```bash
 python main.py --stats
-# Note: "Vector store chunks" should be larger than unique bids
-# Ratio 3-5:1 is normal
-```
-
-**Solution**:
-```bash
-# Rebuild entire index
+# Ratio chunks:bids should be 3-5:1
+# If abnormal:
 python main.py --reindex
 ```
 
 #### Issue 4: Query returns results in wrong order
 
-**Cause**: Hybrid scoring not matching your intent
-
-**Solutions**:
-
-Option A: Adjust hybrid weights
 ```python
-# File: rag/vector_store.py, line ~158
-# Change from (0.6, 0.4) to (0.7, 0.3)
+# Option A: Adjust hybrid weights
 hybrid_score = (semantic_score * 0.7) + (keyword_score * 0.3)
-# Reload: python main.py --ask "your query"
-```
 
-Option B: Use filters
-```bash
-python main.py --ask "bids" --filter product_type=Product
-# Reduces noise from other product types
-```
+# Option B: Use filters
+# python main.py --ask "bids" --filter product_type=Product
 
-Option C: Adjust keyword field weights
-```python
-# File: rag/vector_store.py, line ~105
+# Option C: Adjust keyword field weights
 fields_text = {
-    "full_item_name": 4.0,    # ← Increase if item name match most important
+    "full_item_name": 4.0,    # Increase if item name match most important
     "department": 1.5,
     "bid_type": 1.0,
     "product_type": 1.0,
@@ -901,123 +758,34 @@ fields_text = {
 
 #### Issue 5: LLM returns hallucinated information
 
-**Cause**: LLM going beyond retrieved context
+Check `SYSTEM_PROMPT` in `rag/llm.py` includes:
+- `"Answer ONLY using the structured bid data in RETRIEVED BID CONTEXT."`
+- `"Never hallucinate values not in the context."`
 
-**Solution**:
-
-Check `SYSTEM_PROMPT` in `rag/llm.py`:
-```python
-# Should include:
-"Answer ONLY using the structured bid data in RETRIEVED BID CONTEXT."
-"Never hallucinate values not in the context."
-```
-
-If still happening:
-- Try different LLM model: `OLLAMA_MODEL=mistral` (more precise)
-- Switch to `RAG_LLM_PROVIDER=""` (retrieval-only, no hallucination)
+Or switch to retrieval-only: `RAG_LLM_PROVIDER=""`
 
 #### Issue 6: Slow searches
 
-**Root Cause Analysis**:
-
-```
-Timing breakdown:
-1. Embed query: ~50ms
-2. ChromaDB search: ~100-500ms (depends on index size)
-3. LLM call: 1000-3000ms (most time!)
-
-If slow: Usually LLM provider (network, model size)
-```
-
-**Solutions**:
-
 ```env
-# Option 1: Faster LLM provider
-OLLAMA_MODEL=tinyllama     # Smaller, faster
+# Option 1: Faster LLM
+OLLAMA_MODEL=tinyllama
 
 # Option 2: No LLM (instant results)
 RAG_LLM_PROVIDER=""
 
-# Option 3: Faster server (add timeout)
-# Already in code: timeout=90 for Ollama
+# Option 3: Fewer results
+RAG_TOP_K=3
 ```
-
----
 
 ### Best Practices
 
-#### 1. Query Phrasing
-
-```
-Good queries:
-  "Show me IT hardware bids"
-  (Clear intent + keywords)
-
-Better queries:
-  "List all product bids from IT department"
-  (Specifies type + uses keywords)
-
-Best queries with filters:
-  python main.py --ask "bids" --filter product_type=Product
-  (Explicit filter + clear query)
-
-Avoid:
-  "bids"                  (Too generic)
-  "show me everything"    (Too broad)
-  "gXfQw"                 (Garbage)
-```
-
-#### 2. Monitoring Quality
-
-```bash
-# Regular health checks:
-python main.py --stats
-
-# Monitor these metrics:
-# - Vector store chunks: Should grow with scraped bids
-# - Total SQLite bids: Should increase daily
-# - Ratio chunks:bids: Should be 3-5:1
-
-# If ratio > 10:1: Consider reindex
-# If ratio < 1:1: Data corruption, reindex
-```
-
-#### 3. Tuning Process
-
-Recommended tuning sequence:
-
-```
-1. Try defaults (usually good for 80% of queries)
-   python main.py --ask "your test query"
-
-2. If results are narrow/irrelevant:
-   a. Increase top_k: RAG_TOP_K=10
-   b. Decrease semantic weight: 0.6→0.5
-   c. Increase keyword weight: 0.4→0.5
-
-3. If results are too broad:
-   a. Decrease top_k: RAG_TOP_K=3
-   b. Increase semantic weight: 0.6→0.7
-   c. Decrease keyword weight: 0.4→0.3
-
-4. If LLM results worse than retrieval:
-   a. Check SYSTEM_PROMPT in llm.py
-   b. Try different LLM model
-   c. Use retrieval-only mode
-
-5. Monitor with multiple test queries before deploying
-```
-
-#### 4. Re-indexing Strategy
-
-When to reindex:
+#### Re-indexing Strategy
 
 ```
 ✓ DO reindex when:
   - Changing RAG_EMBEDDING_MODEL
   - Changing RAG_CHUNK_SIZE / RAG_CHUNK_OVERLAP
   - Noticed data corruption
-  - After major DB changes
 
 ✗ DON'T reindex when:
   - Just changing top_k, weights, LLM settings
@@ -1025,73 +793,25 @@ When to reindex:
   - Scraping new bids (automatic)
 ```
 
-Command:
 ```bash
 python main.py --reindex
 # Takes time proportional to # of bids
-# (2-3 min for 1000 bids on CPU)
-```
-
-#### 5. Production Deployment
-
-```yaml
-recommended_settings.env:
-  RAG_EMBEDDING_MODEL: all-MiniLM-L6-v2  # Fast, reliable
-  RAG_TOP_K: 5                           # Balance coverage
-  RAG_CHUNK_SIZE: 800                    # Standard
-  RAG_CHUNK_OVERLAP: 100                 # Standard
-  
-  RAG_LLM_PROVIDER: ollama               # Local (no API cost)
-  OLLAMA_MODEL: llama3                   # Reliable
-  OLLAMA_BASE_URL: http://localhost:11434
-  
-  # Or use retrieval-only (most reliable):
-  RAG_LLM_PROVIDER: ""
+# (~2-3 min for 1000 bids on CPU)
 ```
 
 ---
 
 ## Summary Table: When to Change What
 
-| Goal | Parameter | Change | Impact |
-|------|-----------|--------|--------|
-| **Faster indexing** | RAG_CHUNK_SIZE | 800→600 | 20% faster, less context |
-| **Faster indexing** | RAG_EMBEDDING_MODEL | mpnet→MiniLM | 50% faster, slightly lower accuracy |
-| **More results** | RAG_TOP_K | 5→15 | More comprehensive, more noise |
-| **Fewer results** | RAG_TOP_K | 5→2 | Higher quality, may miss relevant |
-| **Better accuracy** | RAG_EMBEDDING_MODEL | MiniLM→mpnet | 30% slower, better quality |
-| **Exact keyword match** | 0.6 semantic, 0.4 keyword | 0.5, 0.5 | More balanced, less semantic |
-| **Intent-based search** | 0.6 semantic, 0.4 keyword | 0.7, 0.3 | Better for variations, less exact |
-| **Faster queries** | RAG_LLM_PROVIDER | ollama→"" | Instant retrieval, no answers |
-| **Better answers** | OLLAMA_MODEL | tinyllama→llama3 | 2-3x slower but better quality |
-
----
-
-## Next Steps for Your System
-
-1. **Test with sample queries**:
-   ```bash
-   python main.py --ask "IT department laptops"
-   python main.py --ask "show all product bids" --filter product_type=Product
-   python main.py --chat  # Interactive mode
-   ```
-
-2. **Monitor metrics**:
-   ```bash
-   python main.py --stats  # Check health
-   ```
-
-3. **Tune for your use case**:
-   - Start with 3-5 test queries
-   - Adjust weights based on results
-   - Measure improvements
-
-4. **Document changes**:
-   - Keep notes of what you changed and why
-   - Build testing suite of queries
-
----
-
-**Document Version**: 1.0  
-**Last Updated**: May 29, 2026  
-**Author**: System Analysis  
+| Goal | Parameter | Change | Requires Reindex |
+|------|-----------|--------|-----------------|
+| **Faster indexing** | RAG_CHUNK_SIZE | 800→600 | Yes |
+| **Faster indexing** | RAG_EMBEDDING_MODEL | mpnet→MiniLM | Yes |
+| **Better accuracy** | RAG_EMBEDDING_MODEL | MiniLM→mpnet | Yes |
+| **More results** | RAG_TOP_K | 5→15 | No |
+| **Fewer results** | RAG_TOP_K | 5→3 | No |
+| **Semantic priority** | Hybrid weights | 0.6→0.7 semantic | No |
+| **Keyword priority** | Hybrid weights | 0.4→0.5 keyword | No |
+| **Item name priority** | Field weights | full_item_name 3.0→5.0 | No |
+| **Dept priority** | Field weights | department 1.5→2.5 | No |
+| **No LLM cost** | RAG_LLM_PROVIDER | ollama→"" | No |

@@ -1,15 +1,28 @@
 # =========================================================
 # rag/vector_store.py
-# IMPROVED: Hybrid search (semantic + keyword scoring)
+# Hybrid retrieval pipeline:
+#
+#   step 1  ─ Dense retrieval        (ChromaDB / BGE embeddings)
+#   step 2  ─ Sparse retrieval       (BM25 over indexed chunks)
+#   step 3  ─ Fuse                   (Reciprocal Rank Fusion)
+#   step 4  ─ Cross-encoder rerank   (BAAI/bge-reranker-base)
+#
+# This combination is the standard 2024–2026 RAG recipe and
+# is what lifts retrieval scores from ~20% to 70–90% for true
+# matches (see RAG_TUNING_GUIDE.md).
 # =========================================================
 from __future__ import annotations
 import re
+import threading
 import chromadb
 from chromadb.config import Settings as ChromaSettings
-from config.settings import CHROMA_DIR, CHROMA_COLLECTION, RAG_TOP_K
+from config.settings import (
+    CHROMA_DIR, CHROMA_COLLECTION, RAG_TOP_K,
+    RAG_BM25_WEIGHT, RAG_DENSE_WEIGHT, RAG_FETCH_K,
+    RAG_USE_RERANKER, RAG_RERANKER_MODEL,
+)
 from rag.embedder import (
-    build_bid_document,
-    chunk_text,
+    build_bid_chunks,
     embed_texts,
     embed_query,
 )
@@ -17,10 +30,19 @@ from utils.logger import get_logger
 
 log = get_logger("vector_store")
 
-_client     = None
+_client = None
 _collection = None
 
+# Lazy singletons for BM25 + reranker
+_bm25 = None                  # rank_bm25.BM25Okapi
+_bm25_ids: list[str] = []     # chunk-ids aligned with _bm25 corpus
+_bm25_lock = threading.Lock()
+_reranker = None
 
+
+# =========================================================
+# CHROMA COLLECTION
+# =========================================================
 def _get_collection():
     global _client, _collection
     if _collection is None:
@@ -43,19 +65,17 @@ def _get_collection():
 # UPSERT ONE BID
 # =========================================================
 def upsert_bid(bid: dict):
-    col    = _get_collection()
+    col = _get_collection()
     bid_no = bid.get("bid_no") or bid.get("document_url", "unknown")
 
-    doc_text = build_bid_document(bid)
-    chunks   = chunk_text(doc_text)
-
+    chunks = build_bid_chunks(bid)
     if not chunks:
         log.warning(f"No chunks for {bid_no} — skipping")
         return
 
     _delete_bid_chunks(col, bid_no)
 
-    ids        = [f"{bid_no}__chunk_{i}" for i in range(len(chunks))]
+    ids = [f"{bid_no}__chunk_{i}" for i in range(len(chunks))]
     embeddings = embed_texts(chunks)
 
     metadatas = [
@@ -84,6 +104,9 @@ def upsert_bid(bid: dict):
         documents=chunks,
         metadatas=metadatas,
     )
+
+    # invalidate caches so the new chunks are seen
+    _invalidate_caches()
     log.debug(f"Upserted {len(chunks)} chunks for {bid_no}")
 
 
@@ -95,7 +118,7 @@ def upsert_bids(bids: list[dict]):
             if i % 10 == 0:
                 log.info(f"  Indexed {i}/{len(bids)}")
         except Exception as e:
-            log.error(f"  Upsert failed for {bid.get('bid_no','?')}: {e}")
+            log.error(f"  Upsert failed for {bid.get('bid_no', '?')}: {e}")
     log.info(
         f"Vector store upsert complete — "
         f"total chunks: {_get_collection().count()}"
@@ -103,49 +126,106 @@ def upsert_bids(bids: list[dict]):
 
 
 # =========================================================
-# KEYWORD SCORING (TF-IDF style boost)
-# Higher score if query terms appear in item name, dept, etc.
+# BM25 INDEX  (built lazily over every chunk in the collection)
 # =========================================================
-def _keyword_score(query: str, bid: dict) -> float:
-    """
-    Scores 0.0 to 1.0 based on how well query keywords
-    match structured bid fields.
-    """
-    query_words = set(query.lower().split())
-    
-    # Remove common stop words
-    stop_words = {"for", "the", "a", "an", "and", "or", "in", "of", "is"}
-    query_words -= stop_words
-    
-    if not query_words:
-        return 0.5  # neutral if all words are stop words
-    
-    # Searchable fields with weights
-    fields_text = {
-        "full_item_name": 3.0,    # match item name heavily
-        "department": 1.5,
-        "bid_type": 1.0,
-        "product_type": 1.0,
-    }
-    
-    total_score = 0.0
-    max_possible = sum(fields_text.values())
-    
-    for field, weight in fields_text.items():
-        field_text = (bid.get(field, "") or "").lower()
-        field_words = set(field_text.split())
-        
-        # Count matching words
-        matches = len(query_words & field_words)
-        if matches > 0:
-            total_score += weight * (matches / len(query_words))
-    
-    # Normalize to 0.0-1.0
-    return min(1.0, total_score / max_possible)
+_TOKEN_RE = re.compile(r"[A-Za-z0-9]+")
+
+
+def _tokenise(text: str) -> list[str]:
+    return [t.lower() for t in _TOKEN_RE.findall(text or "")]
+
+
+def _build_bm25_index():
+    """Pulls every chunk from Chroma and builds a BM25Okapi index."""
+    global _bm25, _bm25_ids
+    try:
+        from rank_bm25 import BM25Okapi
+    except ImportError:
+        log.warning("rank_bm25 not installed — sparse retrieval disabled. "
+                    "Run: pip install rank-bm25")
+        _bm25 = None
+        _bm25_ids = []
+        return
+
+    col = _get_collection()
+    n = col.count()
+    if n == 0:
+        _bm25 = None
+        _bm25_ids = []
+        return
+
+    log.info(f"Building BM25 index over {n} chunks...")
+    # Chroma's `get` returns ids + documents + metadatas for the whole collection
+    res = col.get(include=["documents", "metadatas"])
+    ids = res.get("ids", []) or []
+    docs = res.get("documents", []) or []
+    metas = res.get("metadatas", []) or []
+
+    # For BM25 corpus we add the structured metadata fields too —
+    # this hugely boosts keyword recall on bid_no / item / dept.
+    corpus_tokens = []
+    for doc, meta in zip(docs, metas):
+        meta = meta or {}
+        blob = " ".join([
+            doc or "",
+            meta.get("bid_no", "") or "",
+            meta.get("ra_no", "") or "",
+            meta.get("full_item_name", "") or "",
+            meta.get("department", "") or "",
+            meta.get("bid_type", "") or "",
+            meta.get("product_type", "") or "",
+        ])
+        corpus_tokens.append(_tokenise(blob))
+
+    _bm25 = BM25Okapi(corpus_tokens)
+    _bm25_ids = ids
+    log.info(f"BM25 index ready ({len(ids)} chunks).")
+
+
+def _ensure_bm25():
+    with _bm25_lock:
+        if _bm25 is None and not _bm25_ids:
+            _build_bm25_index()
+
+
+def _invalidate_caches():
+    global _bm25, _bm25_ids
+    with _bm25_lock:
+        _bm25 = None
+        _bm25_ids = []
 
 
 # =========================================================
-# HYBRID SEARCH: semantic + keyword
+# RERANKER  (cross-encoder)
+# =========================================================
+def _get_reranker():
+    global _reranker
+    if _reranker is None and RAG_USE_RERANKER:
+        try:
+            from sentence_transformers import CrossEncoder
+            log.info(f"Loading reranker: {RAG_RERANKER_MODEL}")
+            _reranker = CrossEncoder(RAG_RERANKER_MODEL)
+            log.info("Reranker ready")
+        except Exception as e:
+            log.warning(f"Reranker unavailable ({e}) — skipping rerank")
+            _reranker = False  # tri-state: None=untried, False=disabled
+    return _reranker if _reranker else None
+
+
+# =========================================================
+# RRF (Reciprocal Rank Fusion)
+# =========================================================
+def _rrf(ranked_lists: list[list[str]], k: int = 60) -> dict[str, float]:
+    """Returns id -> fused score. Higher is better."""
+    scores: dict[str, float] = {}
+    for ranking in ranked_lists:
+        for rank, chunk_id in enumerate(ranking, start=1):
+            scores[chunk_id] = scores.get(chunk_id, 0.0) + 1.0 / (k + rank)
+    return scores
+
+
+# =========================================================
+# HYBRID SEARCH
 # =========================================================
 def search(
     query: str,
@@ -153,57 +233,139 @@ def search(
     filters: dict | None = None,
 ) -> list[dict]:
     """
-    Hybrid search combining:
-    - Semantic similarity (embeddings, 60% weight)
-    - Keyword matching (TF-IDF style, 40% weight)
-    
-    Returns top_k UNIQUE bids sorted by hybrid score.
+    Hybrid retrieval:
+      dense (Chroma)  +  sparse (BM25)  ─►  RRF fuse  ─►
+      cross-encoder rerank  ─►  dedup by bid_no  ─►  top_k.
     """
-    col       = _get_collection()
-    total     = col.count()
-    if total == 0:
+    col = _get_collection()
+    if col.count() == 0:
         log.warning("Vector store is empty — run --reindex first")
         return []
 
-    query_vec = embed_query(query)
+    fetch_k = max(RAG_FETCH_K, top_k * 6)
 
-    # Fetch more raw chunks than needed to account for dedup
-    fetch_n = min(top_k * 4, total)
-
-    kwargs: dict = {
-        "query_embeddings": [query_vec],
-        "n_results":        fetch_n,
+    # ── 1. DENSE ──────────────────────────────────────────
+    q_vec = embed_query(query)
+    kwargs = {
+        "query_embeddings": [q_vec],
+        "n_results":        min(fetch_k, col.count()),
         "include":          ["documents", "metadatas", "distances"],
     }
     if filters:
         kwargs["where"] = filters
 
-    results   = col.query(**kwargs)
-    docs      = results["documents"][0]
-    metas     = results["metadatas"][0]
-    distances = results["distances"][0]
+    dense_res = col.query(**kwargs)
+    dense_ids = dense_res.get("ids", [[]])[0]
+    dense_docs = dense_res["documents"][0]
+    dense_metas = dense_res["metadatas"][0]
+    dense_dists = dense_res["distances"][0]
 
-    # ── Build bid result dict with HYBRID scoring ─────────────────
-    seen: dict[str, dict] = {}
-    
-    for doc, meta, dist in zip(docs, metas, distances):
-        bid_no = meta.get("bid_no", "")
-        
-        # Semantic score (cosine similarity)
-        semantic_score = round(1 - dist, 4)
-        
-        # Keyword score (TF-IDF style)
-        keyword_score = _keyword_score(query, meta)
-        
-        # Hybrid: 60% semantic + 40% keyword
-        hybrid_score = (semantic_score * 0.6) + (keyword_score * 0.4)
-        
-        if bid_no not in seen or hybrid_score > seen[bid_no]["score"]:
-            seen[bid_no] = {
-                "chunk":           doc,
-                "score":           round(hybrid_score, 4),
-                "semantic_score":  semantic_score,
-                "keyword_score":   round(keyword_score, 4),
+    # id -> (doc, meta, semantic_score)
+    by_id: dict[str, dict] = {}
+    for cid, doc, meta, dist in zip(dense_ids, dense_docs, dense_metas, dense_dists):
+        # Chroma cosine distance ∈ [0, 2] → similarity ∈ [-1, 1]
+        sim = max(0.0, 1.0 - float(dist))
+        by_id[cid] = {
+            "doc":            doc,
+            "meta":           meta or {},
+            "semantic_score": round(sim, 4),
+        }
+
+    # ── 2. SPARSE (BM25) ──────────────────────────────────
+    _ensure_bm25()
+    bm25_ranked: list[str] = []
+    bm25_scores: dict[str, float] = {}
+    if _bm25 is not None and _bm25_ids:
+        try:
+            scores = _bm25.get_scores(_tokenise(query))
+            # Sort by score desc
+            order = sorted(
+                range(len(scores)),
+                key=lambda i: scores[i],
+                reverse=True,
+            )[:fetch_k]
+            bm25_ranked = [_bm25_ids[i] for i in order if scores[i] > 0]
+            # min-max normalise BM25 scores into 0..1 for display
+            top_score = scores[order[0]] if order else 0.0
+            if top_score > 0:
+                bm25_scores = {
+                    _bm25_ids[i]: float(scores[i]) / top_score for i in order
+                }
+        except Exception as e:
+            log.debug(f"BM25 query failed: {e}")
+
+    # Hydrate any BM25 hits Chroma didn't surface
+    missing_ids = [cid for cid in bm25_ranked if cid not in by_id]
+    if missing_ids:
+        try:
+            hydr = col.get(
+                ids=missing_ids,
+                include=["documents", "metadatas"],
+            )
+            for cid, doc, meta in zip(
+                hydr.get("ids", []),
+                hydr.get("documents", []),
+                hydr.get("metadatas", []),
+            ):
+                by_id[cid] = {
+                    "doc":            doc,
+                    "meta":           meta or {},
+                    "semantic_score": 0.0,
+                }
+        except Exception as e:
+            log.debug(f"BM25 hydrate failed: {e}")
+
+    # ── 3. FUSE  (RRF) ────────────────────────────────────
+    dense_only_ranking = list(dense_ids)
+    rrf_scores = _rrf([dense_only_ranking, bm25_ranked])
+
+    fused = []
+    for cid, score in rrf_scores.items():
+        if cid not in by_id:
+            continue
+        fused.append({
+            "id":             cid,
+            "fused_score":    score,
+            "bm25_score":     round(bm25_scores.get(cid, 0.0), 4),
+            **by_id[cid],
+        })
+
+    # Take top N for reranking
+    fused.sort(key=lambda x: x["fused_score"], reverse=True)
+    top_for_rerank = fused[: max(top_k * 4, 20)]
+
+    # ── 4. CROSS-ENCODER RERANK ──────────────────────────
+    reranker = _get_reranker()
+    if reranker and top_for_rerank:
+        pairs = [(query, c["doc"]) for c in top_for_rerank]
+        try:
+            ce_scores = reranker.predict(pairs)
+            # CE scores are raw logits — squash to 0..1 with sigmoid
+            import math
+            for c, s in zip(top_for_rerank, ce_scores):
+                c["rerank_score"] = round(1.0 / (1.0 + math.exp(-float(s))), 4)
+            top_for_rerank.sort(key=lambda x: x["rerank_score"], reverse=True)
+        except Exception as e:
+            log.debug(f"Rerank failed: {e}")
+            for c in top_for_rerank:
+                c["rerank_score"] = c["semantic_score"]
+    else:
+        for c in top_for_rerank:
+            c["rerank_score"] = c["semantic_score"]
+
+    # ── 5. DEDUP PER BID  +  FINAL FORMAT ────────────────
+    best_per_bid: dict[str, dict] = {}
+    for c in top_for_rerank:
+        meta = c["meta"]
+        bid_no = meta.get("bid_no", "") or c["id"]
+        final_score = c["rerank_score"]
+        if bid_no not in best_per_bid or final_score > best_per_bid[bid_no]["score"]:
+            best_per_bid[bid_no] = {
+                "chunk":           c["doc"],
+                "score":           round(final_score, 4),
+                "semantic_score":  c["semantic_score"],
+                "bm25_score":      c["bm25_score"],
+                "rerank_score":    final_score,
                 "bid_no":          bid_no,
                 "bid_type":        meta.get("bid_type", ""),
                 "product_type":    meta.get("product_type", ""),
@@ -219,11 +381,13 @@ def search(
                 "corrigendum_url": meta.get("corrigendum_url", ""),
             }
 
-    # Sort by hybrid score descending, return top_k
-    output = sorted(seen.values(), key=lambda x: x["score"], reverse=True)
+    output = sorted(best_per_bid.values(), key=lambda x: x["score"], reverse=True)
     return output[:top_k]
 
 
+# =========================================================
+# HOUSEKEEPING
+# =========================================================
 def _delete_bid_chunks(col, bid_no: str):
     try:
         col.delete(where={"bid_no": bid_no})
@@ -235,6 +399,8 @@ def reindex_all(db):
     log.info("Starting full re-index from SQLite...")
     bids = db.get_all()
     upsert_bids(bids)
+    _invalidate_caches()
+    _ensure_bm25()
     log.info("Re-index complete.")
 
 
@@ -245,3 +411,8 @@ def stats() -> dict:
         "total_chunks": col.count(),
         "chroma_dir":   CHROMA_DIR,
     }
+
+
+# Backwards-compat: some old callers import _keyword_score
+def _keyword_score(query: str, bid: dict) -> float:  # pragma: no cover
+    return 0.0

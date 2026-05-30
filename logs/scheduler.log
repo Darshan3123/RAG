@@ -892,3 +892,126 @@
 2026-05-29 16:05:52 | INFO     | scheduler |   Total new: 9
 2026-05-29 16:05:52 | INFO     | scheduler | Single run complete. Exiting.
 2026-05-29 16:05:52 | INFO     | scheduler | Scheduler stopped.
+2026-05-29 16:35:38 | INFO     | scheduler | 
+2026-05-29 16:35:38 | INFO     | scheduler | ============================================================
+2026-05-29 16:35:38 | INFO     | scheduler | GEM BID SCRAPER SCHEDULER STARTED
+2026-05-29 16:35:38 | INFO     | scheduler | Interval: every 60 minutes
+2026-05-29 16:35:38 | INFO     | scheduler | Database: F:\THRIVEX AI\ThriveX\GeM Tender\storage\gem_bids.db
+2026-05-29 16:35:38 | INFO     | scheduler | ============================================================
+2026-05-29 16:35:38 | INFO     | scheduler | 
+▶  Run started at 2026-05-29 16:35:38
+2026-05-29 16:35:45 | INFO     | scheduler | No new bids this run.
+2026-05-29 16:35:45 | INFO     | scheduler | Single run complete. Exiting.
+2026-05-29 16:35:45 | INFO     | scheduler | Scheduler stopped.
+2026-05-29 16:40:34 | INFO     | scheduler | 
+2026-05-29 16:40:35 | INFO     | scheduler | ============================================================
+2026-05-29 16:40:35 | INFO     | scheduler | GEM BID SCRAPER SCHEDULER STARTED
+2026-05-29 16:40:35 | INFO     | scheduler | Interval: every 60 minutes
+2026-05-29 16:40:35 | INFO     | scheduler | Database: F:\THRIVEX AI\ThriveX\GeM Tender\storage\gem_bids.db
+2026-05-29 16:40:35 | INFO     | scheduler | ============================================================
+2026-05-29 16:40:35 | INFO     | scheduler | 
+▶  Run started at 2026-05-29 16:40:35
+2026-05-29 16:41:56 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:56 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:56 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:56 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:56 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:56 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:57 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:57 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:57 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:57 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:57 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:57 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:58 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:41:59 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:42:03 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:42:03 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:42:04 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:42:04 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:42:04 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:42:05 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:42:05 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:42:06 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:42:06 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:44:44 | INFO     | scheduler | 
+2026-05-29 16:44:44 | INFO     | scheduler | ============================================================
+2026-05-29 16:44:44 | INFO     | scheduler | GEM BID SCRAPER SCHEDULER STARTED
+2026-05-29 16:44:44 | INFO     | scheduler | Interval: every 60 minutes
+2026-05-29 16:44:44 | INFO     | scheduler | Database: F:\THRIVEX AI\ThriveX\GeM Tender\storage\gem_bids.db
+2026-05-29 16:44:44 | INFO     | scheduler | ============================================================
+2026-05-29 16:44:44 | INFO     | scheduler | 
+▶  Run started at 2026-05-29 16:44:44
+2026-05-29 16:47:14 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:47:14 | INFO     | scheduler | Shutdown signal received — stopping after current run.
+2026-05-29 16:47:27 | INFO     | scheduler | 
+2026-05-29 16:47:27 | INFO     | scheduler | ============================================================
+2026-05-29 16:47:27 | INFO     | scheduler | GEM BID SCRAPER SCHEDULER STARTED
+2026-05-29 16:47:27 | INFO     | scheduler | Interval: every 60 minutes
+2026-05-29 16:47:27 | INFO     | scheduler | Database: F:\THRIVEX AI\ThriveX\GeM Tender\storage\gem_bids.db
+2026-05-29 16:47:27 | INFO     | scheduler | ============================================================
+2026-05-29 16:47:27 | INFO     | scheduler | 
+▶  Run started at 2026-05-29 16:47:27
+2026-05-29 16:57:28 | INFO     | scheduler | 
+2026-05-29 16:57:28 | INFO     | scheduler | 🆕  NEW BIDS DETECTED THIS RUN
+2026-05-29 16:57:28 | INFO     | scheduler | ============================================================
+2026-05-29 16:57:28 | INFO     | scheduler |   [Single Tender] GEM/2026/B/7545977 | SUPPLY OF LDS CLIENT KOTA , SUPPLY OF LDS CLIENT | Dept: Bharat Petroleum Corporation Ltd | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Single Tender] GEM/2026/B/7500677 | Customized AMC/CMC for Pre-owned Products - Period | Dept: Indian Oil Corporation Limited | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Single Tender] GEM/2026/B/7504415 | Customized AMC/CMC for Pre-owned Products - | Dept: Indian Oil Corporation Limited | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Limited Tender] GEM/2026/B/7550238 | Identity and Access Management - Security Services | Dept: Indian Oil Corporation Limited | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Limited Tender] GEM/2026/B/7500638 | Hand Held Laser Speed Camera | Dept: Department Of Fertilizers | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Limited Tender] GEM/2026/B/7559770 | Anti spatter spray (Q3) | Dept: Energy Department Uttar Pradesh | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Global Tender] GEM/2026/B/7509648 | GlobalTenderCategory (Q3) | Dept: Department Of Health And Family Welfare | End: 03-06-2026 10:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Global Tender] GEM/2026/B/7473435 | GlobalTenderCategory (Q3) | Dept: Space | End: 01-06-2026 11:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Global Tender] GEM/2026/B/7465807 | GlobalTenderCategory (Q3) | Dept: Department Of Health Research | End: 30-05-2026 13:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Rate Contract Bids] GEM/2026/B/7478455 | Jointing Compressed Asbestos Fiber jointing sheets | Dept: Cane Development (ganna Vikas Vibhag) De | End: 01-06-2026 11:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Rate Contract Bids] GEM/2026/B/7496302 | NonIBR ERW APH tubes confBS6323 PartV 1982 Grade1 | Dept: Cane Development (ganna Vikas Vibhag) De | End: 30-05-2026 14:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Rate Contract Bids] GEM/2026/B/7514993 | Bleaching powder , Lime powder , Rubber Gloves , P | Dept: Urban Development Directorate Of Uttarak | End: 29-05-2026 18:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [BOQ Bids] GEM/2026/B/7519044 | TERMINATION KIT 1 , TERMINATION KIT 2 , TERMINATIO | Dept:  | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [BOQ Bids] GEM/2026/B/7519144 | Photo Copier Paper , File Cover , File Board , Fil | Dept: Department Of Agriculture Cooperation An | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [BOQ Bids] GEM/2026/B/7519351 | STICKER EWS 200 KG , PROGRAMME IC EWS , | Dept: Department Of Heavy Industry | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Product Custom Bid/RAs] GEM/2026/B/7502453 | Vehicle diagnostic monitor | Dept: Central Armed Police Forces | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Product Custom Bid/RAs] GEM/2026/B/7465952 | Corel Draw Graphic Suite perpetual license | Dept: Department Of Economic Affairs | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Product Custom Bid/RAs] GEM/2026/B/7452638 | GALVANIZED WELD MESH 1” x 1” – 3.15 MM. , GALVANIZ | Dept: Department Of Heavy Industry | End: 29-05-2026 16:58:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Bid To RAs] GEM/2026/B/7473585 | DEVELOPMENT & SUPPLY OF CHARGE AIR COOLER | Dept: Department Of Defence Research & Develop | End: 29-05-2026 16:56:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Bid To RAs] GEM/2026/B/7380365 | Titanium Heater with Junction Box (Details as per  | Dept: Department Of Heavy Industry | End: 29-05-2026 16:55:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Bid To RAs] GEM/2026/B/7314259 | Brooms soft , Brooms hard , Toilet Cleaner , Floor | Dept: Department Of Defence Research & Develop | End: 29-05-2026 16:54:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Service Bid/RAs] GEM/2026/B/7488084 | Repair, Maintenance, and Installation of Plant/ | Dept: Energy Department Uttar Pradesh | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Service Bid/RAs] GEM/2026/B/7488178 | Repair, Maintenance, and Installation of Plant/ | Dept: Energy Department Uttar Pradesh | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Service Bid/RAs] GEM/2026/B/7488318 | Repair, Maintenance, and Installation of Plant/ | Dept: Energy Department Uttar Pradesh | End: 29-05-2026 17:00:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Product Bid/RAs] GEM/2026/B/7402571 | PASSIVE NETWORK INFRASTRUCTURE AT CEMALT FACILITY | Dept: Department Of Defence Research & Develop | End: 29-05-2026 16:50:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Product Bid/RAs] GEM/2026/B/7403302 | Firewall hardware , Log analyzer licenses , ZTNA a | Dept: Department Of Defence Production | End: 29-05-2026 16:49:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Product Bid/RAs] GEM/2026/B/7495507 | Finolex or Polycab or Natural white or equivalent  | Dept: Department Of Military Affairs | End: 29-05-2026 16:48:00
+2026-05-29 16:57:28 | INFO     | scheduler |   [Product Bid/RAs] GEM/2026/B/7466826 | Galvanised Metal Boxes (GMB's) of 0.80 mm thicknes | Dept: Department Of Financial Services | End: 29-05-2026 16:48:00
+2026-05-29 16:57:28 | INFO     | scheduler | ============================================================
+2026-05-29 16:57:28 | INFO     | scheduler |   Total new: 28
+2026-05-29 16:57:28 | INFO     | scheduler | Single run complete. Exiting.
+2026-05-29 16:57:28 | INFO     | scheduler | Scheduler stopped.

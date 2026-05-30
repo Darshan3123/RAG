@@ -1,7 +1,7 @@
 # RAG Tuning & Optimization — Practical Guide
 
 > Quick reference for improving RAG performance  
-> **Last Updated**: May 29, 2026
+> **Last Updated**: May 2026
 
 ---
 
@@ -25,7 +25,7 @@
 
 ### Step 1: Increase Semantic Weight
 ```python
-# File: rag/vector_store.py, line ~158
+# File: rag/vector_store.py  (search function, hybrid score line)
 # BEFORE:
 hybrid_score = (semantic_score * 0.6) + (keyword_score * 0.4)
 
@@ -38,7 +38,7 @@ hybrid_score = (semantic_score * 0.8) + (keyword_score * 0.2)
 
 ### Step 2: Add Field Weighting
 ```python
-# File: rag/vector_store.py, line ~105
+# File: rag/vector_store.py  (_keyword_score function)
 # BEFORE (default):
 fields_text = {
     "full_item_name": 3.0,
@@ -84,13 +84,14 @@ RAG_TOP_K=3  # Was 5
 ```env
 # .env file
 RAG_TOP_K=3
-RAG_CHUNK_SIZE=600          # Tighter chunks
-RAG_CHUNK_OVERLAP=50        # Less overlap
-
-# vector_store.py line ~158:
+RAG_CHUNK_SIZE=600
+RAG_CHUNK_OVERLAP=50
+```
+```python
+# rag/vector_store.py — search function:
 hybrid_score = (semantic_score * 0.8) + (keyword_score * 0.2)
 
-# vector_store.py line ~105:
+# rag/vector_store.py — _keyword_score function:
 fields_text = {
     "full_item_name": 5.0,
     "department": 1.5,
@@ -122,7 +123,7 @@ RAG_EMBEDDING_MODEL=all-mpnet-base-v2
 
 ### Step 2: Increase Semantic Weight
 ```python
-# File: rag/vector_store.py, line ~158
+# File: rag/vector_store.py  (search function)
 # BEFORE:
 hybrid_score = (semantic_score * 0.6) + (keyword_score * 0.4)
 
@@ -164,11 +165,12 @@ RAG_TOP_K=15
 RAG_CHUNK_SIZE=1500
 RAG_CHUNK_OVERLAP=200
 RAG_EMBEDDING_MODEL=all-mpnet-base-v2
-
-# vector_store.py line ~158:
+```
+```python
+# rag/vector_store.py — search function:
 hybrid_score = (semantic_score * 0.8) + (keyword_score * 0.2)
 
-# vector_store.py line ~105:
+# rag/vector_store.py — _keyword_score function:
 fields_text = {
     "full_item_name": 2.0,    # ← Relax strict matching
     "department": 1.5,
@@ -191,7 +193,7 @@ python main.py --reindex
 **Solution**: Use keyword field weighting
 
 ```python
-# File: rag/vector_store.py, line ~105
+# File: rag/vector_store.py  (_keyword_score function)
 # BEFORE (default):
 fields_text = {
     "full_item_name": 3.0,
@@ -212,6 +214,11 @@ fields_text = {
 # "Service Bid/RAs" will match query for "service"
 ```
 
+Or use an explicit filter:
+```bash
+python main.py --ask "contracts" --filter bid_type=Service Bid/RAs
+```
+
 ---
 
 ## Scenario 4: Slow Queries
@@ -228,8 +235,46 @@ python main.py --ask "test query"  # Note total time
 # If ~200-500ms: Likely vector search or embedding
 
 # Step 2: Test without LLM
-RAG_LLM_PROVIDER=""  # Disable LLM in .env
+# Set in .env: RAG_LLM_PROVIDER=
 python main.py --ask "test query"  # Much faster?
+```
+
+### For Slow LLM:
+
+**Solution A: Faster LLM Model**
+```env
+# BEFORE:
+OLLAMA_MODEL=llama3
+
+# AFTER (faster):
+OLLAMA_MODEL=tinyllama
+
+# Speed improvement: 3-5x faster
+# Quality: Slightly lower
+```
+
+**Solution B: Retrieval-Only Mode**
+```env
+# BEFORE:
+RAG_LLM_PROVIDER=ollama
+
+# AFTER (instant):
+RAG_LLM_PROVIDER=
+
+# Speed improvement: 10x faster (no LLM call)
+# Output: Structured bid list with score breakdown (no natural language answer)
+```
+
+**Solution C: Reduce Retrieved Bids**
+```env
+# BEFORE:
+RAG_TOP_K=15
+
+# AFTER:
+RAG_TOP_K=5
+
+# Effect: LLM processes fewer bids
+# If LLM is bottleneck: ~3x faster
 ```
 
 ### For Slow Embedding/Search:
@@ -255,46 +300,7 @@ RAG_CHUNK_SIZE=1500
 RAG_CHUNK_SIZE=600
 
 # Speed improvement: 30-40% faster indexing
-# Search: Slightly less context per chunk
 # MUST reindex
-```
-
-### For Slow LLM:
-
-**Solution A: Faster LLM Model**
-```env
-# BEFORE:
-OLLAMA_MODEL=llama3
-
-# AFTER (faster):
-OLLAMA_MODEL=tinyllama
-
-# Speed improvement: 3-5x faster
-# Quality: Slightly lower
-```
-
-**Solution B: Retrieval-Only Mode**
-```env
-# BEFORE:
-RAG_LLM_PROVIDER=ollama
-
-# AFTER (instant):
-RAG_LLM_PROVIDER=""
-
-# Speed improvement: 10x faster (no LLM call)
-# Output: Structured bid list (no natural language answer)
-```
-
-**Solution C: Reduce Retrieved Bids**
-```env
-# BEFORE:
-RAG_TOP_K=15
-
-# AFTER:
-RAG_TOP_K=5
-
-# Effect: LLM processes fewer bids
-# If LLM is bottleneck: ~3x faster
 ```
 
 **Full speed-optimized config**:
@@ -303,7 +309,7 @@ RAG_EMBEDDING_MODEL=all-MiniLM-L6-v2
 RAG_CHUNK_SIZE=600
 RAG_CHUNK_OVERLAP=50
 RAG_TOP_K=5
-RAG_LLM_PROVIDER=""
+RAG_LLM_PROVIDER=
 ```
 
 ---
@@ -316,7 +322,7 @@ RAG_LLM_PROVIDER=""
 
 ### Option A: Adjust Field Weights (keyword matching)
 ```python
-# File: rag/vector_store.py, line ~105
+# File: rag/vector_store.py  (_keyword_score function)
 fields_text = {
     "full_item_name": 3.0,
     "department": 2.5,        # ← Increased from 1.5 (more important)
@@ -350,11 +356,9 @@ python main.py --ask "laptops" --filter department=IT
 ```python
 # File: rag/llm.py
 
-SYSTEM_PROMPT = """You are a GeM bid assistant.
+SYSTEM_PROMPT = """You are a GeM (Government e-Marketplace) bid assistant.
 Answer ONLY using the structured bid data in RETRIEVED BID CONTEXT.
-
 ...
-
 - Never hallucinate values not in the context.
 """
 
@@ -371,24 +375,11 @@ Answer ONLY using the structured bid data in RETRIEVED BID CONTEXT.
 OLLAMA_MODEL=mistral    # More factual than llama3
 ```
 
-### Option 2: Lower LLM Temperature
-```python
-# File: rag/llm.py, line ~125
-options = {
-    "temperature": 0.0,     # Already at minimum
-    "num_predict": 1024,
-    "num_ctx": 4096,
-}
-
-# temperature=0.0 is already most deterministic
-# If still hallucinating: Model quality issue
-```
-
-### Option 3: Retrieval-Only Mode
+### Option 2: Retrieval-Only Mode
 ```env
-RAG_LLM_PROVIDER=""
+RAG_LLM_PROVIDER=
 
-# Effect: Returns structured list instead of LLM answer
+# Effect: Returns structured list with score breakdown instead of LLM answer
 # No hallucination possible (only shows retrieved data)
 ```
 
@@ -413,19 +404,53 @@ python main.py --stats
 python main.py --reindex
 ```
 
-**After reindex, verify**:
-```bash
-# Query and check for duplicates:
-python main.py --ask "any bid"
+---
 
-# Should see:
-# GEM/2024/B/123 : Score 0.95
-# (not repeated)
+## Scenario 8: Exit Command Not Working in Chat
+
+**Symptoms**: Typing "quit" or "bye" in `--chat` mode triggers a query instead of exiting
+
+**Cause**: Old code checked exit after query processing. This is now fixed.
+
+**Current behaviour** (fixed in `query_engine.py`):
+```python
+# Exit words are checked FIRST, before any query
+EXIT_WORDS = {"quit", "exit", "q", "bye", "goodbye",
+              "stop", "close", "end", "done", "ok bye"}
+
+if not raw or is_exit(raw):
+    print("Bye.")
+    break
+```
+
+If you're still seeing this issue, ensure you're running the latest code.
+
+---
+
+## Scenario 9: /search Shows Garbled Text Instead of Item Names
+
+**Symptoms**: `/search laptops` in chat shows raw chunk text like "Bid Number: GEM/2024... Item Category..." instead of clean item names
+
+**Cause**: Old code showed raw chunk text. This is now fixed.
+
+**Current behaviour** (fixed in `query_engine.py` and `main.py`):
+```python
+# search_only() now enriches results with clean full_item_name
+for r in results:
+    r["full_item_name"] = _extract_item(
+        r.get("chunk", ""),
+        r.get("full_item_name", ""),
+    )
+```
+
+The `/search` output now shows:
+```
+• GEM/2026/B/7382409  | All in One PC (V2)  | End: 11-01-2026  | 71.20%
 ```
 
 ---
 
-## Configuration Template: Different Use Cases
+## Configuration Templates
 
 ### Template 1: "Perfect Precision" (E-commerce-like)
 ```env
@@ -433,14 +458,13 @@ RAG_TOP_K=3
 RAG_CHUNK_SIZE=600
 RAG_CHUNK_OVERLAP=50
 RAG_EMBEDDING_MODEL=all-MiniLM-L6-v2
-RAG_LLM_PROVIDER=""
+RAG_LLM_PROVIDER=
 ```
-
 ```python
-# vector_store.py line ~158
+# vector_store.py — search function:
 hybrid_score = (semantic_score * 0.7) + (keyword_score * 0.3)
 
-# vector_store.py line ~105
+# vector_store.py — _keyword_score function:
 fields_text = {
     "full_item_name": 5.0,
     "department": 1.5,
@@ -448,7 +472,6 @@ fields_text = {
     "product_type": 1.0,
 }
 ```
-
 **Best for**: "Find me THIS exact item"
 
 ### Template 2: "High Recall" (Research-like)
@@ -460,12 +483,11 @@ RAG_EMBEDDING_MODEL=all-mpnet-base-v2
 RAG_LLM_PROVIDER=ollama
 OLLAMA_MODEL=llama3
 ```
-
 ```python
-# vector_store.py line ~158
+# vector_store.py — search function:
 hybrid_score = (semantic_score * 0.8) + (keyword_score * 0.2)
 
-# vector_store.py line ~105
+# vector_store.py — _keyword_score function:
 fields_text = {
     "full_item_name": 2.0,
     "department": 1.5,
@@ -473,7 +495,6 @@ fields_text = {
     "product_type": 1.0,
 }
 ```
-
 **Best for**: "Show me EVERYTHING related to this topic"
 
 ### Template 3: "Balanced Default" (Current)
@@ -485,12 +506,11 @@ RAG_EMBEDDING_MODEL=all-MiniLM-L6-v2
 RAG_LLM_PROVIDER=ollama
 OLLAMA_MODEL=llama3
 ```
-
 ```python
-# vector_store.py line ~158
+# vector_store.py — search function:
 hybrid_score = (semantic_score * 0.6) + (keyword_score * 0.4)
 
-# vector_store.py line ~105
+# vector_store.py — _keyword_score function:
 fields_text = {
     "full_item_name": 3.0,
     "department": 1.5,
@@ -498,7 +518,6 @@ fields_text = {
     "product_type": 1.0,
 }
 ```
-
 **Best for**: General-purpose queries
 
 ### Template 4: "Maximum Speed" (API serving)
@@ -507,14 +526,13 @@ RAG_TOP_K=3
 RAG_CHUNK_SIZE=400
 RAG_CHUNK_OVERLAP=0
 RAG_EMBEDDING_MODEL=all-MiniLM-L6-v2
-RAG_LLM_PROVIDER=""
+RAG_LLM_PROVIDER=
 ```
-
 ```python
-# vector_store.py line ~158
+# vector_store.py — search function:
 hybrid_score = (semantic_score * 0.7) + (keyword_score * 0.3)
 
-# vector_store.py line ~105
+# vector_store.py — _keyword_score function:
 fields_text = {
     "full_item_name": 4.0,
     "department": 1.0,
@@ -522,7 +540,6 @@ fields_text = {
     "product_type": 1.0,
 }
 ```
-
 **Best for**: Sub-100ms response requirements
 
 ---
@@ -548,11 +565,7 @@ Test Case 2:
 
 ### Step 2: Baseline Measurement
 ```bash
-# Reset to defaults:
-# RAG_TOP_K=5
-# RAG_EMBEDDING_MODEL=all-MiniLM-L6-v2
-# hybrid_score = (0.6 * semantic) + (0.4 * keyword)
-
+# Reset to defaults first
 python main.py --ask "IT hardware"
 
 # Note results, score distribution
@@ -582,7 +595,7 @@ python main.py --ask "IT hardware"
 ```
 Changes made:
 1. RAG_TOP_K: 5 → 3      (removed noise)
-2. Field weight: IT weight 3.0 (emphasize type matching)
+2. Field weight: item_name 3.0 → 5.0 (emphasize item matching)
 3. hybrid score: 0.6/0.4 → 0.7/0.3 (semantic priority)
 
 Results:
@@ -595,7 +608,7 @@ Results:
 
 ## Advanced: Custom Intent Detection
 
-**File**: `rag/query_engine.py`, lines ~20-26
+**File**: `rag/query_engine.py`
 
 Add more patterns to detect query type:
 
@@ -603,8 +616,17 @@ Add more patterns to detect query type:
 import re
 
 # Existing patterns
-_LIST_INTENT = re.compile(r"\b(all|every|list|...)\b", re.IGNORECASE)
-_FOCUSED_INTENT = re.compile(r"\b(bid number|...)\b", re.IGNORECASE)
+_LIST_INTENT = re.compile(
+    r"\b(all|every|list|show all|show me all|how many|total|"
+    r"complete list|give me all|show me|display all|"
+    r"what bids|which bids|bids do you have)\b",
+    re.IGNORECASE,
+)
+_FOCUSED_INTENT = re.compile(
+    r"\b(bid number|bid no|GEM/\d{4}|specific|"
+    r"one bid|find bid|this bid)\b",
+    re.IGNORECASE,
+)
 
 # NEW: Add budget intent
 _BUDGET_INTENT = re.compile(
@@ -630,8 +652,6 @@ def _smart_top_k(question: str, default_k: int) -> int:
     return default_k
 ```
 
-This allows auto-tuning based on query patterns.
-
 ---
 
 ## Debugging Commands
@@ -643,9 +663,10 @@ python main.py --stats
 # Chat mode (interactive testing)
 python main.py --chat
 
-# Search-only (no LLM)
-python main.py --ask "query" /search
-# (In chat, use: /search query)
+# Search-only (no LLM) — shows full_item_name + score
+# In chat, use: /search query
+python main.py --chat
+You > /search laptops
 
 # With metadata filter
 python main.py --ask "hardware" --filter product_type=Product
@@ -670,7 +691,7 @@ START: Query returning wrong results?
 │  └─ Try: Add filter (--filter product_type=Product)
 │
 ├─ Missing related results?
-│  ├─ Try: Better embedding model (mpnet)
+│  ├─ Try: Better embedding model (mpnet) + reindex
 │  ├─ Try: Increase top_k (5→15)
 │  └─ Try: Decrease semantic weight (0.6→0.5)
 │
@@ -680,13 +701,19 @@ START: Query returning wrong results?
 │  └─ Try: Add explicit filter
 │
 ├─ Too slow?
-│  ├─ Try: Faster embedding model
+│  ├─ Try: RAG_LLM_PROVIDER= (no LLM)
 │  ├─ Try: Smaller chunks (1500→800)
-│  ├─ Try: Retrieval-only (no LLM)
-│  └─ Try: Faster LLM model
+│  ├─ Try: Faster LLM model (tinyllama)
+│  └─ Try: Lower top_k (15→5)
 │
-└─ Duplicates in results?
-   └─ Try: python main.py --reindex
+├─ Duplicates in results?
+│  └─ Try: python main.py --reindex
+│
+├─ Exit not working in chat?
+│  └─ Check: is_exit() called before query in query_engine.py
+│
+└─ /search shows garbled text?
+   └─ Check: search_only() enriches full_item_name in query_engine.py
 ```
 
 ---
@@ -711,10 +738,10 @@ Metric 3: Index Health
   OK: 2-6:1
   Poor: < 2:1 or > 10:1 (reindex!)
 
-Metric 4: Vector Store Size
-  Monitor: Total chunks
-  Should grow with scraped bids
-  If plateaus: No new bids indexed?
+Metric 4: Score Distribution
+  Top result score > 0.70: Good
+  Top result score 0.50-0.70: Okay
+  Top result score < 0.50: Investigate
 ```
 
 ---
@@ -724,4 +751,4 @@ Metric 4: Vector Store Size
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0 | May 2026 | Initial practical guide |
-
+| 1.1 | May 2026 | Added Scenarios 8 & 9 (exit fix, /search fix); updated file locations for _keyword_score and hybrid score line |
