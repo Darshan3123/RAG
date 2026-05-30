@@ -1,18 +1,122 @@
-# Environment — never commit secrets
-.env
+# =============================================================
+# .gitignore — GeM Tender Scraper
+# =============================================================
 
-# Python
+# -------------------------------------------------------------
+# SECRETS & ENVIRONMENT
+# -------------------------------------------------------------
+.env
+*.env
+.env.*
+!.env.example          # keep the example template
+
+# -------------------------------------------------------------
+# PYTHON CACHE & COMPILED FILES
+# -------------------------------------------------------------
 __pycache__/
-**/__pycache__/
 *.py[cod]
 *.pyo
+*.pyd
+*.pyc
+*.pycache
+
+# Distribution / packaging
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+MANIFEST
+
+# -------------------------------------------------------------
+# VIRTUAL ENVIRONMENTS
+# -------------------------------------------------------------
 venv/
 .venv/
-*.egg-info/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
 
-# Project outputs
-downloads/
+# -------------------------------------------------------------
+# LOGS
+# -------------------------------------------------------------
 logs/
-storage/gem_bids.db
+*.log
+*.log.*
+
+# -------------------------------------------------------------
+# PROJECT OUTPUTS & DOWNLOADS
+# -------------------------------------------------------------
+downloads/
+*.pdf
+
+# Scraped data outputs
+tender_result.json
+active_tenders*.json
 storage/gem_bids.json
+
+# -------------------------------------------------------------
+# DATABASES & VECTOR STORES
+# -------------------------------------------------------------
+storage/gem_bids.db
 storage/chroma_db/
+*.db
+*.sqlite
+*.sqlite3
+
+# -------------------------------------------------------------
+# OS & EDITOR JUNK
+# -------------------------------------------------------------
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains / PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# -------------------------------------------------------------
+# TESTING & COVERAGE
+# -------------------------------------------------------------
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+
+# -------------------------------------------------------------
+# MISC
+# -------------------------------------------------------------
+*.bak
+*.tmp
+*.swp
+*.swo
+*~
