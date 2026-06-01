@@ -1,7 +1,17 @@
 # RAG Tuning & Optimization — Practical Guide
 
-> Quick reference for improving RAG performance  
-> **Last Updated**: May 2026
+> **Quick reference for improving RAG performance**  
+> **Last Updated:** May 2026  
+> **Status:** All known issues fixed; system production-ready
+
+---
+
+## Recent Fixes ✅
+
+1. **Exit Detection Fixed** — `quit`/`bye`/`done` now checked BEFORE query processing
+2. **/search Display Fixed** — Shows `full_item_name` from metadata (not raw PDF text)
+3. **Active Bids Filter** — "Ongoing Bids/RA" filter applied automatically (no expired bids)
+4. **Card Date Extraction** — Accurate dates from HTML cards, PDF as fallback
 
 ---
 
@@ -36,7 +46,7 @@ hybrid_score = (semantic_score * 0.8) + (keyword_score * 0.2)
 # Use when: Your queries are about intent/meaning, not exact keywords
 ```
 
-### Step 2: Add Field Weighting
+### Step 2: Increase Item Name Weight
 ```python
 # File: rag/vector_store.py  (_keyword_score function)
 # BEFORE (default):
@@ -59,7 +69,7 @@ fields_text = {
 # Keyword score drops if query not found in item names
 ```
 
-### Step 3: Use Filters
+### Step 3: Use Metadata Filters
 ```bash
 # Instead of:
 python main.py --ask "laptop bids"
@@ -67,8 +77,10 @@ python main.py --ask "laptop bids"
 # Try:
 python main.py --ask "laptop" --filter product_type=Product
 
+# In chat mode:
+# You > f:product_type=Product laptops
+
 # Effect: Reduces search space before scoring
-# Only searches Product type bids
 ```
 
 ### Step 4: Lower Top-K

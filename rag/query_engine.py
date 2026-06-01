@@ -14,7 +14,8 @@ log = get_logger("query_engine")
 
 # Exit words — checked BEFORE any query is made
 EXIT_WORDS = {"quit", "exit", "q", "bye", "goodbye",
-              "stop", "close", "end", "done", "ok bye"}
+              "stop", "close", "end", "done", "ok bye",
+              "/bye", "/quit", "/exit"}
 
 # Broad listing intent → use higher top_k
 _LIST_INTENT = re.compile(

@@ -1,61 +1,127 @@
 # GeM Bid Scraper + RAG Pipeline
 
+> **Last Updated:** May 2026  
+> **Status:** Production-ready RAG system with active bid scraping and hybrid search
+
 ## Project Structure
 
 ```
-GeM Tender/
-├── main.py                    ← entry point (all commands)
-├── requirements.txt
-├── .env                       ← all config values (copy from .env.example)
+gem_scraper/
+├── main.py                           ← Entry point (all commands below)
+├── requirements.txt                  ← Python dependencies
+├── .env                              ← Configuration (copy from .env.example)
+├── .gitignore                        ← Git ignore patterns
 ├── config/
-│   └── settings.py            ← loads .env, exposes all settings
+│   ├── __init__.py
+│   └── settings.py                  ← Loads .env, exposes all settings to code
 ├── core/
-│   ├── browser.py             ← Playwright stealth browser + ongoing-bids filter
-│   └── parser.py              ← PDF extraction + card-based date scraping
+│   ├── __init__.py
+│   ├── browser.py                   ← Playwright stealth browser manager
+│   │                                   • Anti-bot delays & UA rotation
+│   │                                   • Ongoing Bids/RA filter (active bids only)
+│   │                                   • Stealth JS injection (hides webdriver)
+│   └── parser.py                    ← PDF extraction + card HTML parsing
+│                                       • extract_pdf_text() - PyMuPDF + OCR
+│                                       • get_dates_from_card() - accurate dates
+│                                       • get_card_details() - untruncated fields
+│                                       • parse_bid_data() - regex field extraction
 ├── pipeline/
-│   ├── scraper.py             ← one full scrape run (active bids only)
-│   └── scheduler.py           ← hourly loop + new bid alerts
+│   ├── __init__.py
+│   ├── scraper.py                   ← Main scraping loop
+│   │                                   • Filters 9 bid types
+│   │                                   • Applies "active bids only" filter
+│   │                                   • Card-based date extraction
+│   │                                   • Auto-dedup + new-bid detection
+│   └── scheduler.py                 ← Hourly background loop (production)
 ├── storage/
-│   └── database.py            ← SQLite dedup + JSON export + auto RAG index
+│   ├── __init__.py
+│   ├── database.py                  ← SQLite bid storage + dedup
+│   ├── gem_bids.db                  ← SQLite database (auto-created)
+│   ├── gem_bids.json                ← JSON export (auto-updated)
+│   └── chroma_db/                   ← ChromaDB vector store (auto-created)
+│       ├── chroma.sqlite3
+│       └── [uuid]/ (embeddings)
 ├── rag/
-│   ├── embedder.py            ← sentence-transformers (local, no API key)
-│   ├── vector_store.py        ← ChromaDB + hybrid search (semantic + keyword)
-│   ├── llm.py                 ← OpenAI / Ollama / retrieval-only with score breakdown
-│   └── query_engine.py        ← public RAG interface + smart top_k + exit detection
+│   ├── __init__.py
+│   ├── embedder.py                  ← Embedding encoder
+│   │                                   • all-MiniLM-L6-v2 (384-dim, local)
+│   │                                   • build_bid_document()
+│   │                                   • chunk_text() with overlap
+│   │                                   • embed_texts() in batches
+│   ├── vector_store.py              ← ChromaDB + hybrid search
+│   │                                   • Semantic score (60% weight)
+│   │                                   • Keyword score (40% weight)
+│   │                                   • Dedup by bid_no, rank by hybrid score
+│   │                                   • Metadata filtering support
+│   ├── llm.py                       ← LLM answer generation
+│   │                                   • OpenAI / Ollama / Retrieval-only modes
+│   │                                   • Score breakdown in retrieval-only
+│   │                                   • Max 8 bids in context
+│   └── query_engine.py              ← Public RAG query interface
+│                                       • Exit detection (quit/bye/done)
+│                                       • Smart top_k adjustment by intent
+│                                       • Filter parsing (f:key=value)
+│                                       • /search (retrieval only)
 ├── utils/
-│   ├── antibot.py             ← delays, UA rotation, stealth launch options
-│   └── logger.py              ← rotating file + console logs
-├── downloads/                 ← PDFs (auto-created)
-├── logs/                      ← rotating log files (auto-created)
-└── storage/
-    ├── gem_bids.db            ← SQLite (auto-created)
-    ├── gem_bids.json          ← JSON export (auto-created)
-    └── chroma_db/             ← ChromaDB vector store (auto-created)
+│   ├── __init__.py
+│   ├── antibot.py                   ← Anti-detection measures
+│   │                                   • Random delays (page load, cards, PDFs)
+│   │                                   • User-Agent rotation
+│   │                                   • Stealth launch/context options
+│   │                                   • Human-like mouse movements
+│   └── logger.py                    ← Rotating file + console logging
+├── downloads/                       ← PDF storage (auto-created)
+├── logs/                            ← Log files (auto-created, rotated)
+└── Documentation/
+    ├── README.md                    ← This file
+    ├── RAG_QUICK_START.md          ← Quick reference guide
+    ├── RAG_ARCHITECTURE_GUIDE.md   ← Deep dive into system
+    ├── RAG_SCORING_EXAMPLES.md     ← Scoring walkthroughs
+    ├── RAG_TUNING_GUIDE.md         ← Optimization strategies
+    ├── RAG_VISUAL_REFERENCE.md     ← Diagrams & charts
+    └── README_RAG_DOCUMENTATION.md ← Doc index
 ```
 
 ---
 
-## Setup
+## Quick Start
 
-### 1. Install Python dependencies
+### 1. Install Python & Dependencies
 ```bash
+# Python 3.9+
 pip install -r requirements.txt
 playwright install chromium
 ```
 
-### 2. Install Tesseract (OCR fallback for scanned PDFs)
-- **Windows**: https://github.com/UB-Mannheim/tesseract/wiki
-- **Linux**:   `sudo apt install tesseract-ocr poppler-utils`
-- **Mac**:     `brew install tesseract poppler`
-
-### 3. (Optional) Install Ollama for local LLM answers
+### 2. Install System Dependencies
+**Windows:**
 ```bash
-# Install from https://ollama.com then:
-ollama pull llama3
+# Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
+# Download .exe installer and install to C:\Program Files\Tesseract-OCR
+# Update .env: TESSERACT_PATH=C:\\Program Files\\Tesseract-OCR\\tesseract.exe
+```
+
+**Linux:**
+```bash
+sudo apt install tesseract-ocr poppler-utils
+```
+
+**Mac:**
+```bash
+brew install tesseract poppler
+```
+
+### 3. (Optional) Install Ollama for LLM
+```bash
+# Download from https://ollama.com
+ollama pull llama3  # or your preferred model
 ```
 
 ### 4. Configure `.env`
-Copy `.env.example` to `.env` and fill in your values. All settings have sensible defaults.
+```bash
+cp .env.example .env
+# Edit .env with your values (all have sensible defaults)
+```
 
 ---
 

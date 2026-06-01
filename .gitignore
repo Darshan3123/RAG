@@ -120,3 +120,7 @@ coverage.xml
 *.swp
 *.swo
 *~
+
+
+__init__.cpython-313.pyc
+database.cpython-313.pyc

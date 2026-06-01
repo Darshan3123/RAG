@@ -1,303 +1,311 @@
-# GeM Bid Scraper — RAG Architecture & Tuning Guide
+# GeM Bid RAG System — Complete Architecture Guide
 
 > **Last Updated:** May 2026  
-> **Scope:** Complete RAG system architecture, scoring mechanism, and optimization strategies
+> **Scope:** Full system design, all components, data flows, scoring theory, configuration  
+> **For:** Engineers, architects, advanced users
 
 ---
 
 ## Table of Contents
 
 1. [System Overview](#system-overview)
-2. [Data Flow Pipeline](#data-flow-pipeline)
-3. [RAG Architecture](#rag-architecture)
-4. [Scoring Mechanism (Hybrid Scoring)](#scoring-mechanism-hybrid-scoring)
-5. [Configuration & Tuning](#configuration--tuning)
-6. [Performance Optimization](#performance-optimization)
-7. [Troubleshooting & Best Practices](#troubleshooting--best-practices)
+2. [Complete Data Flow](#complete-data-flow)
+3. [Component Architecture](#component-architecture)
+4. [Embedding & Vector Store](#embedding--vector-store)
+5. [Hybrid Scoring Mechanism](#hybrid-scoring-mechanism)
+6. [Query Processing Pipeline](#query-processing-pipeline)
+7. [Configuration Reference](#configuration-reference)
+8. [Performance & Scaling](#performance--scaling)
+9. [Troubleshooting](#troubleshooting)
 
 ---
 
 ## System Overview
 
-Your system is a **Retrieval Augmented Generation (RAG)** pipeline for GeM (Government e-Marketplace) bid information. It combines:
-
-- **Data Collection**: Web scraping of bid PDFs from GeM website (active bids only)
-- **Card-Based Date Extraction**: Dates scraped from listing card HTML for accuracy
-- **Vector Embeddings**: Converting bid text to high-dimensional vectors for similarity search
-- **Hybrid Search**: Combining semantic similarity + keyword matching
-- **LLM Integration**: Optional AI-powered answer generation (OpenAI or Ollama)
-- **SQLite + ChromaDB**: Persistent storage of bids and embeddings
-
-### Key Components:
+Your system is a **Retrieval Augmented Generation (RAG)** pipeline for GeM bids that combines:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    ENTRY POINT: main.py                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌─────────────┐   ┌──────────────┐   ┌──────────────────┐  │
-│  │  Scraper    │──→│  Parser      │──→│  Database        │  │
-│  │ (browser.py)│   │(parser.py)   │   │(database.py)     │  │
-│  └─────────────┘   └──────────────┘   └──────────────────┘  │
-│         ↓                                        ↓          │
-│  Downloads PDFs                    Stores bid metadata      │
-│  Filters active bids               in SQLite                │
-│  Scrapes dates from cards                   ↓               │
-│                                    ┌─────────────────────┐  │
-│                                    │  RAG Pipeline       │  │
-│                                    ├─────────────────────┤  │
-│  ┌──────────────────────────────── │ • Embedder          │ │
-│  │                                 │ • Vector Store      │ │
-│  │ Extracts text from PDFs         │ • Query Engine      │ │
-│  │ Chunks into overlapping         │ • LLM Integration   │ │
-│  │ windows                         └─────────────────────┘ │
-│  │ Converts to embeddings              ↓                   │
-│  │ Stores in ChromaDB             ChromaDB (vectors)       │
-│  │                                                          │
-│  └────────────────────────────────────────────────────────┘ │
-│                                                              │
-│         Query Flow:                                          │
-│  User Question → Embedding → Hybrid Search → LLM → Answer  │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                  RAG SYSTEM COMPONENTS                        │
+├──────────────────────────────────────────────────────────────┤
+│                                                               │
+│  Data Collection                  Data Processing              │
+│  ────────────────                 ──────────────              │
+│  • Web Scraper          →         • PDF Parser               │
+│  • GeM Portal                     • Card HTML Parser         │
+│  • Active Bids Filter             • Date Extraction          │
+│                                   • Field Normalization      │
+│                                           │                   │
+│                                           ▼                   │
+│                                   ┌─────────────────┐        │
+│                                   │  SQLite DB      │        │
+│                                   │  (gem_bids.db)  │        │
+│                                   └────────┬────────┘        │
+│                                            │                  │
+│  Vector Embeddings          Vector Search                     │
+│  ──────────────────         ──────────────                    │
+│  • Sentence-Transformers    • Semantic Search (60%)          │
+│  • 384-dim vectors          • Keyword Matching (40%)         │
+│  • Local model              • Hybrid Scoring                 │
+│  • No API keys                                               │
+│          │                           │                        │
+│          └─────→ ChromaDB ←──────────┘                       │
+│                  (vector_store)                              │
+│                                                               │
+│  Query Time (User Interaction)                                │
+│  ──────────────────────────────────                          │
+│  Question → Embed → Search → Rank → LLM/Format → Answer     │
+│                                                               │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Key Characteristics
+
+- **Active Bids Only:** Scraper uses "Ongoing Bids/RA" filter (no expired bids)
+- **Card-Based Dates:** Dates from HTML cards, not PDFs (more accurate)
+- **Hybrid Search:** 60% semantic + 40% keyword matching
+- **Local Embeddings:** No API keys, runs completely offline
+- **Optional LLM:** Works with Ollama, OpenAI, or retrieval-only mode
+- **Automatic Indexing:** New bids auto-indexed into ChromaDB
+
+---
+
+## Complete Data Flow
+
+### Phase 1: Scraping & Storage
+
+```
+STEP 1: BROWSER INITIALIZATION (core/browser.py)
+─────────────────────────────────────────────────
+├─ Launch Chromium with stealth options
+├─ Disable webdriver detection flags
+├─ Set random User-Agent from pool
+├─ Set random viewport size
+├─ Apply anti-bot delays
+└─ Navigate to GeM portal
+
+STEP 2: FILTER & NAVIGATE (core/browser.py)
+──────────────────────────────────────────
+For each BID_TYPE in settings (Product, Service, etc.):
+  ├─ Reset filters
+  ├─ Select bid_type filter
+  ├─ SELECT ONGOING BIDS/RA FILTER ← Active bids only
+  └─ Iterate pages while collected < TARGET_PER_TYPE
+
+STEP 3: CARD EXTRACTION (core/parser.py)
+───────────────────────────────────────
+For each bid card on page:
+  ├─ get_card_details():
+  │  ├─ bid_no:        "GEM/2026/B/7549944"
+  │  ├─ product_type:  "Product" (from card)
+  │  ├─ full_item_name: "Reactor Coil..." (untruncated from popover)
+  │  ├─ quantity:      "12"
+  │  ├─ department:    "Ministry of..." (full name from card)
+  │  └─ start_date:    "20-05-2026 14:56" (FROM CARD HTML) ← IMPORTANT
+  │
+  └─ get_dates_from_card():
+     ├─ Find "Start Date: DD-MM-YYYY HH:MM AM/PM"
+     ├─ Find "End Date: DD-MM-YYYY HH:MM AM/PM"
+     └─ Convert AM/PM to 24-hour format
+
+STEP 4: PDF DOWNLOAD & PARSING (core/parser.py)
+────────────────────────────────────────────────
+For each card:
+  ├─ browser.download_pdf()
+  │  └─ Save to downloads/ folder
+  ├─ extract_pdf_text():
+  │  ├─ PyMuPDF (fitz) for standard PDFs
+  │  ├─ Tesseract OCR for scanned PDFs
+  │  └─ Return full PDF text
+  └─ parse_bid_data():
+     ├─ Regex field extraction:
+     │  ├─ ra_no:              GEM/2026/R/...
+     │  ├─ bid_type:           Product Bid/RAs
+     │  ├─ estimated_value:    1000000
+     │  ├─ bid_packet_type:    "Two Packet Bid"
+     │  └─ corrigendum_url:    (if present)
+     └─ Use PDF dates ONLY as fallback for start_date/end_date
+
+STEP 5: DATABASE UPSERT (storage/database.py)
+──────────────────────────────────────────────
+INSERT OR REPLACE INTO bids:
+  ├─ document_url:    PRIMARY KEY (deduplication)
+  ├─ bid_no:          GEM/2026/B/...
+  ├─ ra_no:           GEM/2026/R/...
+  ├─ bid_type:        Product Bid/RAs
+  ├─ product_type:    Product
+  ├─ full_item_name:  Reactor Coil...
+  ├─ quantity:        12
+  ├─ department:      Ministry of...
+  ├─ start_date:      2026-05-20 14:56:00 (card preferred)
+  ├─ end_date:        2026-05-30 16:00:00 (card preferred)
+  ├─ estimated_value: 117000000
+  ├─ bid_packet_type: Two Packet Bid
+  ├─ corrigendum_url: (if any)
+  ├─ full_pdf_text:   [entire PDF content]
+  ├─ first_seen:      2026-05-30T10:12:42.291979
+  ├─ is_new:          1 (if new to DB)
+  └─ last_seen:       2026-05-30T10:12:42.291979 (updated)
+
+STEP 6: RAG INDEXING (rag/vector_store.py, rag/embedder.py)
+────────────────────────────────────────────────────────────
+For each NEW bid:
+  ├─ build_bid_document():
+  │  └─ Create rich text with:
+  │     ├─ Structured fields (repeated for emphasis)
+  │     └─ Full PDF text body
+  │     
+  ├─ chunk_text(text):
+  │  ├─ Split into 800-char chunks
+  │  ├─ Overlap: 100 chars between chunks
+  │  ├─ Min size: 20 chars (filter noise)
+  │  └─ Returns: List of overlapping text chunks
+  │     Example: 2400-char doc → 4 chunks with overlap
+  │
+  ├─ embed_texts(chunks):
+  │  ├─ Load all-MiniLM-L6-v2 model
+  │  ├─ Convert chunks to 384-dimensional vectors
+  │  ├─ Normalize (L2 norm = 1.0)
+  │  └─ Batch size: 32 for efficiency
+  │
+  └─ upsert_bid() to ChromaDB:
+     ├─ Delete old chunks for this bid (if re-indexing)
+     ├─ Create IDs: "{bid_no}__chunk_{i}"
+     └─ Store in ChromaDB:
+        ├─ Embeddings: 384-dim vectors
+        ├─ Documents: text chunks
+        └─ Metadata:
+           ├─ bid_no:          (for dedup)
+           ├─ document_url:    (for linking)
+           ├─ full_item_name:  (for /search display)
+           ├─ department:      (for keyword scoring)
+           ├─ bid_type:        (for keyword scoring)
+           ├─ product_type:    (for keyword scoring)
+           ├─ end_date:        (for display)
+           └─ relevance_score: (calculated at query)
+
+RESULT: SQLite DB + ChromaDB vector store ready for queries
+```
+
+### Phase 2: Query Processing
+
+```
+STEP 1: USER INPUT
+────────────────
+python main.py --ask "IT hardware bids"
+        or
+python main.py --chat
+You > "laptop bids from NIC"
+
+STEP 2: EXIT DETECTION (query_engine.py)
+────────────────────────────────────────
+Check if input is exit word:
+  ├─ quit, exit, q, bye, goodbye, stop, close, end, done, ok bye
+  └─ If matched → exit immediately (NO query made)
+  └─ Checked BEFORE any other processing ← FIX
+
+STEP 3: SMART TOP_K SELECTION (query_engine.py)
+───────────────────────────────────────────────
+Analyze question intent:
+  ├─ List intent (show all, list, how many, every):
+  │  └─ top_k = max(5, 15) = 15
+  ├─ Focused lookup (bid number, GEM/, specific):
+  │  └─ top_k = max(1, 5//2) = 2
+  └─ Generic query:
+     └─ top_k = 5 (default)
+
+STEP 4: QUERY EMBEDDING (rag/embedder.py)
+─────────────────────────────────────────
+├─ Load sentence-transformers model
+├─ Encode question → 384-dim vector
+└─ This vector is used for similarity search
+
+STEP 5: VECTOR SEARCH (rag/vector_store.py)
+────────────────────────────────────────────
+search(question, top_k=top_k, filters=filters):
+  
+  1. ChromaDB semantic search:
+     ├─ Find top_k*4 raw chunks (over-fetch for dedup)
+     ├─ Calculate cosine distance to query vector
+     ├─ Convert: semantic_score = 1 - distance
+     │   Range: 0 (unrelated) to 1 (perfect match)
+     └─ Example: distance=0.12 → semantic_score=0.88
+  
+  2. Keyword matching (_keyword_score):
+     ├─ Split question into words
+     ├─ Remove stop words: {the,for,a,an,and,or,in,of,is}
+     ├─ If ALL words are stop words → return 0.5 (neutral)
+     ├─ Match remaining words against:
+     │  ├─ full_item_name    (weight 3.0) ← highest
+     │  ├─ department        (weight 1.5)
+     │  ├─ bid_type          (weight 1.0)
+     │  └─ product_type      (weight 1.0)
+     └─ keyword_score = Σ(match_count × field_weight) / total_weights
+        Range: 0 to 1
+  
+  3. Hybrid scoring:
+     ├─ For each chunk:
+     │  └─ hybrid = (semantic × 0.6) + (keyword × 0.4)
+     └─ Deduplicate by bid_no (keep BEST chunk per bid)
+  
+  4. Sort by hybrid score, return top_k unique bids
+
+STEP 6: LLM GENERATION (rag/llm.py) — OPTIONAL
+────────────────────────────────────────────
+If RAG_LLM_PROVIDER = "openai" or "ollama":
+  
+  1. Format retrieved bids:
+     ├─ Take up to 8 bids
+     ├─ Create structured context:
+     │  └─ Bid No | Item | Dept | End Date | Value
+     └─ Inject into prompt template
+  
+  2. Send to LLM:
+     ├─ System prompt: "You are a GeM bid assistant"
+     ├─ User message: Question + formatted bids
+     └─ Model: llama3 (Ollama) or gpt-4o-mini (OpenAI)
+  
+  3. Parse LLM response:
+     ├─ Extract answer text
+     ├─ Format with markdown
+     └─ Return to user
+
+ELSE (retrieval-only mode):
+  ├─ Return retrieved bids with score breakdown
+  │  Example:
+  │  Bid: GEM/2026/B/7549944
+  │  Item: Reactor Coil for Soft Starter
+  │  Scores:
+  │    Overall: 76%
+  │    • Semantic (60%): 82%
+  │    • Keyword  (40%): 67%
+
+STEP 7: OUTPUT
+──────────────
+Return structured result:
+  ├─ question:    "IT hardware bids"
+  ├─ answer:      "I found 5 IT hardware bids. Here's a summary..."
+  └─ sources:     [
+         {
+           "bid_no":          "GEM/2026/B/7549944",
+           "bid_type":        "Product Bid/RAs",
+           "product_type":    "Product",
+           "full_item_name":  "Reactor Coil...",
+           "department":      "Ministry of...",
+           "end_date":        "30-05-2026 16:00:00",
+           "estimated_value": "117000000",
+           "relevance_score": 0.845,
+           "document_url":    "https://bidplus.gem.gov.in/..."
+         },
+         ...
+       ]
 ```
 
 ---
 
-## Data Flow Pipeline
+## Component Architecture
 
-### Phase 1: Scraping & Ingestion
-
-```
-1. SCRAPER (pipeline/scraper.py)
-   ├─ Filters by bid type (Product, Service, etc.)
-   ├─ Applies "Ongoing Bids/RA" filter → active bids only
-   ├─ Downloads PDF documents
-   ├─ Scrapes start_date + end_date from card HTML (accurate)
-   └─ Extracts raw text from PDFs
-
-2. PARSER (core/parser.py)
-   ├─ get_dates_from_card(): Scrapes dates from listing card HTML
-   │  ├─ Matches "Start Date: DD-MM-YYYY HH:MM AM/PM"
-   │  ├─ Matches "End Date: DD-MM-YYYY HH:MM AM/PM"
-   │  └─ Converts to 24-hour format via _to_24h()
-   ├─ extract_pdf_text(): Extracts text via PyMuPDF (OCR fallback)
-   ├─ parse_bid_data(): Extracts structured fields from PDF text
-   │  ├─ bid_no (GEM/2024/B/12345)
-   │  ├─ bid_type (Product Bid/RAs, Service Bid/RAs, etc.)
-   │  ├─ full_item_name (What is being bid on)
-   │  ├─ department (Government dept)
-   │  ├─ quantity
-   │  ├─ start_date, end_date (PDF fallback only)
-   │  ├─ estimated_value
-   │  ├─ bid_packet_type (Single/Two packet)
-   │  └─ full_pdf_text (entire PDF content)
-   └─ Uses regex patterns + fallback to OCR if needed
-
-3. DATABASE (storage/database.py)
-   ├─ Deduplicates using document_url as primary key
-   ├─ Marks new bids vs. already-seen
-   ├─ Stores in SQLite: storage/gem_bids.db
-   └─ Logs all runs to run_log table
-
-4. RAG INDEXING (rag/vector_store.py)
-   ├─ For EACH new bid:
-   │  ├─ build_bid_document(): Creates rich text
-   │  │  └─ Combines: structured fields + PDF body
-   │  ├─ chunk_text(): Splits into overlapping chunks
-   │  ├─ embed_texts(): Converts to vectors
-   │  └─ upsert_bid(): Stores in ChromaDB
-   └─ Result: Searchable vector database
-```
-
-### Phase 2: Query Time
-
-```
-1. USER QUERY
-   ├─ Question: "Show me all IT hardware bids"
-   ├─ Optional filter: f:product_type=Product
-   └─ Optional top_k override
-
-2. EXIT DETECTION (query_engine.py) — checked FIRST
-   ├─ Checked before any query processing
-   ├─ Exit words: quit, exit, q, bye, goodbye, stop, close, end, done, ok bye
-   └─ If matched → exit immediately (no query made)
-
-3. SMART TOP_K SELECTION (query_engine.py)
-   ├─ Detects query intent:
-   │  ├─ Listing intent (all, every, list, show, how many, what bids, etc.)
-   │  │  → top_k = max(default, 15)
-   │  ├─ Focused lookup (specific bid, find bid, bid number, GEM/YYYY)
-   │  │  → top_k = max(1, default // 2)
-   │  └─ Generic → top_k = default (5)
-   └─ Ensures better results for different query types
-
-4. VECTOR SEARCH (vector_store.py)
-   ├─ Embed query using same model
-   ├─ Fetch top_k*4 raw chunks from ChromaDB
-   │  (over-fetch to account for deduplication)
-   ├─ For each chunk, calculate:
-   │  ├─ Semantic score: cosine similarity (0-1)
-   │  └─ Keyword score: TF-IDF style matching on structured fields
-   ├─ Combine: hybrid_score = (semantic * 0.6) + (keyword * 0.4)
-   ├─ Deduplicate by bid_no (keep highest score per bid)
-   └─ Sort by hybrid score, return top_k
-
-5. LLM INTEGRATION (llm.py)
-   ├─ If RAG_LLM_PROVIDER = "openai" or "ollama"
-   │  ├─ Format retrieved bids into structured prompt (max 8 bids)
-   │  ├─ Send to LLM with system instructions
-   │  ├─ LLM formats response with exact template
-   │  └─ Return formatted answer
-   └─ If no LLM provider: return retrieval-only results with score breakdown
-
-6. OUTPUT
-   ├─ Sources: List of retrieved bids with:
-   │  ├─ bid_no, department, full_item_name
-   │  ├─ end_date, estimated_value
-   │  ├─ relevance_score (hybrid score)
-   │  └─ document_url
-   └─ Answer: LLM-generated or retrieval-only with score breakdown
-```
-
----
-
-## RAG Architecture
-
-### 1. Embeddings (rag/embedder.py)
-
-**Purpose**: Convert text into numerical vectors (embeddings) that capture semantic meaning.
-
-**Model**: `all-MiniLM-L6-v2` (by default)
-- Sentence-Transformers model
-- 384-dimensional vectors
-- Runs completely LOCAL (no API key needed)
-- Fast & efficient for CPU
-
-**Process**:
-
-```python
-1. build_bid_document(bid):
-   - Creates a rich text document
-   - Combines structured fields at the top (repeated for emphasis)
-   - Followed by full PDF text
-   - Result: Single text string with all bid info
-   
-   Example output:
-   "Bid Number: GEM/2024/B/123 RA Number: GEM/2024/R/456 
-    Bid Type: Product Bid/RAs Product Type: Product 
-    Item: Industrial Machinery Quantity: 100 
-    Department: Ministry of Tech ... [PDF body text]"
-
-2. chunk_text(text):
-   - Splits long documents into overlapping chunks
-   - Chunk size: 800 characters (configurable)
-   - Overlap: 100 characters (configurable)
-   - Ensures context isn't lost at chunk boundaries
-   - Keeps chunks ≥ 20 chars (filters out noise)
-   
-   Example:
-   Text = "ABCDEFGHIJKLMNOP..." (2400 chars)
-   Chunks:
-   - [0:800]      = "ABCDEFGH...YZ"
-   - [700:1500]   = "TUVWXYZ...ABC" (overlaps last 100)
-   - [1400:2200]  = "XYZ...DEF"
-   - [2100:2900]  = "...GHI"
-
-3. embed_texts(texts):
-   - Uses sentence-transformers to encode
-   - Returns normalized embeddings (L2 norm = 1)
-   - Enables cosine similarity directly
-   - Batch size: 32 for efficiency
-```
-
-**Configuration**:
-```env
-# In .env file:
-RAG_EMBEDDING_MODEL=all-MiniLM-L6-v2    # Which model to use
-RAG_CHUNK_SIZE=800                      # Characters per chunk
-RAG_CHUNK_OVERLAP=100                   # Overlap between chunks
-```
-
-**Where embeddings are stored**: ChromaDB (`storage/chroma_db/`)
-
----
-
-### 2. Vector Store (rag/vector_store.py)
-
-**Purpose**: Store bid embeddings and perform hybrid similarity search.
-
-**Technology**: ChromaDB (embedded vector database)
-- Persistent storage in `storage/chroma_db/`
-- Uses HNSW (Hierarchical Navigable Small World) algorithm
-- Cosine similarity metric
-- Supports metadata filtering
-
-**Key Operations**:
-
-#### a) **Upsert (Insert/Update)**
-
-```python
-upsert_bid(bid):
-    1. Get or create ChromaDB collection
-    2. Delete old chunks for this bid (if re-indexing)
-    3. Build bid document (structured + PDF text)
-    4. Chunk the text
-    5. Embed all chunks
-    6. Create metadata for each chunk
-    7. Upsert to ChromaDB:
-       - IDs: "{bid_no}__chunk_{i}"
-       - Embeddings: 384-dim vectors
-       - Documents: text chunks
-       - Metadatas: bid fields (bid_no, department, etc.)
-```
-
-#### b) **Hybrid Search**
-
-The search function performs **hybrid scoring** combining:
-
-1. **Semantic Score** (60% weight):
-   - Cosine similarity between query embedding and chunk embeddings
-   - Range: 0 to 1 (1 = perfect match)
-   - Formula: `1 - cosine_distance`
-
-2. **Keyword Score** (40% weight) — `_keyword_score()`:
-   - TF-IDF style matching on structured fields
-   - Removes common stop words from query before matching
-   - Matches query words against: item_name, department, bid_type, product_type
-   - Field weights:
-     - `full_item_name`: 3.0 (highest weight)
-     - `department`: 1.5
-     - `bid_type`: 1.0
-     - `product_type`: 1.0
-   - Range: 0 to 1
-
-3. **Hybrid Score**:
-   ```
-   hybrid_score = (semantic_score × 0.6) + (keyword_score × 0.4)
-   ```
-
-**Example Scoring Breakdown**:
-```
-Query: "IT hardware laptops"
-
-Bid 1: "Dell Laptops" (full_item_name)
-  ├─ Semantic score: 0.87 (good embedding match)
-  ├─ Keyword score: 0.95 (exact match for "laptops" in item_name)
-  └─ Hybrid: (0.87 × 0.6) + (0.95 × 0.4) = 0.522 + 0.380 = 0.902
-
-Bid 2: "Furniture for IT Department"
-  ├─ Semantic score: 0.62 (weak embedding match)
-  ├─ Keyword score: 0.50 (partial match for "IT")
-  └─ Hybrid: (0.62 × 0.6) + (0.50 × 0.4) = 0.372 + 0.200 = 0.572
-
-Result: Bid 1 (0.902) ranked before Bid 2 (0.572)
-```
-
-**Deduplication**:
-- Raw chunks may contain the same bid multiple times (from overlap)
-- Code keeps only the BEST scoring chunk per bid_no
-- Returns top_k unique bids (not chunks)
+### 1. Web Scraper (pipeline/scraper.py + core/browser.py)
 
 ---
 

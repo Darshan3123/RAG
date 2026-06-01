@@ -1,99 +1,113 @@
 # RAG Scoring Deep Dive — Visual Guide
 
-> How exactly are scores calculated? Step-by-step examples  
-> **Last Updated**: May 2026
+> **How exactly are scores calculated?** Step-by-step examples with real numbers  
+> **Last Updated:** May 2026  
+> **For:** Understanding the hybrid scoring formula through concrete examples
 
 ---
 
 ## The Scoring Flow
 
 ```
-┌──────────────────────────────┐
-│ User Query                   │
-│ "Show me IT laptops"         │
-└──────────────┬───────────────┘
+┌──────────────────────────────────────────┐
+│ User Query: "Show me IT laptops"         │
+└──────────────┬─────────────────────────┘
                │
                ▼
-┌──────────────────────────────┐
-│ Embed Query                  │
-│ query_vec = [0.23, -0.45, ...]
-│ (384 dimensions)             │
-└──────────────┬───────────────┘
+┌──────────────────────────────────────────┐
+│ EXIT CHECK (before any processing)       │
+│ Is input quit/bye/done/exit? → skip rest │
+└──────────────┬─────────────────────────┘
+               │ No → continue
+               ▼
+┌──────────────────────────────────────────┐
+│ SMART TOP_K SELECTION                    │
+│ "show all" → fetch 15                    │
+│ "find bid GEM/" → fetch 2-3              │
+│ Default → fetch 5                        │
+└──────────────┬─────────────────────────┘
                │
                ▼
-┌──────────────────────────────┐
-│ Fetch ~20 chunks from DB     │
-│ (for top_k=5, fetch_n=20)    │
-└──────────────┬───────────────┘
+┌──────────────────────────────────────────┐
+│ Embed Query                              │
+│ "IT laptops" → 384-dim vector            │
+│ [0.234, -0.456, 0.892, ..., 0.045]      │
+└──────────────┬─────────────────────────┘
                │
-         ┌─────┴─────┐
-         ▼           ▼
-    FOR EACH CHUNK:
+               ▼
+┌──────────────────────────────────────────┐
+│ Fetch ~top_k*4 chunks from ChromaDB      │
+│ (over-fetch for deduplication)           │
+└──────────────┬─────────────────────────┘
+               │
+         ┌─────┴──────────────┐
+         ▼                    ▼
+    FOR EACH CHUNK (calculate dual scores):
     
-    ├─ Calculate Semantic Score
-    │  ├─ distance = cosine_distance(query, chunk_vec)
-    │  └─ semantic_score = 1 - distance
-    │
-    ├─ Calculate Keyword Score  (_keyword_score)
-    │  ├─ Split query into words
-    │  ├─ Remove stop words (for, the, a, an, and, or, in, of, is)
-    │  ├─ Find matches in bid metadata fields:
-    │  │    full_item_name (weight 3.0)
-    │  │    department     (weight 1.5)
-    │  │    bid_type       (weight 1.0)
-    │  │    product_type   (weight 1.0)
-    │  └─ keyword_score = total_matches / max_possible
-    │
-    └─ Calculate Hybrid Score
-       ├─ hybrid = (semantic * 0.6) + (keyword * 0.4)
-       └─ hybrid_score = 0.0 to 1.0
+    TRACK 1: SEMANTIC SCORING
+    ├─ cosine_dist = distance(query_vec, chunk_vec)
+    ├─ semantic_score = 1 - cosine_dist
+    └─ Range: 0 (unrelated) to 1 (perfect match)
+    
+    TRACK 2: KEYWORD SCORING (_keyword_score)
+    ├─ Split query: "IT" + "laptops"
+    ├─ Remove stop words (for, the, a, an, and, or, in, of, is)
+    ├─ Remaining: "IT" + "laptops"
+    ├─ Match in fields:
+    │   • full_item_name     weight=3.0  ← highest weight
+    │   • department         weight=1.5
+    │   • bid_type           weight=1.0
+    │   • product_type       weight=1.0
+    ├─ Count matches
+    └─ keyword_score = normalized (0 to 1)
+    
+    TRACK 3: HYBRID COMBINATION
+    └─ final = (semantic × 0.6) + (keyword × 0.4)
 
-┌──────────────────────────────────────┐
-│ Aggregate by Bid ID                  │
-│ Keep highest score per bid_no        │
-│ (deduplication)                      │
-└──────────────┬───────────────────────┘
+┌──────────────────────────────────────────┐
+│ Aggregate by Bid ID                      │
+│ • Multiple chunks per bid (from overlap) │
+│ • Keep highest scoring chunk per bid     │
+│ • Deduplicated results                   │
+└──────────────┬─────────────────────────┘
                │
                ▼
-┌──────────────────────────────────────┐
-│ Sort by Hybrid Score (descending)    │
-│ Return top_k results                 │
-└──────────────┬───────────────────────┘
+┌──────────────────────────────────────────┐
+│ Sort by Hybrid Score (highest first)     │
+│ Return top_k unique bids                 │
+└──────────────┬─────────────────────────┘
                │
                ▼
-┌──────────────────────────────────────┐
-│ [Optional] Send to LLM for answer    │
-│ or return retrieval-only results     │
-│ (with semantic + keyword breakdown)  │
-└──────────────────────────────────────┘
+┌──────────────────────────────────────────┐
+│ LLM Answer Generation (optional)         │
+│ OR Retrieval-Only with Score Breakdown   │
+└──────────────────────────────────────────┘
 ```
 
 ---
 
 ## Example 1: Simple Query — "Laptops"
 
-### Setup
+### Database Setup
 
 ```
 Query: "Laptops"
-top_k: 5
+top_k: 5 (default)
 
-Stored in database:
-Bid 1: Item="Dell Laptops", Dept="IT", Type="Product", Value="50 Lakhs"
-Bid 2: Item="Office Furniture", Dept="Admin", Type="Product", Value="10 Lakhs"
-Bid 3: Item="Laptop Bags", Dept="Stationery", Type="Product", Value="2 Lakhs"
-Bid 4: Item="Computer Hardware", Dept="IT", Type="Product", Value="75 Lakhs"
-Bid 5: Item="Network Switches", Dept="IT", Type="Product", Value="30 Lakhs"
+Stored bids:
+  Bid 1: Item="Dell Laptops", Dept="IT", Type="Product"
+  Bid 2: Item="Office Furniture", Dept="Admin", Type="Product"
+  Bid 3: Item="Laptop Bags", Dept="Stationery", Type="Product"
+  Bid 4: Item="Computer Hardware", Dept="IT", Type="Product"
+  Bid 5: Item="Network Switches", Dept="IT", Type="Product"
 ```
 
 ### Step 1: Query Embedding
 
 ```
-Query text: "Laptops"
-↓
-Encode using SentenceTransformer (all-MiniLM-L6-v2)
-↓
-Query vector: [0.324, -0.156, 0.892, ..., 0.045]  (384 dims)
+Input:  "Laptops"
+Model:  all-MiniLM-L6-v2 (384-dimensional)
+Output: query_vec = [0.234, -0.456, 0.892, ..., 0.045]
 ```
 
 ### Step 2: Fetch Candidates

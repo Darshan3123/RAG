@@ -1,36 +1,353 @@
-# GeM Bid RAG System — Quick Start Summary
+# GeM Bid RAG System — Quick Start Guide
 
-> Complete documentation overview  
-> **Last Updated**: May 2026
+> **Last Updated:** May 2026  
+> **For:** First-time users, quick answers, command reference  
+> See [README_RAG_DOCUMENTATION.md](README_RAG_DOCUMENTATION.md) for complete guide index
 
 ---
 
-## System at a Glance
+## What This System Does
+
+1. **Scrapes GeM Portal** — Active bids only (via "Ongoing Bids/RA" filter)
+2. **Extracts Bid Data** — PDFs + card HTML dates
+3. **Builds Vector Database** — ChromaDB with embeddings
+4. **Answers Questions** — Hybrid search (semantic + keyword) + optional LLM
+
+---
+
+## System At A Glance
 
 ```
-Your system = Semantic Search + Keyword Matching + Optional LLM
-
-Data Flow:
-  Scrape PDFs (active bids only) → Extract fields + card dates
-       → Store in SQLite + Vector DB
-                    ↓
-  User Query → Exit Check → Smart top_k → Embed
-       → Hybrid Search → Format results → Show/LLM
+PIPELINE:
+  Scrape (active bids) → Parse PDFs + card dates → Store SQLite + ChromaDB
+                              ↓
+  Query → Embed → Hybrid search → Rank by relevance → LLM answer
 ```
 
-### Key Numbers
+### Key Numbers (Defaults)
 
-| Parameter | Current | Impact |
-|-----------|---------|--------|
-| RAG_TOP_K | 5 | Results returned per query |
-| RAG_CHUNK_SIZE | 800 | Characters per chunk |
-| RAG_CHUNK_OVERLAP | 100 | Overlap for context |
+| Parameter | Value | Impact |
+|-----------|-------|--------|
+| `RAG_TOP_K` | 5 | Unique bids per query |
+| `RAG_CHUNK_SIZE` | 800 | Characters per chunk |
+| `RAG_CHUNK_OVERLAP` | 100 | Overlap for context |
 | Semantic weight | 0.6 | 60% of final score |
 | Keyword weight | 0.4 | 40% of final score |
 
 ---
 
-## The Scoring Formula (Most Important)
+## The Scoring Formula (MOST IMPORTANT)
+
+This is the heart of RAG relevance:
+
+```
+For each bid retrieved:
+
+┌─────────────────────────────────────────────────┐
+│ SEMANTIC TRACK                                  │
+│ ─────────────────────────────────────────────── │
+│ 1. Embed query + bid text using sentence-       │
+│    transformers (384-dim vectors)               │
+│ 2. Cosine similarity = closeness of vectors     │
+│ 3. semantic_score = 1 - distance (0 to 1)       │
+│    • 1.0 = perfect semantic match               │
+│    • 0.0 = completely unrelated                 │
+└─────────────────────────────────────────────────┘
+              ↓
+        ┌─────────────────────────────────────────┐
+        │ KEYWORD TRACK                           │
+        │ ─────────────────────────────────────── │
+        │ 1. Split query into words               │
+        │ 2. Remove stop words (the,for,and,etc.) │
+        │ 3. Match in structured fields:          │
+        │    • full_item_name    (weight: 3.0)    │
+        │    • department        (weight: 1.5)    │
+        │    • bid_type          (weight: 1.0)    │
+        │    • product_type      (weight: 1.0)    │
+        │ 4. keyword_score = Σ(matches × weights) │
+        │    (normalized to 0-1)                  │
+        └─────────────────────────────────────────┘
+              ↓
+  ┌────────────────────────────────────────────┐
+  │ HYBRID SCORE (Final Ranking)               │
+  │ ─────────────────────────────────────────  │
+  │ hybrid = (semantic × 0.6) + (keyword × 0.4)│
+  │                                             │
+  │ Example:                                    │
+  │ Semantic: 0.88, Keyword: 0.46              │
+  │ Hybrid = (0.88 × 0.6) + (0.46 × 0.4)       │
+  │        = 0.528 + 0.184 = 0.712 ← FINAL     │
+  └────────────────────────────────────────────┘
+```
+
+**Real Example:**
+```
+Query: "Dell Laptop bids"
+
+Bid A: "Dell Laptops from Tech Ministry" [actual item name]
+  ├─ Semantic score: 0.92 (excellent match)
+  ├─ Keyword score:  0.94 ("Dell" + "Laptop" found in item)
+  └─ Hybrid: (0.92 × 0.6) + (0.94 × 0.4) = 0.928 ✓ TOP
+
+Bid B: "Office Furniture from Tech Ministry"
+  ├─ Semantic score: 0.45 (weak, about furniture)
+  ├─ Keyword score:  0.30 (only "Tech" matches)
+  └─ Hybrid: (0.45 × 0.6) + (0.30 × 0.4) = 0.390 ⬇ Lower
+```
+
+---
+
+## Quick Command Reference
+
+### Testing & Exploration
+
+```bash
+# Interactive chat (BEST for testing)
+python main.py --chat
+
+# In chat mode, try:
+# You > show me laptop bids
+# You > f:product_type=Product laptops
+# You > /search IT equipment
+# You > quit
+
+# Single one-off query
+python main.py --ask "IT hardware bids"
+
+# Query with filter
+python main.py --ask "laptops" --filter product_type=Product
+
+# View system health
+python main.py --stats
+
+# Retrieval only (no LLM) — shows score breakdown
+# First set in .env: RAG_LLM_PROVIDER=
+python main.py --ask "laptops"
+# Output: Each result shows Semantic %, Keyword %, Overall %
+```
+
+### Maintenance
+
+```bash
+# Rebuild vector store (after changing embedding model or chunk size)
+python main.py --reindex
+
+# Production continuous scrape (runs hourly)
+python main.py
+
+# Single scrape (for testing or cron)
+python main.py --once
+```
+
+---
+
+## Configuration Settings (`.env`)
+
+| Setting | Default | Change when... |
+|---------|---------|-----------------|
+| `RAG_LLM_PROVIDER` | `ollama` | You want to use OpenAI (`openai`) or no LLM (`""`) |
+| `OLLAMA_MODEL` | `llama3` | You installed a different model |
+| `OPENAI_MODEL` | `gpt-4o-mini` | You prefer a different OpenAI model |
+| `RAG_TOP_K` | `5` | You want more/fewer results (tune between 3-15) |
+| `RAG_EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | You want better semantic matching (`all-mpnet-base-v2`) |
+| `RAG_CHUNK_SIZE` | `800` | Results are too generic (decrease) or too narrow (increase) |
+| `RAG_CHUNK_OVERLAP` | `100` | Rarely needs change; affects context continuity |
+
+**LLM Provider Options:**
+
+```env
+# Option 1: Ollama (local, free)
+RAG_LLM_PROVIDER=ollama
+OLLAMA_MODEL=llama3
+
+# Option 2: OpenAI (API, costs money)
+RAG_LLM_PROVIDER=openai
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
+
+# Option 3: Retrieval only (free, no LLM)
+RAG_LLM_PROVIDER=
+```
+
+---
+
+## Common Issues & Fixes
+
+### "Too many generic results"
+**Problem:** Query returns random unrelated bids  
+**Try first:**
+```bash
+# Use metadata filter
+python main.py --ask "laptops" --filter product_type=Product
+
+# Or reduce results count in .env:
+RAG_TOP_K=3
+```
+
+**Try next:**
+```env
+# Increase semantic weight (meaning > keywords)
+# Edit rag/vector_store.py line ~145:
+# hybrid_score = (semantic × 0.8) + (keyword × 0.2)  # was 0.6/0.4
+```
+
+### "Missing relevant bids"
+**Problem:** Query should find results but doesn't  
+**Try first:**
+```bash
+# Search with /search instead (retrieval only)
+# In chat: /search laptop bids
+
+# Or increase top_k in .env:
+RAG_TOP_K=15
+```
+
+**Try next:**
+```bash
+# Better embedding model
+RAG_EMBEDDING_MODEL=all-mpnet-base-v2
+# Then reindex:
+python main.py --reindex
+```
+
+### "Chat exit not working"
+**Problem:** `quit` / `bye` doesn't exit  
+**Status:** Fixed in current version (exit checked BEFORE query)  
+**Supported exit words:** quit, exit, q, bye, goodbye, stop, close, end, done, ok bye
+
+### "/search showing garbled text"
+**Problem:** /search output shows PDF raw text instead of item names  
+**Status:** Fixed in current version (shows full_item_name from metadata)
+
+### "Slow queries"
+**Problem:** Searches take >5 seconds  
+**Try:** Decrease `RAG_TOP_K` or `RAG_CHUNK_SIZE` in `.env`
+
+---
+
+## Decision Tree: What Should I Change?
+
+```
+Are results too generic?
+├─ Yes → reduce RAG_TOP_K to 3
+│
+Are results missing relevant bids?
+├─ Yes → increase RAG_TOP_K to 15
+│
+Are results wrong types/departments?
+├─ Yes → use --filter flag instead
+│
+Are queries slow?
+├─ Yes → decrease RAG_CHUNK_SIZE
+│
+Do you want different LLM?
+├─ Yes → change RAG_LLM_PROVIDER in .env
+```
+
+---
+
+## Running Production
+
+### Continuous Loop (Recommended)
+```bash
+python main.py
+# Runs hourly scrapes + auto-indexes bids
+# Press Ctrl+C to stop
+```
+
+### Systemd Service (Linux)
+```bash
+sudo systemctl start gem-scraper
+sudo systemctl status gem-scraper
+sudo systemctl stop gem-scraper
+```
+
+### Cron Schedule
+```bash
+# Every hour
+0 * * * * cd /path/to/gem_scraper && python main.py --once
+
+# Every 30 minutes
+*/30 * * * * cd /path/to/gem_scraper && python main.py --once
+
+# Daily at 2 AM
+0 2 * * * cd /path/to/gem_scraper && python main.py --once
+```
+
+---
+
+## Example Queries to Try
+
+```bash
+# Simple searches
+python main.py --ask "laptop bids"
+python main.py --ask "service contracts"
+python main.py --ask "Ministry of Defence"
+
+# Complex queries
+python main.py --ask "IT equipment bids above 10 lakh from NIC"
+python main.py --ask "Which bids are ending this week?"
+python main.py --ask "Global tenders in defence or aerospace"
+
+# With filters
+python main.py --ask "product bids" --filter product_type=Product
+python main.py --ask "services" --filter "bid_type=Service Bid/RAs"
+python main.py --ask "maintenance" --filter department=Defence
+
+# In chat mode (/search for quick retrieval without LLM)
+python main.py --chat
+# Then: /search laptop bids from Intel
+# Then: f:product_type=Product server hardware
+# Then: quit
+```
+
+---
+
+## File Organization
+
+**Input/Output:**
+- `storage/gem_bids.db` — SQLite with all bids (auto-created)
+- `storage/gem_bids.json` — JSON export for analysis (auto-created)
+- `storage/chroma_db/` — Vector embeddings (auto-created)
+- `downloads/` — Downloaded PDFs (auto-created)
+
+**Configuration:**
+- `.env` — All settings (copy from `.env.example`)
+- `config/settings.py` — Loads from .env, exposes to code
+
+**Logs:**
+- `logs/scraper.log` — Scraping runs
+- `logs/vector_store.log` — RAG operations
+- `logs/browser.log` — Browser automation
+- Other modules also log
+
+---
+
+## Next Steps
+
+1. **Read [RAG_ARCHITECTURE_GUIDE.md](RAG_ARCHITECTURE_GUIDE.md)** — Deep understanding of system
+2. **Read [RAG_SCORING_EXAMPLES.md](RAG_SCORING_EXAMPLES.md)** — Concrete scoring examples
+3. **Read [RAG_TUNING_GUIDE.md](RAG_TUNING_GUIDE.md)** — Optimization strategies
+4. **Browse [RAG_VISUAL_REFERENCE.md](RAG_VISUAL_REFERENCE.md)** — Diagrams & visuals
+
+---
+
+## FAQ
+
+**Q: Does this cost money?**  
+A: Scraping is free. Ollama is free. OpenAI costs ~$0.01 per query.
+
+**Q: Can I use this on Windows?**  
+A: Yes, install Tesseract from https://github.com/UB-Mannheim/tesseract/wiki
+
+**Q: How often are bids updated?**  
+A: Scraper runs hourly by default. Set `SCRAPE_INTERVAL_MINUTES` in `.env` to change.
+
+**Q: How many bids can it handle?**  
+A: Tested up to 10,000 bids. ChromaDB scales to millions.
+
+**Q: Can I query while scraping?**  
+A: Yes, SQLite and ChromaDB support concurrent reads.
 
 ```
 For each bid retrieved:
