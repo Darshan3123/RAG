@@ -89,9 +89,16 @@ def _get_reranker():
     if not RAG_USE_RERANKER:
         return None
     try:
+        import os
         from sentence_transformers import CrossEncoder
-        log.info(f"Loading reranker: {RAG_RERANKER_MODEL}")
-        _reranker = CrossEncoder(RAG_RERANKER_MODEL)
+
+        # Force offline mode — same SSL fix as embedder
+        os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+        os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+
+        log.info(f"Loading reranker: {RAG_RERANKER_MODEL} (offline mode)")
+        _reranker = CrossEncoder(RAG_RERANKER_MODEL, local_files_only=True)
         log.info("Reranker ready")
     except Exception as e:
         log.warning(f"Reranker load failed: {e}")
@@ -211,6 +218,9 @@ def search(
         dense_ranking.append(cid)
 
     # 2. BM25 sparse retrieval
+    # BM25 must respect the same filters as dense retrieval.
+    # We check each candidate's metadata against the filter dict
+    # before adding it to the ranking.
     bm25_ranking = []
     bm25_idx, bm25_docs_list = _get_bm25()
     if bm25_idx is not None:
@@ -223,6 +233,17 @@ def search(
                     continue
                 rec  = bm25_docs_list[idx]
                 meta = rec["meta"]
+
+                # Apply the same metadata filters as dense retrieval
+                if filters:
+                    skip = False
+                    for fk, fv in filters.items():
+                        if meta.get(fk, "") != fv:
+                            skip = True
+                            break
+                    if skip:
+                        continue
+
                 cid  = f"{meta.get('bid_no','')}__chunk_{meta.get('chunk_index',0)}"
                 bm25_ranking.append(cid)
                 norm = min(1.0, sc / 20.0)
@@ -272,7 +293,7 @@ def search(
         for c in rerank_pool:
             c["rerank_score"] = c.get("semantic_score", 0.0)
 
-    # 6. Build output
+    # 6. Build output — filter by minimum score threshold
     output = []
     for c in rerank_pool[:top_k]:
         meta      = c["meta"]
@@ -281,6 +302,16 @@ def search(
         bm25_sc   = c.get("bm25_score", 0.0)
         # Weighted final: reranker dominates
         final = (rerank_sc * 0.6) + (sem_sc * 0.25) + (bm25_sc * 0.15)
+
+        # Skip results that are pure noise (reranker stuck at neutral ~50%
+        # with no semantic signal — these are BM25 false positives)
+        if sem_sc == 0.0 and rerank_sc < 0.55:
+            log.debug(
+                f"Filtered out noise result: {meta.get('bid_no','')} "
+                f"(rerank={rerank_sc:.2f}, dense=0.00)"
+            )
+            continue
+
         output.append({
             "chunk":           c["doc"],
             "score":           round(final, 4),
@@ -301,6 +332,20 @@ def search(
             "document_url":    meta.get("document_url", ""),
             "corrigendum_url": meta.get("corrigendum_url", ""),
         })
+
+    # Rule B: drop results scoring less than 70% of top result
+    # (handles small corpus "one match + noise filler" pattern)
+    if output and len(output) > 1:
+        top_score = output[0]["score"]
+        cutoff    = top_score * 0.70
+        original  = len(output)
+        output    = [r for r in output if r["score"] >= cutoff]
+        # Always return at least 1 result
+        if not output:
+            output = [output[0]]
+        elif len(output) < original:
+            log.debug(f"Filtered {original - len(output)} low-confidence results (score < {cutoff:.2%})")
+
     return output
 
 

@@ -104,15 +104,66 @@ def run_chat():
             continue
 
         # ── optional filter prefix f:key=value ──
+        # Supports values with spaces: f:bid_type=Global Tender my question
+        # Strategy: parse f:key=value_token, then the rest is the question.
+        # For multi-word filter values, user can use underscore or the value
+        # as-is since we consume everything up to the question start heuristic.
+        # Better: split f:key=value where value ends at first word that would
+        # be a question (we just split the whole token on first space and let
+        # key=value include everything before the second space-separated group).
+        #
+        # Simplest robust approach: f: prefix consumes key=rest_of_first_token,
+        # BUT to support "f:bid_type=Global Tender what bids" correctly we
+        # require the question to be separated by TWO spaces, or we detect the
+        # filter value boundary by checking how many words belong to the value.
+        #
+        # We use the pragmatic approach: split f:key=value where the value is
+        # everything after = in the first token, and remaining tokens are query.
         filters  = None
         question = raw
         if raw.startswith("f:"):
-            parts = raw.split(" ", 1)
-            if len(parts) == 2:
-                kv      = parts[0][2:].split("=", 1)
-                question = parts[1].strip()
-                if len(kv) == 2:
-                    filters = {kv[0]: kv[1]}
+            # Find the first occurrence of a space that is followed by a
+            # non-key=value word. We do this by splitting off the f:key=value
+            # token as everything from f: up to the first space, but handle
+            # multi-word filter values by checking if the next token contains
+            # no alpha question words vs filter continuation.
+            #
+            # Robust fix: use the pattern f:key=value  (one token, no spaces
+            # in value allowed unless user quotes) and document accordingly.
+            # For "Global Tender" specifically, user should write:
+            #   f:bid_type=Global Tender question...
+            # We handle this by consuming tokens greedily into the value until
+            # we hit a token that looks like a question word (not a capitalized
+            # proper noun that extends the filter value).
+            #
+            # Simplest correct heuristic: the filter value is everything after
+            # = in the first token. If the value is a known multi-word type
+            # (contains no lowercase), keep consuming. Stop at first lowercase
+            # word — that's the start of the question.
+            rest = raw[2:]  # strip "f:"
+            if "=" in rest:
+                key, after_eq = rest.split("=", 1)
+                tokens = after_eq.split(" ")
+                value_tokens = []
+                question_tokens = []
+                found_question = False
+                for tok in tokens:
+                    if found_question:
+                        question_tokens.append(tok)
+                    elif tok and tok[0].islower():
+                        # lowercase start → question begins here
+                        found_question = True
+                        question_tokens.append(tok)
+                    else:
+                        value_tokens.append(tok)
+                value    = " ".join(value_tokens).strip()
+                question = " ".join(question_tokens).strip()
+                if key and value and question:
+                    filters = {key.strip(): value}
+                else:
+                    # Couldn't parse cleanly — treat whole thing as question
+                    question = raw
+                    filters  = None
 
         result = engine.ask(question, filters=filters)
         _print_answer(result)

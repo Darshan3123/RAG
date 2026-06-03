@@ -40,9 +40,18 @@ def _is_bge() -> bool:
 def _get_model():
     global _model
     if _model is None:
+        import os
         from sentence_transformers import SentenceTransformer
-        log.info(f"Loading embedding model: {RAG_EMBEDDING_MODEL}")
-        _model = SentenceTransformer(RAG_EMBEDDING_MODEL)
+
+        # Force fully offline mode — model is already cached locally.
+        # This prevents SSL certificate errors on corporate networks
+        # where Python can't verify HuggingFace's TLS certificate.
+        os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+        os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+
+        log.info(f"Loading embedding model: {RAG_EMBEDDING_MODEL} (offline mode)")
+        _model = SentenceTransformer(RAG_EMBEDDING_MODEL, local_files_only=True)
         log.info("Embedding model ready")
     return _model
 
