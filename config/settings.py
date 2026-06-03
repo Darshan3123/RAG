@@ -153,6 +153,17 @@ OLLAMA_MODEL    = _str("OLLAMA_MODEL",    "llama3")
 os.makedirs(CHROMA_DIR, exist_ok=True)
 
 # ---------------------------------------------------------
+# TENDER API  (external tender data — active + awarded)
+# ---------------------------------------------------------
+TENDER_API_BASE_URL   = _str("TENDER_API_BASE_URL", "")
+TENDER_API_KEY        = _str("TENDER_API_KEY", "")
+TENDER_API_TIMEOUT    = _int("TENDER_API_TIMEOUT", 30)
+TENDER_API_PAGE_SIZE  = _int("TENDER_API_PAGE_SIZE", 50)
+TENDER_API_RATE_DELAY = _float("TENDER_API_RATE_DELAY", 1.0)
+TENDER_DB_PATH        = _path("TENDER_DB_PATH", "storage/tenders.db")
+TENDER_JSON_PATH      = _path("TENDER_JSON_PATH", "storage/tenders.json")
+
+# ---------------------------------------------------------
 # PRODUCT TYPE MAP  (bid_type → clean label)
 # ---------------------------------------------------------
 PRODUCT_TYPE_MAP = {

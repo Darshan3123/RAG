@@ -16,7 +16,8 @@ from config.settings import (
 )
 from core.browser import GemBrowser
 from core.parser import (
-    extract_pdf_text, parse_bid_data,
+    extract_pdf_text, parse_bid_data, parse_bid_extended,
+    assemble_tender_record,
     get_card_details,
     clean_text,
 )
@@ -110,8 +111,9 @@ def scrape_bid_type(
                         continue
 
                     parsed = parse_bid_data(pdf_text)
+                    extended = parse_bid_extended(pdf_text, pdf_path=pdf_path)
 
-                    # ── 3. MERGE — prefer card data ──
+                    # ── 3. MERGE — prefer card data, then extended PDF data ──
                     bid = {
                         "bid_type":        bid_type_name,
                         "product_type":    card_data["product_type"],
@@ -125,15 +127,39 @@ def scrape_bid_type(
                                                  parsed.get("department", "")),
                         "start_date":      card_data["start_date"] or parsed.get("start_date", ""),
                         "end_date":        card_data["end_date"]   or parsed.get("end_date", ""),
-                        # estimated_value + bid_packet_type only in PDF
+                        # Fields only from PDF
                         "estimated_value": parsed.get("estimated_value", ""),
                         "bid_packet_type": parsed.get("bid_packet_type", ""),
                         "document_url":    doc_url,
                         "corrigendum_url": corr_url,
                         "full_pdf_text":   clean_text(pdf_text),
+                        # Extended fields from new parser
+                        "category":        extended.get("category", ""),
+                        "sub_category":    extended.get("sub_category", ""),
+                        "product_name":    extended.get("product_name", ""),
+                        "procurement_type": extended.get("procurement_type", ""),
+                        "authority":       extended.get("authority", "") or _pick(card_data["department"], parsed.get("department", "")),
+                        "sector":          extended.get("sector", ""),
+                        "earnest_amount":  extended.get("earnest_amount", ""),
+                        "doc_cost":        extended.get("doc_cost", ""),
+                        "open_date":       extended.get("open_date", ""),
+                        "search_text":     extended.get("search_text", ""),
+                        "is_corrigendum":  extended.get("is_corrigendum", False),
+                        "address":         extended.get("address", ""),
+                        "address_pin":     extended.get("address_pin", ""),
+                        "city":            extended.get("city", ""),
+                        "state":           extended.get("state", ""),
+                        "contact_person":  extended.get("contact_person", ""),
+                        "contact_email":   extended.get("contact_email", ""),
+                        "contact_phone":   extended.get("contact_phone", ""),
+                        "document_path":   extended.get("document_path", ""),
                     }
 
-                    is_new = db.upsert(bid)
+                    # ── 4. Build the unified tender-format record ──
+                    page_url = getattr(browser, "current_url", "https://gem.gov.in/")
+                    tender_record = assemble_tender_record(bid, page_url=page_url)
+
+                    is_new = db.upsert(bid, tender_record=tender_record)
                     if is_new:
                         stats["new"] += 1
                     collected += 1

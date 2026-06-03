@@ -2,6 +2,7 @@
 # =========================================================
 # main.py — Entry point
 #
+# ── GeM Scraper ──────────────────────────────────────────
 # python main.py                        # continuous hourly loop
 # python main.py --once                 # single scrape run
 # python main.py --stats                # DB + vector store stats
@@ -9,6 +10,13 @@
 # python main.py --ask "q" --filter product_type=Product
 # python main.py --chat                 # interactive chat
 # python main.py --reindex              # rebuild vector store
+#
+# ── Tender API Pipeline ──────────────────────────────────
+# python main.py --tender-active                    # fetch open tenders from API
+# python main.py --tender-results                   # fetch awarded tenders from API
+# python main.py --tender-file active_tenders.json  # load from local file
+# python main.py --tender-stats                     # tender DB stats
+# python main.py --tender-active --category "Printing Work" --state Gujarat
 # =========================================================
 import sys
 import os
@@ -177,12 +185,66 @@ def run_reindex():
     print("\nRe-index complete. Run --stats to verify.\n")
 
 
+# =========================================================
+# TENDER API PIPELINE COMMANDS
+# =========================================================
+def print_tender_stats():
+    from tender_database import TenderDatabase
+    db = TenderDatabase()
+    s = db.stats()
+    print("\n" + "=" * 42)
+    print("  Tender Database — Stats")
+    print("=" * 42)
+    print(f"  Total tenders : {s['total']}")
+    print(f"  OPEN          : {s['open']}")
+    print(f"  AOC (results) : {s['aoc']}")
+    print(f"  New this run  : {s['new']}")
+    print(f"  Total runs    : {s['runs']}")
+    print("=" * 42 + "\n")
+
+
+def run_tender_active(category: str = "", state: str = ""):
+    from tender_pipeline import run_active
+    run_active(category=category, state=state)
+
+
+def run_tender_results(category: str = "", state: str = ""):
+    from tender_pipeline import run_results
+    run_results(category=category, state=state)
+
+
+def run_tender_file(filepath: str):
+    from tender_pipeline import run_from_file
+    run_from_file(filepath)
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
 
     try:
         if "--stats" in args:
             print_stats()
+
+        elif "--tender-stats" in args:
+            print_tender_stats()
+
+        elif "--tender-file" in args:
+            idx = args.index("--tender-file")
+            fp  = args[idx + 1] if idx + 1 < len(args) else ""
+            if fp:
+                run_tender_file(fp)
+            else:
+                print("Usage: python main.py --tender-file path/to/file.json")
+
+        elif "--tender-active" in args:
+            cat   = args[args.index("--category") + 1] if "--category" in args else ""
+            state = args[args.index("--state") + 1]    if "--state"    in args else ""
+            run_tender_active(category=cat, state=state)
+
+        elif "--tender-results" in args:
+            cat   = args[args.index("--category") + 1] if "--category" in args else ""
+            state = args[args.index("--state") + 1]    if "--state"    in args else ""
+            run_tender_results(category=cat, state=state)
 
         elif "--reindex" in args:
             log.info("Mode: full vector store re-index")
@@ -212,7 +274,6 @@ if __name__ == "__main__":
             log.info("Mode: continuous hourly loop")
             from pipeline.scheduler import start_scheduler
             start_scheduler(run_once=False)
-            
     except KeyboardInterrupt:
         print("\n")
         log.info("Process interrupted by user (Ctrl+C). Shutting down gracefully...")

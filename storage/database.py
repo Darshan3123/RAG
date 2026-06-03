@@ -1,6 +1,7 @@
 # =========================================================
 # storage/database.py
 # SQLite storage — dedup, upsert, new-bid detection
+# Extended schema with all unified tender format fields
 # =========================================================
 import sqlite3
 import json
@@ -17,23 +18,62 @@ log = get_logger("database")
 # ---------------------------------------------------------
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS bids (
-    document_url     TEXT PRIMARY KEY,
-    bid_no           TEXT,
-    ra_no            TEXT,
-    bid_type         TEXT,
-    product_type     TEXT,
-    full_item_name   TEXT,
-    quantity         TEXT,
-    department       TEXT,
-    start_date       TEXT,
-    end_date         TEXT,
-    estimated_value  TEXT,
-    bid_packet_type  TEXT,
-    corrigendum_url  TEXT,
-    full_pdf_text    TEXT,
-    first_seen       TEXT,
-    last_seen        TEXT,
-    is_new           INTEGER DEFAULT 1
+    -- Core identity
+    document_url        TEXT PRIMARY KEY,
+    bid_no              TEXT,
+    ra_no               TEXT,
+    bid_type            TEXT,
+    product_type        TEXT,
+    -- Item fields
+    full_item_name      TEXT,
+    quantity            TEXT,
+    category            TEXT,
+    sub_category        TEXT,
+    product_name        TEXT,
+    search_text         TEXT,
+    -- Organisation
+    department          TEXT,
+    authority           TEXT,
+    sector              TEXT,
+    ownership           TEXT DEFAULT 'Government Departments',
+    -- Dates (stored as "DD-MM-YYYY HH:MM:SS" strings)
+    start_date          TEXT,
+    end_date            TEXT,
+    open_date           TEXT,
+    -- Money
+    estimated_value     TEXT,
+    earnest_amount      TEXT,
+    doc_cost            TEXT,
+    -- Bid meta
+    bid_packet_type     TEXT,
+    procurement_type    TEXT,
+    bidding_type        TEXT DEFAULT 'Tender',
+    competition_type    TEXT DEFAULT 'NCB',
+    tender_type         TEXT,
+    tender_status       TEXT,
+    is_corrigendum      INTEGER DEFAULT 0,
+    -- Location
+    city                TEXT,
+    state               TEXT,
+    country             TEXT DEFAULT 'India',
+    address             TEXT,
+    address_pin         TEXT,
+    -- Contact
+    contact_person      TEXT,
+    contact_email       TEXT,
+    contact_phone       TEXT,
+    -- Document
+    corrigendum_url     TEXT,
+    document_path       TEXT,
+    full_pdf_text       TEXT,
+    -- Source
+    procurement_source  TEXT,
+    -- Tender format fields (JSON serialised)
+    tender_record       TEXT,
+    -- Metadata
+    first_seen          TEXT,
+    last_seen           TEXT,
+    is_new              INTEGER DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS run_log (
@@ -66,7 +106,50 @@ class BidDatabase:
     def _init(self):
         with self._conn() as conn:
             conn.executescript(SCHEMA)
+            # Add any new columns that may not exist in older DBs
+            self._migrate(conn)
         log.info(f"Database ready: {self.db_path}")
+
+    def _migrate(self, conn):
+        """Add new columns to existing DB without dropping data."""
+        new_cols = [
+            ("category",          "TEXT"),
+            ("sub_category",      "TEXT"),
+            ("product_name",      "TEXT"),
+            ("search_text",       "TEXT"),
+            ("authority",         "TEXT"),
+            ("sector",            "TEXT"),
+            ("ownership",         "TEXT DEFAULT 'Government Departments'"),
+            ("open_date",         "TEXT"),
+            ("earnest_amount",    "TEXT"),
+            ("doc_cost",          "TEXT"),
+            ("procurement_type",  "TEXT"),
+            ("bidding_type",      "TEXT DEFAULT 'Tender'"),
+            ("competition_type",  "TEXT DEFAULT 'NCB'"),
+            ("tender_type",       "TEXT"),
+            ("tender_status",     "TEXT"),
+            ("is_corrigendum",    "INTEGER DEFAULT 0"),
+            ("city",              "TEXT"),
+            ("state",             "TEXT"),
+            ("country",           "TEXT DEFAULT 'India'"),
+            ("address",           "TEXT"),
+            ("address_pin",       "TEXT"),
+            ("contact_person",    "TEXT"),
+            ("contact_email",     "TEXT"),
+            ("contact_phone",     "TEXT"),
+            ("document_path",     "TEXT"),
+            ("procurement_source","TEXT"),
+            ("tender_record",     "TEXT"),
+        ]
+        existing = {row[1] for row in conn.execute("PRAGMA table_info(bids)").fetchall()}
+        for col, col_type in new_cols:
+            if col not in existing:
+                try:
+                    conn.execute(f"ALTER TABLE bids ADD COLUMN {col} {col_type}")
+                    log.info(f"  DB migration: added column '{col}'")
+                except Exception as e:
+                    log.debug(f"  Migration skip {col}: {e}")
+        conn.commit()
 
     # -------------------------------------------------------
     # CHECK IF BID EXISTS (deduplication)
@@ -83,9 +166,10 @@ class BidDatabase:
     # UPSERT — insert new, or update last_seen + is_new=0
     # Returns True if this is a NEW bid
     # -------------------------------------------------------
-    def upsert(self, bid: dict) -> bool:
+    def upsert(self, bid: dict, tender_record: dict | None = None) -> bool:
         now = datetime.utcnow().isoformat()
         is_new = not self.exists(bid["document_url"])
+        tender_json = json.dumps(tender_record, ensure_ascii=False) if tender_record else ""
 
         with self._conn() as conn:
             if is_new:
@@ -93,32 +177,80 @@ class BidDatabase:
                     INSERT INTO bids (
                         document_url, bid_no, ra_no,
                         bid_type, product_type, full_item_name,
-                        quantity, department,
-                        start_date, end_date,
-                        estimated_value, bid_packet_type,
-                        corrigendum_url, full_pdf_text,
+                        quantity, department, authority, sector,
+                        category, sub_category, product_name, search_text,
+                        start_date, end_date, open_date,
+                        estimated_value, earnest_amount, doc_cost,
+                        bid_packet_type, procurement_type, bidding_type,
+                        competition_type, tender_type, tender_status,
+                        is_corrigendum,
+                        city, state, country, address, address_pin,
+                        contact_person, contact_email, contact_phone,
+                        corrigendum_url, document_path, full_pdf_text,
+                        procurement_source, tender_record,
                         first_seen, last_seen, is_new
                     ) VALUES (
                         :document_url, :bid_no, :ra_no,
                         :bid_type, :product_type, :full_item_name,
-                        :quantity, :department,
-                        :start_date, :end_date,
-                        :estimated_value, :bid_packet_type,
-                        :corrigendum_url, :full_pdf_text,
+                        :quantity, :department, :authority, :sector,
+                        :category, :sub_category, :product_name, :search_text,
+                        :start_date, :end_date, :open_date,
+                        :estimated_value, :earnest_amount, :doc_cost,
+                        :bid_packet_type, :procurement_type, :bidding_type,
+                        :competition_type, :tender_type, :tender_status,
+                        :is_corrigendum,
+                        :city, :state, :country, :address, :address_pin,
+                        :contact_person, :contact_email, :contact_phone,
+                        :corrigendum_url, :document_path, :full_pdf_text,
+                        :procurement_source, :tender_record,
                         :first_seen, :last_seen, 1
                     )
-                """, {**bid, "first_seen": now, "last_seen": now})
+                """, {
+                    **bid,
+                    "department":        bid.get("department", ""),
+                    "authority":         bid.get("authority", ""),
+                    "sector":            bid.get("sector", ""),
+                    "category":          bid.get("category", ""),
+                    "sub_category":      bid.get("sub_category", ""),
+                    "product_name":      bid.get("product_name", ""),
+                    "search_text":       bid.get("search_text", ""),
+                    "open_date":         bid.get("open_date", ""),
+                    "earnest_amount":    bid.get("earnest_amount", ""),
+                    "doc_cost":          bid.get("doc_cost", ""),
+                    "procurement_type":  bid.get("procurement_type", ""),
+                    "bidding_type":      bid.get("bidding_type", "Tender"),
+                    "competition_type":  bid.get("competition_type", "NCB"),
+                    "tender_type":       bid.get("tender_type", "Open Tender"),
+                    "tender_status":     bid.get("tender_status", "OPEN"),
+                    "is_corrigendum":    1 if bid.get("is_corrigendum") else 0,
+                    "city":              bid.get("city", ""),
+                    "state":             bid.get("state", ""),
+                    "country":           bid.get("country", "India"),
+                    "address":           bid.get("address", ""),
+                    "address_pin":       bid.get("address_pin", ""),
+                    "contact_person":    bid.get("contact_person", ""),
+                    "contact_email":     bid.get("contact_email", ""),
+                    "contact_phone":     bid.get("contact_phone", ""),
+                    "document_path":     bid.get("document_path", ""),
+                    "procurement_source": bid.get("procurement_source", "https://gem.gov.in/"),
+                    "tender_record":     tender_json,
+                    "first_seen":        now,
+                    "last_seen":         now,
+                })
                 log.info(f"  NEW BID saved: {bid.get('bid_no')}")
             else:
                 conn.execute("""
                     UPDATE bids
                     SET last_seen = ?, is_new = 0,
-                        ra_no = ?, corrigendum_url = ?
+                        ra_no = ?, corrigendum_url = ?,
+                        tender_status = ?, tender_record = ?
                     WHERE document_url = ?
                 """, (
                     now,
                     bid.get("ra_no", ""),
                     bid.get("corrigendum_url", ""),
+                    bid.get("tender_status", "OPEN"),
+                    tender_json,
                     bid["document_url"],
                 ))
 
@@ -180,16 +312,27 @@ class BidDatabase:
             ))
 
     # -------------------------------------------------------
-    # EXPORT JSON
+    # EXPORT JSON — in unified tender format
     # -------------------------------------------------------
     def export_json(self, path: str = JSON_OUT_PATH):
-        bids = self.get_all()
-        # strip full_pdf_text from JSON export (too large)
-        for b in bids:
+        rows = self.get_all()
+        output = []
+        for b in rows:
+            # If a pre-assembled tender_record is stored, use it directly
+            if b.get("tender_record"):
+                try:
+                    output.append(json.loads(b["tender_record"]))
+                    continue
+                except Exception:
+                    pass
+            # Fallback: strip internal fields and export raw row
             b.pop("full_pdf_text", None)
+            b.pop("tender_record", None)
+            output.append(b)
+
         with open(path, "w", encoding="utf-8") as f:
-            json.dump(bids, f, ensure_ascii=False, indent=2)
-        log.info(f"JSON exported: {path} ({len(bids)} records)")
+            json.dump(output, f, ensure_ascii=False, indent=2)
+        log.info(f"JSON exported: {path} ({len(output)} records)")
 
     # -------------------------------------------------------
     # STATS
