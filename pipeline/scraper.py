@@ -89,27 +89,35 @@ def scrape_bid_type(
                     card = cards.nth(i)
 
                     # ── 1. PULL EVERY POSSIBLE FIELD FROM CARD HTML ──
+                    log.info(f"  Card {i+1}/{total_cards}: reading card details...")
                     card_data = get_card_details(card, bid_type_name)
+                    log.info(f"  Card {i+1}: bid_no={card_data['bid_no']}")
 
+                    log.info(f"  Card {i+1}: extracting links...")
                     doc_url, corr_url = browser.extract_card_links(card)
                     if not doc_url:
+                        log.info(f"  Card {i+1}: no doc_url, skipping")
                         continue
                     if doc_url in seen_urls:
+                        log.info(f"  Card {i+1}: already seen, skipping")
                         continue
                     seen_urls.add(doc_url)
 
                     # ── 2. DOWNLOAD + PARSE PDF (fallback fields) ──
+                    log.info(f"  Card {i+1}: downloading PDF from {doc_url}...")
                     pdf_path = browser.download_pdf(doc_url)
                     if not pdf_path:
                         log.warning(f"  Skipping — download failed: {doc_url}")
                         stats["errors"] += 1
                         continue
 
+                    log.info(f"  Card {i+1}: extracting PDF text...")
                     pdf_text = extract_pdf_text(pdf_path)
                     if len(pdf_text.strip()) < 50:
                         log.warning("  Skipping — empty PDF text")
                         continue
 
+                    log.info(f"  Card {i+1}: parsing bid data...")
                     parsed = parse_bid_data(pdf_text)
                     extended = parse_bid_extended(pdf_text, pdf_path=pdf_path)
 
@@ -156,9 +164,11 @@ def scrape_bid_type(
                     }
 
                     # ── 4. Build the unified tender-format record ──
+                    log.info(f"  Card {i+1}: assembling tender record...")
                     page_url = getattr(browser, "current_url", "https://gem.gov.in/")
                     tender_record = assemble_tender_record(bid, page_url=page_url)
 
+                    log.info(f"  Card {i+1}: saving to database...")
                     is_new = db.upsert(bid, tender_record=tender_record)
                     if is_new:
                         stats["new"] += 1

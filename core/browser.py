@@ -134,34 +134,144 @@ class GemBrowser:
             log.warning(f"Could not select Ongoing Bids/RA filter: {e}")
 
     # -------------------------------------------------------
-    # DOWNLOAD PDF  (with retry)
+    # DOWNLOAD PDF  (with retry + verbose logging)
+    # Strategy:
+    #   1. Try direct HTTP GET (requests) with strict timeouts.
+    #      - connect+first-byte: 20s
+    #      - total body read: 60s via a socket-level deadline
+    #   2. Fall back to Playwright page.goto() which returns
+    #      the response body directly — no download-event needed.
     # -------------------------------------------------------
     def download_pdf(
         self,
         document_url: str,
         retries: int = 3
     ) -> str | None:
+        import re
+        import requests
+
+        def _filename_from_url(url: str) -> str:
+            name = url.rstrip("/").split("/")[-1].split("?")[0]
+            if not name.lower().endswith(".pdf"):
+                name += ".pdf"
+            name = re.sub(r"[^\w\-.]", "_", name)
+            return name or "bid.pdf"
+
+        def _filename_from_headers(resp, fallback: str) -> str:
+            cd = resp.headers.get("Content-Disposition", "")
+            if cd:
+                m = re.search(r'filename[^;=\n]*=(["\']?)(.+?)\1(?:;|$)', cd)
+                if m:
+                    fn = m.group(2).strip()
+                    if not fn.lower().endswith(".pdf"):
+                        fn += ".pdf"
+                    return fn
+            return fallback
+
         for attempt in range(1, retries + 1):
+            log.info(f"  PDF download attempt {attempt}/{retries}: {document_url}")
+
+            # ── Strategy 1: direct HTTP GET ──
             try:
-                with self.dl_page.expect_download(
-                    timeout=60_000
-                ) as dl_info:
-                    self.dl_page.evaluate(
-                        f'window.location.href = "{document_url}"'
+                log.info(f"  [attempt {attempt}] Trying HTTP GET...")
+                cookies = {
+                    c["name"]: c["value"]
+                    for c in self._context.cookies()
+                }
+                headers = {
+                    "User-Agent": (
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/124.0.0.0 Safari/537.36"
+                    ),
+                    "Referer": "https://bidplus.gem.gov.in/",
+                    "Accept": "application/pdf,*/*",
+                }
+                # timeout=(connect_timeout, read_timeout)
+                resp = requests.get(
+                    document_url,
+                    cookies=cookies,
+                    headers=headers,
+                    timeout=(20, 60),
+                    stream=True,
+                )
+                log.info(
+                    f"  [attempt {attempt}] HTTP status={resp.status_code} "
+                    f"content-type='{resp.headers.get('Content-Type', '')}'"
+                )
+                content_type = resp.headers.get("Content-Type", "")
+                if resp.status_code == 200 and "pdf" in content_type.lower():
+                    filename = _filename_from_headers(resp, _filename_from_url(document_url))
+                    path = os.path.join(DOWNLOAD_DIR, filename)
+                    log.info(f"  [attempt {attempt}] Writing PDF to {filename}...")
+                    with open(path, "wb") as f:
+                        for chunk in resp.iter_content(chunk_size=65536):
+                            if chunk:
+                                f.write(chunk)
+                    resp.close()
+                    sleep_pdf_download()
+                    log.info(f"  [attempt {attempt}] Downloaded OK (HTTP): {filename}")
+                    return path
+                else:
+                    resp.close()
+                    log.info(
+                        f"  [attempt {attempt}] HTTP response not a PDF "
+                        f"(status={resp.status_code}, ct='{content_type}') "
+                        f"— trying browser fallback"
                     )
-                download = dl_info.value
-                filename = download.suggested_filename or "bid.pdf"
-                path     = os.path.join(DOWNLOAD_DIR, filename)
-                download.save_as(path)
-                sleep_pdf_download()
-                log.debug(f"Downloaded: {filename}")
-                return path
+            except requests.exceptions.Timeout:
+                log.warning(f"  [attempt {attempt}] HTTP GET timed out for {document_url}")
+            except Exception as e:
+                log.warning(f"  [attempt {attempt}] HTTP GET failed: {e}")
+
+            # ── Strategy 2: Playwright page.goto() ──
+            # page.goto returns response object; we read its body directly.
+            # This avoids expect_download() which only fires on
+            # Content-Disposition: attachment.
+            try:
+                log.info(f"  [attempt {attempt}] Trying Playwright goto()...")
+                response = self.dl_page.goto(
+                    document_url,
+                    wait_until="load",
+                    timeout=60_000,
+                )
+                if response and response.status == 200:
+                    ct = response.headers.get("content-type", "")
+                    log.info(
+                        f"  [attempt {attempt}] Playwright goto status=200 "
+                        f"content-type='{ct}'"
+                    )
+                    if "pdf" in ct.lower():
+                        body = response.body()
+                        filename = _filename_from_url(document_url)
+                        path = os.path.join(DOWNLOAD_DIR, filename)
+                        with open(path, "wb") as f:
+                            f.write(body)
+                        sleep_pdf_download()
+                        log.info(f"  [attempt {attempt}] Downloaded OK (goto): {filename}")
+                        return path
+                    else:
+                        log.warning(
+                            f"  [attempt {attempt}] Playwright goto: "
+                            f"not a PDF content-type='{ct}'"
+                        )
+                else:
+                    status = response.status if response else "no response"
+                    log.warning(
+                        f"  [attempt {attempt}] Playwright goto failed: "
+                        f"status={status}"
+                    )
             except Exception as e:
                 log.warning(
-                    f"Download attempt {attempt}/{retries} "
-                    f"failed for {document_url}: {e}"
+                    f"  [attempt {attempt}] Playwright goto failed: {e}"
                 )
-                time.sleep(5 * attempt)
+
+            log.warning(
+                f"  Attempt {attempt}/{retries} exhausted for {document_url}"
+            )
+            time.sleep(3 * attempt)
+
+        log.error(f"  All {retries} download attempts failed: {document_url}")
         return None
 
     # -------------------------------------------------------

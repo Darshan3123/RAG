@@ -860,7 +860,7 @@ def assemble_tender_record(bid: dict, page_url: str = "") -> dict:
 # =========================================================
 def get_ra_from_card(card) -> str:
     try:
-        text = card.inner_text()
+        text = card.inner_text(timeout=5_000)
         m = re.search(r"GEM/\d{4}/R/\d+", text)
         return m.group() if m else ""
     except Exception as e:
@@ -874,7 +874,7 @@ def get_ra_from_card(card) -> str:
 def get_product_type_from_card(card, bid_type_name: str) -> str:
     from config.settings import PRODUCT_TYPE_MAP
     try:
-        text = card.inner_text()
+        text = card.inner_text(timeout=5_000)
         m = re.search(
             r"(?:Type\s*[:\-]\s*)(Product|Service|Works|Goods)",
             text, re.IGNORECASE,
@@ -896,7 +896,7 @@ def get_dates_from_card(card) -> tuple[str, str]:
     start_date = ""
     end_date = ""
     try:
-        text = card.inner_text()
+        text = card.inner_text(timeout=5_000)
 
         start_m = re.search(
             r"Start\s+Date\s*[:\-]?\s*(\d{2}-\d{2}-\d{4})\s+(\d{1,2}:\d{2})\s*(AM|PM)?",
@@ -955,29 +955,32 @@ def _read_popover_attr(node) -> str:
 
 
 def get_full_item_name_from_card(card) -> str:
+    # ── Strategy 1: scan popover attributes on all descendant nodes ──
+    # Avoid expensive XPath translate() — iterate over known attribute names
+    # directly instead of querying the full subtree by text.
     try:
-        items_node = card.locator(
-            "xpath=.//*[contains(translate(normalize-space(.), "
-            "'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),"
-            " 'items:')]"
-        ).first
-        if items_node and items_node.count() > 0:
-            txt = _read_popover_attr(items_node)
-            if txt:
-                txt = re.sub(r"^\s*items?\s*:\s*", "", txt, flags=re.IGNORECASE)
-                return txt
-
         for attr in _POPOVER_ATTRS:
-            cand = card.locator(f"[{attr}]").first
-            if cand and cand.count() > 0:
-                val = cand.get_attribute(attr) or ""
-                if val and len(val.strip()) > 15:
-                    return _strip_html(val)
+            try:
+                nodes = card.locator(f"[{attr}]")
+                count = nodes.count()
+                for idx in range(min(count, 10)):  # cap to avoid long loops
+                    try:
+                        val = nodes.nth(idx).get_attribute(attr, timeout=2_000) or ""
+                        val = val.strip()
+                        if len(val) > 15:
+                            cleaned = _strip_html(val)
+                            cleaned = re.sub(r"^\s*items?\s*:\s*", "", cleaned, flags=re.IGNORECASE)
+                            return cleaned
+                    except Exception:
+                        continue
+            except Exception:
+                continue
     except Exception as e:
-        log.debug(f"Popover lookup failed: {e}")
+        log.debug(f"Popover attr scan failed: {e}")
 
+    # ── Strategy 2: plain text parse from inner_text() ──
     try:
-        text = card.inner_text()
+        text = card.inner_text(timeout=5_000)
         m = re.search(r"Items?\s*:\s*(.+?)(?:\n|Quantity\s*:)", text, re.IGNORECASE | re.DOTALL)
         if m:
             return clean_text(m.group(1)).rstrip(".")
@@ -991,7 +994,7 @@ def get_full_item_name_from_card(card) -> str:
 # =========================================================
 def get_quantity_from_card(card) -> str:
     try:
-        text = card.inner_text()
+        text = card.inner_text(timeout=5_000)
         m = re.search(r"Quantity\s*[:\-]?\s*([\d][\d,]*)", text, re.IGNORECASE)
         if m:
             return m.group(1).replace(",", "").strip()
@@ -1005,7 +1008,7 @@ def get_quantity_from_card(card) -> str:
 # =========================================================
 def get_department_from_card(card) -> str:
     try:
-        text = card.inner_text()
+        text = card.inner_text(timeout=5_000)
         m = re.search(
             r"Department\s+Name(?:\s+And\s+Address)?\s*[:\-]?\s*\n?([^\n]{3,200})",
             text, re.IGNORECASE,
@@ -1022,7 +1025,7 @@ def get_department_from_card(card) -> str:
 # =========================================================
 def get_bid_no_from_card(card) -> str:
     try:
-        text = card.inner_text()
+        text = card.inner_text(timeout=5_000)
         m = re.search(r"GEM/\d{4}/B/\d+", text)
         return m.group() if m else ""
     except Exception:
