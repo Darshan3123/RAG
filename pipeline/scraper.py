@@ -113,13 +113,21 @@ def scrape_bid_type(
 
                     log.info(f"  Card {i+1}: extracting PDF text...")
                     pdf_text = extract_pdf_text(pdf_path)
+                    log.info(f"  Card {i+1}: PDF text extracted ({len(pdf_text)} chars)")
                     if len(pdf_text.strip()) < 50:
                         log.warning("  Skipping — empty PDF text")
                         continue
 
                     log.info(f"  Card {i+1}: parsing bid data...")
-                    parsed = parse_bid_data(pdf_text)
-                    extended = parse_bid_extended(pdf_text, pdf_path=pdf_path)
+                    try:
+                        parsed = parse_bid_data(pdf_text)
+                        log.info(f"  Card {i+1}: basic parse complete, starting extended parse...")
+                        extended = parse_bid_extended(pdf_text, pdf_path=pdf_path)
+                        log.info(f"  Card {i+1}: extended parse complete")
+                    except Exception as parse_err:
+                        log.error(f"  Card {i+1}: PARSE ERROR - {parse_err}", exc_info=True)
+                        stats["errors"] += 1
+                        continue
 
                     # ── 3. MERGE — prefer card data, then extended PDF data ──
                     bid = {

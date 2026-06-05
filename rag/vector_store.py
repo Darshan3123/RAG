@@ -110,37 +110,56 @@ def upsert_bid(bid: dict):
     global _bm25_index
     _bm25_index = None
 
-    col    = _get_collection()
     bid_no = bid.get("bid_no") or bid.get("document_url", "unknown")
-    chunks = build_bid_chunks(bid)
-    if not chunks:
-        log.warning(f"No chunks for {bid_no} — skipping")
-        return
+    log.info(f"  [vector_store] Starting upsert for {bid_no}")
+    
+    try:
+        col    = _get_collection()
+        log.info(f"  [vector_store] Collection obtained")
+        
+        chunks = build_bid_chunks(bid)
+        log.info(f"  [vector_store] Built {len(chunks)} chunks")
+        
+        if not chunks:
+            log.warning(f"  [vector_store] No chunks for {bid_no} — skipping")
+            return
 
-    _delete_bid_chunks(col, bid_no)
-    ids        = [f"{bid_no}__chunk_{i}" for i in range(len(chunks))]
-    embeddings = embed_texts(chunks)
-    metadatas  = [
-        {
-            "bid_no":          bid_no,
-            "bid_type":        bid.get("bid_type", ""),
-            "product_type":    bid.get("product_type", ""),
-            "full_item_name":  bid.get("full_item_name", ""),
-            "quantity":        bid.get("quantity", ""),
-            "department":      bid.get("department", ""),
-            "start_date":      bid.get("start_date", ""),
-            "end_date":        bid.get("end_date", ""),
-            "estimated_value": bid.get("estimated_value", ""),
-            "bid_packet_type": bid.get("bid_packet_type", ""),
-            "ra_no":           bid.get("ra_no", ""),
-            "document_url":    bid.get("document_url", ""),
-            "corrigendum_url": bid.get("corrigendum_url", ""),
-            "chunk_index":     i,
-        }
-        for i in range(len(chunks))
-    ]
-    col.upsert(ids=ids, embeddings=embeddings,
-               documents=chunks, metadatas=metadatas)
+        _delete_bid_chunks(col, bid_no)
+        log.info(f"  [vector_store] Deleted old chunks for {bid_no}")
+        
+        ids        = [f"{bid_no}__chunk_{i}" for i in range(len(chunks))]
+        
+        log.info(f"  [vector_store] Embedding {len(chunks)} chunks...")
+        embeddings = embed_texts(chunks)
+        log.info(f"  [vector_store] Embeddings complete")
+        
+        metadatas  = [
+            {
+                "bid_no":          bid_no,
+                "bid_type":        bid.get("bid_type", ""),
+                "product_type":    bid.get("product_type", ""),
+                "full_item_name":  bid.get("full_item_name", ""),
+                "quantity":        bid.get("quantity", ""),
+                "department":      bid.get("department", ""),
+                "start_date":      bid.get("start_date", ""),
+                "end_date":        bid.get("end_date", ""),
+                "estimated_value": bid.get("estimated_value", ""),
+                "bid_packet_type": bid.get("bid_packet_type", ""),
+                "ra_no":           bid.get("ra_no", ""),
+                "document_url":    bid.get("document_url", ""),
+                "corrigendum_url": bid.get("corrigendum_url", ""),
+                "chunk_index":     i,
+            }
+            for i in range(len(chunks))
+        ]
+        
+        log.info(f"  [vector_store] Upserting to ChromaDB...")
+        col.upsert(ids=ids, embeddings=embeddings,
+                   documents=chunks, metadatas=metadatas)
+        log.info(f"  [vector_store] Upsert complete for {bid_no}")
+    except Exception as e:
+        log.error(f"  [vector_store] ERROR during upsert for {bid_no}: {e}", exc_info=True)
+        raise
 
 
 def upsert_bids(bids: list[dict]):

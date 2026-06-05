@@ -645,10 +645,13 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
     unified tender format. Called from scraper after
     parse_bid_data() is already done; results are merged on top.
     """
+    log.info("  [parser] Starting parse_bid_extended...")
     base = parse_bid_data(pdf_text)
+    log.info("  [parser] Base parsing complete")
     ext  = {}
 
     # ── Item Category → category, sub_category, product_name ──
+    log.info("  [parser] Extracting item category...")
     raw_cat = base.get("full_item_name", "")
     # Also try a direct regex from PDF for accuracy
     m = re.search(
@@ -662,11 +665,14 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
     ext["category"]     = category
     ext["sub_category"] = sub_category
     ext["product_name"] = infer_product_name(raw_cat)
+    log.info(f"  [parser] Category: {category[:50]}...")
 
     # ── Procurement type ──
+    log.info("  [parser] Determining procurement type...")
     ext["procurement_type"] = infer_procurement_type(raw_cat, base.get("bid_packet_type", ""))
 
     # ── Authority from PDF (more reliable than card) ──
+    log.info("  [parser] Extracting authority...")
     # Try multiple label variants GeM uses
     authority_patterns = [
         r"(?:Department Name|विभाग का नाम)\s*[:\-]?\s*\n?([^\n]{3,200})",
@@ -689,11 +695,14 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
                 break
         if ext["authority"]:
             break
+    log.info(f"  [parser] Authority: {ext['authority'][:50]}...")
 
     # ── Sector ──
+    log.info("  [parser] Classifying sector...")
     ext["sector"] = classify_sector(ext["authority"])
 
     # ── EMD (earnest_amount) ──
+    log.info("  [parser] Extracting EMD amount...")
     # Try single-schedule pattern first, then multi-schedule
     emd_match = re.search(
         r"EMD Amount.*?(\d[\d,]+)",
@@ -702,6 +711,7 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
     ext["earnest_amount"] = clean_text(emd_match.group(1)) if emd_match else ""
 
     # ── Doc cost — try "Document Fee" / "Tender Fee" / "Bid Document Fee" ──
+    log.info("  [parser] Extracting document cost...")
     doc_fee_match = re.search(
         r"(?:Document\s+Fee|Tender\s+Fee|Bid\s+Document\s+Fee|"
         r"Tender\s+Document\s+Cost|Document\s+Cost)\s*[:\-]?\s*(?:Rs\.?\s*)?(\d[\d,\.]+)",
@@ -720,12 +730,15 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
     ext["work_desc_base"] = raw_cat  # scraper will build full work_desc
 
     # ── is_corrigendum — True if a RA number is present ──
+    log.info("  [parser] Checking for corrigendum...")
     ra_match = re.search(r"GEM/\d{4}/R/\d+", pdf_text)
     ext["is_corrigendum"] = bool(ra_match)
 
     # ── Consignee block ──
+    log.info("  [parser] Extracting consignee details...")
     consignee = _extract_consignee_block(pdf_text)
     ext.update(consignee)
+    log.info(f"  [parser] Consignee city: {consignee.get('city', 'N/A')}, state: {consignee.get('state', 'N/A')}")
 
     # ── document_path — local PDF path ──
     ext["document_path"] = pdf_path or ""
@@ -734,6 +747,7 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
     # Will be set dynamically in scraper; default OPEN
     ext["tender_status"] = "OPEN"
 
+    log.info("  [parser] parse_bid_extended complete")
     return {**base, **ext}
 
 

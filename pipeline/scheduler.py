@@ -78,6 +78,21 @@ def start_scheduler(run_once: bool = False):
     log.info(f"Database: {db.db_path}")
     log.info("=" * 60)
 
+    # ── PRE-WARM EMBEDDING MODEL ──────────────────────────
+    # Load the model BEFORE scraping starts to avoid blocking
+    # during the scraping loop (69s delay on first bid)
+    log.info("")
+    log.info("Pre-warming embedding model (this takes 60-90 seconds)...")
+    try:
+        from rag.embedder import prewarm_model
+        prewarm_model()
+        log.info("✓ Model pre-warmed successfully")
+    except Exception as e:
+        log.warning(f"⚠ Model pre-warm failed: {e}")
+        log.warning("  Model will load on first bid (may cause delay)")
+    log.info("")
+    # ──────────────────────────────────────────────────────
+
     while _running:
         run_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log.info(f"\n▶  Run started at {run_at}")

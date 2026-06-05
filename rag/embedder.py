@@ -51,9 +51,23 @@ def _get_model():
         os.environ.setdefault("HF_HUB_OFFLINE", "1")
 
         log.info(f"Loading embedding model: {RAG_EMBEDDING_MODEL} (offline mode)")
+        log.info("  This may take 60-90 seconds on first load...")
         _model = SentenceTransformer(RAG_EMBEDDING_MODEL, local_files_only=True)
         log.info("Embedding model ready")
     return _model
+
+
+def prewarm_model():
+    """
+    Pre-warm the embedding model by loading it and doing a test encode.
+    Call this at startup to avoid blocking during scraping.
+    """
+    log.info("Pre-warming embedding model...")
+    model = _get_model()
+    # Do a test encode to ensure everything is loaded
+    test_text = ["Test embedding to warm up the model"]
+    model.encode(test_text, show_progress_bar=False)
+    log.info("Embedding model pre-warmed and ready")
 
 
 # =========================================================
@@ -123,13 +137,16 @@ def chunk_text(text: str) -> list[str]:
 def embed_texts(texts: list[str]) -> list:
     if not texts:
         return []
+    log.info(f"  [embedder] Encoding {len(texts)} texts...")
     model = _get_model()
+    log.info(f"  [embedder] Model loaded, starting encode...")
     embeddings = model.encode(
         texts,
         batch_size=32,
         show_progress_bar=False,
         normalize_embeddings=True,
     )
+    log.info(f"  [embedder] Encoding complete")
     return embeddings.tolist()
 
 

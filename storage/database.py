@@ -257,11 +257,13 @@ class BidDatabase:
         # ── RAG: index into vector store (new bids only) ──
         if is_new:
             try:
+                log.info(f"  [database] Starting RAG indexing for {bid.get('bid_no')}...")
                 from rag.vector_store import upsert_bid
                 upsert_bid(bid)
+                log.info(f"  [database] RAG indexing complete")
             except Exception as e:
-                log.warning(f"  RAG index failed for "
-                            f"{bid.get('bid_no','?')}: {e}")
+                log.warning(f"  [database] RAG index failed for "
+                            f"{bid.get('bid_no','?')}: {e}", exc_info=True)
 
         return is_new
 
