@@ -43,16 +43,20 @@ def _get_model():
         import os
         from sentence_transformers import SentenceTransformer
 
-        # Force fully offline mode — model is already cached locally.
-        # This prevents SSL certificate errors on corporate networks
-        # where Python can't verify HuggingFace's TLS certificate.
-        os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
-        os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
-        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+        # Respect HF_OFFLINE env var — set to "true" to block network calls
+        offline = os.getenv("HF_OFFLINE", "false").lower() in ("1", "true", "yes")
+        if offline:
+            os.environ["TRANSFORMERS_OFFLINE"] = "1"
+            os.environ["HF_DATASETS_OFFLINE"] = "1"
+            os.environ["HF_HUB_OFFLINE"] = "1"
 
-        log.info(f"Loading embedding model: {RAG_EMBEDDING_MODEL} (offline mode)")
+        mode = "offline" if offline else "online"
+        log.info(f"Loading embedding model: {RAG_EMBEDDING_MODEL} ({mode})")
         log.info("  This may take 60-90 seconds on first load...")
-        _model = SentenceTransformer(RAG_EMBEDDING_MODEL, local_files_only=True)
+        _model = SentenceTransformer(
+            RAG_EMBEDDING_MODEL,
+            local_files_only=offline,
+        )
         log.info("Embedding model ready")
     return _model
 

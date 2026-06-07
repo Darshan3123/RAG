@@ -98,13 +98,18 @@ def _get_reranker():
         import os
         from sentence_transformers import CrossEncoder
 
-        # Force offline mode — same SSL fix as embedder
-        os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
-        os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
-        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+        offline = os.getenv("HF_OFFLINE", "false").lower() in ("1", "true", "yes")
+        if offline:
+            os.environ["TRANSFORMERS_OFFLINE"] = "1"
+            os.environ["HF_DATASETS_OFFLINE"] = "1"
+            os.environ["HF_HUB_OFFLINE"] = "1"
 
-        log.info(f"Loading reranker: {RAG_RERANKER_MODEL} (offline mode)")
-        _reranker = CrossEncoder(RAG_RERANKER_MODEL, local_files_only=True)
+        mode = "offline" if offline else "online"
+        log.info(f"Loading reranker: {RAG_RERANKER_MODEL} ({mode})")
+        _reranker = CrossEncoder(
+            RAG_RERANKER_MODEL,
+            local_files_only=offline,
+        )
         log.info("Reranker ready")
     except Exception as e:
         log.warning(f"Reranker load failed: {e}")
