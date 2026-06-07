@@ -48,10 +48,15 @@ def _print_answer(result: dict):
     print(result["answer"])
     print(f"\n── Sources ({len(result['sources'])} unique bids) ──")
     for s in result["sources"]:
+        sector = s.get("sector", "")
+        state  = s.get("state", "")
+        status = s.get("status", "")
+        meta   = " | ".join(filter(None, [sector, state, status]))
         print(
             f"  [{s['bid_no']}]  "
-            f"{s['department'][:40]}  "
+            f"{s['department'][:35]}  "
             f"Score: {s['relevance_score']:.2%}"
+            + (f"  [{meta}]" if meta else "")
         )
     print("─" * 62 + "\n")
 
@@ -62,10 +67,22 @@ def run_ask(question: str, filter_str: str | None):
     if filter_str:
         kv = filter_str.split("=", 1)
         if len(kv) == 2:
-            filters = {kv[0]: kv[1]}
+            key   = kv[0].strip()
+            value = kv[1].strip()
+            # Normalise common aliases so users don't need to know
+            # the exact internal field name
+            key_aliases = {
+                "tender_status": "status",
+                "dept":          "department",
+                "dept_name":     "department",
+            }
+            key = key_aliases.get(key, key)
+            filters = {key: value}
     engine = QueryEngine()
     result = engine.ask(question, filters=filters)
     print(f"\nQ: {result['question']}")
+    if filters:
+        print(f"   Filters: {filters}")
     _print_answer(result)
 
 
@@ -255,8 +272,15 @@ if __name__ == "__main__":
             question = args[idx + 1] if idx + 1 < len(args) else ""
             filter_str = None
             if "--filter" in args:
-                fi         = args.index("--filter")
-                filter_str = args[fi + 1] if fi + 1 < len(args) else None
+                fi = args.index("--filter")
+                # Collect ALL tokens after --filter until the next -- flag
+                # This allows multi-word values like: --filter state=Tamil Nadu
+                filter_tokens = []
+                j = fi + 1
+                while j < len(args) and not args[j].startswith("--"):
+                    filter_tokens.append(args[j])
+                    j += 1
+                filter_str = " ".join(filter_tokens) if filter_tokens else None
             if question:
                 run_ask(question, filter_str)
             else:

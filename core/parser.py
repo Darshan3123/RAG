@@ -315,22 +315,38 @@ def infer_product_name(item_category: str) -> str:
 def split_item_category(raw: str) -> tuple[str, str]:
     """
     Split 'Category - SubCat1; SubCat2' into (category, sub_category).
-    Uses ' - ' as primary delimiter, '; ' or ',' as secondary.
-    Returns (category, sub_category).
+
+    Special cases:
+    - Multi-item list ("Item No 1 ... , Item no 2 ..."): keep entire
+      string as category, sub_category = first item name only.
+    - Single-item with ' - ' delimiter: standard split.
     """
     if not raw:
         return "", ""
-    # Primary split on ' - '
+
+    # ── Multi-item numbered list detection ──
+    # Matches "Item No 1 ...", "Item no 2 ...", etc.
+    if re.search(r"\bItem\s+[Nn]o\.?\s*\d+\b", raw):
+        # Extract just the first item label as sub_category
+        first = re.search(
+            r"\bItem\s+[Nn]o\.?\s*\d+\s+([^,\.]{3,120})",
+            raw,
+        )
+        sub = clean_text(first.group(1)) if first else ""
+        return raw.strip(), sub
+
+    # ── Standard: primary split on ' - ' ──
     if " - " in raw:
         parts = raw.split(" - ", 1)
         cat = parts[0].strip()
-        # sub_category: take first segment before ';' or ','
         sub = re.split(r"[;,]", parts[1])[0].strip()
         return cat, sub
-    # Fallback: split on ';'
+
+    # ── Fallback: split on ';' or ',' ──
     parts = re.split(r"[;,]", raw)
     if len(parts) >= 2:
         return parts[0].strip(), parts[1].strip()
+
     return raw.strip(), ""
 
 
@@ -574,6 +590,47 @@ def _extract_consignee_block(pdf_text: str) -> dict:
     return result
 
 
+def _extract_item_category(pdf_text: str) -> str:
+    """
+    Extract the full item category text, which may span multiple lines.
+    The section ends at the next major header (GeMARPTS, Searched, Bid Number, etc.)
+    Collapses newlines into spaces and returns the full joined text.
+    """
+    # Primary: multi-line capture until the next section header
+    m = re.search(
+        r"(?:वव?\S*\s*\S*\s*/Item Category|Item Category)\s+"
+        r"(.*?)"
+        r"(?=\nGeMARPTS|\nSearched\s+String|\n\x01|\nBid\s+Number|\nBid\s+No|\nDated:|\Z)",
+        pdf_text[:10000], re.IGNORECASE | re.DOTALL,
+    )
+    if m:
+        val = clean_text(m.group(1))
+        if val and "which regular" not in val.lower() and len(val) > 5:
+            return val
+
+    # Fallback: single-line (original behaviour)
+    m = re.search(
+        r"(?:व\S+\s+\S+\s*/Item Category|Item Category)\s+([^\n]{5,300})",
+        pdf_text[:8000], re.IGNORECASE,
+    )
+    if m:
+        val = m.group(1).strip()
+        if "which regular" not in val.lower():
+            return val
+
+    # Last resort: Item Title
+    m = re.search(
+        r"Item Title\s*[:\-]?\s*([^\n]{5,300})",
+        pdf_text[:8000], re.IGNORECASE,
+    )
+    if m:
+        val = m.group(1).strip()
+        if "which regular" not in val.lower():
+            return val
+
+    return ""
+
+
 def parse_bid_data(pdf_text: str) -> dict:
     """
     Original parser — kept for backward compatibility.
@@ -590,32 +647,7 @@ def parse_bid_data(pdf_text: str) -> dict:
     )
     d["quantity"] = clean_text(m.group(1)) if m else ""
 
-    item_candidates = []
-    m = re.search(
-        r"(?:व\S+\s+\S+\s*/Item Category|Item Category)\s+([^\n]{5,300})",
-        pdf_text[:8000], re.IGNORECASE,
-    )
-    if m:
-        val = m.group(1).strip()
-        if "which regular" not in val.lower():
-            item_candidates.append(val)
-
-    m = re.search(
-        r"Item Title\s*[:\-]?\s*([^\n]{5,300})",
-        pdf_text[:8000], re.IGNORECASE,
-    )
-    if m:
-        val = m.group(1).strip()
-        if "which regular" not in val.lower():
-            item_candidates.append(val)
-
-    m = re.search(r"व\S+\s+\S+\s+([^\n/]{5,300})/", pdf_text[:8000])
-    if m:
-        val = m.group(1).strip()
-        if "which regular" not in val.lower():
-            item_candidates.append(val)
-
-    d["full_item_name"] = clean_text(item_candidates[0]) if item_candidates else ""
+    d["full_item_name"] = _extract_item_category(pdf_text)
 
     m = re.search(
         r"(?:Department Name|विभाग का नाम|Department\s+(?:का|of))\s*[:\-]?\s*([^\n]{5,200})",
@@ -653,13 +685,10 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
     # ── Item Category → category, sub_category, product_name ──
     log.info("  [parser] Extracting item category...")
     raw_cat = base.get("full_item_name", "")
-    # Also try a direct regex from PDF for accuracy
-    m = re.search(
-        r"(?:व\S+\s+\S+\s*/Item Category|Item Category)\s+([^\n]{5,300})",
-        pdf_text[:8000], re.IGNORECASE,
-    )
-    if m and "which regular" not in m.group(1).lower():
-        raw_cat = clean_text(m.group(1))
+    # Re-extract using the multi-line helper for accuracy
+    extracted = _extract_item_category(pdf_text)
+    if extracted:
+        raw_cat = extracted
 
     category, sub_category = split_item_category(raw_cat)
     ext["category"]     = category
@@ -801,14 +830,47 @@ def assemble_tender_record(bid: dict, page_url: str = "") -> dict:
         due_display = due_date_str
 
     location_str = ", ".join(filter(None, [city, state]))
+
+    # For multi-item bids, build a compact item description
+    if full_item and re.search(r"\bItem\s+[Nn]o\.?\s*\d+\b", full_item):
+        item_labels = re.findall(
+            r"\bItem\s+[Nn]o\.?\s*\d+\s+(.*?)(?:\s+as\s+per\s+the\s+tech|\s*,\s*Item|\Z)",
+            full_item,
+        )
+        count = len(re.findall(r"\bItem\s+[Nn]o\.?\s*\d+\b", full_item))
+        if item_labels:
+            item_desc = "; ".join(m.strip().rstrip(".") for m in item_labels)
+            item_display = f"{count} items: {item_desc}"
+        else:
+            item_display = full_item[:300]
+    else:
+        item_display = full_item
+
     work_desc = (
-        f"{authority} has published Bids Are invited for {full_item}. "
+        f"{authority} has published Bids Are invited for {item_display}. "
         f"Last date of submission for this tender is {due_display}. "
         f"This is a {product_name} tender in {location_str}"
     ).strip()
 
     # ── tender_summary ──
-    tender_summary = f"Bids Are invited for {full_item}" if full_item else ""
+    # For multi-item bids, show a compact summary instead of the full raw list
+    if full_item and re.search(r"\bItem\s+[Nn]o\.?\s*\d+\b", full_item):
+        # Extract short labels before "as per the technical specification..."
+        item_labels = re.findall(
+            r"\bItem\s+[Nn]o\.?\s*\d+\s+(.*?)(?:\s+as\s+per\s+the\s+tech|\s*,\s*Item|\Z)",
+            full_item,
+        )
+        count = len(re.findall(r"\bItem\s+[Nn]o\.?\s*\d+\b", full_item))
+        if item_labels:
+            shown = item_labels[:5]
+            summary_items = "; ".join(m.strip().rstrip(".") for m in shown)
+            tender_summary = f"Bids invited for {count} items: {summary_items}"
+            if count > 5:
+                tender_summary += f" (+{count-5} more)"
+        else:
+            tender_summary = f"Bids Are invited for {full_item[:200]}"
+    else:
+        tender_summary = f"Bids Are invited for {full_item}" if full_item else ""
 
     # ── s3_document_path ──
     doc_url = bid.get("document_url", "")

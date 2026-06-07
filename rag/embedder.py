@@ -74,19 +74,55 @@ def prewarm_model():
 # BUILD A HIGH-SIGNAL DOC FOR ONE BID
 # =========================================================
 def _metadata_card(bid: dict) -> str:
-    """Compact, repeat-key block — high signal for retrieval."""
+    """Compact, repeat-key block — high signal for retrieval.
+
+    Supports both GeM scraper field names and tender pipeline field names:
+      - department   / authority
+      - product_type / product_name / category
+      - bid_type     / tender_type
+      - status       / tender_status
+      - sector
+      - state / city
+      - tender_summary / work_desc
+    """
+    # Resolve dual field-name conventions
+    department  = bid.get("department") or bid.get("authority", "")
+    product_t   = bid.get("product_type") or bid.get("product_name") or bid.get("category", "")
+    bid_type    = bid.get("bid_type") or bid.get("tender_type", "")
+    status      = bid.get("status") or bid.get("tender_status", "")
+    sector      = bid.get("sector", "")
+    state       = bid.get("state", "")
+    city        = bid.get("city", "")
+    summary     = bid.get("tender_summary") or bid.get("work_desc", "")
+    proc_type   = bid.get("procurement_type", "")
+    competition = bid.get("competition_type", "")
+
+    # Truncate long descriptions to avoid bloating the card
+    if summary and len(summary) > 300:
+        summary = summary[:300]
+
     return (
-        f"Bid Number: {bid.get('bid_no', '')}. "
+        f"Bid Number: {bid.get('bid_no', '') or bid.get('tender_no', '')}. "
         f"RA Number: {bid.get('ra_no', '')}. "
-        f"Bid Type: {bid.get('bid_type', '')}. "
-        f"Product Type: {bid.get('product_type', '')}. "
+        f"Status: {status}. "
+        f"Bid Type: {bid_type}. "
+        f"Procurement Type: {proc_type}. "
+        f"Competition: {competition}. "
+        f"Product Type: {product_t}. "
+        f"Sector: {sector}. "
         f"Item: {bid.get('full_item_name', '')}. "
         f"Items mentioned: {bid.get('full_item_name', '')}. "
+        f"Category: {bid.get('category', '')}. "
+        f"Sub Category: {bid.get('sub_category', '')}. "
         f"Quantity: {bid.get('quantity', '')}. "
-        f"Department: {bid.get('department', '')}. "
+        f"Department: {department}. "
+        f"Authority: {department}. "
+        f"State: {state}. "
+        f"City: {city}. "
+        f"Summary: {summary}. "
         f"Start Date: {bid.get('start_date', '')}. "
-        f"End Date: {bid.get('end_date', '')}. "
-        f"Estimated Value: {bid.get('estimated_value', '')}. "
+        f"End Date: {bid.get('end_date', '') or bid.get('due_date', '')}. "
+        f"Estimated Value: {bid.get('estimated_value', '') or bid.get('tender_value', '')}. "
         f"Bid Packet Type: {bid.get('bid_packet_type', '')}."
     ).strip()
 

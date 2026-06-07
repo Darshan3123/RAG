@@ -1,7 +1,5 @@
 # =========================================================
 # rag/query_engine.py
-# FIX: exit words checked before query, wider intent
-#      patterns, /search shows full_item_name not chunk
 # =========================================================
 from __future__ import annotations
 import re
@@ -12,12 +10,10 @@ from utils.logger import get_logger
 
 log = get_logger("query_engine")
 
-# Exit words — checked BEFORE any query is made
 EXIT_WORDS = {"quit", "exit", "q", "bye", "goodbye",
               "stop", "close", "end", "done", "ok bye",
               "/bye", "/quit", "/exit"}
 
-# Broad listing intent → use higher top_k
 _LIST_INTENT = re.compile(
     r"\b(all|every|list|show all|show me all|how many|total|"
     r"complete list|give me all|show me|display all|"
@@ -25,12 +21,86 @@ _LIST_INTENT = re.compile(
     re.IGNORECASE,
 )
 
-# Focused lookup → use lower top_k
 _FOCUSED_INTENT = re.compile(
     r"\b(bid number|bid no|GEM/\d{4}|specific|"
     r"one bid|find bid|this bid)\b",
     re.IGNORECASE,
 )
+
+# ── Auto-filter lookup tables ─────────────────────────────────────────
+
+_STATES = {
+    "andhra pradesh", "arunachal pradesh", "assam", "bihar", "chhattisgarh",
+    "goa", "gujarat", "haryana", "himachal pradesh", "jharkhand",
+    "karnataka", "kerala", "madhya pradesh", "maharashtra", "manipur",
+    "meghalaya", "mizoram", "nagaland", "odisha", "punjab", "rajasthan",
+    "sikkim", "tamil nadu", "telangana", "tripura", "uttar pradesh",
+    "uttarakhand", "west bengal", "delhi", "jammu and kashmir",
+    "ladakh", "chandigarh", "puducherry",
+}
+
+_SECTORS = {
+    "healthcare and medical":          "Healthcare and Medical",
+    "defence and security":            "Defence and Security",
+    "nuclear and atomic energy":       "Nuclear and Atomic Energy",
+    "space and satellite":             "Space and Satellite",
+    "energy - oil and gas":            "Energy - Oil and Gas",
+    "energy - power":                  "Energy - Power",
+    "information technology":          "Information Technology",
+    "public administrative department":"Public Administrative Department",
+    "law and justice":                 "Law and Justice",
+    "education":                       "Education",
+}
+
+_STATUS_WORDS   = {"open": "OPEN", "closed": "CLOSED", "active": "OPEN"}
+_PROC_WORDS     = {"services": "Services", "goods": "Goods", "works": "Works"}
+
+# ── State capitalisation map ──────────────────────────────────────────
+_STATE_CANONICAL = {
+    "tamil nadu":       "Tamil Nadu",
+    "jammu and kashmir":"Jammu and Kashmir",
+    "andhra pradesh":   "Andhra Pradesh",
+    "arunachal pradesh":"Arunachal Pradesh",
+    "himachal pradesh": "Himachal Pradesh",
+    "madhya pradesh":   "Madhya Pradesh",
+    "uttar pradesh":    "Uttar Pradesh",
+    "west bengal":      "West Bengal",
+}
+
+
+def _auto_detect_filters(question: str, existing: dict | None) -> dict | None:
+    """Extract state/sector/status/procurement from free-text and apply as filters."""
+    q = question.lower()
+    found: dict = {}
+
+    for state in _STATES:
+        if state in q:
+            found["state"] = _STATE_CANONICAL.get(state, state.title())
+            break
+
+    for key, val in _SECTORS.items():
+        if key in q:
+            found["sector"] = val
+            break
+
+    for word, val in _STATUS_WORDS.items():
+        if re.search(rf"\b{word}\b", q):
+            found["status"] = val
+            break
+
+    for word, val in _PROC_WORDS.items():
+        if re.search(rf"\b{word}\b", q):
+            found["procurement_type"] = val
+            break
+
+    if not found:
+        return existing
+
+    merged = {**found}
+    if existing:
+        merged.update(existing)   # explicit filters override auto-detected
+
+    return merged if merged != (existing or {}) else existing
 
 
 def _smart_top_k(question: str, default_k: int) -> int:
@@ -39,6 +109,17 @@ def _smart_top_k(question: str, default_k: int) -> int:
     if _FOCUSED_INTENT.search(question):
         return max(1, default_k // 2)
     return default_k
+
+
+def _enrich_query(question: str, filters: dict | None) -> str:
+    """Append filter values to query so dense + BM25 both see them."""
+    if not filters:
+        return question
+    parts = [question.strip()]
+    for k, v in filters.items():
+        if v:
+            parts.append(f"{k} {v}")
+    return " ".join(parts)
 
 
 def is_exit(text: str) -> bool:
@@ -62,9 +143,17 @@ class QueryEngine:
         top_k: int | None = None,
     ) -> dict:
         k = top_k or _smart_top_k(question, self.top_k)
-        log.info(f"Query: '{question}' | filters={filters} | k={k}")
 
-        chunks = search(question, top_k=k, filters=filters)
+        # Auto-detect state/sector/status/procurement from question text
+        filters = _auto_detect_filters(question, filters)
+
+        enriched = _enrich_query(question, filters)
+        if filters:
+            log.info(f"Query: '{question}' → enriched: '{enriched}' | auto-filters={filters} | k={k}")
+        else:
+            log.info(f"Query: '{question}' | filters=None | k={k}")
+
+        chunks = search(enriched, top_k=k, filters=filters)
         log.info(f"Retrieved {len(chunks)} unique bids")
 
         if not chunks:
@@ -87,6 +176,9 @@ class QueryEngine:
                     c.get("full_item_name", ""),
                 ),
                 "department":      c.get("department", ""),
+                "sector":          c.get("sector", ""),
+                "state":           c.get("state", ""),
+                "status":          c.get("status", ""),
                 "end_date":        c.get("end_date", ""),
                 "estimated_value": c.get("estimated_value", ""),
                 "document_url":    c.get("document_url", ""),
@@ -108,12 +200,13 @@ class QueryEngine:
         filters: dict | None = None,
         top_k: int | None = None,
     ) -> list[dict]:
+        filters = _auto_detect_filters(query, filters)
+        enriched = _enrich_query(query, filters)
         results = search(
-            query,
+            enriched,
             top_k=top_k or _smart_top_k(query, self.top_k),
             filters=filters,
         )
-        # enrich with clean item name
         for r in results:
             r["full_item_name"] = _extract_item(
                 r.get("chunk", ""),

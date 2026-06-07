@@ -63,6 +63,7 @@ downloads/
 tender_result.json
 active_tenders*.json
 storage/gem_bids.json
+storage/tenders.json
 
 # -------------------------------------------------------------
 # DATABASES & VECTOR STORES
