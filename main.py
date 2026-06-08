@@ -206,7 +206,7 @@ def run_reindex():
 # TENDER API PIPELINE COMMANDS
 # =========================================================
 def print_tender_stats():
-    from tender_database import TenderDatabase
+    from storage.tender_database import TenderDatabase
     db = TenderDatabase()
     s = db.stats()
     print("\n" + "=" * 42)
@@ -221,17 +221,17 @@ def print_tender_stats():
 
 
 def run_tender_active(category: str = "", state: str = ""):
-    from tender_pipeline import run_active
+    from pipeline.tender_pipeline import run_active
     run_active(category=category, state=state)
 
 
 def run_tender_results(category: str = "", state: str = ""):
-    from tender_pipeline import run_results
+    from pipeline.tender_pipeline import run_results
     run_results(category=category, state=state)
 
 
 def run_tender_file(filepath: str):
-    from tender_pipeline import run_from_file
+    from pipeline.tender_pipeline import run_from_file
     run_from_file(filepath)
 
 

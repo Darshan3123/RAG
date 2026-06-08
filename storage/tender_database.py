@@ -1,5 +1,5 @@
 # =========================================================
-# tender_database.py
+# storage/tender_database.py
 # SQLite storage for API-sourced tenders (both formats)
 # Separate from gem_bids.db — different schema
 # =========================================================

@@ -1,5 +1,5 @@
 # =========================================================
-# tender_api_client.py
+# pipeline/tender_api_client.py
 # HTTP client for the tender API
 # Handles pagination, auth, rate limiting
 # =========================================================

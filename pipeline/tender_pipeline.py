@@ -1,20 +1,20 @@
 # =========================================================
-# tender_pipeline.py
+# pipeline/tender_pipeline.py
 # Orchestrates the full API → parse → store pipeline
 # Called via main.py or directly:
-#   python tender_pipeline.py --active
-#   python tender_pipeline.py --results
-#   python tender_pipeline.py --file <path>
-#   python tender_pipeline.py --stats
+#   python -m pipeline.tender_pipeline --active
+#   python -m pipeline.tender_pipeline --results
+#   python -m pipeline.tender_pipeline --file <path>
+#   python -m pipeline.tender_pipeline --stats
 # =========================================================
 from __future__ import annotations
 import sys
 import os
 
-from tender_api_client import TenderApiClient, load_from_file
-from tender_parser     import parse_api_response
-from tender_database   import TenderDatabase
-from utils.logger      import get_logger
+from pipeline.tender_api_client import TenderApiClient, load_from_file
+from pipeline.tender_parser     import parse_api_response
+from storage.tender_database    import TenderDatabase
+from utils.logger               import get_logger
 
 log = get_logger("tender_pipeline")
 
@@ -110,7 +110,7 @@ if __name__ == "__main__":
         if fp:
             run_from_file(fp)
         else:
-            print("Usage: python tender_pipeline.py --file path/to/file.json")
+            print("Usage: python -m pipeline.tender_pipeline --file path/to/file.json")
 
     elif "--active" in args:
         cat   = args[args.index("--category") + 1] if "--category" in args else ""
@@ -125,10 +125,10 @@ if __name__ == "__main__":
     else:
         print("""
 Usage:
-  python tender_pipeline.py --file active_tenders.json   # test with local file
-  python tender_pipeline.py --file tender_result.json    # test with local file
-  python tender_pipeline.py --active                     # fetch from API
-  python tender_pipeline.py --results                    # fetch results from API
-  python tender_pipeline.py --stats                      # show DB stats
-  python tender_pipeline.py --active --category "Printing Work" --state Gujarat
+  python -m pipeline.tender_pipeline --file active_tenders.json   # test with local file
+  python -m pipeline.tender_pipeline --file tender_result.json    # test with local file
+  python -m pipeline.tender_pipeline --active                     # fetch from API
+  python -m pipeline.tender_pipeline --results                    # fetch results from API
+  python -m pipeline.tender_pipeline --stats                      # show DB stats
+  python -m pipeline.tender_pipeline --active --category "Printing Work" --state Gujarat
         """)

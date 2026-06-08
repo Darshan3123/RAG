@@ -1,5 +1,5 @@
 # =========================================================
-# tender_parser.py
+# pipeline/tender_parser.py
 # Parses BOTH API response formats into a unified schema:
 #
 # FORMAT 1 — active_tenders  (status = OPEN)
