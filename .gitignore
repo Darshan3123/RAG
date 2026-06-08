@@ -9,6 +9,7 @@
 *.env
 .env.*
 !.env.example          # keep the example template
+!.env.colab            # keep the Colab template
 
 # -------------------------------------------------------------
 # PYTHON CACHE & COMPILED FILES
@@ -101,6 +102,7 @@ $RECYCLE.BIN/
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
+!colab_setup.ipynb     # keep the Colab notebook
 
 # -------------------------------------------------------------
 # TESTING & COVERAGE

@@ -109,12 +109,17 @@ os.makedirs(LOG_DIR,      exist_ok=True)
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
 # ---------------------------------------------------------
-# TESSERACT  (Windows path — ignored on Linux/Mac)
+# TESSERACT  (Windows path — ignored on Linux/Mac/Colab)
+# On Linux/Colab tesseract is on $PATH so no path needed.
+# Override via TESSERACT_CMD env var if required.
 # ---------------------------------------------------------
-TESSERACT_CMD = _str(
-    "TESSERACT_CMD",
+import platform as _platform
+_default_tesseract = (
     r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    if _platform.system() == "Windows"
+    else "tesseract"
 )
+TESSERACT_CMD = _str("TESSERACT_CMD", _default_tesseract)
 
 # ---------------------------------------------------------
 # RAG SETTINGS
