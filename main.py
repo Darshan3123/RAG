@@ -1,307 +1,378 @@
 #!/usr/bin/env python3
 # =========================================================
-# main.py — Entry point
+# main.py  —  Unified entry point (run from root)
 #
-# ── GeM Scraper ──────────────────────────────────────────
-# python main.py                        # continuous hourly loop
-# python main.py --once                 # single scrape run
-# python main.py --stats                # DB + vector store stats
-# python main.py --ask "question"       # single RAG query
-# python main.py --ask "q" --filter product_type=Product
-# python main.py --chat                 # interactive chat
-# python main.py --reindex              # rebuild vector store
+# ── SCRAPER ──────────────────────────────────────────────
+# python main.py --scrape                          # continuous loop
+# python main.py --scrape --once                   # single scrape run
+# python main.py --scrape --stats                  # MongoDB stats
+# python main.py --scrape --tender-active          # fetch open tenders
+# python main.py --scrape --tender-results         # fetch awarded tenders
+# python main.py --scrape --tender-file path.json  # load from local file
+# python main.py --scrape --tender-stats           # tender collection stats
+# python main.py --scrape --tender-active --category "Printing Work" --state Gujarat
 #
-# ── Tender API Pipeline ──────────────────────────────────
-# python main.py --tender-active                    # fetch open tenders from API
-# python main.py --tender-results                   # fetch awarded tenders from API
-# python main.py --tender-file active_tenders.json  # load from local file
-# python main.py --tender-stats                     # tender DB stats
-# python main.py --tender-active --category "Printing Work" --state Gujarat
+# ── INDEXER ──────────────────────────────────────────────
+# python main.py --index --index-new               # embed new bids
+# python main.py --index --reindex-all             # rebuild ChromaDB
+# python main.py --index --stats                   # MongoDB + ChromaDB stats
+#
+# ── QUERY ────────────────────────────────────────────────
+# python main.py --query --ask "show me open bids for printing"
+# python main.py --query --ask "pumps in Gujarat" --filter state=Gujarat
+# python main.py --query --chat
+# python main.py --query --search "keywords"
+# python main.py --query --stats
 # =========================================================
 import sys
 import os
-sys.path.insert(0, os.path.dirname(__file__))
 
-from utils.logger import get_logger
-log = get_logger("main")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+HELP = """
+GeM Scraper — Unified Entry Point
+==================================
 
-def print_stats():
-    from storage.database import BidDatabase
-    from rag.vector_store import stats as vs_stats
-    db = BidDatabase()
-    s  = db.stats()
-    vs = vs_stats()
-    print("\n" + "=" * 42)
-    print("  GeM Bid Scraper — Stats")
-    print("=" * 42)
-    print(f"  SQLite total bids  : {s['total']}")
-    print(f"  New (unseen)       : {s['new_this_run']}")
-    print(f"  Total runs logged  : {s['total_runs']}")
-    print(f"  Vector store chunks: {vs['total_chunks']}")
-    print(f"  ChromaDB path      : {vs['chroma_dir']}")
-    print("=" * 42 + "\n")
+SCRAPER commands:
+  python main.py --scrape                           continuous hourly loop
+  python main.py --scrape --once                    single scrape run
+  python main.py --scrape --stats                   MongoDB stats
+  python main.py --scrape --tender-active           fetch open tenders from API
+  python main.py --scrape --tender-results          fetch awarded tenders from API
+  python main.py --scrape --tender-file path.json   load tenders from local file
+  python main.py --scrape --tender-stats            tender collection stats
+  python main.py --scrape --tender-active --category "Printing Work" --state Gujarat
 
+INDEXER commands:
+  python main.py --index --index-new                embed new bids into ChromaDB
+  python main.py --index --reindex-all              rebuild entire ChromaDB from scratch
+  python main.py --index --stats                    MongoDB + ChromaDB stats
 
-def _print_answer(result: dict):
-    print("\n" + "─" * 62)
-    print(result["answer"])
-    print(f"\n── Sources ({len(result['sources'])} unique bids) ──")
-    for s in result["sources"]:
-        sector = s.get("sector", "")
-        state  = s.get("state", "")
-        status = s.get("status", "")
-        meta   = " | ".join(filter(None, [sector, state, status]))
-        print(
-            f"  [{s['bid_no']}]  "
-            f"{s['department'][:35]}  "
-            f"Score: {s['relevance_score']:.2%}"
-            + (f"  [{meta}]" if meta else "")
-        )
-    print("─" * 62 + "\n")
+QUERY commands:
+  python main.py --query --ask "question"           RAG answer with LLM
+  python main.py --query --ask "q" --filter state=Gujarat
+  python main.py --query --chat                     interactive chat
+  python main.py --query --search "keywords"        retrieval only, no LLM
+  python main.py --query --stats                    ChromaDB stats
 
+Or run each module directly from root:
+  python scraper_main.py --once
+  python indexer_main.py --index-new
+  python query_main.py   --chat
 
-def run_ask(question: str, filter_str: str | None):
-    from rag.query_engine import QueryEngine
-    filters = None
-    if filter_str:
-        kv = filter_str.split("=", 1)
-        if len(kv) == 2:
-            key   = kv[0].strip()
-            value = kv[1].strip()
-            # Normalise common aliases so users don't need to know
-            # the exact internal field name
-            key_aliases = {
-                "tender_status": "status",
-                "dept":          "department",
-                "dept_name":     "department",
-            }
-            key = key_aliases.get(key, key)
-            filters = {key: value}
-    engine = QueryEngine()
-    result = engine.ask(question, filters=filters)
-    print(f"\nQ: {result['question']}")
-    if filters:
-        print(f"   Filters: {filters}")
-    _print_answer(result)
+Or run from inside the module directory:
+  cd scraper  &&  python main.py --once
+  cd indexer  &&  python main.py --index-new
+  cd query    &&  python main.py --chat
+"""
 
 
-def run_chat():
-    from rag.query_engine import QueryEngine, is_exit
-    engine = QueryEngine()
+# ── SCRAPER ───────────────────────────────────────────────────────────────────
 
-    print("\n" + "=" * 62)
-    print("  GeM Bid RAG Chat")
-    print("  Commands:")
-    print("    <question>               — search + LLM answer")
-    print("    f:<key>=<value> <q>      — with metadata filter")
-    print("    /search <question>       — retrieval only, no LLM")
-    print("    quit / bye               — exit")
-    print("=" * 62 + "\n")
-
-    while True:
-        try:
-            raw = input("You > ").strip()
-        except (EOFError, KeyboardInterrupt):
-            print("\nBye.")
-            break
-
-        # ── FIX: check exit BEFORE any processing ──
-        if not raw or is_exit(raw):
-            print("Bye.")
-            break
-
-        # ── /search — retrieval only, no LLM ──
-        if raw.lower().startswith("/search "):
-            q       = raw[8:].strip()
-            results = engine.search_only(q)
-            print(f"\n{len(results)} unique bids:\n")
-            for r in results:
-                # FIX: show full_item_name not chunk text
-                item = r.get("full_item_name", "N/A")[:40]
-                print(
-                    f"  • {r['bid_no']:30s} "
-                    f"| {item:40s} "
-                    f"| End: {r.get('end_date','N/A'):19s} "
-                    f"| {r['score']:.2%}"
-                )
-            print()
-            continue
-
-        # ── optional filter prefix f:key=value ──
-        # Supports values with spaces: f:bid_type=Global Tender my question
-        # Strategy: parse f:key=value_token, then the rest is the question.
-        # For multi-word filter values, user can use underscore or the value
-        # as-is since we consume everything up to the question start heuristic.
-        # Better: split f:key=value where value ends at first word that would
-        # be a question (we just split the whole token on first space and let
-        # key=value include everything before the second space-separated group).
-        #
-        # Simplest robust approach: f: prefix consumes key=rest_of_first_token,
-        # BUT to support "f:bid_type=Global Tender what bids" correctly we
-        # require the question to be separated by TWO spaces, or we detect the
-        # filter value boundary by checking how many words belong to the value.
-        #
-        # We use the pragmatic approach: split f:key=value where the value is
-        # everything after = in the first token, and remaining tokens are query.
-        filters  = None
-        question = raw
-        if raw.startswith("f:"):
-            # Find the first occurrence of a space that is followed by a
-            # non-key=value word. We do this by splitting off the f:key=value
-            # token as everything from f: up to the first space, but handle
-            # multi-word filter values by checking if the next token contains
-            # no alpha question words vs filter continuation.
-            #
-            # Robust fix: use the pattern f:key=value  (one token, no spaces
-            # in value allowed unless user quotes) and document accordingly.
-            # For "Global Tender" specifically, user should write:
-            #   f:bid_type=Global Tender question...
-            # We handle this by consuming tokens greedily into the value until
-            # we hit a token that looks like a question word (not a capitalized
-            # proper noun that extends the filter value).
-            #
-            # Simplest correct heuristic: the filter value is everything after
-            # = in the first token. If the value is a known multi-word type
-            # (contains no lowercase), keep consuming. Stop at first lowercase
-            # word — that's the start of the question.
-            rest = raw[2:]  # strip "f:"
-            if "=" in rest:
-                key, after_eq = rest.split("=", 1)
-                tokens = after_eq.split(" ")
-                value_tokens = []
-                question_tokens = []
-                found_question = False
-                for tok in tokens:
-                    if found_question:
-                        question_tokens.append(tok)
-                    elif tok and tok[0].islower():
-                        # lowercase start → question begins here
-                        found_question = True
-                        question_tokens.append(tok)
-                    else:
-                        value_tokens.append(tok)
-                value    = " ".join(value_tokens).strip()
-                question = " ".join(question_tokens).strip()
-                if key and value and question:
-                    filters = {key.strip(): value}
-                else:
-                    # Couldn't parse cleanly — treat whole thing as question
-                    question = raw
-                    filters  = None
-
-        result = engine.ask(question, filters=filters)
-        _print_answer(result)
-
-
-def run_reindex():
-    from storage.database import BidDatabase
-    from rag.vector_store import reindex_all
-    db = BidDatabase()
-    reindex_all(db)
-    print("\nRe-index complete. Run --stats to verify.\n")
-
-
-# =========================================================
-# TENDER API PIPELINE COMMANDS
-# =========================================================
-def print_tender_stats():
-    from storage.tender_database import TenderDatabase
-    db = TenderDatabase()
-    s = db.stats()
-    print("\n" + "=" * 42)
-    print("  Tender Database — Stats")
-    print("=" * 42)
-    print(f"  Total tenders : {s['total']}")
-    print(f"  OPEN          : {s['open']}")
-    print(f"  AOC (results) : {s['aoc']}")
-    print(f"  New this run  : {s['new']}")
-    print(f"  Total runs    : {s['runs']}")
-    print("=" * 42 + "\n")
-
-
-def run_tender_active(category: str = "", state: str = ""):
-    from pipeline.tender_pipeline import run_active
-    run_active(category=category, state=state)
-
-
-def run_tender_results(category: str = "", state: str = ""):
-    from pipeline.tender_pipeline import run_results
-    run_results(category=category, state=state)
-
-
-def run_tender_file(filepath: str):
-    from pipeline.tender_pipeline import run_from_file
-    run_from_file(filepath)
-
-
-if __name__ == "__main__":
-    args = sys.argv[1:]
+def run_scraper(args: list):
+    from shared.utils.logger import get_logger
+    log = get_logger("main.scraper")
 
     try:
         if "--stats" in args:
-            print_stats()
+            from shared.storage import mongo_client as db
+            s = db.stats()
+            print(f"\n{'='*42}\n  GeM Bid Scraper — Stats\n{'='*42}")
+            print(f"  Total bids  : {s['total']}")
+            print(f"  New (unseen): {s['new_this_run']}")
+            print(f"  Total runs  : {s['total_runs']}")
+            print(f"{'='*42}\n")
 
         elif "--tender-stats" in args:
-            print_tender_stats()
+            from scraper.pipeline.tender_pipeline import tender_stats
+            tender_stats()
 
         elif "--tender-file" in args:
             idx = args.index("--tender-file")
             fp  = args[idx + 1] if idx + 1 < len(args) else ""
             if fp:
-                run_tender_file(fp)
+                from scraper.pipeline.tender_pipeline import run_from_file
+                run_from_file(fp)
             else:
-                print("Usage: python main.py --tender-file path/to/file.json")
+                print("Usage: python main.py --scrape --tender-file path/to/file.json")
 
         elif "--tender-active" in args:
             cat   = args[args.index("--category") + 1] if "--category" in args else ""
-            state = args[args.index("--state") + 1]    if "--state"    in args else ""
-            run_tender_active(category=cat, state=state)
+            state = args[args.index("--state")    + 1] if "--state"    in args else ""
+            from scraper.pipeline.tender_pipeline import run_active
+            run_active(category=cat, state=state)
 
         elif "--tender-results" in args:
             cat   = args[args.index("--category") + 1] if "--category" in args else ""
-            state = args[args.index("--state") + 1]    if "--state"    in args else ""
-            run_tender_results(category=cat, state=state)
+            state = args[args.index("--state")    + 1] if "--state"    in args else ""
+            from scraper.pipeline.tender_pipeline import run_results
+            run_results(category=cat, state=state)
 
-        elif "--reindex" in args:
-            log.info("Mode: full vector store re-index")
-            run_reindex()
+        elif "--once" in args:
+            log.info("Mode: single scrape run")
+            from scraper.pipeline.scheduler import start_scheduler
+            start_scheduler(run_once=True)
+
+        else:
+            log.info("Mode: continuous hourly loop")
+            from scraper.pipeline.scheduler import start_scheduler
+            start_scheduler(run_once=False)
+
+    except KeyboardInterrupt:
+        print("\n")
+        log.info("Scraper interrupted.")
+        try:
+            sys.exit(130)
+        except SystemExit:
+            os._exit(130)
+
+
+# ── INDEXER ───────────────────────────────────────────────────────────────────
+
+def run_indexer(args: list):
+    from shared.utils.logger import get_logger
+    log = get_logger("main.indexer")
+
+    try:
+        if "--stats" in args:
+            from shared.storage import mongo_client as db
+            from indexer.rag.vector_store import stats as vs_stats
+            s  = db.stats()
+            vs = vs_stats()
+            print(f"\n{'='*42}\n  Indexer — Stats\n{'='*42}")
+            print(f"  MongoDB total bids    : {s['total']}")
+            print(f"  Unindexed (is_new)    : {s['new_this_run']}")
+            print(f"  ChromaDB chunks       : {vs['total_chunks']}")
+            print(f"  ChromaDB collection   : {vs['collection']}")
+            print(f"  ChromaDB path         : {vs['chroma_dir']}")
+            print(f"{'='*42}\n")
+
+        elif "--reindex-all" in args:
+            log.info("Mode: full reindex from MongoDB")
+            from shared.storage import mongo_client as db
+            from indexer.rag.vector_store import reindex_all as vs_reindex
+            from shared.rag.embedder import prewarm_model
+            bids = db.get_all(projection={"_id": 0})
+            log.info(f"Reindexing {len(bids)} bids...")
+            prewarm_model()
+            vs_reindex(bids)
+            log.info("Full reindex complete.")
+
+        elif "--index-new" in args:
+            log.info("Mode: index new bids only")
+            from shared.storage import mongo_client as db
+            from indexer.rag.vector_store import upsert_bid
+            from shared.rag.embedder import prewarm_model
+            new_bids = db.get_new_bids()
+            if not new_bids:
+                log.info("No new bids to index.")
+                return
+            log.info(f"Found {len(new_bids)} new bids to index.")
+            prewarm_model()
+            indexed_urls = []
+            for i, bid in enumerate(new_bids, 1):
+                try:
+                    log.info(f"  [{i}/{len(new_bids)}] {bid.get('bid_no','unknown')}")
+                    upsert_bid(bid)
+                    indexed_urls.append(bid["document_url"])
+                except Exception as e:
+                    log.error(f"  Failed: {bid.get('bid_no','?')}: {e}")
+            db.mark_bids_indexed(indexed_urls)
+            log.info(f"Done. Indexed {len(indexed_urls)}/{len(new_bids)} bids.")
+
+        else:
+            print("""
+Indexer usage:
+  python main.py --index --index-new
+  python main.py --index --reindex-all
+  python main.py --index --stats
+            """)
+
+    except KeyboardInterrupt:
+        print("\n")
+        log.info("Indexer interrupted.")
+        sys.exit(130)
+
+
+# ── QUERY ─────────────────────────────────────────────────────────────────────
+
+def run_query(args: list):
+    from shared.utils.logger import get_logger
+    log = get_logger("main.query")
+
+    def _print_answer(result: dict):
+        print("\n" + "─" * 62)
+        print(result["answer"])
+        print(f"\n── Sources ({len(result['sources'])} unique bids) ──")
+        for s in result["sources"]:
+            meta = " | ".join(filter(None, [s.get("sector",""), s.get("state",""), s.get("status","")]))
+            print(
+                f"  [{s['bid_no']}]  "
+                f"{s['department'][:35]}  "
+                f"Score: {s['relevance_score']:.2%}"
+                + (f"  [{meta}]" if meta else "")
+            )
+        print("─" * 62 + "\n")
+
+    try:
+        if "--stats" in args:
+            from query.rag.vector_store import stats as vs_stats
+            vs = vs_stats()
+            print(f"\n{'='*42}\n  Query — Stats\n{'='*42}")
+            print(f"  ChromaDB chunks    : {vs['total_chunks']}")
+            print(f"  ChromaDB collection: {vs['collection']}")
+            print(f"  ChromaDB path      : {vs['chroma_dir']}")
+            print(f"{'='*42}\n")
 
         elif "--ask" in args:
             idx      = args.index("--ask")
             question = args[idx + 1] if idx + 1 < len(args) else ""
             filter_str = None
             if "--filter" in args:
-                fi = args.index("--filter")
-                # Collect ALL tokens after --filter until the next -- flag
-                # This allows multi-word values like: --filter state=Tamil Nadu
+                fi            = args.index("--filter")
                 filter_tokens = []
                 j = fi + 1
                 while j < len(args) and not args[j].startswith("--"):
                     filter_tokens.append(args[j])
                     j += 1
                 filter_str = " ".join(filter_tokens) if filter_tokens else None
-            if question:
-                run_ask(question, filter_str)
-            else:
-                print('Usage: python main.py --ask "your question"')
+
+            if not question:
+                print('Usage: python main.py --query --ask "your question"')
+                return
+
+            filters = None
+            if filter_str:
+                kv = filter_str.split("=", 1)
+                if len(kv) == 2:
+                    key = kv[0].strip()
+                    val = kv[1].strip()
+                    key_aliases = {"tender_status": "status", "dept": "department"}
+                    filters = {key_aliases.get(key, key): val}
+
+            from query.rag.query_engine import QueryEngine
+            engine = QueryEngine()
+            result = engine.ask(question, filters=filters)
+            print(f"\nQ: {result['question']}")
+            if filters:
+                print(f"   Filters: {filters}")
+            _print_answer(result)
 
         elif "--chat" in args:
-            run_chat()
+            from query.rag.query_engine import QueryEngine, is_exit
+            engine = QueryEngine()
 
-        elif "--once" in args:
-            log.info("Mode: single scrape run")
-            from pipeline.scheduler import start_scheduler
-            start_scheduler(run_once=True)
+            print("\n" + "=" * 62)
+            print("  GeM Bid RAG Chat")
+            print("  Commands:")
+            print("    <question>               — search + LLM answer")
+            print("    f:<key>=<value> <q>      — with metadata filter")
+            print("    /search <question>       — retrieval only, no LLM")
+            print("    quit / bye               — exit")
+            print("=" * 62 + "\n")
+
+            while True:
+                try:
+                    raw = input("You > ").strip()
+                except (EOFError, KeyboardInterrupt):
+                    print("\nBye.")
+                    break
+
+                if not raw or is_exit(raw):
+                    print("Bye.")
+                    break
+
+                if raw.lower().startswith("/search "):
+                    q       = raw[8:].strip()
+                    results = engine.search_only(q)
+                    print(f"\n{len(results)} unique bids:\n")
+                    for r in results:
+                        item = r.get("full_item_name", "N/A")[:40]
+                        print(
+                            f"  • {r['bid_no']:30s} "
+                            f"| {item:40s} "
+                            f"| End: {r.get('end_date','N/A'):19s} "
+                            f"| {r['score']:.2%}"
+                        )
+                    print()
+                    continue
+
+                filters  = None
+                question = raw
+                if raw.startswith("f:"):
+                    rest = raw[2:]
+                    if "=" in rest:
+                        key, after_eq   = rest.split("=", 1)
+                        tokens          = after_eq.split(" ")
+                        value_tokens    = []
+                        question_tokens = []
+                        found_q         = False
+                        for tok in tokens:
+                            if found_q:
+                                question_tokens.append(tok)
+                            elif tok and tok[0].islower():
+                                found_q = True
+                                question_tokens.append(tok)
+                            else:
+                                value_tokens.append(tok)
+                        value    = " ".join(value_tokens).strip()
+                        question = " ".join(question_tokens).strip()
+                        if key and value and question:
+                            filters = {key.strip(): value}
+                        else:
+                            question = raw
+                            filters  = None
+
+                result = engine.ask(question, filters=filters)
+                _print_answer(result)
+
+        elif "--search" in args:
+            idx = args.index("--search")
+            q   = args[idx + 1] if idx + 1 < len(args) else ""
+            if q:
+                from query.rag.query_engine import QueryEngine
+                engine  = QueryEngine()
+                results = engine.search_only(q)
+                for r in results:
+                    print(f"  • {r['bid_no']} | {r.get('full_item_name','')[:50]} | {r['score']:.2%}")
+            else:
+                print('Usage: python main.py --query --search "keywords"')
 
         else:
-            log.info("Mode: continuous hourly loop")
-            from pipeline.scheduler import start_scheduler
-            start_scheduler(run_once=False)
+            print("""
+Query usage:
+  python main.py --query --ask "question"
+  python main.py --query --ask "question" --filter state=Gujarat
+  python main.py --query --chat
+  python main.py --query --search "keywords"
+  python main.py --query --stats
+            """)
+
     except KeyboardInterrupt:
         print("\n")
-        log.info("Process interrupted by user (Ctrl+C). Shutting down gracefully...")
-        try:
-            sys.exit(130)  # Standard Linux exit code for SIGINT
-        except SystemExit:
-            os._exit(130)
+        sys.exit(130)
+
+
+# ── ROUTER ────────────────────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    args = sys.argv[1:]
+
+    if not args or "--help" in args or "-h" in args:
+        print(HELP)
+
+    elif "--scrape" in args:
+        remaining = [a for a in args if a != "--scrape"]
+        run_scraper(remaining)
+
+    elif "--index" in args:
+        remaining = [a for a in args if a != "--index"]
+        run_indexer(remaining)
+
+    elif "--query" in args:
+        remaining = [a for a in args if a != "--query"]
+        run_query(remaining)
+
+    else:
+        print(f"Unknown command: {' '.join(args)}")
+        print(HELP)

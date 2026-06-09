@@ -1,22 +1,44 @@
-# ── Environment ──────────────────────────────────────────
-python-dotenv>=1.0.0
+# =============================================================
+# requirements.txt — Universal (all modules)
+# =============================================================
+# Install everything:
+#   pip install -r requirements.txt
+#   playwright install chromium
+#
+# Or install per-module only:
+#   pip install -r scraper/requirements.txt
+#   pip install -r indexer/requirements.txt
+#   pip install -r query/requirements.txt
+#
+# GPU note: replace torch==2.3.0 with the CUDA build if needed:
+#   pip install torch==2.3.0+cu118 --index-url https://download.pytorch.org/whl/cu118
+# =============================================================
 
-# ── Scraper ───────────────────────────────────────────────
-playwright>=1.44.0
-PyMuPDF>=1.24.0
-Pillow>=10.0.0
-pdf2image>=1.17.0
-pytesseract>=0.3.10
+# ── Core ─────────────────────────────────────────────────────
+python-dotenv==1.0.1
+numpy>=1.24,<2.0          # torch 2.3.x compiled against NumPy 1.x; NumPy 2.0 breaks it
 
-# ── RAG — Embeddings (local, no API key needed) ───────────
-sentence-transformers>=3.0.0
+# ── Scraper ──────────────────────────────────────────────────
+playwright==1.44.0
+PyMuPDF==1.24.4
+Pillow==10.3.0
+pdf2image==1.17.0
+pytesseract==0.3.10
+requests==2.32.3
 
-# ── RAG — Sparse retrieval (BM25) ─────────────────────────
-rank-bm25>=0.2.2
+# ── MongoDB (scraper + indexer) ───────────────────────────────
+pymongo==4.7.2
 
-# ── RAG — Vector Store ────────────────────────────────────
-chromadb>=0.5.0
+# ── Embeddings + Reranker (indexer + query) ───────────────────
+sentence-transformers==3.0.1
+torch==2.3.0
 
-# ── RAG — LLM (pick one or both) ─────────────────────────
-openai>=1.30.0
-requests>=2.31.0
+# ── Vector store (indexer + query) ───────────────────────────
+chromadb>=0.5.4
+
+# ── Sparse retrieval (indexer + query) ───────────────────────
+rank-bm25==0.2.2
+
+# ── LLM providers (query) ────────────────────────────────────
+openai==1.35.0
+# requests already listed above (used for Ollama HTTP API too)

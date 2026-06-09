@@ -1,0 +1,19 @@
+# ── indexer/requirements.txt ─────────────────────────────
+# GPU server. Handles embedding generation + ChromaDB writes.
+# Install: pip install -r requirements.txt
+
+# Core
+python-dotenv==1.0.1
+
+# Embedding model (runs locally — downloads ~400MB on first use)
+sentence-transformers==3.0.1
+torch==2.3.0          # or torch==2.3.0+cu118 for CUDA GPU
+
+# Vector store
+chromadb>=0.5.4
+
+# Sparse retrieval (BM25)
+rank-bm25==0.2.2
+
+# MongoDB
+pymongo==4.7.2
