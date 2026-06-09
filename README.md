@@ -1,104 +1,103 @@
 # GeM Bid Scraper + RAG Pipeline
 
-> **Last Updated:** May 2026  
-> **Status:** Production-ready RAG system with active bid scraping and hybrid search
+> **Last Updated:** June 2026
+> **Branch:** v2 — Modular scraper / indexer / query architecture
+
+A production system that scrapes active bids from the [Government e-Marketplace (GeM)](https://bidplus.gem.gov.in), stores them in MongoDB, embeds them into a vector store, and answers natural-language queries using hybrid RAG search.
+
+---
+
+## Architecture Overview
+
+The system is split into three independent modules that communicate through MongoDB:
+
+```
+GeM Website
+    │
+    ▼
+┌─────────────────────────────────────────────────────────┐
+│  scraper/          (any server — no GPU needed)         │
+│  Playwright browser → PDF parser → MongoDB              │
+└─────────────────────────────────────────────────────────┘
+              │  writes bids  (is_new=True)
+              ▼
+         MongoDB
+              │  reads new bids
+              ▼
+┌─────────────────────────────────────────────────────────┐
+│  indexer/          (GPU server recommended)             │
+│  MongoDB → BGE embeddings → ChromaDB vector store       │
+└─────────────────────────────────────────────────────────┘
+              │  reads ChromaDB
+              ▼
+┌─────────────────────────────────────────────────────────┐
+│  query/            (GPU server or separate machine)     │
+│  Dense + BM25 + RRF + Cross-encoder reranker → answer   │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
 
 ## Project Structure
 
 ```
 gem_scraper/
-├── main.py                           ← Entry point (all commands below)
-├── requirements.txt                  ← Python dependencies
-├── .env                              ← Configuration (copy from .env.example)
-├── .gitignore                        ← Git ignore patterns
-├── config/
-│   ├── __init__.py
-│   └── settings.py                  ← Loads .env, exposes all settings to code
-├── core/
-│   ├── __init__.py
-│   ├── browser.py                   ← Playwright stealth browser manager
-│   │                                   • Anti-bot delays & UA rotation
-│   │                                   • Ongoing Bids/RA filter (active bids only)
-│   │                                   • Stealth JS injection (hides webdriver)
-│   └── parser.py                    ← PDF extraction + card HTML parsing
-│                                       • extract_pdf_text() - PyMuPDF + OCR
-│                                       • get_dates_from_card() - accurate dates
-│                                       • get_card_details() - untruncated fields
-│                                       • parse_bid_data() - regex field extraction
-├── pipeline/
-│   ├── __init__.py
-│   ├── scraper.py                   ← Main scraping loop
-│   │                                   • Filters 9 bid types
-│   │                                   • Applies "active bids only" filter
-│   │                                   • Card-based date extraction
-│   │                                   • Auto-dedup + new-bid detection
-│   └── scheduler.py                 ← Hourly background loop (production)
-├── storage/
-│   ├── __init__.py
-│   ├── database.py                  ← SQLite bid storage + dedup
-│   ├── gem_bids.db                  ← SQLite database (auto-created)
-│   ├── gem_bids.json                ← JSON export (auto-updated)
-│   └── chroma_db/                   ← ChromaDB vector store (auto-created)
-│       ├── chroma.sqlite3
-│       └── [uuid]/ (embeddings)
-├── rag/
-│   ├── __init__.py
-│   ├── embedder.py                  ← Embedding encoder
-│   │                                   • all-MiniLM-L6-v2 (384-dim, local)
-│   │                                   • build_bid_document()
-│   │                                   • chunk_text() with overlap
-│   │                                   • embed_texts() in batches
-│   ├── vector_store.py              ← ChromaDB + hybrid search
-│   │                                   • Semantic score (60% weight)
-│   │                                   • Keyword score (40% weight)
-│   │                                   • Dedup by bid_no, rank by hybrid score
-│   │                                   • Metadata filtering support
-│   ├── llm.py                       ← LLM answer generation
-│   │                                   • OpenAI / Ollama / Retrieval-only modes
-│   │                                   • Score breakdown in retrieval-only
-│   │                                   • Max 8 bids in context
-│   └── query_engine.py              ← Public RAG query interface
-│                                       • Exit detection (quit/bye/done)
-│                                       • Smart top_k adjustment by intent
-│                                       • Filter parsing (f:key=value)
-│                                       • /search (retrieval only)
-├── utils/
-│   ├── __init__.py
-│   ├── antibot.py                   ← Anti-detection measures
-│   │                                   • Random delays (page load, cards, PDFs)
-│   │                                   • User-Agent rotation
-│   │                                   • Stealth launch/context options
-│   │                                   • Human-like mouse movements
-│   └── logger.py                    ← Rotating file + console logging
-├── downloads/                       ← PDF storage (auto-created)
-├── logs/                            ← Log files (auto-created, rotated)
-└── Documentation/
-    ├── README.md                    ← This file
-    ├── RAG_QUICK_START.md          ← Quick reference guide
-    ├── RAG_ARCHITECTURE_GUIDE.md   ← Deep dive into system
-    ├── RAG_SCORING_EXAMPLES.md     ← Scoring walkthroughs
-    ├── RAG_TUNING_GUIDE.md         ← Optimization strategies
-    ├── RAG_VISUAL_REFERENCE.md     ← Diagrams & charts
-    └── README_RAG_DOCUMENTATION.md ← Doc index
+│
+├── main.py                      ← Unified entry point (all commands)
+├── requirements.txt             ← All dependencies (universal install)
+├── .env                         ← Configuration (never committed)
+├── ARCHITECTURE.md              ← Detailed architecture + deploy guide
+│
+├── shared/                      ← Installed on ALL machines
+│   ├── config/settings.py       ← Single source of config, reads .env
+│   ├── storage/mongo_client.py  ← MongoDB read/write
+│   ├── rag/embedder.py          ← BGE embedding model (shared by indexer+query)
+│   └── utils/
+│       ├── logger.py            ← Rotating file + console logging
+│       └── antibot.py           ← Human-like delays, stealth browser options
+│
+├── scraper/                     ← Scraper module
+│   ├── core/
+│   │   ├── browser.py           ← Playwright stealth Chromium session
+│   │   └── parser.py            ← PDF extraction + field parsing + sector classification
+│   └── pipeline/
+│       ├── scheduler.py         ← Timed loop (every N minutes)
+│       ├── scraper.py           ← Per-bid-type scrape → save to MongoDB
+│       ├── tender_api_client.py ← External tender API HTTP client
+│       ├── tender_parser.py     ← Normalises active/result tender formats
+│       └── tender_pipeline.py   ← Tender API orchestrator
+│
+├── indexer/                     ← Indexer module (GPU server)
+│   └── rag/vector_store.py      ← ChromaDB WRITE: chunk → embed → upsert
+│
+├── query/                       ← Query module
+│   └── rag/
+│       ├── vector_store.py      ← ChromaDB READ: dense+BM25+RRF+reranker
+│       ├── query_engine.py      ← RAG orchestration + auto-filter detection
+│       └── llm.py               ← Ollama / OpenAI / retrieval-only output
+│
+├── downloads/                   ← Scraped PDFs (auto-created)
+├── logs/                        ← Rotating log files (auto-created)
+└── storage/
+    └── chroma_db/               ← ChromaDB vector store (auto-created)
 ```
 
 ---
 
 ## Quick Start
 
-### 1. Install Python & Dependencies
+### 1. Install Dependencies
+
 ```bash
-# Python 3.9+
+# Python 3.10+
 pip install -r requirements.txt
 playwright install chromium
 ```
 
-### 2. Install System Dependencies
-**Windows:**
+**Windows** — Tesseract OCR (for PDF fallback):
 ```bash
-# Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
-# Download .exe installer and install to C:\Program Files\Tesseract-OCR
-# Update .env: TESSERACT_PATH=C:\\Program Files\\Tesseract-OCR\\tesseract.exe
+# Download installer: https://github.com/UB-Mannheim/tesseract/wiki
+# Install to C:\Program Files\Tesseract-OCR\
 ```
 
 **Linux:**
@@ -106,234 +105,254 @@ playwright install chromium
 sudo apt install tesseract-ocr poppler-utils
 ```
 
-**Mac:**
+### 2. Start MongoDB
+
 ```bash
-brew install tesseract poppler
+# Local (default)
+mongod --dbpath /data/db
+
+# Or use MongoDB Atlas — set MONGO_URI in .env
 ```
 
-### 3. (Optional) Install Ollama for LLM
+### 3. Configure `.env`
+
+```bash
+cp .env  # edit with your values — all have sensible defaults
+```
+
+Key settings:
+
+```env
+MONGO_URI=mongodb://localhost:27017
+RAG_EMBEDDING_MODEL=BAAI/bge-base-en-v1.5
+RAG_RERANKER_MODEL=BAAI/bge-reranker-large
+RAG_LLM_PROVIDER=          # blank = retrieval-only, or: ollama / openai
+TARGET_PER_TYPE=3           # bids to scrape per bid type per run
+```
+
+### 4. (Optional) Install Ollama for LLM answers
+
 ```bash
 # Download from https://ollama.com
-ollama pull llama3  # or your preferred model
-```
-
-### 4. Configure `.env`
-```bash
-cp .env.example .env
-# Edit .env with your values (all have sensible defaults)
+ollama pull llama3
+# Then set in .env: RAG_LLM_PROVIDER=ollama
 ```
 
 ---
 
 ## All Commands
 
+All commands go through the root `main.py`:
+
 ```bash
-# Continuous hourly scrape loop (production)
-python main.py
+# ── Scraper ──────────────────────────────────────────────
+python main.py --scrape --once          # single scrape run
+python main.py --scrape                 # continuous loop (every 60 min)
 
-# Single scrape run (testing / cron)
-python main.py --once
+# ── Indexer ──────────────────────────────────────────────
+python main.py --index --index-new      # embed only new (is_new=True) bids
+python main.py --index --reindex-all    # rebuild entire vector store from scratch
 
-# Show DB + vector store stats
+# ── Query ────────────────────────────────────────────────
+python main.py --query --ask "show me defence bids"
+python main.py --query --ask "bids in Uttar Pradesh"
+python main.py --query --ask "XLPE cable electrical tender"
+python main.py --query --chat           # interactive chat mode
+
+# ── Query with explicit filters ──────────────────────────
+python main.py --query --ask "all bids" --filter sector="Defence and Security"
+python main.py --query --ask "goods bids" --filter state="Uttar Pradesh"
+python main.py --query --ask "services bids" --filter procurement_type=Services
+
+# ── Stats ────────────────────────────────────────────────
 python main.py --stats
-
-# Ask a question (RAG query)
-python main.py --ask "Show me IT equipment bids above 10 lakh"
-
-# Ask with a metadata filter
-python main.py --ask "laptop bids" --filter product_type=Product
-python main.py --ask "maintenance bids" --filter "bid_type=Service Bid/RAs"
-
-# Interactive chat mode
-python main.py --chat
-
-# Rebuild vector store from existing SQLite DB
-python main.py --reindex
 ```
 
-### Chat mode commands
-Once inside `--chat`:
+---
 
-| Command | Description |
+## RAG Pipeline — How It Works
+
+```
+User query: "defence equipment bids"
+        │
+        ▼
+1. Auto-filter detection
+   • "bids in Uttar Pradesh"  → state=Uttar Pradesh
+   • "information technology" → sector=Information Technology
+   • "services tenders"       → procurement_type=Services
+   (generic words like "services" in "printing services" do NOT trigger filters)
+        │
+        ▼
+2. Dense retrieval (BGE embeddings, cosine similarity)
+   → fetch top-40 chunks from ChromaDB
+        │
+        ▼
+3. BM25 keyword retrieval (metadata fields only)
+   → item name ×3 weight, sector, dept, bid_type, state
+        │
+        ▼
+4. RRF fusion (Reciprocal Rank Fusion)
+   → merge dense + BM25 rankings
+        │
+        ▼
+5. Deduplicate by bid_no — always use chunk[0] (metadata card)
+        │
+        ▼
+6. Cross-encoder reranker (bge-reranker-large)
+   → score each (query, document) pair directly
+   → drop results with rerank score < 0.55
+        │
+        ▼
+7. Tail trim — drop bottom 20% if > 3 results
+        │
+        ▼
+8. LLM (Ollama / OpenAI) or retrieval-only output
+```
+
+### Score Interpretation
+
+The displayed `score` is the **cross-encoder reranker score** — the most meaningful signal:
+
+| Score | Meaning |
 |---|---|
-| `<question>` | Hybrid search + LLM answer |
-| `f:<key>=<value> <question>` | Search with metadata filter |
-| `/search <question>` | Retrieval only, no LLM — shows item names + scores |
-| `quit` / `bye` / `exit` / `done` | Exit chat |
+| 85–100% | Strong specific match — query and item align precisely |
+| 70–85% | Good match — correct category, item clearly relevant |
+| 55–70% | Moderate — correct sector/dept but query is vague or broad |
+| < 55% | Dropped — reranker judged it not relevant |
+
+Broad queries like "show me defence bids" naturally score 65–72% — the reranker is **correctly** saying the match is sector-level, not item-level. More specific queries like "UV ozone environmental chamber" score 85%+.
 
 ---
 
-## Scraper Behaviour
+## Configuration Reference
 
-### Active Bids Only
-The scraper applies the **"Ongoing Bids/RA"** filter on the GeM portal before collecting cards. This means only currently open/active bids are scraped — expired or closed bids are skipped automatically.
+All settings are in `.env` and loaded by `shared/config/settings.py`:
 
-This is handled by `browser.select_ongoing_bids()` which clicks the "Ongoing Bids/RA" checkbox after selecting each bid type filter.
-
-### Date Accuracy
-Bid dates (`start_date`, `end_date`) are scraped directly from the **card HTML** on the listing page, not from the PDF. Card dates are more reliable because:
-- PDFs sometimes contain incorrect or missing date fields
-- Card HTML always shows the portal's authoritative start/end timestamps
-- Card dates are in `DD-MM-YYYY HH:MM AM/PM` format and are converted to 24-hour `DD-MM-YYYY HH:MM:SS`
-
-PDF dates are used only as a fallback when card dates are unavailable.
-
-### Bid Types Scraped
-```
-Product Bid/RAs
-Service Bid/RAs
-Bid To RAs
-Product Custom Bid/RAs
-BOQ Bids
-Rate Contract Bids
-Global Tender
-Limited Tender
-Single Tender
-```
-
----
-
-## RAG Configuration (`.env` / `config/settings.py`)
+### Scraper
 
 | Setting | Default | Description |
 |---|---|---|
-| `RAG_EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Local embedding model (no API key) |
-| `RAG_LLM_PROVIDER` | `ollama` | `ollama` / `openai` / `""` (retrieval only) |
-| `OLLAMA_MODEL` | `llama3` | Ollama model name |
-| `OPENAI_MODEL` | `gpt-4o-mini` | OpenAI model (if using OpenAI) |
-| `RAG_TOP_K` | `5` | Unique bids returned per query |
+| `TARGET_PER_TYPE` | `3` | Bids to collect per bid type per run |
+| `MAX_EMPTY_PAGES` | `5` | Stop after N pages with no new bids |
+| `SCRAPE_INTERVAL_MINUTES` | `60` | Scheduler loop interval |
+| `GEM_BASE_URL` | `https://bidplus.gem.gov.in` | GeM portal base URL |
+
+### RAG / Indexer / Query
+
+| Setting | Default | Description |
+|---|---|---|
+| `RAG_EMBEDDING_MODEL` | `BAAI/bge-base-en-v1.5` | Embedding model (768-dim) |
+| `RAG_RERANKER_MODEL` | `BAAI/bge-reranker-large` | Cross-encoder reranker |
+| `RAG_USE_RERANKER` | `true` | Enable/disable reranker |
+| `RAG_TOP_K` | `5` | Results returned per query |
+| `RAG_FETCH_K` | `40` | Candidates fetched before reranking |
 | `RAG_CHUNK_SIZE` | `800` | Characters per text chunk |
-| `RAG_CHUNK_OVERLAP` | `100` | Overlap between consecutive chunks |
+| `RAG_CHUNK_OVERLAP` | `100` | Overlap between chunks |
+| `RAG_RERANKER_WEIGHT` | `0.60` | Reranker share of final score |
+| `RAG_DENSE_WEIGHT` | `0.60` | Dense share of remaining weight |
+| `RAG_BM25_WEIGHT` | `0.40` | BM25 share of remaining weight |
+| `CHROMA_DIR` | `storage/chroma_db` | ChromaDB storage path |
+| `CHROMA_COLLECTION` | `gem_bids` | Collection name |
 
-### LLM Provider options
+### LLM
 
-| Provider | Cost | Setup |
+| Setting | Default | Description |
 |---|---|---|
-| `ollama` | Free, local | Install Ollama + `ollama pull llama3` |
-| `openai` | Paid API | Set `OPENAI_API_KEY` in `.env` |
-| `""` (empty) | Free | No LLM — returns formatted retrieval results with score breakdown |
+| `RAG_LLM_PROVIDER` | `""` | `ollama` / `openai` / `""` (retrieval-only) |
+| `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server URL |
+| `OLLAMA_MODEL` | `llama3` | Ollama model name |
+| `OPENAI_API_KEY` | `""` | OpenAI API key |
+| `OPENAI_MODEL` | `gpt-4o-mini` | OpenAI model |
+
+### MongoDB
+
+| Setting | Default | Description |
+|---|---|---|
+| `MONGO_URI` | `mongodb://localhost:27017` | MongoDB connection string |
+| `MONGO_DB_NAME` | `gem_scraper` | Database name |
+| `MONGO_BIDS_COLL` | `bids` | Bids collection |
 
 ---
 
-## How RAG Works
+## Bid Types Scraped
 
 ```
-User question
-     │
-     ▼
-Embed query (sentence-transformers, local)
-     │
-     ▼
-ChromaDB vector search → top-K*4 raw chunks (over-fetch for dedup)
-     │
-     ├── Semantic score  = 1 - cosine_distance   (60% weight)
-     └── Keyword score   = TF-IDF field matching  (40% weight)
-                │
-                ▼
-         Hybrid score = (semantic × 0.6) + (keyword × 0.4)
-                │
-                ▼
-     Deduplicate by bid_no → top-K unique bids
-                │
-                ▼
-     LLM (Ollama/OpenAI) generates answer  OR  retrieval-only output
-                │
-                ▼
-     Answer + source bids with relevance scores
+Product Bid/RAs       Service Bid/RAs       Bid To RAs
+Product Custom Bid/RAs    BOQ Bids          Rate Contract Bids
+Global Tender         Limited Tender        Single Tender
 ```
-
-Every new bid scraped is **automatically indexed** into ChromaDB via `database.upsert()`.
-No manual step needed — scrape → index → query all happen in one pipeline.
-
----
-
-## Hybrid Scoring
-
-The search combines two signals:
-
-| Signal | Weight | What it captures |
-|---|---|---|
-| Semantic similarity | 60% | Meaning, intent, synonyms |
-| Keyword matching | 40% | Exact words in item name, dept, type |
-
-**Field weights for keyword scoring:**
-
-| Field | Weight |
-|---|---|
-| `full_item_name` | 3.0 |
-| `department` | 1.5 |
-| `bid_type` | 1.0 |
-| `product_type` | 1.0 |
-
-When using retrieval-only mode (`RAG_LLM_PROVIDER=""`), each result shows a full score breakdown:
-```
-Overall Score : 72%
-  • Semantic (60%)  : 85%
-  • Keyword  (40%)  : 52%
-```
-
----
-
-## Query Engine Features
-
-### Smart Top-K Selection
-The query engine automatically adjusts how many results to fetch based on query intent:
-
-| Intent | Example | top_k |
-|---|---|---|
-| Listing intent | "show all bids", "list every product bid", "how many bids" | max(default, 15) |
-| Focused lookup | "find bid GEM/2024/B/123", "specific bid" | max(1, default // 2) |
-| Default | "IT hardware bids" | default (5) |
-
-### Exit Detection
-In `--chat` mode, exit words are checked **before** any query processing. Supported exit words: `quit`, `exit`, `q`, `bye`, `goodbye`, `stop`, `close`, `end`, `done`, `ok bye`.
-
-### /search Command
-In chat mode, `/search <question>` performs retrieval only (no LLM) and displays:
-- Bid number
-- Full item name (from metadata, not raw chunk text)
-- End date
-- Hybrid score
 
 ---
 
 ## Example Queries
 
 ```bash
-python main.py --ask "Find laptop or computer bids from NIC"
-python main.py --ask "Which bids are ending this month?"
-python main.py --ask "Service bids above 50 lakh" --filter product_type=Service
-python main.py --ask "Global tenders in defence or military"
-python main.py --ask "Show BOQ bids from Gujarat"
-python main.py --ask "List all ongoing product bids"
+# By item
+python main.py --query --ask "XLPE cable electrical"
+python main.py --query --ask "UV ozone environmental chamber"
+python main.py --query --ask "300 TB storage data center"
+python main.py --query --ask "proximity warning device mining"
+python main.py --query --ask "stainless steel tube grade 304"
+
+# By sector / category
+python main.py --query --ask "defence equipment bids"
+python main.py --query --ask "fire fighting system maintenance"
+python main.py --query --ask "healthcare medical global tender"
+
+# By location
+python main.py --query --ask "bids in Uttar Pradesh"
+python main.py --query --ask "tenders in Delhi"
+python main.py --query --ask "goods tenders in Chhattisgarh"
+
+# Combined
+python main.py --query --ask "information technology bids in Tamil Nadu"
+python main.py --query --ask "services tenders" --filter state="West Bengal"
 ```
 
 ---
 
-## JSON Output Fields
+## Logs
 
-```json
-{
-  "bid_type":        "Product Bid/RAs",
-  "product_type":    "Product",
-  "bid_no":          "GEM/2026/B/7382409",
-  "ra_no":           "GEM/2026/R/1234567",
-  "full_item_name":  "All in One PC (V2) (Q2)",
-  "quantity":        "200",
-  "department":      "Department Of Electronics And Information Technology",
-  "start_date":      "11-12-2025 16:30:00",
-  "end_date":        "11-01-2026 16:00:00",
-  "estimated_value": "13000000",
-  "bid_packet_type": "Two Packet Bid",
-  "document_url":    "https://bidplus.gem.gov.in/showbidDocument/...",
-  "corrigendum_url": "",
-  "first_seen":      "2026-05-25T10:00:00",
-  "last_seen":       "2026-05-25T11:00:00",
-  "is_new":          1
-}
+Each module writes to its own rotating log file in `logs/` (5 MB max, 5 backups):
+
+| File | Module |
+|---|---|
+| `main.log` | Entry point |
+| `scraper.log` | Scrape runs |
+| `scheduler.log` | Scheduler loop |
+| `browser.log` | Playwright browser |
+| `parser.log` | PDF + card parsing |
+| `mongo_client.log` | MongoDB operations |
+| `embedder.log` | Embedding model |
+| `vector_store.log` | ChromaDB operations |
+| `query_engine.log` | Query pipeline |
+| `llm.log` | LLM calls |
+
+---
+
+## Model Upgrade Options
+
+| Component | Current | Upgrade | Notes |
+|---|---|---|---|
+| Embedding | `bge-base-en-v1.5` (400MB) | `bge-large-en-v1.5` (1.2GB) | Better vectors, needs reindex |
+| Embedding | `bge-base-en-v1.5` | `bge-m3` (2GB) | Multilingual — handles Hindi PDF text |
+| Reranker | `bge-reranker-large` (1.3GB) | `bge-reranker-v2-m3` | Best accuracy, multilingual |
+
+To upgrade embedding model — change `.env` then reindex:
+
+```bash
+# .env
+RAG_EMBEDDING_MODEL=BAAI/bge-m3
+
+# Rebuild vector store with new model
+python main.py --index --reindex-all
 ```
 
-> `full_pdf_text` is stored in SQLite but stripped from the JSON export to keep file size manageable.
+Reranker upgrade requires no reindex — just change `.env`:
+
+```bash
+RAG_RERANKER_MODEL=BAAI/bge-reranker-v2-m3
+```
 
 ---
 
@@ -346,8 +365,8 @@ Description=GeM Bid Scraper
 After=network.target
 
 [Service]
-WorkingDirectory=/path/to/gem_tender
-ExecStart=/usr/bin/python3 main.py
+WorkingDirectory=/path/to/gem_scraper
+ExecStart=/usr/bin/python3 main.py --scrape
 Restart=always
 RestartSec=30
 
@@ -360,28 +379,21 @@ sudo systemctl enable gem-scraper
 sudo systemctl start gem-scraper
 ```
 
-## Running with Cron (alternative)
+## Cron Alternative
 
 ```bash
-# Every hour — scrape active bids + auto-index new ones into RAG
-0 * * * * cd /path/to/gem_tender && python main.py --once >> logs/cron.log 2>&1
+# Every hour — scrape + index new bids
+0 * * * * cd /path/to/gem_scraper && python main.py --scrape --once >> logs/cron.log 2>&1
+5 * * * * cd /path/to/gem_scraper && python main.py --index --index-new >> logs/cron.log 2>&1
 ```
 
 ---
 
-## Logs
+## Requirements
 
-Each module writes to its own rotating log file in `logs/`:
-
-| File | Module |
-|---|---|
-| `main.log` | Entry point |
-| `scraper.log` | Scrape runs |
-| `scheduler.log` | Scheduler loop |
-| `browser.log` | Playwright browser |
-| `parser.log` | PDF + card parsing |
-| `database.log` | SQLite operations |
-| `embedder.log` | Embedding model |
-| `vector_store.log` | ChromaDB operations |
-
-Logs rotate at 5 MB, keeping 5 backups per file.
+- Python 3.10+
+- MongoDB 6.0+ (local or Atlas)
+- `numpy<2.0` (torch 2.3.x requires NumPy 1.x)
+- `chromadb>=0.5.4` (NumPy 2.x compatible)
+- Playwright Chromium (`playwright install chromium`)
+- ~2GB disk for embedding + reranker models (downloaded automatically on first run)
