@@ -10,6 +10,7 @@ from scraper.core.parser import (
     extract_pdf_text, parse_bid_data, parse_bid_extended,
     assemble_tender_record, get_card_details, clean_text,
 )
+from scraper.core.validator import post_process_bid
 from shared.storage import mongo_client as db
 from shared.utils.antibot import sleep_between_cards
 from shared.utils.logger import get_logger
@@ -137,10 +138,54 @@ def scrape_bid_type(
                         "contact_email":   extended.get("contact_email", ""),
                         "contact_phone":   extended.get("contact_phone", ""),
                         "document_path":   extended.get("document_path", ""),
+                        "organization_name": extended.get("organization_name", ""),
+                        "office_name":     extended.get("office_name", ""),
                     }
 
                     page_url      = getattr(browser, "current_url", "https://gem.gov.in/")
+
+                    # ── Post-process: heuristic corrections before record assembly ──
+                    bid, parse_issues = post_process_bid(bid)
+                    if parse_issues:
+                        bid["parse_issues"] = parse_issues
+
                     tender_record = assemble_tender_record(bid, page_url=page_url)
+
+                    # ── Promote tender_record fields to top-level when parser missed them ──
+                    tr = tender_record  # shorthand
+                    if not bid.get("city") and tr.get("city"):
+                        bid["city"] = tr["city"]
+                    if not bid.get("state") and tr.get("state"):
+                        bid["state"] = tr["state"]
+                    if not bid.get("contact_person") and tr.get("contact_person"):
+                        bid["contact_person"] = tr["contact_person"]
+                    if not bid.get("address") and tr.get("address"):
+                        bid["address"] = tr["address"]
+                    if not bid.get("address_pin") and tr.get("address_pin"):
+                        bid["address_pin"] = tr["address_pin"]
+
+                    # ── Normalize earnest_amount to float at top level ──
+                    raw_emd = bid.get("earnest_amount", "")
+                    if raw_emd:
+                        try:
+                            import re as _re
+                            bid["earnest_amount"] = float(
+                                _re.sub(r"[,\s]", "", str(raw_emd))
+                            )
+                        except (ValueError, TypeError):
+                            bid["earnest_amount"] = 0.0
+                    else:
+                        # Fall back to tender_record decimal if top-level was empty
+                        tr_emd = tr.get("earnest_amount", {})
+                        if isinstance(tr_emd, dict):
+                            try:
+                                bid["earnest_amount"] = float(
+                                    tr_emd.get("$numberDecimal", "0") or "0"
+                                )
+                            except (ValueError, TypeError):
+                                bid["earnest_amount"] = 0.0
+                        else:
+                            bid["earnest_amount"] = 0.0
 
                     # ── Save to MongoDB (no RAG call) ──
                     is_new = db.upsert(bid, tender_record=tender_record)

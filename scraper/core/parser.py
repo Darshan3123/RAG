@@ -176,6 +176,35 @@ CITY_TO_STATE: dict[str, str] = {
     "port blair": "Andaman and Nicobar Islands",
     "daman": "Dadra and Nagar Haveli and Daman and Diu",
     "silvassa": "Dadra and Nagar Haveli and Daman and Diu",
+    # Additional cities / districts commonly seen in GeM bids
+    "hoshiarpur": "Punjab", "pathankot": "Punjab", "rupnagar": "Punjab",
+    "gurdaspur": "Punjab", "fazilka": "Punjab", "moga": "Punjab",
+    "rajauri": "Jammu and Kashmir", "poonch": "Jammu and Kashmir",
+    "kathua": "Jammu and Kashmir", "udhampur": "Jammu and Kashmir",
+    "reasi": "Jammu and Kashmir", "doda": "Jammu and Kashmir",
+    "kishtwar": "Jammu and Kashmir", "ramban": "Jammu and Kashmir",
+    "kinnaur": "Himachal Pradesh", "lahaul": "Himachal Pradesh",
+    "spiti": "Himachal Pradesh", "bilaspur": "Himachal Pradesh",
+    "una": "Himachal Pradesh", "hamirpur": "Himachal Pradesh",
+    "sultanpur": "Uttar Pradesh", "amethi": "Uttar Pradesh",
+    "raebareli": "Uttar Pradesh", "unnao": "Uttar Pradesh",
+    "hardoi": "Uttar Pradesh", "sitapur": "Uttar Pradesh",
+    "lakhimpur": "Uttar Pradesh", "kheri": "Uttar Pradesh",
+    "paradip": "Odisha", "paradeep": "Odisha", "kendrapara": "Odisha",
+    "jagatsinghpur": "Odisha", "angul": "Odisha", "dhenkanal": "Odisha",
+    "koraput": "Odisha", "rayagada": "Odisha", "ganjam": "Odisha",
+    "khammam": "Telangana", "nalgonda": "Telangana", "suryapet": "Telangana",
+    "mahbubnagar": "Telangana", "sangareddy": "Telangana",
+    "nagarkurnool": "Telangana", "wanaparthy": "Telangana",
+    "bokaro": "Jharkhand", "giridih": "Jharkhand", "chatra": "Jharkhand",
+    "palamu": "Jharkhand", "latehar": "Jharkhand", "garhwa": "Jharkhand",
+    "kiriburu": "Jharkhand", "noamundi": "Jharkhand",
+    "durg": "Chhattisgarh", "raigarh": "Chhattisgarh",
+    "jagdalpur": "Chhattisgarh", "ambikapur": "Chhattisgarh",
+    "navsari": "Gujarat", "valsad": "Gujarat", "bharuch": "Gujarat",
+    "narmada": "Gujarat", "dahod": "Gujarat", "panchmahal": "Gujarat",
+    "bangalore": "Karnataka", "bengaluru": "Karnataka",
+    "mysore": "Karnataka", "hubli": "Karnataka",
 }
 
 
@@ -201,7 +230,7 @@ _SECTOR_RULES: list[tuple[str, str]] = [
     (r"urban|municipality|smart city|town planning|housing|slum|pwbd|cpwd|nhai", "Urban Development and Housing"),
     (r"finance|bank|rbi|sebi|nabard|sidbi|tax|gst|customs|excise|treasury", "Finance and Banking"),
     (r"police|law|judiciary|court|prison|correctional|ncrb", "Law and Justice"),
-    (r"it|software|hardware|computer|digital|data|network|cyber|nic|meity|e-governance", "Information Technology"),
+    (r"\bit\b|software|hardware|computer|digital|data|network|cyber|nic|meity|e-governance", "Information Technology"),
     (r"science|research|technology|laboratory|testing|calibration|csir|dst|dbt", "Science and Technology"),
     (r"social|welfare|women|child|disability|pension|relief|nhrc|human rights|ngo|niti", "Social Welfare"),
     (r"tourism|hospitality|hotel|culture|heritage|museum|monument|asi", "Tourism and Culture"),
@@ -541,17 +570,60 @@ def _extract_consignee_block(pdf_text: str) -> dict:
         "contact_phone": "",
     }
 
-    # Cap text slices to avoid catastrophic backtracking on large PDFs
-    # Most consignee/contact info appears in the first ~8 KB
-    search_text = pdf_text[:8000]
+    # ── Prefer the Consignee section when present, else first 8 KB ──
+    consignee_hdr = re.search(
+        r"Consignees?/Reporting\s+Officer",
+        pdf_text, re.IGNORECASE,
+    )
+    if consignee_hdr:
+        start_idx   = max(consignee_hdr.start() - 200, 0)
+        search_text = pdf_text[start_idx: start_idx + 8000]
+    else:
+        search_text = pdf_text[:8000]
 
-    # ── 1. Find any 6-digit pin followed by address text ──
-    addr_match = re.search(r"(\d{6}),([^\n]{10,250})", search_text)
+    # ── 1. Find a 6-digit PIN followed by address text,
+    #        but skip any match that sits inside a bank / EMD line ──
+    _BANK_CONTEXT_MARKERS = ("A/c No", "Account No", "IFSC", "Bank Name",
+                             "EMD Amount", "NEFT", "RTGS", "Account Number")
+
+    addr_match = None
+    for m in re.finditer(r"(\d{6}),([^\n]{10,250})", search_text):
+        # Examine ±80 chars around the match for bank markers
+        ctx_start = max(0, m.start() - 80)
+        ctx_end   = min(len(search_text), m.end() + 80)
+        context   = search_text[ctx_start:ctx_end]
+        if any(marker in context for marker in _BANK_CONTEXT_MARKERS):
+            continue   # this looks like a bank/IFSC line, skip it
+        addr_match = m
+        break
+
     if addr_match:
         pin  = addr_match.group(1)
         rest = clean_text(addr_match.group(2))
         result["address"]     = f"{pin},{rest}"
         result["address_pin"] = pin
+
+    # ── 1b. Extract city from "***...***CITYNAME" pattern (used when no named contact) ──
+    # e.g. "***********\n***********BANGALORE\n1\nN/A"
+    star_city_m = re.search(
+        r"\*{5,}\s*\n\s*\*{5,}([A-Za-z][A-Za-z\s]{2,40})\s*\n",
+        search_text, re.IGNORECASE,
+    )
+    if star_city_m:
+        star_city = star_city_m.group(1).strip().title()
+        if not result["city"]:
+            star_lower = star_city.lower()
+            if star_lower in CITY_TO_STATE:
+                result["city"]  = star_city
+                result["state"] = CITY_TO_STATE[star_lower]
+            else:
+                for known_city in sorted(CITY_TO_STATE.keys(), key=len, reverse=True):
+                    if known_city in star_lower or star_lower in known_city:
+                        result["city"]  = known_city.title()
+                        result["state"] = CITY_TO_STATE[known_city]
+                        break
+                else:
+                    result["city"] = star_city  # store as-is even if not in map
 
     # ── 2. Try to find city by matching known cities in address context ──
     if addr_match:
@@ -579,38 +651,83 @@ def _extract_consignee_block(pdf_text: str) -> dict:
                 break
     result["state"] = CITY_TO_STATE.get(city_key, "")
 
-    # ── 4. Consignee name — find the consignee section then extract name ──
-    # Avoid re.DOTALL on full text; locate the section first, then parse a
-    # small window to prevent catastrophic backtracking.
-    person_match = None
-    consignee_section_m = re.search(
-        r"Consignee[s]?[^\n]{0,80}Reporting[^\n]{0,80}Officer",
-        search_text, re.IGNORECASE,
-    )
-    if consignee_section_m:
-        # Look in the 500-char window after the header for the first data row
-        window = search_text[consignee_section_m.end():consignee_section_m.end() + 500]
-        person_match = re.search(
-            r"\n\s*1\s*\n([A-Z][a-zA-Z\s\.]{3,60})\n",
-            window,
-        )
-        if person_match:
-            result["contact_person"] = clean_text(person_match.group(1))
+    # ── 3b. If state still empty, try matching state names directly in address ──
+    if not result["state"]:
+        _ALL_STATES = [
+            "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar",
+            "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh",
+            "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra",
+            "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+            "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
+            "Uttar Pradesh", "Uttarakhand", "West Bengal",
+            "Jammu and Kashmir", "Ladakh", "Delhi", "Chandigarh", "Puducherry",
+            "Andaman and Nicobar Islands",
+            "Dadra and Nagar Haveli and Daman and Diu",
+        ]
+        addr_search = (result["address"] + " " + addr_context).lower()
+        for state_name in _ALL_STATES:
+            if state_name.lower() in addr_search:
+                result["state"] = state_name
+                # Also try to pick city from address words before the state name
+                idx = addr_search.find(state_name.lower())
+                before = addr_search[max(0, idx - 120):idx]
+                for known_city in sorted(CITY_TO_STATE.keys(), key=len, reverse=True):
+                    if known_city in before and CITY_TO_STATE[known_city] == state_name:
+                        result["city"] = known_city.title()
+                        break
+                # If still no city, extract last meaningful word before state name
+                if not result["city"]:
+                    words = re.findall(r"[a-z]{4,}", before)
+                    if words:
+                        result["city"] = words[-1].title()
+                break
 
+    # ── 4. Consignee name — find the consignee section then extract name ──
+    # PDF structure (after clean_text collapses newlines):
+    #   "...S.N o. ... 1 Firstname Lastname 834006,Address..."
+    # The name sits between the row number "1 " and the 6-digit PIN.
+    # Also works on raw text where newlines are preserved.
+    person_match = None
+
+    # Strategy A: name between row-number "1" and the 6-digit PIN
+    # Works on collapsed text: "... 1 Firstname Lastname 834006,..."
+    # Also works on raw text:  "...\n1\nFirstname Lastname\n834006,..."
+    if addr_match:
+        pre_pin = search_text[max(0, addr_match.start() - 300): addr_match.start()]
+        pm = (
+            re.search(r"\b1\s*\n([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,4})\s*\n", pre_pin)
+            or re.search(r"\b1\s+([A-Z][a-zA-Z]{2,}(?:\s+[A-Z][a-zA-Z]{2,}){0,3})\s+\d{6}", pre_pin)
+        )
+        if pm:
+            name = clean_text(pm.group(1))
+            # Skip placeholder values
+            if name.upper() not in ("N/A", "NA", "NIL", "NOT AVAILABLE"):
+                result["contact_person"] = name
+
+    # Strategy B (raw text only): table row "\n 1\n<Name>\n"
     if not result["contact_person"]:
-        # Alternative: S.No. table header pattern — no DOTALL, bounded window
-        sno_m = re.search(
-            r"(?:S\.No\.|S\.N\.|No\.)[^\n]*\n",
+        consignee_section_m = re.search(
+            r"Consignee[s]?[^\n]{0,80}Reporting[^\n]{0,80}Officer",
             search_text, re.IGNORECASE,
         )
+        if consignee_section_m:
+            window = search_text[consignee_section_m.end():consignee_section_m.end() + 500]
+            pm = re.search(r"\n\s*1\s*\n([A-Z][a-zA-Z\s\.]{3,60})\n", window)
+            if pm:
+                name = clean_text(pm.group(1))
+                if name.upper() not in ("N/A", "NA", "NIL"):
+                    result["contact_person"] = name
+
+    # Strategy C: S.No. table fallback (raw text)
+    if not result["contact_person"]:
+        sno_m = re.search(r"(?:S\.No\.|S\.N\.|No\.)[^\n]*\n", search_text, re.IGNORECASE)
         if sno_m:
             window = search_text[sno_m.end():sno_m.end() + 400]
-            alt = re.search(
-                r"(?:[^\n]*\n){0,3}\s*1\s*([A-Z][a-zA-Z\s\.]{3,60})\n",
-                window,
-            )
+            alt = re.search(r"(?:[^\n]*\n){0,3}\s*1\s*([A-Z][a-zA-Z\s\.]{3,60})\n", window)
             if alt:
-                result["contact_person"] = clean_text(alt.group(1))
+                name = clean_text(alt.group(1))
+                if name.upper() not in ("N/A", "NA", "NIL"):
+                    result["contact_person"] = name
 
     # ── 5. Email ──
     email_match = re.search(
@@ -632,6 +749,42 @@ def _extract_consignee_block(pdf_text: str) -> dict:
     return result
 
 
+# Phrases that signal the end of the true item name — anything after these
+# belongs to relaxation/policy explanatory text, not the category itself.
+_ITEM_TAIL_STOPS = [
+    "mse relaxation for years of experience and turnover",
+    "startup relaxation for years of experience and turnover",
+    "mse relaxation",
+    "startup relaxation",
+    "local supplier",
+    "make in india",
+    "purchase preference",
+    "class-i local",
+    "class-ii local",
+    "bid security",
+    "technical specification",
+    "as per the tech",
+    "delivery period",
+    "warranty period",
+]
+
+
+def _trim_item_tail(val: str) -> str:
+    """
+    Strip trailing policy/relaxation text that sometimes bleeds into
+    the extracted item category string.
+    """
+    if not val:
+        return val
+    lower = val.lower()
+    cut = len(val)
+    for kw in _ITEM_TAIL_STOPS:
+        idx = lower.find(kw)
+        if idx != -1 and idx < cut:
+            cut = idx
+    return val[:cut].strip(" ,;-")
+
+
 def _extract_item_category(pdf_text: str) -> str:
     """
     Extract the full item category text, which may span multiple lines.
@@ -640,23 +793,24 @@ def _extract_item_category(pdf_text: str) -> str:
     """
     # Primary: multi-line capture until the next section header
     m = re.search(
-        r"(?:वव?\S*\s*\S*\s*/Item Category|Item Category)\s+"
-        r"(.*?)"
+        r"(?:[^\n]*/)?Item\s+Category\s*\n"   # label on its own line
+        r"(.*?)"                                # value (may span lines)
         r"(?=\nGeMARPTS|\nSearched\s+String|\n\x01|\nBid\s+Number|\nBid\s+No|\nDated:|\Z)",
         pdf_text[:10000], re.IGNORECASE | re.DOTALL,
     )
     if m:
         val = clean_text(m.group(1))
+        val = _trim_item_tail(val)
         if val and "which regular" not in val.lower() and len(val) > 5:
             return val
 
-    # Fallback: single-line (original behaviour)
+    # Fallback: single-line value on same line as label (older PDF layout)
     m = re.search(
-        r"(?:व\S+\s+\S+\s*/Item Category|Item Category)\s+([^\n]{5,300})",
+        r"(?:[^\n]*/)?Item\s+Category\s*[:\-]\s*([^\n]{5,300})",
         pdf_text[:8000], re.IGNORECASE,
     )
     if m:
-        val = m.group(1).strip()
+        val = _trim_item_tail(m.group(1).strip())
         if "which regular" not in val.lower():
             return val
 
@@ -666,7 +820,7 @@ def _extract_item_category(pdf_text: str) -> str:
         pdf_text[:8000], re.IGNORECASE,
     )
     if m:
-        val = m.group(1).strip()
+        val = _trim_item_tail(m.group(1).strip())
         if "which regular" not in val.lower():
             return val
 
@@ -692,7 +846,10 @@ def parse_bid_data(pdf_text: str) -> dict:
     d["full_item_name"] = _extract_item_category(pdf_text)
 
     m = re.search(
-        r"(?:Department Name|विभाग का नाम|Department\s+(?:का|of))\s*[:\-]?\s*([^\n]{5,200})",
+        r"(?:[^\n]*/)?Department\s+Name\s*\n([^\n]{5,200})",
+        pdf_text[:6000], re.IGNORECASE,
+    ) or re.search(
+        r"(?:Department Name|Department\s+(?:का|of))\s*[:\-]\s*([^\n]{5,200})",
         pdf_text[:6000], re.IGNORECASE,
     )
     d["department"] = clean_text(m.group(1)) if m else ""
@@ -744,28 +901,45 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
 
     # ── Authority from PDF (more reliable than card) ──
     log.info("  [parser] Extracting authority...")
-    # Try multiple label variants GeM uses
-    authority_patterns = [
-        r"(?:Department Name|विभाग का नाम)\s*[:\-]?\s*\n?([^\n]{3,200})",
-        r"(?:Organisation Name|संगठन का नाम)\s*[:\-]?\s*\n?([^\n]{3,200})",
-        r"(?:Office Name|काया?लय का नाम)\s*[:\-]?\s*\n?([^\n]{3,200})",
-        r"(?:Ministry|Ministry.*?State Name|मं.*?रा.*?नाम)\s*[:\-]?\s*\n?([^\n]{3,200})",
+    # GeM PDFs put the value on the NEXT line after the label, e.g.:
+    #   "वभाग का नाम/Department Name\nSteel Authority Of India Limited"
+    # Pattern: match the label line, then capture the very next non-empty line.
+    _LABEL_NEXT_LINE = [
+        r"(?:[^\n]*/)?Department\s+Name\s*\n([^\n]{3,200})",
+        r"(?:[^\n]*/)?Organisation\s+Name\s*\n([^\n]{3,200})",
+        r"(?:[^\n]*/)?Organization\s+Name\s*\n([^\n]{3,200})",
     ]
+    _SKIP_AUTHORITY = {
+        "na", "n/a", "not available", "nil",
+        "organisation name", "organization name",
+        "department name", "office name", "ministry",
+    }
     ext["authority"] = ""
-    for pat in authority_patterns:
+    for pat in _LABEL_NEXT_LINE:
         for m in re.finditer(pat, pdf_text[:6000], re.IGNORECASE):
             val = clean_text(m.group(1))
-            # Strip any leading slash or label fragment
             val = re.sub(r"^[/\\:\-\s]+", "", val).strip()
-            # Skip placeholder values and skip values that are just label echoes
-            low = val.lower()
-            skip = {"na", "n/a", "not available", "nil", "organisation name",
-                    "department name", "office name", "ministry"}
-            if val and low not in skip and len(val) > 2:
+            if val and val.lower() not in _SKIP_AUTHORITY and len(val) > 2:
                 ext["authority"] = val
                 break
         if ext["authority"]:
             break
+    # Final fallback: inline same-line pattern (older PDF layout OR collapsed text)
+    if not ext["authority"]:
+        _INLINE_PATTERNS = [
+            r"/Department\s+Name\s+([A-Z][^\n/]{3,150}?)(?:\s+[^\s/]{0,30}/|\s*$)",
+            r"/Organisation\s+Name\s+([A-Z][^\n/]{3,150}?)(?:\s+[^\s/]{0,30}/|\s*$)",
+            r"Department\s+Name\s*[:\-]\s*([^\n]{3,200})",
+            r"Organisation\s+Name\s*[:\-]\s*([^\n]{3,200})",
+        ]
+        for pat in _INLINE_PATTERNS:
+            m = re.search(pat, pdf_text[:6000], re.IGNORECASE)
+            if m:
+                val = clean_text(m.group(1))
+                val = re.sub(r"^[/\\:\-\s]+", "", val).strip()
+                if val and val.lower() not in _SKIP_AUTHORITY and len(val) > 2:
+                    ext["authority"] = val
+                    break
     log.info(f"  [parser] Authority: {ext['authority'][:50]}...")
 
     # ── Sector ──
@@ -774,10 +948,10 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
 
     # ── EMD (earnest_amount) ──
     log.info("  [parser] Extracting EMD amount...")
-    # Try single-schedule pattern first, then multi-schedule
+    # Handles plain "EMD Amount 17500", Hindi prefix, and multiline layouts
     emd_match = re.search(
-        r"EMD Amount.*?(\d[\d,]+)",
-        pdf_text, re.IGNORECASE,
+        r"(?:EMD\s*Amount|ईएमड[^\n]{0,15}Amount|Earnest\s+Money\s+Deposit)[^\d]{0,30}(\d[\d,]*)",
+        pdf_text, re.IGNORECASE | re.DOTALL,
     )
     ext["earnest_amount"] = clean_text(emd_match.group(1)) if emd_match else ""
 
@@ -813,6 +987,36 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
 
     # ── document_path — local PDF path ──
     ext["document_path"] = pdf_path or ""
+
+    # ── Organization name and Office name — structured fields for filtering ──
+    # GeM PDFs: in RAW text, value is on next line after label.
+    # In STORED full_pdf_text (clean_text applied), newlines → spaces, so
+    # value is inline: "...Hindi.../Organisation Name Bokaro Steel Plant Hindi..."
+    _ORG_SKIP = {"na", "n/a", "nil", "not available", "organisation name", "organization name"}
+    _OFF_SKIP  = {"na", "n/a", "nil", "not available", "office name"}
+
+    # Try next-line pattern first (raw PDF text), then inline (collapsed text)
+    org_m = (
+        re.search(r"(?:[^\n]*/)?Organisation\s+Name\s*\n([^\n]{3,200})", pdf_text[:6000], re.IGNORECASE)
+        or re.search(r"(?:[^\n]*/)?Organization\s+Name\s*\n([^\n]{3,200})", pdf_text[:6000], re.IGNORECASE)
+        or re.search(r"/Organisation\s+Name\s+([A-Z][^\n/]{3,150}?)(?:\s+[^\s/]{0,30}/|\s*$)", pdf_text[:6000], re.IGNORECASE)
+        or re.search(r"/Organization\s+Name\s+([A-Z][^\n/]{3,150}?)(?:\s+[^\s/]{0,30}/|\s*$)", pdf_text[:6000], re.IGNORECASE)
+    )
+    if org_m:
+        val = clean_text(org_m.group(1))
+        ext["organization_name"] = val if val.lower() not in _ORG_SKIP and len(val) > 2 else ""
+    else:
+        ext["organization_name"] = ext.get("authority", "")
+
+    off_m = (
+        re.search(r"(?:[^\n]*/)?Office\s+Name\s*\n([^\n]{3,200})", pdf_text[:6000], re.IGNORECASE)
+        or re.search(r"/Office\s+Name\s+([A-Z0-9][^\n/]{2,150}?)(?:\s+[^\s/]{0,30}/|\s*$)", pdf_text[:6000], re.IGNORECASE)
+    )
+    if off_m:
+        val = clean_text(off_m.group(1))
+        ext["office_name"] = val if val.lower() not in _OFF_SKIP and len(val) > 1 else ""
+    else:
+        ext["office_name"] = ""
 
     # ── tender_status — computed from end_date vs now ──
     # Will be set dynamically in scraper; default OPEN
