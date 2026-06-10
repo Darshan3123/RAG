@@ -122,6 +122,17 @@ coverage.xml
 *.swo
 *~
 
+# -------------------------------------------------------------
+# DEBUG / INVESTIGATION SCRIPTS (local use only)
+# -------------------------------------------------------------
+check_indexed.py
+debug_contact.py
+debug_missing.py
+dump_pdf.py
+inspect_sample.py
+test_parse.py
+0.5.4
+
 
 __init__.cpython-313.pyc
 database.cpython-313.pyc
