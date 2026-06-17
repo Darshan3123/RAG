@@ -9,6 +9,7 @@ from scraper.core.browser import GemBrowser
 from scraper.core.parser import (
     extract_pdf_text, parse_bid_data, parse_bid_extended,
     assemble_tender_record, get_card_details, clean_text,
+    extract_pdf_intelligence,
 )
 from scraper.core.validator import post_process_bid
 from shared.storage import mongo_client as db
@@ -27,6 +28,17 @@ def _pick(card_val: str, pdf_val: str) -> str:
             return pv
         return cv
     return pv
+
+
+def _to_int(val) -> int | None:
+    """Convert string/float quantity to int; returns None if unparseable."""
+    if val is None or val == "":
+        return None
+    try:
+        import re as _re
+        return int(float(_re.sub(r"[,\s]", "", str(val))))
+    except (ValueError, TypeError):
+        return None
 
 
 # =========================================================
@@ -82,7 +94,7 @@ def scrape_bid_type(
                         continue
                     seen_urls.add(doc_url)
 
-                    pdf_path = browser.download_pdf(doc_url)
+                    pdf_path = browser.download_pdf(doc_url, bid_type=bid_type_name)
                     if not pdf_path:
                         stats["errors"] += 1
                         continue
@@ -93,8 +105,9 @@ def scrape_bid_type(
                         continue
 
                     try:
-                        parsed   = parse_bid_data(pdf_text)
-                        extended = parse_bid_extended(pdf_text, pdf_path=pdf_path)
+                        parsed        = parse_bid_data(pdf_text)
+                        extended      = parse_bid_extended(pdf_text, pdf_path=pdf_path)
+                        pdf_intel     = extract_pdf_intelligence(pdf_text)
                     except Exception as parse_err:
                         log.error(f"  Card {i+1}: parse error — {parse_err}", exc_info=True)
                         stats["errors"] += 1
@@ -104,19 +117,19 @@ def scrape_bid_type(
                         "bid_type":        bid_type_name,
                         "product_type":    card_data["product_type"],
                         "bid_no":          card_data["bid_no"] or parsed.get("bid_no", ""),
-                        "ra_no":           card_data["ra_no"],
+                        "ra_no":           card_data["ra_no"] or None,
                         "full_item_name":  _pick(card_data["full_item_name"],
                                                  parsed.get("full_item_name", "")),
-                        "quantity":        _pick(card_data["quantity"],
-                                                 parsed.get("quantity", "")),
+                        "quantity":        _to_int(_pick(card_data["quantity"],
+                                                 parsed.get("quantity", ""))),
                         "department":      _pick(card_data["department"],
                                                  parsed.get("department", "")),
                         "start_date":      card_data["start_date"] or parsed.get("start_date", ""),
                         "end_date":        card_data["end_date"]   or parsed.get("end_date", ""),
-                        "estimated_value": parsed.get("estimated_value", ""),
-                        "bid_packet_type": parsed.get("bid_packet_type", ""),
+                        "estimated_value": parsed.get("estimated_value") or None,
+                        "bid_packet_type": parsed.get("bid_packet_type") or None,
                         "document_url":    doc_url,
-                        "corrigendum_url": corr_url,
+                        "corrigendum_url": corr_url or None,
                         "full_pdf_text":   clean_text(pdf_text),
                         "category":        extended.get("category", ""),
                         "sub_category":    extended.get("sub_category", ""),
@@ -126,7 +139,7 @@ def scrape_bid_type(
                                                card_data["department"], parsed.get("department", "")),
                         "sector":          extended.get("sector", ""),
                         "earnest_amount":  extended.get("earnest_amount", ""),
-                        "doc_cost":        extended.get("doc_cost", ""),
+                        "doc_cost":        extended.get("doc_cost") or None,
                         "open_date":       extended.get("open_date", ""),
                         "search_text":     extended.get("search_text", ""),
                         "is_corrigendum":  extended.get("is_corrigendum", False),
@@ -135,11 +148,12 @@ def scrape_bid_type(
                         "city":            extended.get("city", ""),
                         "state":           extended.get("state", ""),
                         "contact_person":  extended.get("contact_person", ""),
-                        "contact_email":   extended.get("contact_email", ""),
-                        "contact_phone":   extended.get("contact_phone", ""),
+                        "contact_email":   extended.get("contact_email", "") or None,
+                        "contact_phone":   extended.get("contact_phone", "") or None,
                         "document_path":   extended.get("document_path", ""),
                         "organization_name": extended.get("organization_name", ""),
                         "office_name":     extended.get("office_name", ""),
+                        "pdf_intelligence": pdf_intel,
                     }
 
                     page_url      = getattr(browser, "current_url", "https://gem.gov.in/")
@@ -164,28 +178,28 @@ def scrape_bid_type(
                     if not bid.get("address_pin") and tr.get("address_pin"):
                         bid["address_pin"] = tr["address_pin"]
 
-                    # ── Normalize earnest_amount to float at top level ──
+                    # ── Normalize earnest_amount to int at top level ──
                     raw_emd = bid.get("earnest_amount", "")
                     if raw_emd:
                         try:
                             import re as _re
-                            bid["earnest_amount"] = float(
+                            bid["earnest_amount"] = int(float(
                                 _re.sub(r"[,\s]", "", str(raw_emd))
-                            )
+                            ))
                         except (ValueError, TypeError):
-                            bid["earnest_amount"] = 0.0
+                            bid["earnest_amount"] = 0
                     else:
                         # Fall back to tender_record decimal if top-level was empty
                         tr_emd = tr.get("earnest_amount", {})
                         if isinstance(tr_emd, dict):
                             try:
-                                bid["earnest_amount"] = float(
+                                bid["earnest_amount"] = int(float(
                                     tr_emd.get("$numberDecimal", "0") or "0"
-                                )
+                                ))
                             except (ValueError, TypeError):
-                                bid["earnest_amount"] = 0.0
+                                bid["earnest_amount"] = 0
                         else:
-                            bid["earnest_amount"] = 0.0
+                            bid["earnest_amount"] = 0
 
                     # ── Save to MongoDB (no RAG call) ──
                     is_new = db.upsert(bid, tender_record=tender_record)

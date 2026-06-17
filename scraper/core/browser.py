@@ -93,9 +93,19 @@ class GemBrowser:
         except Exception as e:
             log.warning(f"Could not select Ongoing Bids/RA filter: {e}")
 
-    def download_pdf(self, document_url: str, retries: int = 3) -> str | None:
+    def download_pdf(self, document_url: str, retries: int = 3,
+                     bid_type: str = "") -> str | None:
         import re
         import requests
+
+        def _safe_folder(bid_type_name: str) -> str:
+            """Convert bid type name to a safe folder name."""
+            name = bid_type_name.strip()
+            # Replace slashes and spaces with underscores, strip special chars
+            name = re.sub(r"[/\\]", "_", name)
+            name = re.sub(r"\s+", "_", name)
+            name = re.sub(r"[^\w\-]", "", name)
+            return name or "Other"
 
         def _filename_from_url(url: str) -> str:
             name = url.rstrip("/").split("/")[-1].split("?")[0]
@@ -111,6 +121,13 @@ class GemBrowser:
                     fn = m.group(2).strip()
                     return fn if fn.lower().endswith(".pdf") else fn + ".pdf"
             return fallback
+
+        # ── Determine save directory ──
+        if bid_type:
+            save_dir = os.path.join(DOWNLOAD_DIR, _safe_folder(bid_type))
+        else:
+            save_dir = DOWNLOAD_DIR
+        os.makedirs(save_dir, exist_ok=True)
 
         for attempt in range(1, retries + 1):
             log.info(f"  PDF download attempt {attempt}/{retries}: {document_url}")
@@ -132,7 +149,7 @@ class GemBrowser:
                 ct = resp.headers.get("Content-Type", "")
                 if resp.status_code == 200 and "pdf" in ct.lower():
                     filename = _filename_from_headers(resp, _filename_from_url(document_url))
-                    path = os.path.join(DOWNLOAD_DIR, filename)
+                    path = os.path.join(save_dir, filename)
                     with open(path, "wb") as f:
                         for chunk in resp.iter_content(chunk_size=65536):
                             if chunk:
@@ -155,7 +172,7 @@ class GemBrowser:
                     if "pdf" in ct.lower():
                         body = response.body()
                         filename = _filename_from_url(document_url)
-                        path = os.path.join(DOWNLOAD_DIR, filename)
+                        path = os.path.join(save_dir, filename)
                         with open(path, "wb") as f:
                             f.write(body)
                         sleep_pdf_download()

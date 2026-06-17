@@ -131,6 +131,10 @@ debug_missing.py
 dump_pdf.py
 inspect_sample.py
 test_parse.py
+
+# Local sample / debug output files
+sample_output.json
+sample_pdf_text.txt
 0.5.4
 
 

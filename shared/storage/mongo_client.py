@@ -79,16 +79,21 @@ def upsert(bid: dict, tender_record: dict | None = None) -> bool:
             log.error(f"  Insert failed for {bid.get('bid_no')}: {e}")
             return False
     else:
+        update_fields = {
+            "last_seen":        now,
+            "is_new":           False,
+            "ra_no":            bid.get("ra_no", ""),
+            "corrigendum_url":  bid.get("corrigendum_url", ""),
+            "tender_status":    bid.get("tender_status", "OPEN"),
+        }
+        # Carry forward pdf_intelligence if re-scraped
+        if bid.get("pdf_intelligence"):
+            update_fields["pdf_intelligence"] = bid["pdf_intelligence"]
+        if tender_record:
+            update_fields["tender_record"] = tender_record
         col.update_one(
             {"document_url": bid["document_url"]},
-            {"$set": {
-                "last_seen":      now,
-                "is_new":         False,
-                "ra_no":          bid.get("ra_no", ""),
-                "corrigendum_url": bid.get("corrigendum_url", ""),
-                "tender_status":  bid.get("tender_status", "OPEN"),
-                **({"tender_record": tender_record} if tender_record else {}),
-            }}
+            {"$set": update_fields},
         )
 
     return is_new
@@ -160,12 +165,8 @@ def export_json(path: str):
     bids = get_all()
     output = []
     for b in bids:
-        tr = b.pop("tender_record", None)
-        if tr and isinstance(tr, dict):
-            output.append(tr)
-        else:
-            b.pop("full_pdf_text", None)
-            output.append(b)
+        b.pop("full_pdf_text", None)   # always strip raw text — too large
+        output.append(b)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2, default=str)
     log.info(f"JSON exported: {path} ({len(output)} records)")

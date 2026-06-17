@@ -12,6 +12,10 @@
 # python main.py --scrape --tender-stats           # tender collection stats
 # python main.py --scrape --tender-active --category "Printing Work" --state Gujarat
 #
+# ── EXPORT ───────────────────────────────────────────────
+# python main.py --export                          # export to output.json (default)
+# python main.py --export --out my_file.json       # export to custom path
+#
 # ── INDEXER ──────────────────────────────────────────────
 # python main.py --index --index-new               # embed new bids
 # python main.py --index --reindex-all             # rebuild ChromaDB
@@ -42,6 +46,10 @@ SCRAPER commands:
   python main.py --scrape --tender-file path.json   load tenders from local file
   python main.py --scrape --tender-stats            tender collection stats
   python main.py --scrape --tender-active --category "Printing Work" --state Gujarat
+
+EXPORT commands:
+  python main.py --export                           export all bids to output.json
+  python main.py --export --out my_file.json        export to a custom path
 
 INDEXER commands:
   python main.py --index --index-new                embed new bids into ChromaDB
@@ -125,6 +133,23 @@ def run_scraper(args: list):
             sys.exit(130)
         except SystemExit:
             os._exit(130)
+
+
+
+# ── EXPORT ────────────────────────────────────────────────────────────────────
+
+def run_export(args: list):
+    from shared.storage import mongo_client as db
+
+    out_path = "output.json"
+    if "--out" in args:
+        idx = args.index("--out")
+        if idx + 1 < len(args):
+            out_path = args[idx + 1]
+
+    db.export_json(out_path)
+    total = db.stats()["total"]
+    print(f"\n✅  Exported {total} records → {out_path}\n")
 
 
 # ── INDEXER ───────────────────────────────────────────────────────────────────
@@ -364,6 +389,10 @@ if __name__ == "__main__":
     elif "--scrape" in args:
         remaining = [a for a in args if a != "--scrape"]
         run_scraper(remaining)
+
+    elif "--export" in args:
+        remaining = [a for a in args if a != "--export"]
+        run_export(remaining)
 
     elif "--index" in args:
         remaining = [a for a in args if a != "--index"]

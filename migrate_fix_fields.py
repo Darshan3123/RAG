@@ -2,145 +2,105 @@
 """
 migrate_fix_fields.py
 ─────────────────────
-Re-parses key fields from full_pdf_text for all existing MongoDB records
-and fixes the 5 data quality issues:
+Cleans up data types and empty-string fields in the bids collection.
 
-  1. category / authority / search_text — re-extract cleanly (no Hindi noise)
-  2. organization_name / office_name    — re-extract with next-line pattern
-  3. city / state                       — re-extract with state-name fallback
-  4. contact_person                     — re-extract from consignee block
-  5. earnest_amount                     — normalize to float
-  6. product_name / sector              — re-classify from clean category
+Changes applied per document:
+  1. quantity          string → int  (e.g. "373809" → 373809)
+  2. earnest_amount    float → int   (root level only; tender_record keeps $numberDecimal)
+  3. estimated_value   "" → None
+  4. corrigendum_url   "" → None
+  5. doc_cost          "" → None
+  6. ra_no             "" → None
+  7. bid_packet_type   "" → None
 
-Run once from the project root:
+Root-level date strings (start_date / end_date / open_date) are kept as DD-MM-YYYY
+strings — changing them would break existing consumers with no benefit.
+
+tender_record.$numberDecimal / $numberLong fields are left untouched — they are
+the raw MongoDB/BSON format used by the downstream indexer and should stay as-is.
+
+Run from the project root:
     python migrate_fix_fields.py
 
-Safe to re-run — all updates use $set.
+Safe to re-run — uses $set only; no data is deleted.
+Pass --dry-run to preview changes without writing.
 """
-import sys, os, re
+import sys, os, argparse
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from shared.storage.mongo_client import _bids
 from shared.utils.logger import get_logger
-from scraper.core.parser import (
-    parse_bid_extended,
-    classify_sector,
-    infer_product_name,
-    clean_text,
-)
 
-log = get_logger("migrate")
+log = get_logger("migrate.fix_fields")
 
-
-def _to_float(val) -> float:
-    import re
-    if val is None or val == "":
-        return 0.0
-    if isinstance(val, (int, float)):
-        return float(val)
-    if isinstance(val, dict):
-        raw = val.get("$numberDecimal", "0") or "0"
-        try:
-            return float(re.sub(r"[,\s]", "", str(raw)))
-        except ValueError:
-            return 0.0
-    try:
-        return float(re.sub(r"[,\s]", "", str(val)))
-    except (ValueError, TypeError):
-        return 0.0
+# Fields that should be None instead of empty string
+_NULLABLE_STR_FIELDS = [
+    "estimated_value",
+    "corrigendum_url",
+    "doc_cost",
+    "ra_no",
+    "bid_packet_type",
+    "contact_email",
+    "contact_phone",
+]
 
 
-def run():
-    col = _bids()
+def run(dry_run: bool = False):
+    col   = _bids()
     total = col.count_documents({})
-    log.info(f"Starting re-parse migration on {total} records...")
+    log.info(f"Total documents: {total} | dry_run={dry_run}")
 
-    updated = 0
-    skipped = 0
-    errors  = 0
+    updated = skipped = 0
 
     for doc in col.find({}, {
         "_id": 1, "bid_no": 1,
-        "full_pdf_text": 1,
-        "document_path": 1,
+        "quantity": 1,
         "earnest_amount": 1,
-        "tender_record": 1,
+        **{f: 1 for f in _NULLABLE_STR_FIELDS},
     }):
-        pdf_text = doc.get("full_pdf_text", "") or ""
-        if not pdf_text.strip():
-            log.warning(f"  No full_pdf_text for {doc.get('bid_no','?')} — skipping")
+        patch = {}
+        bid_no = doc.get("bid_no", "?")
+
+        # 1. quantity: string → int
+        qty = doc.get("quantity")
+        if isinstance(qty, str) and qty.strip():
+            try:
+                clean = qty.replace(",", "").strip()
+                patch["quantity"] = int(float(clean))
+            except ValueError:
+                log.warning(f"  {bid_no}: cannot parse quantity={repr(qty)}")
+        elif qty is None:
+            patch["quantity"] = None
+
+        # 2. earnest_amount: float → int (root level)
+        ea = doc.get("earnest_amount")
+        if isinstance(ea, float):
+            patch["earnest_amount"] = int(ea)
+
+        # 3-7. Empty string fields → None
+        for field in _NULLABLE_STR_FIELDS:
+            val = doc.get(field)
+            if val == "":
+                patch[field] = None
+
+        if not patch:
             skipped += 1
             continue
 
-        try:
-            # Re-parse from the actual PDF file if available (raw text preserves newlines)
-            # Fall back to full_pdf_text from DB if file is gone
-            doc_path = doc.get("document_path", "")
-            if doc_path and os.path.exists(doc_path):
-                from scraper.core.parser import extract_pdf_text
-                raw_text = extract_pdf_text(doc_path)
-            else:
-                # full_pdf_text was stored after clean_text() — newlines collapsed.
-                # Reconstruct approximate newlines by splitting on Hindi label boundaries.
-                raw_text = pdf_text  # best we can do without the file
+        log.info(f"  {bid_no}: {list(patch.keys())}")
 
-            ext = parse_bid_extended(
-                raw_text,
-                pdf_path=doc_path or "",
-            )
-        except Exception as e:
-            log.error(f"  Re-parse failed for {doc.get('bid_no','?')}: {e}")
-            errors += 1
-            continue
-
-        # Normalize earnest_amount: re-parsed string → float
-        raw_emd = ext.get("earnest_amount", "")
-        tr_emd  = (doc.get("tender_record") or {}).get("earnest_amount")
-        emd_float = _to_float(raw_emd) if raw_emd else _to_float(tr_emd)
-
-        patch = {
-            # Clean category / sub_category / search_text
-            "category":          ext.get("category", ""),
-            "sub_category":      ext.get("sub_category", ""),
-            "search_text":       ext.get("search_text", ""),
-            "full_item_name":    ext.get("full_item_name", "") or doc.get("full_item_name", ""),
-            # Clean authority
-            "authority":         ext.get("authority", ""),
-            # Re-classified from clean category
-            "product_name":      ext.get("product_name", ""),
-            "sector":            ext.get("sector", ""),
-            "procurement_type":  ext.get("procurement_type", ""),
-            # Structured org fields
-            "organization_name": ext.get("organization_name", ""),
-            "office_name":       ext.get("office_name", ""),
-            # Location
-            "city":              ext.get("city", ""),
-            "state":             ext.get("state", ""),
-            "address":           ext.get("address", ""),
-            "address_pin":       ext.get("address_pin", ""),
-            # Contact
-            "contact_person":    ext.get("contact_person", ""),
-            "contact_email":     ext.get("contact_email", ""),
-            "contact_phone":     ext.get("contact_phone", ""),
-            # Normalized money
-            "earnest_amount":    emd_float,
-        }
-
-        col.update_one({"_id": doc["_id"]}, {"$set": patch})
+        if not dry_run:
+            col.update_one({"_id": doc["_id"]}, {"$set": patch})
         updated += 1
-        log.info(
-            f"  [{updated}/{total}] {doc.get('bid_no','?')} | "
-            f"city={patch['city']} state={patch['state']} "
-            f"org={patch['organization_name'][:30]} "
-            f"emd={patch['earnest_amount']}"
-        )
 
-    log.info(
-        f"Migration complete — updated: {updated} | "
-        f"skipped (no pdf text): {skipped} | errors: {errors}"
-    )
-    print(f"\n✅  Migration done: {updated} updated | {skipped} skipped | {errors} errors\n")
+    action = "Would update" if dry_run else "Updated"
+    log.info(f"Done — {action}: {updated} | already clean: {skipped}")
+    print(f"\n✅  {action}: {updated} | already clean: {skipped}\n")
 
 
 if __name__ == "__main__":
-    run()
+    parser = argparse.ArgumentParser(description="Fix field types in bids collection")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="Preview changes without writing")
+    args = parser.parse_args()
+    run(dry_run=args.dry_run)
