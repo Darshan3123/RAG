@@ -12,12 +12,14 @@ A production system that scrapes active bids from the [Government e-Marketplace 
 The system is split into three independent modules that communicate through MongoDB:
 
 ```
-GeM Website
-    │
-    ▼
+GeM Website                        External Tender API
+    │                                      │
+    ▼                                      ▼
 ┌─────────────────────────────────────────────────────────┐
 │  scraper/          (any server — no GPU needed)         │
-│  Playwright browser → PDF parser → MongoDB              │
+│  Playwright browser → PDF parser │ API client → parser  │
+│                   ↘              ↙                      │
+│                    MongoDB (Save)                       │
 └─────────────────────────────────────────────────────────┘
               │  writes bids  (is_new=True)
               ▼
@@ -148,6 +150,15 @@ All commands go through the root `main.py`:
 # ── Scraper ──────────────────────────────────────────────
 python main.py --scrape --once          # single scrape run
 python main.py --scrape                 # continuous loop (every 60 min)
+python main.py --scrape --tender-active # fetch open tenders from external API
+python main.py --scrape --tender-results# fetch awarded tenders from API
+python main.py --scrape --tender-file path.json # load tenders from local file
+python main.py --scrape --tender-stats  # tender collection stats
+python main.py --scrape --stats         # MongoDB scraper stats
+
+# ── Export ───────────────────────────────────────────────
+python main.py --export                 # export all bids to output.json
+python main.py --export --out my_file.json # export to a custom path
 
 # ── Indexer ──────────────────────────────────────────────
 python main.py --index --index-new      # embed only new (is_new=True) bids

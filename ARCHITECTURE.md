@@ -52,17 +52,20 @@ gem_scraper/
 ## Data Flow
 
 ```
-GeM Website
-    │
-    ▼
-scraper/core/browser.py          (Playwright, downloads PDFs)
-    │
-    ▼
-scraper/core/parser.py           (extracts 35+ fields from PDF + card HTML)
-    │
-    ▼
-scraper/pipeline/scraper.py
-    │  saves bid dict (is_new=True)
+GeM Website                        External Tender API
+    │                                      │
+    ▼                                      ▼
+scraper/core/browser.py             scraper/pipeline/tender_api_client.py
+(Playwright, downloads PDFs)        (Fetches JSON paginated data)
+    │                                      │
+    ▼                                      ▼
+scraper/core/parser.py              scraper/pipeline/tender_parser.py
+(extracts 35+ fields)               (Normalizes formats)
+    │                                      │
+    ▼                                      ▼
+scraper/pipeline/scraper.py         scraper/pipeline/tender_pipeline.py
+    │                                      │
+    └─── saves bid dict (is_new=True) ─────┘
     ▼
 MongoDB  ←────────────────────── shared/storage/mongo_client.py
     │
@@ -121,8 +124,16 @@ cp .env.example .env   # fill in MONGO_URI
 pip install -r requirements.txt
 playwright install chromium
 
-python main.py --once          # single run
-python main.py                 # continuous loop
+# Scrape GeM Portal
+python ../main.py --scrape --once          # single run
+python ../main.py --scrape                 # continuous loop
+
+# Scrape Tender API
+python ../main.py --scrape --tender-active
+python ../main.py --scrape --tender-results
+
+# Export
+python ../main.py --export                 # exports bids to output.json
 ```
 
 ### Machine 2 — Indexer (GPU server)
