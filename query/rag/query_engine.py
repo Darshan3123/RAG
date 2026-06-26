@@ -4,8 +4,8 @@
 from __future__ import annotations
 import re
 from query.rag.vector_store import search, stats as vs_stats
-from query.rag.llm import call_llm, _extract_item
-from shared.config.settings import RAG_TOP_K, RAG_LLM_PROVIDER
+from query.rag.llm import call_llm, call_llm_direct, _extract_item
+from shared.config.settings import RAG_TOP_K, RAG_LLM_PROVIDER, CHROMA_PRODUCTS_COLLECTION, CHROMA_SERVICES_COLLECTION
 from shared.utils.logger import get_logger
 
 log = get_logger("query_engine")
@@ -128,7 +128,7 @@ def _smart_top_k(question: str, default_k: int) -> int:
     if _LIST_INTENT.search(question):
         return max(default_k, 15)
     if _FOCUSED_INTENT.search(question):
-        return max(1, default_k // 2)
+        return max(default_k, 15)
     return default_k
 
 
@@ -146,6 +146,23 @@ def _enrich_query(question: str, filters: dict | None) -> str:
 def is_exit(text: str) -> bool:
     return text.strip().lower() in EXIT_WORDS
 
+
+
+def _detect_target_collection(question: str) -> str:
+    if _FOCUSED_INTENT.search(question):
+        log.info("AI Router Intent: BOTH (Focused Query Bypass)")
+        return "BOTH"
+
+    system = "You are a router. Reply with exactly one word: PRODUCT, SERVICE, or BOTH. Determine if the user's question is about products (goods, electronics, vehicles), services (cleaning, outsourcing, maintenance, manpower), or both/unclear."
+    intent = call_llm_direct(question, system).strip().upper()
+    log.info(f"AI Router Intent: {intent}")
+    
+    # Check exact word matches to avoid misrouting on verbose responses
+    if "PRODUCT" in intent and "SERVICE" not in intent:
+        return CHROMA_PRODUCTS_COLLECTION
+    elif "SERVICE" in intent and "PRODUCT" not in intent:
+        return CHROMA_SERVICES_COLLECTION
+    return "BOTH"
 
 class QueryEngine:
 
@@ -174,8 +191,15 @@ class QueryEngine:
         else:
             log.info(f"Query: '{question}' | filters=None | k={k}")
 
-        chunks = search(enriched, top_k=k, filters=filters)
-        log.info(f"Retrieved {len(chunks)} unique bids")
+        target_col = _detect_target_collection(question)
+        if target_col == "BOTH":
+            chunks_prod = search(enriched, top_k=k, filters=filters, collection_name=CHROMA_PRODUCTS_COLLECTION)
+            chunks_serv = search(enriched, top_k=k, filters=filters, collection_name=CHROMA_SERVICES_COLLECTION)
+            # Combine and sort by rerank_score (search already ranks them)
+            chunks = sorted(chunks_prod + chunks_serv, key=lambda x: x.get("rerank_score", 0), reverse=True)[:k]
+        else:
+            chunks = search(enriched, top_k=k, filters=filters, collection_name=target_col)
+        log.info(f"Retrieved {len(chunks)} unique bids from {target_col}")
 
         if not chunks:
             return {
@@ -223,11 +247,14 @@ class QueryEngine:
     ) -> list[dict]:
         filters = _auto_detect_filters(query, filters)
         enriched = _enrich_query(query, filters)
-        results = search(
-            enriched,
-            top_k=top_k or _smart_top_k(query, self.top_k),
-            filters=filters,
-        )
+        k = top_k or _smart_top_k(query, self.top_k)
+        target_col = _detect_target_collection(query)
+        if target_col == "BOTH":
+            chunks_prod = search(enriched, top_k=k, filters=filters, collection_name=CHROMA_PRODUCTS_COLLECTION)
+            chunks_serv = search(enriched, top_k=k, filters=filters, collection_name=CHROMA_SERVICES_COLLECTION)
+            results = sorted(chunks_prod + chunks_serv, key=lambda x: x.get("rerank_score", 0), reverse=True)[:k]
+        else:
+            results = search(enriched, top_k=k, filters=filters, collection_name=target_col)
         for r in results:
             r["full_item_name"] = _extract_item(
                 r.get("chunk", ""),

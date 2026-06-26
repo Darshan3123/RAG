@@ -107,7 +107,7 @@ def scrape_bid_type(
                     try:
                         parsed        = parse_bid_data(pdf_text)
                         extended      = parse_bid_extended(pdf_text, pdf_path=pdf_path)
-                        pdf_intel     = extract_pdf_intelligence(pdf_text)
+                        pdf_intel     = extract_pdf_intelligence(pdf_text, card_data["product_type"])
                     except Exception as parse_err:
                         log.error(f"  Card {i+1}: parse error — {parse_err}", exc_info=True)
                         stats["errors"] += 1

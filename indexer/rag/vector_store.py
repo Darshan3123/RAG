@@ -6,32 +6,36 @@
 from __future__ import annotations
 import chromadb
 from chromadb.config import Settings as ChromaSettings
-from shared.config.settings import CHROMA_DIR, CHROMA_COLLECTION
+from shared.config.settings import CHROMA_DIR, CHROMA_PRODUCTS_COLLECTION, CHROMA_SERVICES_COLLECTION
 from shared.rag.embedder import build_bid_chunks, embed_texts
 from shared.utils.logger import get_logger
 
 log = get_logger("vector_store")
 
 _client     = None
-_collection = None
+_collections = {}
 
 
-def _get_collection():
-    global _client, _collection
-    if _collection is None:
+def _get_collection(product_type: str = "Product"):
+    global _client, _collections
+    if _client is None:
         _client = chromadb.PersistentClient(
             path=CHROMA_DIR,
             settings=ChromaSettings(anonymized_telemetry=False),
         )
-        _collection = _client.get_or_create_collection(
-            name=CHROMA_COLLECTION,
+    
+    col_name = CHROMA_PRODUCTS_COLLECTION if "Product" in product_type else CHROMA_SERVICES_COLLECTION
+
+    if col_name not in _collections:
+        _collections[col_name] = _client.get_or_create_collection(
+            name=col_name,
             metadata={"hnsw:space": "cosine"},
         )
         log.info(
-            f"ChromaDB ready — collection '{CHROMA_COLLECTION}' "
-            f"({_collection.count()} chunks)"
+            f"ChromaDB ready — collection '{col_name}' "
+            f"({_collections[col_name].count()} chunks)"
         )
-    return _collection
+    return _collections[col_name]
 
 
 def _delete_bid_chunks(col, bid_no: str):
@@ -46,9 +50,10 @@ def _delete_bid_chunks(col, bid_no: str):
 # ---------------------------------------------------------
 def upsert_bid(bid: dict):
     bid_no = bid.get("bid_no") or bid.get("document_url", "unknown")
-    log.info(f"  Indexing: {bid_no}")
+    product_type = bid.get("product_type", "") or bid.get("product_name", "")
+    log.info(f"  Indexing: {bid_no} to {product_type}")
 
-    col    = _get_collection()
+    col    = _get_collection(product_type)
     chunks = build_bid_chunks(bid)
     if not chunks:
         log.warning(f"  No chunks for {bid_no} — skipping")
@@ -116,9 +121,9 @@ def reindex_all(bids: list[dict]):
 # STATS
 # ---------------------------------------------------------
 def stats() -> dict:
-    col = _get_collection()
     return {
-        "collection":   CHROMA_COLLECTION,
-        "total_chunks": col.count(),
+        "collections":  [CHROMA_PRODUCTS_COLLECTION, CHROMA_SERVICES_COLLECTION],
         "chroma_dir":   CHROMA_DIR,
+        "product_chunks": _get_collection("Product").count(),
+        "service_chunks": _get_collection("Service").count(),
     }

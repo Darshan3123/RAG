@@ -23,28 +23,15 @@ log = get_logger("llm")
 
 MAX_BIDS_IN_PROMPT = 8
 
-SYSTEM_PROMPT = """You are an assistant for the Indian Government e-Marketplace (GeM) bid database.
+SYSTEM_PROMPT = """You are an intelligent, conversational assistant for the Indian Government e-Marketplace (GeM) bid database.
 
-# Hard rules
-1. Use ONLY the bids listed under RETRIEVED BID CONTEXT. Never invent values.
-2. If a field is empty or missing, write `N/A`.
-3. If RETRIEVED BID CONTEXT is empty, answer exactly:
-   "No matching bids were found in the indexed data."
-4. Filter the listed bids to only those that *truly* answer the
-   USER QUESTION (e.g. if asked about pumps, do not include
-   tungsten-ball bids even if they are in the context).
-
-# Output format (one bid per block, blank line between blocks)
-Bid No    : <bid_no>
-Item      : <full_item_name>
-Dept      : <department>
-Type      : <bid_type> / <product_type>
-End Date  : <end_date>
-Est. Value: <estimated_value> INR
-URL       : <document_url>
-
-After the list, write ONE short summary sentence describing
-how many bids matched and any common theme. Never add anything else.
+# Instructions:
+1. Act like a helpful AI (like ChatGPT). Speak naturally and conversationally.
+2. The user will ask a question, and you will be provided with a list of retrieved bids in the RETRIEVED BID CONTEXT.
+3. Your goal is to summarize the matching bids naturally in a readable, well-formatted response. You can use bullet points, bold text, and neat spacing to make the data easy to read.
+4. ALWAYS include the 'Bid No' and 'URL' so the user knows where to find the bid.
+5. If the user asks a specific question (e.g., "what is the most expensive one?"), answer that question directly using the context.
+6. ONLY use the information provided in the context. Do not invent or hallucinate data. If the context is empty, politely inform the user that no matching bids were found.
 """
 
 
@@ -69,6 +56,20 @@ def _extract_item(chunk_text: str, metadata_item: str) -> str:
     return "N/A"
 
 
+def _extract_required_docs(chunk_text: str) -> str:
+    """Extract required documents list from raw text if present."""
+    if not chunk_text:
+        return "N/A"
+    pat = r"Document required from seller\s*(.*?)(?:\*In case|क्या आप|Do you want|$)"
+    m = re.search(pat, chunk_text, re.IGNORECASE | re.DOTALL)
+    if m:
+        val = m.group(1).strip()
+        val = re.sub(r"\s+", " ", val)
+        if len(val) > 2 and len(val) < 1000:
+            return val
+    return "N/A"
+
+
 def build_prompt(question: str, chunks: list[dict]) -> str:
     if not chunks:
         return (
@@ -80,7 +81,11 @@ def build_prompt(question: str, chunks: list[dict]) -> str:
     parts = []
 
     for c in capped:
-        item = _extract_item(c.get("chunk", ""), c.get("full_item_name", ""))
+        raw_text = c.get("chunk", "")
+        item = _extract_item(raw_text, c.get("full_item_name", ""))
+        req_docs = _extract_required_docs(raw_text)
+        chunk_text = raw_text.replace('\n', ' ')[:1000]
+        
         block = (
             f"Bid No    : {c.get('bid_no', 'N/A')}\n"
             f"Item      : {item}\n"
@@ -90,7 +95,9 @@ def build_prompt(question: str, chunks: list[dict]) -> str:
             f"Start Date: {c.get('start_date') or 'N/A'}\n"
             f"End Date  : {c.get('end_date') or 'N/A'}\n"
             f"Est. Value: {c.get('estimated_value') or 'N/A'}\n"
-            f"URL       : {c.get('document_url', 'N/A')}"
+            f"URL       : {c.get('document_url', 'N/A')}\n"
+            f"Req. Docs : {req_docs}\n"
+            f"Text Snippet: {chunk_text}"
         )
         parts.append(f"--- BID ---\n{block}")
 
@@ -148,7 +155,7 @@ def _call_ollama(prompt: str) -> str:
         resp = requests.post(
             f"{OLLAMA_BASE_URL}/api/generate",
             json=payload,
-            timeout=120,
+            timeout=300,
         )
         resp.raise_for_status()
         return resp.json().get("response", "").strip()
@@ -197,3 +204,45 @@ def _format_retrieval_only(question: str, chunks: list[dict]) -> str:
         )
     lines.append("\n" + "─" * 70)
     return "\n".join(lines)
+
+def call_llm_direct(prompt: str, system: str) -> str:
+    provider = (RAG_LLM_PROVIDER or "").lower().strip()
+    if provider == "openai":
+        try:
+            from openai import OpenAI
+            client = OpenAI(api_key=OPENAI_API_KEY)
+            resp = client.chat.completions.create(
+                model=OPENAI_MODEL,
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user",   "content": prompt},
+                ],
+                temperature=0.0,
+                max_tokens=50,
+            )
+            return resp.choices[0].message.content.strip()
+        except Exception:
+            return ""
+    elif provider == "ollama":
+        try:
+            import requests
+            payload = {
+                "model":  OLLAMA_MODEL,
+                "system": system,
+                "prompt": prompt,
+                "stream": False,
+                "options": {
+                    "temperature": 0.0,
+                    "num_predict": 50,
+                },
+            }
+            resp = requests.post(
+                f"{OLLAMA_BASE_URL}/api/generate",
+                json=payload,
+                timeout=10,
+            )
+            resp.raise_for_status()
+            return resp.json().get("response", "").strip()
+        except Exception:
+            return ""
+    return ""

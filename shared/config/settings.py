@@ -91,17 +91,22 @@ VIEWPORTS = [
 GEM_BASE_URL = _str("GEM_BASE_URL", "https://bidplus.gem.gov.in")
 GEM_ALL_BIDS = f"{GEM_BASE_URL}/all-bids"
 
-BID_TYPES = [
-    "Product Bid/RAs",
-    "Service Bid/RAs",
-    "Bid To RAs",
-    "Product Custom Bid/RAs",
-    "BOQ Bids",
-    "Rate Contract Bids",
-    "Global Tender",
-    "Limited Tender",
-    "Single Tender",
-]
+env_bid_types = _str("BID_TYPE_TO_EXTRACT", "")
+
+if env_bid_types:
+    BID_TYPES = [b.strip() for b in env_bid_types.split(",") if b.strip()]
+else:
+    BID_TYPES = [
+        "Product Bid/RAs",
+        "Service Bid/RAs",
+        "Bid To RAs",
+        "Product Custom Bid/RAs",
+        "BOQ Bids",
+        "Rate Contract Bids",
+        "Global Tender",
+        "Limited Tender",
+        "Single Tender",
+    ]
 
 TARGET_PER_TYPE = _int("TARGET_PER_TYPE", 10)
 MAX_EMPTY_PAGES = _int("MAX_EMPTY_PAGES", 5)
@@ -142,7 +147,8 @@ TESSERACT_CMD = _str(
 # ---------------------------------------------------------
 RAG_EMBEDDING_MODEL = _str("RAG_EMBEDDING_MODEL", "BAAI/bge-base-en-v1.5")
 CHROMA_DIR          = _path("CHROMA_DIR", "storage/chroma_db")
-CHROMA_COLLECTION   = _str("CHROMA_COLLECTION", "gem_bids")
+CHROMA_PRODUCTS_COLLECTION = _str("CHROMA_PRODUCTS_COLLECTION", "gem_products")
+CHROMA_SERVICES_COLLECTION = _str("CHROMA_SERVICES_COLLECTION", "gem_services")
 RAG_TOP_K           = _int("RAG_TOP_K", 5)
 RAG_CHUNK_SIZE      = _int("RAG_CHUNK_SIZE", 800)
 RAG_CHUNK_OVERLAP   = _int("RAG_CHUNK_OVERLAP", 100)

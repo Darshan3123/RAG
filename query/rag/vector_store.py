@@ -8,7 +8,7 @@ import math
 import chromadb
 from chromadb.config import Settings as ChromaSettings
 from shared.config.settings import (
-    CHROMA_DIR, CHROMA_COLLECTION, RAG_TOP_K,
+    CHROMA_DIR, CHROMA_PRODUCTS_COLLECTION, CHROMA_SERVICES_COLLECTION, RAG_TOP_K,
     RAG_FETCH_K, RAG_DENSE_WEIGHT, RAG_BM25_WEIGHT,
     RAG_USE_RERANKER, RAG_RERANKER_MODEL,
 )
@@ -23,36 +23,37 @@ _DENSE_WEIGHT    = RAG_DENSE_WEIGHT   # default 0.6 → used as fraction of non-
 _BM25_WEIGHT     = RAG_BM25_WEIGHT    # default 0.4 → used as fraction of non-reranker weight
 
 _client     = None
-_collection = None
-_bm25_index = None
-_bm25_docs  = None
+_collections = {}
+_bm25_indexes = {}
+_bm25_docs  = {}
 _reranker   = None
 
 
-def _get_collection():
-    global _client, _collection
-    if _collection is None:
+def _get_collection(collection_name: str):
+    global _client, _collections
+    if _client is None:
         _client = chromadb.PersistentClient(
             path=CHROMA_DIR,
             settings=ChromaSettings(anonymized_telemetry=False),
         )
-        _collection = _client.get_or_create_collection(
-            name=CHROMA_COLLECTION,
+    if collection_name not in _collections:
+        _collections[collection_name] = _client.get_or_create_collection(
+            name=collection_name,
             metadata={"hnsw:space": "cosine"},
         )
         log.info(
-            f"ChromaDB ready — collection '{CHROMA_COLLECTION}' "
-            f"({_collection.count()} chunks)"
+            f"ChromaDB ready — collection '{collection_name}' "
+            f"({_collections[collection_name].count()} chunks)"
         )
-    return _collection
+    return _collections[collection_name]
 
 
-def _get_bm25():
-    global _bm25_index, _bm25_docs
-    if _bm25_index is not None:
-        return _bm25_index, _bm25_docs
+def _get_bm25(collection_name: str):
+    global _bm25_indexes, _bm25_docs
+    if collection_name in _bm25_indexes:
+        return _bm25_indexes[collection_name], _bm25_docs[collection_name]
 
-    col   = _get_collection()
+    col   = _get_collection(collection_name)
     total = col.count()
     if total == 0:
         return None, []
@@ -88,15 +89,15 @@ def _get_bm25():
 
     try:
         from rank_bm25 import BM25Okapi
-        _bm25_index = BM25Okapi(corpus)
-        _bm25_docs  = doc_records
+        _bm25_indexes[collection_name] = BM25Okapi(corpus)
+        _bm25_docs[collection_name]  = doc_records
         log.info(f"BM25 index ready ({total} chunks).")
     except ImportError:
         log.warning("rank_bm25 not installed — pip install rank-bm25")
-        _bm25_index = None
-        _bm25_docs  = []
+        _bm25_indexes[collection_name] = None
+        _bm25_docs[collection_name]  = []
 
-    return _bm25_index, _bm25_docs
+    return _bm25_indexes[collection_name], _bm25_docs[collection_name]
 
 
 def _get_reranker():
@@ -141,8 +142,11 @@ def search(
     query: str,
     top_k: int = RAG_TOP_K,
     filters: dict | None = None,
+    collection_name: str = None,
 ) -> list[dict]:
-    col   = _get_collection()
+    if not collection_name:
+        collection_name = CHROMA_PRODUCTS_COLLECTION
+    col   = _get_collection(collection_name)
     total = col.count()
     if total == 0:
         log.warning("Vector store empty — run indexer: python main.py --index-new")
@@ -176,7 +180,7 @@ def search(
         dense_ranking.append(cid)
 
     bm25_ranking = []
-    bm25_idx, bm25_docs_list = _get_bm25()
+    bm25_idx, bm25_docs_list = _get_bm25(collection_name)
     if bm25_idx is not None:
         try:
             tokens = query.lower().split()
@@ -278,8 +282,8 @@ def search(
         final = rerank_sc
 
         # Drop results the reranker says are not relevant.
-        # Lower threshold with filters (more precise queries get more benefit of the doubt).
-        rerank_cutoff = 0.50 if filters else 0.55
+        # We lowered the threshold to 0.40 to be more forgiving for semantic matches
+        rerank_cutoff = 0.40 if filters else 0.45
         if rerank_sc < rerank_cutoff:
             continue
 
@@ -322,9 +326,9 @@ def search(
 
 
 def stats() -> dict:
-    col = _get_collection()
     return {
-        "collection":   CHROMA_COLLECTION,
-        "total_chunks": col.count(),
+        "collections":  [CHROMA_PRODUCTS_COLLECTION, CHROMA_SERVICES_COLLECTION],
         "chroma_dir":   CHROMA_DIR,
+        "product_chunks": _get_collection(CHROMA_PRODUCTS_COLLECTION).count(),
+        "service_chunks": _get_collection(CHROMA_SERVICES_COLLECTION).count(),
     }

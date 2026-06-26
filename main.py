@@ -167,8 +167,9 @@ def run_indexer(args: list):
             print(f"\n{'='*42}\n  Indexer — Stats\n{'='*42}")
             print(f"  MongoDB total bids    : {s['total']}")
             print(f"  Unindexed (is_new)    : {s['new_this_run']}")
-            print(f"  ChromaDB chunks       : {vs['total_chunks']}")
-            print(f"  ChromaDB collection   : {vs['collection']}")
+            print(f"  ChromaDB product chunks : {vs['product_chunks']}")
+            print(f"  ChromaDB service chunks : {vs['service_chunks']}")
+            print(f"  ChromaDB collections  : {', '.join(vs['collections'])}")
             print(f"  ChromaDB path         : {vs['chroma_dir']}")
             print(f"{'='*42}\n")
 
@@ -226,9 +227,9 @@ def run_query(args: list):
     log = get_logger("main.query")
 
     def _print_answer(result: dict):
-        print("\n" + "─" * 62)
+        print("\n" + "-" * 62)
         print(result["answer"])
-        print(f"\n── Sources ({len(result['sources'])} unique bids) ──")
+        print(f"\n-- Sources ({len(result['sources'])} unique bids) --")
         for s in result["sources"]:
             meta = " | ".join(filter(None, [s.get("sector",""), s.get("state",""), s.get("status","")]))
             print(
@@ -237,7 +238,7 @@ def run_query(args: list):
                 f"Score: {s['relevance_score']:.2%}"
                 + (f"  [{meta}]" if meta else "")
             )
-        print("─" * 62 + "\n")
+        print("-" * 62 + "\n")
 
     try:
         if "--stats" in args:
