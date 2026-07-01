@@ -217,10 +217,11 @@ class GemBrowser:
         except Exception as e:
             log.debug(f"wait_for_cards: {e}")
 
-    def extract_card_links(self, card) -> tuple[str, str]:
+    def extract_card_links(self, card) -> tuple[str, str, str]:
         from shared.config.settings import GEM_BASE_URL
         document_url    = ""
         corrigendum_url = ""
+        ra_url          = ""
         links = card.locator("a")
         for j in range(links.count()):
             try:
@@ -232,6 +233,8 @@ class GemBrowser:
                     document_url = GEM_BASE_URL + "/" + href.lstrip("/")
                 if "corrigendum" in link_text.lower():
                     corrigendum_url = GEM_BASE_URL + "/" + href.lstrip("/")
+                if "showradocument" in href.lower():
+                    ra_url = GEM_BASE_URL + "/" + href.lstrip("/")
             except Exception:
                 pass
-        return document_url, corrigendum_url
+        return document_url, corrigendum_url, ra_url

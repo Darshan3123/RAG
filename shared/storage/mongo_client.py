@@ -41,7 +41,7 @@ def _db():
 def _bids():
     col = _db()[MONGO_BIDS_COLL]
     # Ensure indexes exist (idempotent)
-    col.create_index("document_url", unique=True)
+    col.create_index("card.bid_pdf_url", unique=True)
     col.create_index("is_new")
     col.create_index("first_seen")
     return col
@@ -57,16 +57,17 @@ def _runs():
 # Returns True if this is a NEW bid.
 # Note: no RAG call here — the indexer handles that.
 # ---------------------------------------------------------
-def upsert(bid: dict, tender_record: dict | None = None) -> bool:
+def upsert(doc: dict) -> bool:
     now = datetime.utcnow().isoformat()
     col = _bids()
 
-    existing = col.find_one({"document_url": bid["document_url"]}, {"_id": 1})
-    is_new = existing is None
+    doc_url = doc.get("card", {}).get("bid_pdf_url")
+    if not doc_url:
+        log.error("Upsert failed: Document has no card.bid_pdf_url")
+        return False
 
-    doc = {**bid}
-    if tender_record:
-        doc["tender_record"] = tender_record
+    existing = col.find_one({"card.bid_pdf_url": doc_url}, {"_id": 1})
+    is_new = existing is None
 
     if is_new:
         doc["first_seen"] = now
@@ -74,25 +75,22 @@ def upsert(bid: dict, tender_record: dict | None = None) -> bool:
         doc["is_new"]     = True
         try:
             col.insert_one(doc)
-            log.info(f"  NEW BID saved: {bid.get('bid_no', 'unknown')}")
+            log.info(f"  NEW BID saved: {doc.get('bid', {}).get('bid_no', 'unknown')}")
         except Exception as e:
-            log.error(f"  Insert failed for {bid.get('bid_no')}: {e}")
+            log.error(f"  Insert failed for {doc.get('bid', {}).get('bid_no')}: {e}")
             return False
     else:
         update_fields = {
-            "last_seen":        now,
-            "is_new":           False,
-            "ra_no":            bid.get("ra_no", ""),
-            "corrigendum_url":  bid.get("corrigendum_url", ""),
-            "tender_status":    bid.get("tender_status", "OPEN"),
+            "last_seen": now,
+            "is_new": False,
         }
-        # Carry forward pdf_intelligence if re-scraped
-        if bid.get("pdf_intelligence"):
-            update_fields["pdf_intelligence"] = bid["pdf_intelligence"]
-        if tender_record:
-            update_fields["tender_record"] = tender_record
+        # Update the entire document on re-scrape but preserve metadata
+        for k, v in doc.items():
+            if k not in ["_id", "first_seen", "last_seen", "is_new"]:
+                update_fields[k] = v
+                
         col.update_one(
-            {"document_url": bid["document_url"]},
+            {"card.bid_pdf_url": doc_url},
             {"$set": update_fields},
         )
 
@@ -115,7 +113,7 @@ def mark_bids_indexed(document_urls: list[str]):
     if not document_urls:
         return
     result = _bids().update_many(
-        {"document_url": {"$in": document_urls}},
+        {"card.bid_pdf_url": {"$in": document_urls}},
         {"$set": {"is_new": False}}
     )
     log.info(f"Marked {result.modified_count} bids as indexed")
@@ -140,7 +138,7 @@ def get_all(projection: dict | None = None) -> list[dict]:
 # EXISTS CHECK
 # ---------------------------------------------------------
 def exists(document_url: str) -> bool:
-    return _bids().count_documents({"document_url": document_url}, limit=1) > 0
+    return _bids().count_documents({"card.bid_pdf_url": document_url}, limit=1) > 0
 
 
 # ---------------------------------------------------------

@@ -83,61 +83,147 @@ def _doc_urls(s3_list: list) -> list[str]:
 
 
 # =========================================================
-# UNIFIED SCHEMA
-# Both formats map to this same dict structure so the
-# rest of the pipeline (database, RAG) doesn't care which
-# format the API returned.
+# UNIFIED NESTED SCHEMA
+# Both API formats map to the same base structure so the
+# rest of the pipeline doesn't care which format it returned.
+# (API data lacks full PDF intelligence, so many fields stay empty)
 # =========================================================
-UNIFIED_FIELDS = [
-    "tender_id",          # internal API id
-    "tender_no",          # official tender number
-    "tender_reference_id",# GEM bid no or state portal ref
-    "status",             # OPEN | AOC | CLOSED
-    "platform",           # GEM | eProcure | etc.
-    "source_name",        # Gem | Maharashtra Tenders Portal | etc.
-    "source_url",         # procurement_source / ref_url
-    "tender_type",        # Open Tender | Limited | etc.
-    "procurement_type",   # Services | Goods | Works
-    "bidding_type",       # Tender | Goods | Services
-    "competition_type",   # NCB | ICB | etc.
-    "category",           # Paper And Printing Services
-    "sub_category",       # Printing Related Service
-    "product_name",       # Printing Work
-    "sector",             # Public Administrative Department
-    "authority",          # Issuing organization
-    "ownership",          # Government Departments | PSU | etc.
-    "city",
-    "state",
-    "country",
-    "address",
-    "address_pin",
-    "contact_person",
-    "contact_email",
-    "contact_phone",
-    "tender_summary",     # short description
-    "work_desc",          # full description
-    "search_text",        # categories/keywords
-    "tender_value",       # estimated value INR
-    "doc_cost",           # document cost INR
-    "earnest_amount",     # EMD INR
-    "pub_date",           # published date
-    "enter_date",         # entered in system
-    "due_date",           # submission deadline
-    "open_date",          # bid opening date
-    "is_corrigendum",
-    "document_urls",      # list of PDF download URLs
-    # ── Result-only fields (AOC) ──────────────────────────
-    "contract_date",      # award date
-    "contract_value",     # actual awarded amount INR
-    "completion_date",    # contract duration
-    "winner_name",        # winning bidder name
-    "winner_bid",         # winning bid amount
-    "all_bidders",        # list of all bidders with amounts
-]
-
 
 def _empty_record() -> dict:
-    return {f: "" for f in UNIFIED_FIELDS}
+    return {
+        "bid": {
+            "bid_no": "",
+            "ra_no": "",
+            "bid_type": "",
+            "product_type": "",
+            "base_type": "",
+            "process_kind": ""
+        },
+        "card": {
+            "items": [],
+            "departments": [],
+            "start_datetime": "",
+            "end_datetime": "",
+            "bid_pdf_url": "",
+            "ra_pdf_url": ""
+        },
+        "pdf": {
+            "timing": {
+                "bid_end_datetime": "",
+                "bid_opening_datetime": "",
+                "bid_offer_validity_days": None
+            },
+            "departments": [],
+            "items": [],
+            "documents": {
+                "required_from_seller": [],
+                "show_uploaded_docs_to_all_bidders": False,
+                "attachments": []
+            },
+            "consignees": [],
+            "relaxations": {
+                "mse_relaxation_experience_turnover": False,
+                "startup_relaxation_experience_turnover": False
+            },
+            "auto_extension": {
+                "min_bids_to_disable_extension": None,
+                "auto_extend_days": None,
+                "auto_extension_count": None
+            },
+            "ra": {
+                "bid_to_ra_enabled": False,
+                "ra_qualification_rule": "",
+                "ra_start_datetime": "",
+                "ra_end_datetime": "",
+                "auto_extension": {
+                    "enabled": False,
+                    "window_minutes": 15
+                },
+                "mse_relaxation_experience_turnover": False,
+                "startup_relaxation_experience_turnover": False
+            },
+            "bid_type": {
+                "type_of_bid": "",
+                "technical_clarification_window_days": None
+            },
+            "inspection": {
+                "inspection_required": False,
+                "inspection_agency_type": ""
+            },
+            "evaluation": {
+                "evaluation_method": "",
+                "schedules": []
+            },
+            "clauses": {
+                "arbitration_clause": False,
+                "mediation_clause": False
+            },
+            "mii": {
+                "mii_purchase_preference": False,
+                "mii_price_band_percent": None,
+                "mii_max_quantity_percent": None,
+                "allow_only_class_1_2_local_suppliers": False
+            },
+            "mse": {
+                "mse_purchase_preference": False,
+                "mse_price_band_percent": None,
+                "mse_max_quantity_percent": None
+            },
+            "financials": {
+                "emd": {
+                    "required": False,
+                    "advisory_bank": None,
+                    "amount_total": 0,
+                    "schedule_breakup": []
+                },
+                "epbg": {
+                    "required": False,
+                    "advisory_bank": None,
+                    "percent": None,
+                    "duration_months": None
+                },
+                "emd_exemption_text": ""
+            },
+            "terms": {
+                "special_terms_version": "",
+                "special_terms_text": "",
+                "buyer_atc": {
+                    "generic": "",
+                    "items": [],
+                    "hard_requirements": [],
+                    "info_clauses": []
+                },
+                "disclaimer": ""
+            }
+        },
+        "normalized": {
+            "status": "OPEN",
+            "tender_id": "",
+            "source": "",
+            "tender_value": "",
+            "doc_cost": "",
+            "platform": "",
+            "pub_date": ""
+        },
+        "validation": {
+            "issues": []
+        },
+        "full_pdf_text": ""
+    }
+
+
+def _try_float(val) -> float | None:
+    try:
+        if isinstance(val, dict):
+            return float(val.get("$numberDecimal", 0))
+        return float(val) if val else None
+    except Exception:
+        return None
+
+
+def _get_api_datetime(val) -> str:
+    """Format an API date cleanly to DD-MM-YYYY HH:MM:SS"""
+    return _ts_to_str(val)
 
 
 # =========================================================
@@ -145,50 +231,75 @@ def _empty_record() -> dict:
 # =========================================================
 def parse_active_tender(raw: dict) -> dict:
     rec = _empty_record()
-    rec["tender_id"]           = raw.get("tender_id", "")
-    rec["tender_no"]           = raw.get("tender_no", "")
-    rec["tender_reference_id"] = raw.get("tender_reference_id", "")
-    rec["status"]              = raw.get("tender_status", "OPEN")
-    rec["platform"]            = ", ".join(raw.get("platforms", []))
-    rec["source_name"]         = raw.get("procurement_source_name", "")
-    rec["source_url"]          = raw.get("procurement_source", "")
-    rec["tender_type"]         = raw.get("tender_type", "")
-    rec["procurement_type"]    = raw.get("procurement_type", "")
-    rec["bidding_type"]        = raw.get("bidding_type", "")
-    rec["competition_type"]    = raw.get("competition_type", "")
-    rec["category"]            = raw.get("category", "")
-    rec["sub_category"]        = raw.get("sub_category", "")
-    rec["product_name"]        = raw.get("product_name", "")
-    rec["sector"]              = raw.get("sector", "")
-    rec["authority"]           = raw.get("authority", "")
-    rec["ownership"]           = raw.get("ownership", "")
-    rec["city"]                = raw.get("city", "")
-    rec["state"]               = raw.get("state", "")
-    rec["country"]             = raw.get("country", "India")
-    rec["address"]             = raw.get("address", "")
-    rec["address_pin"]         = raw.get("address_pin", "")
-    rec["contact_person"]      = raw.get("contact_person", "")
-    rec["contact_email"]       = raw.get("contact_email", "")
-    rec["contact_phone"]       = raw.get("contact_phone", "")
-    rec["tender_summary"]      = raw.get("tender_summary", "")
-    rec["work_desc"]           = raw.get("work_desc", "")
-    rec["search_text"]         = raw.get("search_text", "")
-    rec["is_corrigendum"]      = str(raw.get("is_corrigendum", False))
+    
+    bid_no = raw.get("tender_no", "")
+    rec["bid"]["bid_no"] = bid_no
+    rec["bid"]["bid_type"] = raw.get("tender_type", "")
+    rec["bid"]["product_type"] = raw.get("procurement_type", "")
+    pt_lower = rec["bid"]["product_type"].lower()
+    rec["bid"]["base_type"] = "PRODUCT" if "good" in pt_lower or "product" in pt_lower else "SERVICE" if "service" in pt_lower else "CUSTOM"
+    rec["bid"]["process_kind"] = "CATALOGUE"
+    
+    # Card level
+    rec["card"]["start_datetime"] = _get_api_datetime(raw.get("pub_date"))
+    rec["card"]["end_datetime"] = _get_api_datetime(raw.get("due_date"))
+    
+    # Single item from summary
+    if raw.get("product_name"):
+        rec["card"]["items"].append({
+            "name": raw.get("product_name", ""),
+            "quantity": None
+        })
+        rec["pdf"]["items"].append({
+            "schedule_no": 1,
+            "item_category": raw.get("category", "") + " - " + raw.get("sub_category", ""),
+            "quantity": None
+        })
+        
+    # Department
+    dept = {
+        "ministry_state_name": raw.get("state", ""),
+        "department_name": raw.get("authority", ""),
+        "organisation_name": raw.get("ownership", ""),
+        "office_name": raw.get("city", "")
+    }
+    rec["pdf"]["departments"].append(dept)
+    
+    # Consignee fallback
+    rec["pdf"]["consignees"].append({
+        "consignee_name": raw.get("contact_person", ""),
+        "address_raw": raw.get("address", ""),
+        "pincode": raw.get("address_pin", ""),
+        "city": raw.get("city", ""),
+        "state": raw.get("state", ""),
+        "quantity": None,
+        "delivery_days": None
+    })
+    
+    # Timing
+    rec["pdf"]["timing"]["bid_end_datetime"] = rec["card"]["end_datetime"]
+    rec["pdf"]["timing"]["bid_opening_datetime"] = _get_api_datetime(raw.get("open_date"))
+    
+    # Financials
+    emd_amt = _try_float(raw.get("earnest_amount", 0))
+    if emd_amt and emd_amt > 0:
+        rec["pdf"]["financials"]["emd"]["required"] = True
+        rec["pdf"]["financials"]["emd"]["amount_total"] = emd_amt
 
-    # Money — MongoDB $numberDecimal format
-    rec["tender_value"]   = _decimal(raw.get("tender_value", 0))
-    rec["doc_cost"]       = _decimal(raw.get("doc_cost", 0))
-    rec["earnest_amount"] = _decimal(raw.get("earnest_amount", 0))
+    # Normalized fields (for RAG/UI)
+    rec["normalized"]["status"] = raw.get("tender_status", "OPEN")
+    rec["normalized"]["tender_id"] = raw.get("tender_id", "")
+    rec["normalized"]["source"] = raw.get("procurement_source_name", "")
+    rec["normalized"]["tender_value"] = _try_float(raw.get("tender_value", 0))
+    rec["normalized"]["doc_cost"] = _try_float(raw.get("doc_cost", 0))
+    rec["normalized"]["platform"] = ", ".join(raw.get("platforms", []))
+    rec["normalized"]["pub_date"] = rec["card"]["start_datetime"]
 
-    # Dates — MongoDB $numberLong format
-    rec["pub_date"]   = _ts_to_str(raw.get("pub_date"))
-    rec["enter_date"] = _ts_to_str(raw.get("enter_date"))
-    rec["due_date"]   = _ts_to_str(raw.get("due_date"))
-    rec["open_date"]  = _ts_to_str(raw.get("open_date"))
-
-    # Documents — has tender_download_path
-    rec["document_urls"] = _doc_urls(raw.get("s3_document_path", []))
-
+    # Documents
+    doc_urls = _doc_urls(raw.get("s3_document_path", []))
+    if doc_urls:
+        rec["card"]["bid_pdf_url"] = doc_urls[0]
+        
     return rec
 
 
@@ -196,91 +307,64 @@ def parse_active_tender(raw: dict) -> dict:
 # FORMAT 2 PARSER — tender_results
 # =========================================================
 def parse_tender_result(raw: dict) -> dict:
-    # Unwrap OpenSearch envelope
     src = raw.get("_source", raw)
-
     rec = _empty_record()
-    rec["tender_id"]           = src.get("tender_result_id", "")
-    rec["tender_no"]           = src.get("tender_no", "")
-    rec["tender_reference_id"] = src.get("tender_reference_id", "")
-    rec["status"]              = src.get("tender_status", "AOC")
-    rec["platform"]            = ", ".join(src.get("platforms", []))
-    rec["source_name"]         = src.get("procurement_source_name", "")
-    rec["source_url"]          = src.get("ref_url", "")
-    rec["tender_type"]         = ""  # not in result format
-    rec["procurement_type"]    = ""  # not in result format
-    rec["bidding_type"]        = ""  # not in result format
-    rec["competition_type"]    = ""  # not in result format
-    rec["category"]            = src.get("category", "")
-    rec["sub_category"]        = src.get("sub_category", "")
-    rec["product_name"]        = src.get("product_name", src.get("product", ""))
-    rec["sector"]              = src.get("sector", "")
-    rec["authority"]           = src.get("authority", "")
-    rec["ownership"]           = src.get("ownership", "")
-    rec["city"]                = src.get("city", "")
-    rec["state"]               = src.get("state", "")
-    rec["country"]             = "India"
-    rec["address"]             = ""  # not in result format
-    rec["address_pin"]         = ""
-    rec["contact_person"]      = ""
-    rec["contact_email"]       = ""
-    rec["contact_phone"]       = ""
-    rec["tender_summary"]      = ""  # not in result format
-    rec["work_desc"]           = src.get("work_desc", "")
-    rec["search_text"]         = src.get("search_text", "")
-    rec["is_corrigendum"]      = "False"
+    
+    rec["bid"]["bid_no"] = src.get("tender_no", "")
+    rec["bid"]["product_type"] = "Unknown"
+    rec["bid"]["base_type"] = "PRODUCT"
+    
+    rec["card"]["start_datetime"] = _get_api_datetime(src.get("pub_date"))
+    rec["card"]["end_datetime"] = _get_api_datetime(src.get("due_date"))
+    
+    if src.get("product_name") or src.get("product"):
+        rec["card"]["items"].append({
+            "name": src.get("product_name", src.get("product", "")),
+            "quantity": None
+        })
+        
+    # Department
+    dept = {
+        "ministry_state_name": src.get("state", ""),
+        "department_name": src.get("authority", ""),
+        "organisation_name": src.get("ownership", ""),
+        "office_name": src.get("city", "")
+    }
+    rec["pdf"]["departments"].append(dept)
+    
+    # Timing
+    rec["pdf"]["timing"]["bid_end_datetime"] = rec["card"]["end_datetime"]
+    rec["pdf"]["timing"]["bid_opening_datetime"] = _get_api_datetime(src.get("open_date"))
+    
+    # Financials
+    emd_amt = _try_float(src.get("earnest_amount", 0))
+    if emd_amt and emd_amt > 0:
+        rec["pdf"]["financials"]["emd"]["required"] = True
+        rec["pdf"]["financials"]["emd"]["amount_total"] = emd_amt
 
-    # Money — plain float (no MongoDB wrapper)
-    rec["tender_value"]   = _decimal(src.get("tender_value", 0))
-    rec["doc_cost"]       = ""
-    rec["earnest_amount"] = ""
+    # Normalized fields
+    rec["normalized"]["status"] = src.get("tender_status", "AOC")
+    rec["normalized"]["tender_id"] = src.get("tender_result_id", "")
+    rec["normalized"]["source"] = src.get("procurement_source_name", "")
+    rec["normalized"]["tender_value"] = _try_float(src.get("tender_value", 0))
+    rec["normalized"]["contract_value"] = _try_float(src.get("contract_value", 0))
+    rec["normalized"]["contract_date"] = _get_api_datetime(src.get("contract_date"))
+    rec["normalized"]["pub_date"] = rec["card"]["start_datetime"]
 
-    # Dates — plain integer timestamps (no MongoDB wrapper)
-    rec["pub_date"]   = _ts_to_str(src.get("pub_date"))
-    rec["enter_date"] = _ts_to_str(src.get("enter_date"))
-    rec["due_date"]   = _ts_to_str(src.get("due_date"))
-    rec["open_date"]  = _ts_to_str(src.get("open_date"))
-
-    # Result-specific fields
-    rec["contract_date"]    = _ts_to_str(src.get("contract_date"))
-    rec["contract_value"]   = str(src.get("contract_value", ""))
-    rec["completion_date"]  = src.get("completion_date", "")
-
-    # Winner and all bidders
+    # Winner details
     bidders = src.get("bidder_list", [])
     w = _winner(bidders)
-    rec["winner_name"] = w.get("bidder_name", "")
-    rec["winner_bid"]  = str(w.get("bid_amount", ""))
-    rec["all_bidders"] = json.dumps([
-        {
-            "name":   b.get("bidder_name", ""),
-            "amount": b.get("bid_amount", 0),
-            "rank":   b.get("rank", 0),
-            "status": "Winner" if b.get("aoc_status") == 1
-                      else "Rejected" if b.get("aoc_status") == 2
-                      else "Disqualified",
-        }
-        for b in sorted(bidders, key=lambda x: x.get("rank", 99))
-    ])
-
-    # Documents — NO download URL in result format
-    rec["document_urls"] = []
-
+    rec["normalized"]["winner_name"] = w.get("bidder_name", "")
+    rec["normalized"]["winner_bid"] = _try_float(w.get("bid_amount", 0))
+    
     return rec
 
 
 # =========================================================
 # AUTO-DETECT & PARSE
-# Detects which format the API returned and parses it.
 # =========================================================
 def parse_api_response(raw_json: str | list | dict) -> list[dict]:
-    """
-    Pass raw JSON string, parsed list, or parsed dict.
-    Returns list of unified records regardless of format.
-    """
     if isinstance(raw_json, str):
-        # tender_result format: multiple root-level objects
-        # (not a valid JSON array — fix by wrapping)
         text = raw_json.strip()
         if not text.startswith("["):
             text = "[" + text + "]"
@@ -293,13 +377,10 @@ def parse_api_response(raw_json: str | list | dict) -> list[dict]:
     records = []
     for item in data:
         if "_source" in item:
-            # Format 2: OpenSearch envelope
             records.append(parse_tender_result(item))
         elif "tender_id" in item:
-            # Format 1: active_tenders
             records.append(parse_active_tender(item))
         elif "tender_result_id" in item:
-            # Format 2 already unwrapped
             records.append(parse_tender_result({"_source": item}))
         else:
             log.warning(f"Unknown tender format — skipping: {list(item.keys())[:5]}")

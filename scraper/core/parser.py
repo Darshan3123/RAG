@@ -1032,18 +1032,234 @@ def parse_bid_extended(pdf_text: str, pdf_path: str = "") -> dict:
 # shaped exactly like active_tenders-mittal-ind.json.
 # Called from pipeline/scraper.py after all merging is done.
 # =========================================================
+def build_pdf_section(bid: dict) -> dict:
+    """Construct the nested `pdf` field of the GeM record from parsed data."""
+    pdf_intel = bid.get("pdf_intelligence", {})
+    bid_pdf_text = bid.get("full_pdf_text", "")
+    
+    # --- TIMING ---
+    timeline = pdf_intel.get("timeline", {})
+    bid_open_dt = timeline.get("bid_opening_datetime")
+    bid_end_dt  = timeline.get("bid_end_datetime")
+    validity    = timeline.get("bid_validity_days")
+
+    if not bid_open_dt:
+        start_dt, _ = _extract_dates(bid_pdf_text)
+        bid_open_dt = start_dt or bid.get("start_date", "")
+
+    if not bid_end_dt:
+        _, end_dt = _extract_dates(bid_pdf_text)
+        bid_end_dt = end_dt or bid.get("end_date", "")
+
+    timing = {
+        "bid_opening_datetime": bid_open_dt,
+        "bid_end_datetime": bid_end_dt,
+        "bid_offer_validity_days": validity or bid.get("bid_offer_validity_days", None),
+    }
+
+    # --- DEPARTMENTS ---
+    dept = pdf_intel.get("departments", [])
+    if not dept:
+        dept = [{
+            "ministry_state_name": bid.get("state", ""),
+            "department_name":     bid.get("department", ""),
+            "organisation_name":   bid.get("organization_name", ""),
+            "office_name":         bid.get("office_name", ""),
+        }]
+
+    # --- DOCUMENTS ---
+    elig = pdf_intel.get("eligibility", {})
+    docs = {
+        "required_from_seller": elig.get("required_docs", []),
+        "show_uploaded_docs_to_all_bidders": bool(elig.get("show_docs_to_all_bidders", False)),
+        "attachments": [], 
+    }
+
+    # --- RELAXATIONS (MSE / Startup experience/turnover) ---
+    relax = {
+        "mse_relaxation_experience_turnover": bool(elig.get("mse_exempt", False)),
+        "startup_relaxation_experience_turnover": bool(elig.get("startup_exempt", False)),
+    }
+
+    # --- AUTO EXTENSION (Bid-level) ---
+    ra_rules = pdf_intel.get("ra_rules", {})
+    auto_ext = {
+        "min_bids_to_disable_extension": ra_rules.get("min_bids_to_disable_extension"),
+        "auto_extend_days": ra_rules.get("auto_extend_days"),
+        "auto_extension_count": ra_rules.get("auto_extend_max"),
+    }
+
+    # --- RA SECTION (Bid -> RA + RA PDF) ---
+    ra = {
+        "bid_to_ra_enabled": bool(ra_rules.get("bid_to_ra_enabled", False)),
+        "ra_qualification_rule": ra_rules.get("ra_qualification_rule", ""),
+        "ra_start_datetime": "",
+        "ra_end_datetime": "",
+        "auto_extension": {
+            "enabled": False,
+            "window_minutes": 15,
+        },
+        "mse_relaxation_experience_turnover": False,
+        "startup_relaxation_experience_turnover": False,
+    }
+
+    ra_pdf = pdf_intel.get("ra_pdf", {})
+    if ra_pdf:
+        if ra_pdf.get("ra_start_datetime"):
+            ra["ra_start_datetime"] = ra_pdf["ra_start_datetime"]
+        if ra_pdf.get("ra_end_datetime"):
+            ra["ra_end_datetime"] = ra_pdf["ra_end_datetime"]
+            
+        if ra_pdf.get("auto_extension"):
+            if ra_pdf["auto_extension"].get("enabled"):
+                ra["auto_extension"]["enabled"] = True
+            if ra_pdf["auto_extension"].get("window_minutes"):
+                ra["auto_extension"]["window_minutes"] = ra_pdf["auto_extension"]["window_minutes"]
+                
+        ra["mse_relaxation_experience_turnover"] = ra_pdf.get("mse_relaxation_experience_turnover", False)
+        ra["startup_relaxation_experience_turnover"] = ra_pdf.get("startup_relaxation_experience_turnover", False)
+
+    # --- MII / MSE POLICY ---
+    policy = pdf_intel.get("policy", {})
+    mii = {
+        "mii_purchase_preference": bool(policy.get("mii_margin_percent") is not None),
+        "mii_price_band_percent": policy.get("mii_margin_percent"),
+        "mii_max_quantity_percent": policy.get("mii_max_quantity_percent"),
+        "allow_only_class_1_2_local_suppliers": False,
+    }
+
+    mse = {
+        "mse_purchase_preference": bool(policy.get("mse_margin_percent") is not None),
+        "mse_price_band_percent": policy.get("mse_margin_percent"),
+        "mse_max_quantity_percent": policy.get("mse_max_quantity_percent"),
+    }
+
+    # --- FINANCIALS (EMD / ePBG) ---
+    fin = pdf_intel.get("financials", {})
+    financials = {
+        "emd": {
+            "required": bool(fin.get("emd_amount")),
+            "advisory_bank": fin.get("advisory_bank"),
+            "amount_total": fin.get("emd_amount", 0),
+            "schedule_breakup": [],
+        },
+        "epbg": {
+            "required": bool(fin.get("epbg_percent")),
+            "advisory_bank": fin.get("advisory_bank"),
+            "percent": fin.get("epbg_percent"),
+            "duration_months": fin.get("epbg_duration_months"),
+        },
+        "emd_exemption_text": "",
+    }
+
+    # --- CONSIGNEES ---
+    consignees = []
+    for ci in pdf_intel.get("consignee_items", []):
+        consignees.append({
+            "consignee_name": ci.get("consignee_name", ""),
+            "address_raw": ci.get("consignee_location", ""),
+            "pincode": ci.get("pincode", ""),
+            "city": "",
+            "state": "",
+            "quantity": ci.get("quantity", 0),
+            "delivery_days": ci.get("delivery_days", 0)
+        })
+
+    # --- ITEMS ---
+    full_item = bid.get("full_item_name", "")
+    items = []
+    if full_item:
+        items.append({
+            "schedule_no": 1,
+            "item_category": full_item,
+            "quantity": bid.get("quantity")
+        })
+
+    return {
+        "timing": timing,
+        "departments": dept,
+        "items": items,
+        "documents": docs,
+        "consignees": consignees,
+        "relaxations": relax,
+        "auto_extension": auto_ext,
+        "ra": ra,
+        "bid_type": {
+            "type_of_bid": ra_rules.get("bid_type", ""),
+            "technical_clarification_window_days": timeline.get("clarification_window_days"),
+        },
+        "inspection": {
+            "inspection_required": bool(financials.get("inspection_required", False)),
+            "inspection_agency_type": financials.get("inspection_agency_type", ""),
+        },
+        "evaluation": {
+            "evaluation_method": financials.get("evaluation_method", ""),
+            "schedules": [],
+        },
+        "clauses": {
+            "arbitration_clause": bool(financials.get("arbitration_clause", False)),
+            "mediation_clause": bool(financials.get("mediation_clause", False)),
+        },
+        "mii": mii,
+        "mse": mse,
+        "financials": financials,
+        "terms": {
+            "special_terms_version": "",
+            "special_terms_text": "",
+            "buyer_atc": {
+                "generic": "",
+                "items": [],
+                "hard_requirements": [],
+                "info_clauses": []
+            },
+            "disclaimer": ""
+        },
+    }
+    
 def assemble_tender_record(bid: dict, page_url: str = "") -> dict:
     """
-    Convert the internal scraper 'bid' dict into the unified
-    tender format that matches active_tenders-mittal-ind.json.
-    All date fields become {"$numberLong": "..."} objects.
-    All money fields become {"$numberDecimal": "..."} objects.
+    Convert the internal scraper 'bid' dict into the new nested
+    tender format matching JSON_FORMAT_NEW_PLAN.MD.
     """
+    from scraper.pipeline.tender_parser import _empty_record
+    
+    rec = _empty_record()
+    
     end_date   = bid.get("end_date", "")
     start_date = bid.get("start_date", "")
     open_date  = bid.get("open_date", "") or start_date
 
-    # ── tender_status: dynamic — OPEN if end_date is in the future ──
+    rec["bid"]["bid_no"] = bid.get("bid_no", "")
+    rec["bid"]["ra_no"] = bid.get("ra_no", "")
+    rec["bid"]["bid_type"] = bid.get("bid_type", "")
+    rec["bid"]["product_type"] = bid.get("product_type", "")
+    pt_lower = str(rec["bid"]["product_type"]).lower()
+    rec["bid"]["base_type"] = "PRODUCT" if "good" in pt_lower or "product" in pt_lower else "SERVICE" if "service" in pt_lower else "CUSTOM"
+    rec["bid"]["process_kind"] = "CATALOGUE"
+    
+    rec["card"]["start_datetime"] = start_date
+    rec["card"]["end_datetime"] = end_date
+    rec["card"]["bid_pdf_url"] = bid.get("document_url", "")
+    rec["card"]["ra_pdf_url"] = bid.get("corrigendum_url", "")
+    
+    full_item = bid.get("full_item_name", "")
+    if full_item:
+        rec["card"]["items"].append({
+            "name": full_item,
+            "quantity": bid.get("quantity")
+        })
+        
+    rec["card"]["departments"].append({
+        "name": bid.get("department", ""),
+        "address": bid.get("address", ""),
+        "city": bid.get("city", ""),
+        "state": bid.get("state", ""),
+        "pincode": bid.get("address_pin", "")
+    })
+    
+    # Delegate to build_pdf_section
+    rec["pdf"] = build_pdf_section(bid)
+
     status = "OPEN"
     try:
         if end_date:
@@ -1052,129 +1268,23 @@ def assemble_tender_record(bid: dict, page_url: str = "") -> dict:
                 status = "CLOSED"
     except Exception:
         pass
-
-    # ── tender_type: Open Tender unless bid_type says Limited/Single ──
-    bid_type_raw = bid.get("bid_type", "")
-    if "limited" in bid_type_raw.lower():
-        tender_type = "Limited Tender"
-    elif "single" in bid_type_raw.lower():
-        tender_type = "Single Tender"
-    else:
-        tender_type = "Open Tender"
-
-    # ── work_desc — rich template ──
-    authority    = bid.get("authority", bid.get("department", ""))
-    full_item    = bid.get("full_item_name", "")
-    product_name = bid.get("product_name", "")
-    city         = bid.get("city", "")
-    state        = bid.get("state", "")
-    due_date_str = end_date[:10].replace("-", "-") if end_date else ""
-    # Convert DD-MM-YYYY to YYYY-MM-DD for the display string
-    try:
-        due_display = datetime.strptime(due_date_str, "%d-%m-%Y").strftime("%Y-%m-%d")
-    except Exception:
-        due_display = due_date_str
-
-    location_str = ", ".join(filter(None, [city, state]))
-
-    # For multi-item bids, build a compact item description
-    if full_item and re.search(r"\bItem\s+[Nn]o\.?\s*\d+\b", full_item):
-        item_labels = re.findall(
-            r"\bItem\s+[Nn]o\.?\s*\d+\s+(.*?)(?:\s+as\s+per\s+the\s+tech|\s*,\s*Item|\Z)",
-            full_item,
-        )
-        count = len(re.findall(r"\bItem\s+[Nn]o\.?\s*\d+\b", full_item))
-        if item_labels:
-            item_desc = "; ".join(m.strip().rstrip(".") for m in item_labels)
-            item_display = f"{count} items: {item_desc}"
-        else:
-            item_display = full_item[:300]
-    else:
-        item_display = full_item
-
-    work_desc = (
-        f"{authority} has published Bids Are invited for {item_display}. "
-        f"Last date of submission for this tender is {due_display}. "
-        f"This is a {product_name} tender in {location_str}"
-    ).strip()
-
-    # ── tender_summary ──
-    # For multi-item bids, show a compact summary instead of the full raw list
-    if full_item and re.search(r"\bItem\s+[Nn]o\.?\s*\d+\b", full_item):
-        # Extract short labels before "as per the technical specification..."
-        item_labels = re.findall(
-            r"\bItem\s+[Nn]o\.?\s*\d+\s+(.*?)(?:\s+as\s+per\s+the\s+tech|\s*,\s*Item|\Z)",
-            full_item,
-        )
-        count = len(re.findall(r"\bItem\s+[Nn]o\.?\s*\d+\b", full_item))
-        if item_labels:
-            shown = item_labels[:5]
-            summary_items = "; ".join(m.strip().rstrip(".") for m in shown)
-            tender_summary = f"Bids invited for {count} items: {summary_items}"
-            if count > 5:
-                tender_summary += f" (+{count-5} more)"
-        else:
-            tender_summary = f"Bids Are invited for {full_item[:200]}"
-    else:
-        tender_summary = f"Bids Are invited for {full_item}" if full_item else ""
-
-    # ── s3_document_path ──
-    doc_url = bid.get("document_url", "")
-    random_num = bid.get("random_number", _gen_random_number())
-    s3_path = []
-    if doc_url:
-        s3_path = [{
-            "download_id":           f"TD{random_num[:8]}-{random_num[8:14]}",
-            "file_name":             "Tender Document",
-            "tender_download_path":  doc_url,
-        }]
-
-    return {
-        "tender_id":            bid.get("tender_id", _gen_tender_id()),
-        "tender_no":            bid.get("bid_no", ""),
-        "tender_reference_id":  bid.get("bid_no", ""),
-        "tender_status":        status,
-        "tender_type":          tender_type,
-        "tender_value":         _decimal_obj(bid.get("estimated_value", "")),
-        "tender_summary":       tender_summary,
-        "work_desc":            work_desc,
-        "authority":            authority,
-        "category":             bid.get("category", ""),
-        "sub_category":         bid.get("sub_category", ""),
-        "product_name":         bid.get("product_name", ""),
-        "sector":               bid.get("sector", ""),
-        "procurement_type":     bid.get("procurement_type", ""),
-        "bidding_type":         "Tender",
-        "competition_type":     "NCB",
-        "ownership":            "Government Departments",
-        "platforms":            ["GEM"],
-        "procurement_source":   page_url or "https://gem.gov.in/",
-        "procurement_source_name": "Gem",
-        "city":                 bid.get("city", ""),
-        "state":                bid.get("state", ""),
-        "country":              "India",
-        "address":              bid.get("address", ""),
-        "address_pin":          bid.get("address_pin", ""),
-        "contact_person":       bid.get("contact_person", ""),
-        "contact_email":        bid.get("contact_email", ""),
-        "contact_phone":        bid.get("contact_phone", ""),
-        "search_text":          bid.get("search_text", ""),
-        "earnest_amount":       _decimal_obj(bid.get("earnest_amount", "")),
-        "doc_cost":             _decimal_obj(bid.get("doc_cost", "")),
-        "pub_date":             _ms_obj(start_date),
-        "enter_date":           _ms_obj(start_date),
-        "due_date":             _ms_obj(end_date),
-        "org_subm_date":        _ms_obj(end_date),
-        "open_date":            _ms_obj(open_date),
-        "is_corrigendum":       bid.get("is_corrigendum", False),
-        "tentative_date":       False,
-        "attachment":           "Tender Document",
-        "document_path":        bid.get("document_path", ""),
-        "s3_document_path":     s3_path,
-        "random_number":        random_num,
-        "created_at":           _now_ms(),
-        "updated_at":           _now_ms(),
-    }
+        
+    rec["normalized"]["status"] = status
+    rec["normalized"]["tender_id"] = bid.get("tender_id", "")
+    rec["normalized"]["source"] = "Gem"
+    rec["normalized"]["tender_value"] = bid.get("estimated_value", "")
+    rec["normalized"]["doc_cost"] = bid.get("doc_cost", "")
+    rec["normalized"]["platform"] = "GEM"
+    rec["normalized"]["pub_date"] = start_date
+    
+    rec["full_pdf_text"] = bid.get("full_pdf_text", "")
+    
+    # Optionally append or set ra text
+    ra_text = bid.get("ra_full_pdf_text", "")
+    if ra_text:
+        rec["full_pdf_text"] += "\n\n--- RA PDF TEXT ---\n\n" + ra_text
+        
+    return rec
 
 
 # =========================================================

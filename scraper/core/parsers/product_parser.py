@@ -27,7 +27,7 @@ def parse_product_intelligence(pdf_text: str) -> dict:
                           clarification_window_days },
         "eligibility":  { min_turnover_lakhs, mse_relaxed_turnover_lakhs,
                           startup_exempt, required_docs },
-        "ra_rules":     { ra_enabled, elimination_rule,
+        "ra_rules":     { bid_to_ra_enabled, ra_qualification_rule,
                           auto_extend_days, auto_extend_max,
                           min_bids_to_disable_extension, bid_type },
         "financials":   { emd_amount, advisory_bank,
@@ -46,6 +46,21 @@ def parse_product_intelligence(pdf_text: str) -> dict:
         "bid_validity_days":         None,
         "clarification_window_days": None,
     }
+
+    # ── 1.1 DEPARTMENTS ─────────────────────────────────────────────────────────
+    departments: list = []
+    min_m = re.search(r"मं.ालय/रा!य\s+का\s+नाम/Ministry/State\s+Name\s*(.*?)\n", pdf_text, re.IGNORECASE)
+    dept_m = re.search(r"वभाग\s+का\s+नाम/Department\s+Name\s*(.*?)\n", pdf_text, re.IGNORECASE)
+    org_m = re.search(r"संगठन\s+का\s+नाम/Organisation\s+Name\s*(.*?)\n", pdf_text, re.IGNORECASE)
+    off_m = re.search(r"काया.लय\s+का\s+नाम/Office\s+Name\s*(.*?)\n", pdf_text, re.IGNORECASE)
+
+    if min_m or dept_m or org_m or off_m:
+        departments.append({
+            "ministry_state_name": clean_text(min_m.group(1)) if min_m else "",
+            "department_name": clean_text(dept_m.group(1)) if dept_m else "",
+            "organisation_name": clean_text(org_m.group(1)) if org_m else "",
+            "office_name": clean_text(off_m.group(1)) if off_m else ""
+        })
 
     # Bid Opening Date / Time
     bo_m = re.search(
@@ -115,75 +130,101 @@ def parse_product_intelligence(pdf_text: str) -> dict:
         except ValueError:
             pass
 
-    # Startup Relaxation (Yes / No)
+    # MSE Relaxation / Exemption for Years of Experience and Turnover
+    mse_relax_m = re.search(
+        r"MSE\s+(?:Relaxation|Exemption)\s+for\s+Years\s+Of\s+Experience"
+        r"(?:\s+and\s+Turnover)?\s*[:\-]?\s*(Yes|No)",
+        pdf_text, re.IGNORECASE,
+    )
+    if mse_relax_m:
+        eligibility["mse_exempt"] = mse_relax_m.group(1).strip().lower() == "yes"
+
+    # Startup Relaxation / Exemption
     startup_m = re.search(
-        r"Startup\s+Relaxation\s+for\s+Years\s+of\s+Experience\s+and\s+Turnover\s*[:\-]?\s*(Yes|No)",
+        r"Startup\s+(?:Relaxation|Exemption)\s+for\s+Years\s+Of\s+Experience"
+        r"(?:\s+and\s+Turnover)?\s*[:\-]?\s*(Yes|No)",
         pdf_text, re.IGNORECASE,
     )
     if startup_m:
         eligibility["startup_exempt"] = startup_m.group(1).strip().lower() == "yes"
 
-    # Required seller documents — look for known short labels anywhere in the PDF.
-    # GeM PDFs mention these labels both in tables and inline prose.
-    _KNOWN_DOCS: list[tuple[str, str]] = [
-        (r"Experience\s+Criteria",                  "Experience Criteria"),
-        (r"Bidder\s+Turnover",                      "Bidder Turnover"),
-        (r"Certificate\s+\(Requested\s+in\s+ATC\)", "Certificate (Requested in ATC)"),
-        (r"MSE\s+Certificate",                      "MSE Certificate"),
-        (r"MSME\s+(?:Registration|Certificate)",    "MSME Registration"),
-        (r"Startup\s+(?:Certificate|Registration)", "Startup Certificate"),
-        (r"OEM\s+(?:Certificate|Authorization)",    "OEM Certificate"),
-        (r"ISO\s+\d{4,5}(?::\d{4})?",              None),   # capture full label
-        (r"CA\s+Certificate|Chartered\s+Accountant\s+Certificate",
-                                                    "CA Certificate"),
-        (r"Affidavit",                              "Affidavit"),
-    ]
-    seen: set = set()
-    for pattern, label in _KNOWN_DOCS:
-        m = re.search(pattern, pdf_text[:25000], re.IGNORECASE)
-        if m:
-            doc_label = label if label else clean_text(m.group())
-            if doc_label not in seen:
-                seen.add(doc_label)
-                eligibility["required_docs"].append(doc_label)
+    # Required seller documents
+    docs_m = re.search(
+        r"(?:द&तावेज़\s*/\s*)?Document\s+required\s+from\s+seller\s+([^\n\*]+)",
+        pdf_text, re.IGNORECASE
+    )
+    if docs_m:
+        docs_raw = docs_m.group(1).split(",")
+        for d in docs_raw:
+            d_cl = clean_text(d)
+            if d_cl and d_cl not in eligibility["required_docs"]:
+                eligibility["required_docs"].append(d_cl)
+                
+    # Show docs to all bidders
+    show_docs_m = re.search(
+        r"Do you want to show documents uploaded by bidders to all bidders participated in bid\?\s*(Yes|No)",
+        pdf_text, re.IGNORECASE
+    )
+    if show_docs_m:
+        eligibility["show_docs_to_all_bidders"] = show_docs_m.group(1).strip().lower() == "yes"
 
     # ── 3. RA / BIDDING RULES ──────────────────────────────────────────────────
     ra_rules: dict = {
-        "ra_enabled":                    False,
-        "elimination_rule":              None,
+        "bid_to_ra_enabled":             False,
+        "ra_qualification_rule":         None,
         "auto_extend_days":              None,
         "auto_extend_max":               None,
         "min_bids_to_disable_extension": None,
         "bid_type":                      None,
     }
 
-    # RA enabled?
-    if re.search(r"Reverse\s+Auction|RA\s+(?:is\s+)?(?:enabled|applicable|conducted|to\s+be\s+conducted)",
-                 pdf_text, re.IGNORECASE):
-        ra_rules["ra_enabled"] = True
+    # RA enabled? Prefer explicit "Bid to RA enabled" cell over generic RA text
+    ra_flag_m = re.search(
+        r"Bid\s+to\s+RA\s+enabled\s*[:\-]?\s*(Yes|No)",
+        pdf_text, re.IGNORECASE,
+    ) or re.search(
+        r"बिड\s+से\s+रिवर्स\s+नीलामी\s+सक्रिय\s+किया\s+गया\s*[:\-]?\s*(Yes|No)",
+        pdf_text, re.IGNORECASE,
+    )
+
+    if ra_flag_m:
+        ra_rules["bid_to_ra_enabled"] = ra_flag_m.group(1).strip().lower() == "yes"
+    else:
+        # Fallback: generic RA text (for older formats where the explicit flag is absent)
+        if re.search(
+            r"Reverse\s+Auction|RA\s+(?:is\s+)?(?:enabled|applicable|conducted|to\s+be\s+conducted)",
+            pdf_text, re.IGNORECASE,
+        ):
+            ra_rules["bid_to_ra_enabled"] = True
 
     # Elimination rule
     elim_m = re.search(
-        r"(?:RA\s+)?Qualification\s+Rule\s*[:\-]?\s*([^\n]{5,120})",
+        r"(?:RA\s+)?Quali[f\ufb01]ication\s+Rule\s*[:\-]?\s*([^\n]{5,120})",
         pdf_text, re.IGNORECASE,
     )
     if elim_m:
-        ra_rules["elimination_rule"] = clean_text(elim_m.group(1))
+        ra_rules["ra_qualification_rule"] = clean_text(elim_m.group(1))
 
     # Auto-extension days
-    ae_days_m = re.search(
-        r"(?:Number\s+of\s+[Dd]ays?\s+for\s+auto[-\s]?extension|"
-        r"Auto[-\s]?[Ee]xtension\s+[Pp]eriod)\s*[:\-]?\s*(\d+)",
-        pdf_text, re.IGNORECASE,
+    ae_days_m = (
+        re.search(
+            r"(?:Number\s+of\s+[Dd]ays?\s+for\s+auto[-\s]?extension|"
+            r"Number\s+of\s+days\s+for\s+which\s+Bid\s+would\s+be\s+auto[-\s]?extended|"
+            r"Auto[-\s]?[Ee]xtension\s+[Pp]eriod)\s*[:\-]?\s*(\d+)",
+            pdf_text, re.IGNORECASE,
+        )
     )
     if ae_days_m:
         ra_rules["auto_extend_days"] = int(ae_days_m.group(1))
 
     # Max auto-extension count
-    ae_max_m = re.search(
-        r"(?:Max(?:imum)?\s+Auto[-\s]?[Ee]xtension\s+[Cc]ount|"
-        r"Max(?:imum)?\s+[Nn]umber\s+of\s+Auto[-\s]?[Ee]xtension)\s*[:\-]?\s*(\d+)",
-        pdf_text, re.IGNORECASE,
+    ae_max_m = (
+        re.search(
+            r"(?:Max(?:imum)?\s+Auto[-\s]?[Ee]xtension\s+[Cc]ount|"
+            r"Max(?:imum)?\s+[Nn]umber\s+of\s+Auto[-\s]?[Ee]xtension|"
+            r"Number\s+of\s+Auto\s+Extension\s+count)\s*[:\-]?\s*(\d+)",
+            pdf_text, re.IGNORECASE,
+        )
     )
     if ae_max_m:
         ra_rules["auto_extend_max"] = int(ae_max_m.group(1))
@@ -205,13 +246,36 @@ def parse_product_intelligence(pdf_text: str) -> dict:
     if bid_type_m:
         ra_rules["bid_type"] = clean_text(bid_type_m.group(1))
 
-    # ── 4. FINANCIALS ─────────────────────────────────────────────────────────
+    # ── 4. FINANCIALS / CLAUSES / EVALUATION ───────────────────────────────────
     financials: dict = {
-        "emd_amount":          None,
-        "advisory_bank":       None,
-        "epbg_percent":        None,
-        "epbg_duration_months": None,
+        "emd_amount":            None,
+        "advisory_bank":         None,
+        "epbg_percent":          None,
+        "epbg_duration_months":   None,
+        "inspection_required":    False,
+        "inspection_agency_type": "",
+        "evaluation_method":      "",
+        "arbitration_clause":     False,
+        "mediation_clause":       False,
     }
+    
+    # Inspection
+    insp_m = re.search(r"Inspection Required(?:\s*\(.*?\))?\s*[:\-]?\s*(Yes|No)", pdf_text, re.IGNORECASE)
+    if insp_m:
+        financials["inspection_required"] = insp_m.group(1).strip().lower() == "yes"
+        
+    # Evaluation Method
+    eval_m = re.search(r"Evaluation Method\s*(?:\(\s*([^\)]+)\s*\)|\s*([^\n]+))", pdf_text, re.IGNORECASE)
+    if eval_m:
+        financials["evaluation_method"] = clean_text(eval_m.group(1) or eval_m.group(2))
+        
+    # Clauses
+    arb_m = re.search(r"Arbitration Clause\s*(Yes|No)", pdf_text, re.IGNORECASE)
+    if arb_m:
+        financials["arbitration_clause"] = arb_m.group(1).strip().lower() == "yes"
+    med_m = re.search(r"Mediation Clause\s*(Yes|No)", pdf_text, re.IGNORECASE)
+    if med_m:
+        financials["mediation_clause"] = med_m.group(1).strip().lower() == "yes"
 
     # EMD amount (numeric)
     emd_m = re.search(
@@ -632,6 +696,7 @@ def parse_product_intelligence(pdf_text: str) -> dict:
             pass
 
     return {
+        "departments":     departments,
         "timeline":        timeline,
         "eligibility":     eligibility,
         "ra_rules":        ra_rules,

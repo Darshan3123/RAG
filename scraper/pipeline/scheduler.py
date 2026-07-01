@@ -35,13 +35,27 @@ def alert_new_bids():
     log.info("")
     log.info("NEW BIDS DETECTED THIS RUN")
     log.info("=" * 60)
-    for bid in new_bids:
+    for bid_doc in new_bids:
+        b = bid_doc.get("bid", {})
+        card = bid_doc.get("card", {})
+        pdf = bid_doc.get("pdf", {})
+        
+        dept = ""
+        depts = pdf.get("departments")
+        if depts:
+            dept = depts[0].get("department_name", "")
+            
+        item_name = ""
+        items = card.get("items")
+        if items:
+            item_name = items[0].get("name", "")
+
         log.info(
-            f"  [{bid.get('bid_type','')}] "
-            f"{bid.get('bid_no','')} | "
-            f"{bid.get('full_item_name','')[:50]} | "
-            f"Dept: {bid.get('department','')[:40]} | "
-            f"End: {bid.get('end_date','')}"
+            f"  [{b.get('bid_type','')}] "
+            f"{b.get('bid_no','')} | "
+            f"{item_name[:50]} | "
+            f"Dept: {dept[:40]} | "
+            f"End: {card.get('end_datetime','')}"
         )
     log.info("=" * 60)
     log.info(f"  Total new: {len(new_bids)}")

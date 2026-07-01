@@ -29,13 +29,19 @@ def index_new_bids():
     prewarm_model()
 
     indexed_urls = []
-    for i, bid in enumerate(new_bids, 1):
+    for i, bid_doc in enumerate(new_bids, 1):
         try:
-            log.info(f"  [{i}/{len(new_bids)}] Indexing {bid.get('bid_no', 'unknown')}")
-            upsert_bid(bid)
-            indexed_urls.append(bid["document_url"])
+            b = bid_doc.get("bid", {})
+            card = bid_doc.get("card", {})
+            bid_no = b.get("bid_no", "unknown")
+            doc_url = card.get("bid_pdf_url", "")
+            
+            log.info(f"  [{i}/{len(new_bids)}] Indexing {bid_no}")
+            upsert_bid(bid_doc)
+            if doc_url:
+                indexed_urls.append(doc_url)
         except Exception as e:
-            log.error(f"  Failed to index {bid.get('bid_no', '?')}: {e}")
+            log.error(f"  Failed to index {bid_doc.get('bid', {}).get('bid_no', '?')}: {e}")
 
     db.mark_bids_indexed(indexed_urls)
     log.info(f"Done. Indexed {len(indexed_urls)}/{len(new_bids)} bids.")

@@ -48,13 +48,18 @@ def _delete_bid_chunks(col, bid_no: str):
 # ---------------------------------------------------------
 # UPSERT ONE BID
 # ---------------------------------------------------------
-def upsert_bid(bid: dict):
-    bid_no = bid.get("bid_no") or bid.get("document_url", "unknown")
-    product_type = bid.get("product_type", "") or bid.get("product_name", "")
+def upsert_bid(bid_doc: dict):
+    b = bid_doc.get("bid", {})
+    card = bid_doc.get("card", {})
+    pdf = bid_doc.get("pdf", {})
+    norm = bid_doc.get("normalized", {})
+    
+    bid_no = b.get("bid_no") or "unknown"
+    product_type = b.get("product_type", "")
     log.info(f"  Indexing: {bid_no} to {product_type}")
 
     col    = _get_collection(product_type)
-    chunks = build_bid_chunks(bid)
+    chunks = build_bid_chunks(bid_doc)
     if not chunks:
         log.warning(f"  No chunks for {bid_no} — skipping")
         return
@@ -63,27 +68,34 @@ def upsert_bid(bid: dict):
 
     ids        = [f"{bid_no}__chunk_{i}" for i in range(len(chunks))]
     embeddings = embed_texts(chunks)
+    
+    card_items = card.get("items") or []
+    c_item = card_items[0] if card_items else {}
+    depts = pdf.get("departments") or []
+    dept = depts[0] if depts else {}
+    ra = pdf.get("ra", {})
+    ae = ra.get("auto_extension", {})
+    
     metadatas  = [
         {
             "bid_no":           bid_no,
-            "bid_type":         bid.get("bid_type", "") or bid.get("tender_type", ""),
-            "product_type":     bid.get("product_type", "") or bid.get("product_name", ""),
-            "full_item_name":   bid.get("full_item_name", ""),
-            "quantity":         bid.get("quantity", ""),
-            "department":       bid.get("department", "") or bid.get("authority", ""),
-            "authority":        bid.get("authority", "") or bid.get("department", ""),
-            "sector":           bid.get("sector", ""),
-            "state":            bid.get("state", ""),
-            "city":             bid.get("city", ""),
-            "status":           bid.get("status", "") or bid.get("tender_status", ""),
-            "procurement_type": bid.get("procurement_type", ""),
-            "start_date":       bid.get("start_date", ""),
-            "end_date":         bid.get("end_date", "") or bid.get("due_date", ""),
-            "estimated_value":  bid.get("estimated_value", "") or bid.get("tender_value", ""),
-            "bid_packet_type":  bid.get("bid_packet_type", ""),
-            "ra_no":            bid.get("ra_no", ""),
-            "document_url":     bid.get("document_url", ""),
-            "corrigendum_url":  bid.get("corrigendum_url", ""),
+            "bid_type":         b.get("bid_type", ""),
+            "product_type":     b.get("product_type", ""),
+            "base_type":        b.get("base_type", ""),
+            "full_item_name":   str(c_item.get("name", "") or ""),
+            "quantity":         str(c_item.get("quantity", "") or ""),
+            "department":       str(dept.get("department_name", "") or ""),
+            "state":            str(dept.get("ministry_state_name", "") or ""),
+            "city":             str(dept.get("office_name", "") or ""),
+            "status":           str(norm.get("status", "") or ""),
+            "start_date":       str(card.get("start_datetime", "") or ""),
+            "end_date":         str(card.get("end_datetime", "") or ""),
+            "estimated_value":  str(norm.get("tender_value", "") or ""),
+            "document_url":     str(card.get("bid_pdf_url", "") or ""),
+            "ra_document_url":  str(card.get("ra_pdf_url", "") or ""),
+            "ra_start":         str(ra.get("ra_start_datetime", "") or ""),
+            "ra_end":           str(ra.get("ra_end_datetime", "") or ""),
+            "ra_enabled":       str(ra.get("bid_to_ra_enabled", False)),
             "chunk_index":      i,
         }
         for i in range(len(chunks))
