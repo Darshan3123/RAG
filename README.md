@@ -106,7 +106,6 @@ playwright install chromium
 ```bash
 # Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
 # Download .exe installer and install to C:\Program Files\Tesseract-OCR
-# Update .env: TESSERACT_PATH=C:\\Program Files\\Tesseract-OCR\\tesseract.exe
 ```
 
 **Linux:**

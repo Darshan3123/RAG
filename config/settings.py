@@ -107,15 +107,6 @@ JSON_OUT_PATH = _path("JSON_OUT_PATH", "storage/gem_bids.json")
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 os.makedirs(LOG_DIR,      exist_ok=True)
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-
-# ---------------------------------------------------------
-# TESSERACT  (Windows path — ignored on Linux/Mac)
-# ---------------------------------------------------------
-TESSERACT_CMD = _str(
-    "TESSERACT_CMD",
-    r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-)
-
 # ---------------------------------------------------------
 # RAG SETTINGS
 # ---------------------------------------------------------
