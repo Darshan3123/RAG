@@ -1,0 +1,40 @@
+# ── Usage of requirements.txt ─────────────────────────────
+# pip install uv "packaging>=24.2" "setuptools>=77.0.0"
+# uv pip install -r requirements.txt --torch-backend=cu130  --index-strategy unsafe-best-match --no-build-isolation
+# ── PyTorch CUDA Index ────────────────────────────────────
+--extra-index-url https://download.pytorch.org/whl/cu130
+
+# ── Environment & Frameworks ──────────────────────────────
+python-dotenv>=1.0.0
+fastapi<0.137.0
+
+# ── GPU & Inference Engine ────────────────────────────────
+torch==2.11.0
+torchvision==0.26.0
+torchaudio==2.11.0
+vllm==0.21.0
+
+# ── Flash Attention (Pre-built Wheels) ────────────────────
+flash-attn @ https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.4/flash_attn-2.8.3+cu130torch2.11-cp310-cp310-linux_x86_64.whl ; python_version == "3.10"
+flash-attn @ https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.4/flash_attn-2.8.3+cu130torch2.11-cp311-cp311-linux_x86_64.whl ; python_version == "3.11"
+flash-attn @ https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.4/flash_attn-2.8.3+cu130torch2.11-cp312-cp312-linux_x86_64.whl ; python_version == "3.12"
+flash-attn @ https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.4/flash_attn-2.8.3+cu130torch2.11-cp313-cp313-linux_x86_64.whl ; python_version == "3.13"
+flash-attn @ https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.4/flash_attn-2.8.3+cu130torch2.11-cp314-cp314-linux_x86_64.whl ; python_version == "3.14"
+
+# ── Scraper & Document Processing ────────────────────────
+playwright>=1.44.0
+Mineru_Document_To_Markdown[all] @ git+https://github.com/ThriveX2025/Mineru_Document_To_Markdown.git
+git+https://github.com/ThriveX2025/Mineru_Utils.git
+
+# ── RAG — Embeddings (local, no API key needed) ───────────
+sentence-transformers>=3.0.0
+
+# ── RAG — Sparse retrieval (BM25) ─────────────────────────
+rank-bm25>=0.2.2
+
+# ── RAG — Vector Store ────────────────────────────────────
+chromadb>=0.5.0
+
+# ── RAG — LLM (pick one or both) ─────────────────────────
+openai>=1.30.0
+requests>=2.31.0

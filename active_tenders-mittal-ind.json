@@ -1,0 +1,382 @@
+[{
+  "tender_id": "TDu6t9y-861192",
+  "country": "India",
+  "tender_value": {
+    "$numberDecimal": "350000.0"
+  },
+  "city": "Delhi",
+  "procurement_type": "Services",
+  "bidding_type": "Tender",
+  "due_date": {
+    "$numberLong": "1779408000000"
+  },
+  "doc_cost": {
+    "$numberDecimal": "0"
+  },
+  "contact_person": "",
+  "attachment": "Tender Document",
+  "tender_reference_id": "GEM/2026/B/7510377",
+  "work_desc": "National Human Rights Commission has published Bids Are invited for Paper-Based Printing Services - Printing With Material; Book/Booklet; Offset. Last date of submission for this tender is 2026-05-22. This is a Printing Work tender in Delhi, Delhi",
+  "tender_type": "Open Tender",
+  "search_text": "Paper and Printing Services, Printing Related Service, Printing Work",
+  "org_subm_date": {
+    "$numberLong": "1779408000000"
+  },
+  "random_number": "FA6DB3DA-1076-42B1-A893-73AAAD55E759",
+  "state": "Delhi",
+  "tender_summary": "Bids Are invited for Paper-Based Printing Services - Printing With Material; Book/Booklet; Offset",
+  "sector": "Public Administrative Department",
+  "address": "110023,NATIONAL HUMAN RIGHTS COMMISSION, MANAV ADHIKAR BHAWAN, C-BLOCK, GPO COMPLEX, INA, NEW DELHI",
+  "competition_type": "NCB",
+  "contact_email": "",
+  "enter_date": {
+    "$numberLong": "1778457600000"
+  },
+  "earnest_amount": {
+    "$numberDecimal": "0.0"
+  },
+  "pub_date": {
+    "$numberLong": "1778457600000"
+  },
+  "authority": "National Human Rights Commission",
+  "is_corrigendum": false,
+  "address_pin": "110023",
+  "ownership": "Government Departments",
+  "tender_no": "GEM/2026/B/7510377",
+  "tentative_date": false,
+  "open_date": {
+    "$numberLong": "1779408000000"
+  },
+  "contact_phone": "",
+  "s3_document_path": [
+    {
+      "download_id": "TDDhQejb-8202",
+      "file_name": "Tender Document",
+      "tender_download_path": "https://www.tenderfiles.com/TenderDocument/52026/11/fa6db3da-1076-42b1-a893-73aaad55e759?FileName=fa6db3da-1076-42b1-a893-73aaad55e759.pdf"
+    }
+  ],
+  "tender_status": "OPEN",
+  "procurement_source": "https://gem.gov.in/",
+  "category": "Paper And Printing Services",
+  "sub_category": "Printing Related Service",
+  "product_name": "Printing Work",
+  "created_at": {
+    "$numberLong": "1778546070626"
+  },
+  "updated_at": {
+    "$numberLong": "1778546070638"
+  },
+  "is_file_downloaded": false,
+  "procurement_source_name": "Gem",
+  "platforms": [
+    "GEM"
+  ]
+},
+{
+  "tender_id": "TDgIw3a-380104",
+  "country": "India",
+  "tender_value": {
+    "$numberDecimal": "1000000.0"
+  },
+  "city": "Mahesana",
+  "procurement_type": "Services",
+  "bidding_type": "Tender",
+  "due_date": {
+    "$numberLong": "1779408000000"
+  },
+  "doc_cost": {
+    "$numberDecimal": "0"
+  },
+  "contact_person": "",
+  "attachment": "Tender Document",
+  "tender_reference_id": "GEM/2026/B/7513847",
+  "work_desc": "Department Of Agriculture And Cooperation has published Bids Are invited for Facility Management Services - Lumpsum Based - Atma Project Mahesana; Annual Printing Service Contract; Consumables To Be Provided By Service Provider (Inclusive In Contract Cost). Last date of submission for this tender is 2026-05-22. This is a Facility Management tender in Mahesana, Gujarat",
+  "tender_type": "Open Tender",
+  "search_text": "Services, Hospitality Related Services, Facility Management",
+  "org_subm_date": {
+    "$numberLong": "1779408000000"
+  },
+  "random_number": "96543119-51B9-477C-BAE0-68C7FBA6EAF6",
+  "state": "Gujarat",
+  "tender_summary": "Bids Are invited for Facility Management Services - Lumpsum Based - Atma Project Mahesana; Annual Printing Service Contract; Consumables To Be Provided By Service Provider (Inclusive In Contract Cost)",
+  "sector": "Agriculture",
+  "address": "384001,ATMA Project, C/o Farmer Training Centre, Haidary Chauk, Dhobighat, Mahesana",
+  "competition_type": "NCB",
+  "contact_email": "",
+  "enter_date": {
+    "$numberLong": "1778112000000"
+  },
+  "earnest_amount": {
+    "$numberDecimal": "30000.0"
+  },
+  "pub_date": {
+    "$numberLong": "1778112000000"
+  },
+  "authority": "Department Of Agriculture And Cooperation",
+  "is_corrigendum": false,
+  "address_pin": "384001",
+  "ownership": "Government Departments",
+  "tender_no": "GEM/2026/B/7513847",
+  "tentative_date": false,
+  "open_date": {
+    "$numberLong": "1779408000000"
+  },
+  "contact_phone": "",
+  "s3_document_path": [
+    {
+      "download_id": "TDDkys6Z-2503",
+      "file_name": "Tender Document",
+      "tender_download_path": "https://www.tenderfiles.com/TenderDocument/52026/7/96543119-51b9-477c-bae0-68c7fba6eaf6?FileName=1778147081.pdf"
+    },
+    {
+      "download_id": "TDDzBr9x-1105",
+      "file_name": "Tender Document 2",
+      "tender_download_path": "https://www.tenderfiles.com/TenderDocument/52026/7/96543119-51b9-477c-bae0-68c7fba6eaf6?FileName=96543119-51b9-477c-bae0-68c7fba6eaf6.pdf"
+    },
+    {
+      "download_id": "TDDarD1m-8973",
+      "file_name": "Tender Document 3",
+      "tender_download_path": "https://www.tenderfiles.com/TenderDocument/52026/7/96543119-51b9-477c-bae0-68c7fba6eaf6?FileName=1778147007.xlsx"
+    },
+    {
+      "download_id": "TDD2xbOt-8531",
+      "file_name": "Tender Document 4",
+      "tender_download_path": "https://www.tenderfiles.com/TenderDocument/52026/7/96543119-51b9-477c-bae0-68c7fba6eaf6?FileName=1778147077.pdf"
+    }
+  ],
+  "tender_status": "OPEN",
+  "procurement_source": "https://gem.gov.in/",
+  "category": "Services",
+  "sub_category": "Hospitality Related Services",
+  "product_name": "Facility Management",
+  "created_at": {
+    "$numberLong": "1778249745495"
+  },
+  "updated_at": {
+    "$numberLong": "1778249745512"
+  },
+  "is_file_downloaded": false,
+  "procurement_source_name": "Gem",
+  "platforms": [
+    "GEM"
+  ]
+},
+{
+  "tender_id": "TDewKkf-342344",
+  "country": "India",
+  "tender_value": {
+    "$numberDecimal": "500000.0"
+  },
+  "city": "Bharatpur",
+  "procurement_type": "Tender",
+  "bidding_type": "Goods",
+  "due_date": {
+    "$numberLong": "1779408000000"
+  },
+  "doc_cost": {
+    "$numberDecimal": "0"
+  },
+  "contact_person": "Ms. Bharti Bhardwaj",
+  "attachment": "Tender Document",
+  "tender_reference_id": "RGA2627GSRC00082",
+  "work_desc": "Rajasthan Grameen Aajeevika Vikas Parishad has published Tender For Printing Of Shg Books Of Record. Last date of submission for this tender is 2026-05-22. This is a Printing Work tender in Bharatpur, Rajasthan",
+  "tender_type": "Open Tender",
+  "search_text": "Paper and Printing Services, Printing Related Service, Printing Work",
+  "org_subm_date": {
+    "$numberLong": "1779408000000"
+  },
+  "random_number": "D1C60AB6-5179-402A-B2CB-9540CA4991EA",
+  "state": "Rajasthan",
+  "tender_summary": "Tender For Printing Of Shg Books Of Record",
+  "sector": "Rural Development",
+  "address": "DPMU Bharatpur, Atal Seva Kendra, Anaj Mandi ke Samne, Jatmasi road, Roopbas, Rupbas, (Bharatpur), PIN:321404, Landline No.:9093836124, Fax No.:",
+  "competition_type": "NCB",
+  "contact_email": "rjto200836036966@rajasthan.in",
+  "enter_date": {
+    "$numberLong": "1779062400000"
+  },
+  "earnest_amount": {
+    "$numberDecimal": "0.0"
+  },
+  "pub_date": {
+    "$numberLong": "1778803200000"
+  },
+  "authority": "Rajasthan Grameen Aajeevika Vikas Parishad",
+  "is_corrigendum": false,
+  "address_pin": "321404",
+  "ownership": "Government Departments",
+  "tender_no": "RGA2627GSRC00082",
+  "tentative_date": false,
+  "open_date": {
+    "$numberLong": "1779408000000"
+  },
+  "contact_phone": "9413161170",
+  "s3_document_path": [
+    {
+      "download_id": "TDDWs1oT-2883",
+      "file_name": "Tender Detail",
+      "tender_download_path": "https://www.tenderfiles.com/TenderDocument/52026/18/d1c60ab6-5179-402a-b2cb-9540ca4991ea?FileName=d1c60ab6-5179-402a-b2cb-9540ca4991ea.html"
+    }
+  ],
+  "tender_status": "OPEN",
+  "procurement_source": "http://sppp.rajasthan.gov.in/bidlist.php",
+  "category": "Paper And Printing Services",
+  "sub_category": "Printing Related Service",
+  "product_name": "Printing Work",
+  "created_at": {
+    "$numberLong": "1779150832094"
+  },
+  "updated_at": {
+    "$numberLong": "1779150832106"
+  },
+  "is_file_downloaded": false,
+  "procurement_source_name": "State Public Procurement Portal Rajasthan",
+  "platforms": [
+    "eProcure"
+  ]
+},
+{
+  "tender_id": "TD3zkrz-955170",
+  "country": "India",
+  "tender_value": {
+    "$numberDecimal": "350000.0"
+  },
+  "city": "Bharatpur",
+  "procurement_type": "Tender",
+  "bidding_type": "Services",
+  "due_date": {
+    "$numberLong": "1779408000000"
+  },
+  "doc_cost": {
+    "$numberDecimal": "0"
+  },
+  "contact_person": "Ms. Bharti Bhardwaj",
+  "attachment": "Tender Document",
+  "tender_reference_id": "RGA2627SSRC00084",
+  "work_desc": "Rajasthan Grameen Aajeevika Vikas Parishad has published Tender For Printing Work=-1 17X27/4 70 Gsm Paper (With Design) – B&W 2 16X26/4 70 Gsm Paper (With Design) – B&W 3 18X22/4 70 Gsm Paper (With Design) – B&W 4 Book Binding Rate: Up To 100 Pages (Thread Binding With Cloth Cover) 5 Binding Rate: Up To 100 Pages (Stapler Pin) – For Creating Sets 6 A4 70 Gsm Paper (With Design) – Multi-Coloured 7 18X22/4 70 Gsm Paper Pamphlet (With Design) – Multi-Coloured (Art Paper) 8 Certificate (Coloured) – A4 Size (Multi-Coloured) 9 Flex Printing With Design (Standard Sheet) – 200 Gsm 10 Flex Printing With Design & Frame (Standard Sheet) – 200 Gsm 11 Flex Printing With Design & Frame (Star Sheet) – 240 Gsm 12 Sun Board With Vinyl Sheet – 5 Mm. Last date of submission for this tender is 2026-05-22. This is a Printing Work tender in Bharatpur, Rajasthan",
+  "tender_type": "Open Tender",
+  "search_text": "Paper and Printing Services, Printing Related Service, Printing Work",
+  "org_subm_date": {
+    "$numberLong": "1779408000000"
+  },
+  "random_number": "71C44E1C-945B-45FE-A45B-76D0B7042EAA",
+  "state": "Rajasthan",
+  "tender_summary": "Tender For Printing Work",
+  "sector": "Rural Development",
+  "address": "DPMU Bharatpur, Atal Seva Kendra, Anaj Mandi ke Samne, Jatmasi road, Roopbas, Rupbas, (Bharatpur), PIN:321404, Landline No.:9093836124, Fax No.:",
+  "competition_type": "NCB",
+  "contact_email": "rjto200836036966@rajasthan.in",
+  "enter_date": {
+    "$numberLong": "1778889600000"
+  },
+  "earnest_amount": {
+    "$numberDecimal": "0.0"
+  },
+  "pub_date": {
+    "$numberLong": "1778803200000"
+  },
+  "authority": "Rajasthan Grameen Aajeevika Vikas Parishad",
+  "is_corrigendum": false,
+  "address_pin": "321404",
+  "ownership": "Government Departments",
+  "tender_no": "RGA2627SSRC00084",
+  "tentative_date": false,
+  "open_date": {
+    "$numberLong": "1779408000000"
+  },
+  "contact_phone": "9413161170",
+  "s3_document_path": [
+    {
+      "download_id": "TDDvmOrw-8625",
+      "file_name": "Tender Detail",
+      "tender_download_path": "https://www.tenderfiles.com/TenderDocument/52026/16/71c44e1c-945b-45fe-a45b-76d0b7042eaa?FileName=71c44e1c-945b-45fe-a45b-76d0b7042eaa.html"
+    }
+  ],
+  "tender_status": "OPEN",
+  "procurement_source": "http://sppp.rajasthan.gov.in/bidlist.php",
+  "category": "Paper And Printing Services",
+  "sub_category": "Printing Related Service",
+  "product_name": "Printing Work",
+  "created_at": {
+    "$numberLong": "1779064257140"
+  },
+  "updated_at": {
+    "$numberLong": "1779064257153"
+  },
+  "is_file_downloaded": false,
+  "procurement_source_name": "State Public Procurement Portal Rajasthan",
+  "platforms": [
+    "eProcure"
+  ]
+},
+{
+  "tender_id": "TD11mkh-649318",
+  "country": "India",
+  "tender_value": {
+    "$numberDecimal": "1500000.0"
+  },
+  "city": "Pithoragarh",
+  "procurement_type": "Sale Tenders",
+  "bidding_type": "Tender",
+  "due_date": {
+    "$numberLong": "1779408000000"
+  },
+  "doc_cost": {
+    "$numberDecimal": "354"
+  },
+  "contact_person": "",
+  "attachment": "Scan Images",
+  "tender_reference_id": "",
+  "work_desc": "District Education And Training Institute has published Tender For Mess Arrangements, Stationery, And Printing Work. Last date of submission for this tender is 2026-05-22. This is a Printing Work tender in Pithoragarh, Uttarakhand",
+  "tender_type": "Open Limited",
+  "search_text": "Paper and Printing Services, Printing Related Service, Printing Work",
+  "org_subm_date": {
+    "$numberLong": "1779408000000"
+  },
+  "random_number": "35C9ACDD-35E1-4051-A15F-7408B8D4AECA",
+  "state": "Uttarakhand",
+  "tender_summary": "Tender For Mess Arrangements, Stationery, And Printing Work",
+  "sector": "Educational And Research Institute",
+  "address": "",
+  "competition_type": "NCB",
+  "contact_email": "",
+  "enter_date": {
+    "$numberLong": "1777852800000"
+  },
+  "earnest_amount": {
+    "$numberDecimal": "30000.0"
+  },
+  "pub_date": {
+    "$numberLong": "1777852800000"
+  },
+  "authority": "District Education And Training Institute",
+  "is_corrigendum": false,
+  "address_pin": "",
+  "ownership": "Government Departments",
+  "tender_no": "149",
+  "tentative_date": false,
+  "contact_phone": "",
+  "s3_document_path": [
+    {
+      "download_id": "TDDxmkWB-5841",
+      "file_name": "Tender Document",
+      "tender_download_path": "https://www.tenderfiles.com/TenderDocument/52026/4/35c9acdd-35e1-4051-a15f-7408b8d4aeca?FileName=35c9acdd-35e1-4051-a15f-7408b8d4aeca.pdf"
+    }
+  ],
+  "tender_status": "OPEN",
+  "procurement_source": "dainikjagaran_almora",
+  "category": "Paper And Printing Services",
+  "sub_category": "Printing Related Service",
+  "product_name": "Printing Work",
+  "created_at": {
+    "$numberLong": "1777941328469"
+  },
+  "updated_at": {
+    "$numberLong": "1777941328480"
+  },
+  "is_file_downloaded": false,
+  "procurement_source_name": "Dainik Jagaran",
+  "platforms": [
+    "eProcure"
+  ]
+}]

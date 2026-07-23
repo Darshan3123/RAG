@@ -1,0 +1,408 @@
+# GeM Bid Scraper + RAG Pipeline
+
+> **Last Updated:** July 2026  
+> **Status:** Production-ready RAG system with active bid scraping and hybrid search
+
+## Project Structure
+
+```
+gem_scraper/
+├── main.py                           ← Entry point (all commands below)
+├── MINERU_MARKDOWN_PASER.py          ← Mineru & Docling PDF parser script
+├── requirements.txt                  ← Python dependencies
+├── .env                              ← Configuration (copy from .env.example)
+├── .gitignore                        ← Git ignore patterns
+├── sync_to_github.sh                 ← GitHub sync automation script
+├── config/
+│   ├── __init__.py
+│   └── settings.py                  ← Loads .env, exposes all settings to code
+├── core/
+│   ├── __init__.py
+│   ├── browser.py                   ← Playwright stealth browser manager
+│   │                                   • Anti-bot delays & UA rotation
+│   │                                   • Ongoing Bids/RA filter (active bids only)
+│   │                                   • Stealth JS injection (hides webdriver)
+│   └── parser.py                    ← PDF extraction + card HTML parsing
+│                                       • extract_pdf_text() - PyMuPDF + OCR
+│                                       • get_dates_from_card() - accurate dates
+│                                       • get_card_details() - untruncated fields
+│                                       • parse_bid_data() - regex field extraction
+├── pipeline/
+│   ├── __init__.py
+│   ├── scraper.py                   ← Main scraping loop
+│   │                                   • Filters 9 bid types
+│   │                                   • Applies "active bids only" filter
+│   │                                   • Card-based date extraction
+│   │                                   • Auto-dedup + new-bid detection
+│   └── scheduler.py                 ← Hourly background loop (production)
+├── storage/
+│   ├── __init__.py
+│   ├── database.py                  ← SQLite bid storage + dedup
+│   ├── gem_bids.db                  ← SQLite database (auto-created)
+│   ├── gem_bids.json                ← JSON export (auto-updated)
+│   └── chroma_db/                   ← ChromaDB vector store (auto-created)
+│       ├── chroma.sqlite3
+│       └── [uuid]/ (embeddings)
+├── rag/
+│   ├── __init__.py
+│   ├── embedder.py                  ← Embedding encoder
+│   │                                   • all-MiniLM-L6-v2 (384-dim, local)
+│   │                                   • build_bid_document()
+│   │                                   • chunk_text() with overlap
+│   │                                   • embed_texts() in batches
+│   ├── vector_store.py              ← ChromaDB + hybrid search
+│   │                                   • Semantic score (60% weight)
+│   │                                   • Keyword score (40% weight)
+│   │                                   • Dedup by bid_no, rank by hybrid score
+│   │                                   • Metadata filtering support
+│   ├── llm.py                       ← LLM answer generation
+│   │                                   • OpenAI / Ollama / Retrieval-only modes
+│   │                                   • Score breakdown in retrieval-only
+│   │                                   • Max 8 bids in context
+│   └── query_engine.py              ← Public RAG query interface
+│                                       • Exit detection (quit/bye/done)
+│                                       • Smart top_k adjustment by intent
+│                                       • Filter parsing (f:key=value)
+│                                       • /search (retrieval only)
+├── utils/
+│   ├── __init__.py
+│   ├── antibot.py                   ← Anti-detection measures
+│   │                                   • Random delays (page load, cards, PDFs)
+│   │                                   • User-Agent rotation
+│   │                                   • Stealth launch/context options
+│   │                                   • Human-like mouse movements
+│   └── logger.py                    ← Rotating file + console logging
+├── STANDLONE TEST SCRIPTS/            ← Isolated scraper testing & evaluation scripts
+│   ├── TEST_STANDALONE_SCRAPPER.py
+│   ├── TEST_STANDALONE_SCRAPPER_MULTI_ITEM_ONLY.py
+│   ├── TEST_STANDALONE_SCRAPPER_SCRAPE_PARTICULAR_BID.py
+│   └── TEST_STANDALONE_SCRAPPER_WITH_EVAL_METHODS_SPLIT_REPORT.py
+├── downloads/                       ← PDF storage (auto-created)
+├── logs/                            ← Log files (auto-created, rotated)
+└── Documentation/
+    ├── README.md                    ← Main overview (this file)
+    ├── Mineru_README.md             ← Mineru VLM & document conversion documentation
+    ├── RAG_QUICK_START.md          ← Quick reference guide
+    ├── RAG_ARCHITECTURE_GUIDE.md   ← Deep dive into system
+    ├── RAG_SCORING_EXAMPLES.md     ← Scoring walkthroughs
+    ├── RAG_TUNING_GUIDE.md         ← Optimization strategies
+    ├── RAG_VISUAL_REFERENCE.md     ← Diagrams & charts
+    └── README_RAG_DOCUMENTATION.md ← Doc index
+```
+
+---
+
+## Quick Start
+
+### 1. Install Python & Dependencies
+```bash
+# Python 3.9+
+pip install -r requirements.txt
+playwright install chromium
+```
+
+### 2. Install System Dependencies
+**Windows:**
+```bash
+# Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
+# Download .exe installer and install to C:\Program Files\Tesseract-OCR
+# Update .env: TESSERACT_PATH=C:\\Program Files\\Tesseract-OCR\\tesseract.exe
+```
+
+**Linux:**
+```bash
+sudo apt install tesseract-ocr poppler-utils
+```
+
+**Mac:**
+```bash
+brew install tesseract poppler
+```
+
+### 3. (Optional) Install Ollama for LLM
+```bash
+# Download from https://ollama.com
+ollama pull llama3  # or your preferred model
+```
+
+### 4. Configure `.env`
+```bash
+cp .env.example .env
+# Edit .env with your values (all have sensible defaults)
+```
+
+---
+
+## All Commands
+
+```bash
+# Continuous hourly scrape loop (production)
+python main.py
+
+# Single scrape run (testing / cron)
+python main.py --once
+
+# Show DB + vector store stats
+python main.py --stats
+
+# Ask a question (RAG query)
+python main.py --ask "Show me IT equipment bids above 10 lakh"
+
+# Ask with a metadata filter
+python main.py --ask "laptop bids" --filter product_type=Product
+python main.py --ask "maintenance bids" --filter "bid_type=Service Bid/RAs"
+
+# Interactive chat mode
+python main.py --chat
+
+# Rebuild vector store from existing SQLite DB
+python main.py --reindex
+```
+
+### Chat mode commands
+Once inside `--chat`:
+
+| Command | Description |
+|---|---|
+| `<question>` | Hybrid search + LLM answer |
+| `f:<key>=<value> <question>` | Search with metadata filter |
+| `/search <question>` | Retrieval only, no LLM — shows item names + scores |
+| `quit` / `bye` / `exit` / `done` | Exit chat |
+
+### Utility & Helper Scripts
+
+```bash
+# Parse PDF markdown & Docling JSON files using Mineru parser
+python MINERU_MARKDOWN_PASER.py --help
+
+# Sync local workspace changes to GitHub main branch
+./sync_to_github.sh
+
+# Run standalone scraper tests (inside 'STANDLONE TEST SCRIPTS/')
+python "STANDLONE TEST SCRIPTS/TEST_STANDALONE_SCRAPPER.py"
+```
+
+---
+
+## Scraper Behaviour
+
+### Active Bids Only
+The scraper applies the **"Ongoing Bids/RA"** filter on the GeM portal before collecting cards. This means only currently open/active bids are scraped — expired or closed bids are skipped automatically.
+
+This is handled by `browser.select_ongoing_bids()` which clicks the "Ongoing Bids/RA" checkbox after selecting each bid type filter.
+
+### Date Accuracy
+Bid dates (`start_date`, `end_date`) are scraped directly from the **card HTML** on the listing page, not from the PDF. Card dates are more reliable because:
+- PDFs sometimes contain incorrect or missing date fields
+- Card HTML always shows the portal's authoritative start/end timestamps
+- Card dates are in `DD-MM-YYYY HH:MM AM/PM` format and are converted to 24-hour `DD-MM-YYYY HH:MM:SS`
+
+PDF dates are used only as a fallback when card dates are unavailable.
+
+### Bid Types Scraped
+```
+Product Bid/RAs
+Service Bid/RAs
+Bid To RAs
+Product Custom Bid/RAs
+BOQ Bids
+Rate Contract Bids
+Global Tender
+Limited Tender
+Single Tender
+```
+
+---
+
+## RAG Configuration (`.env` / `config/settings.py`)
+
+| Setting | Default | Description |
+|---|---|---|
+| `RAG_EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Local embedding model (no API key) |
+| `RAG_LLM_PROVIDER` | `ollama` | `ollama` / `openai` / `""` (retrieval only) |
+| `OLLAMA_MODEL` | `llama3` | Ollama model name |
+| `OPENAI_MODEL` | `gpt-4o-mini` | OpenAI model (if using OpenAI) |
+| `RAG_TOP_K` | `5` | Unique bids returned per query |
+| `RAG_CHUNK_SIZE` | `800` | Characters per text chunk |
+| `RAG_CHUNK_OVERLAP` | `100` | Overlap between consecutive chunks |
+
+### LLM Provider options
+
+| Provider | Cost | Setup |
+|---|---|---|
+| `ollama` | Free, local | Install Ollama + `ollama pull llama3` |
+| `openai` | Paid API | Set `OPENAI_API_KEY` in `.env` |
+| `""` (empty) | Free | No LLM — returns formatted retrieval results with score breakdown |
+
+---
+
+## How RAG Works
+
+```
+User question
+     │
+     ▼
+Embed query (sentence-transformers, local)
+     │
+     ▼
+ChromaDB vector search → top-K*4 raw chunks (over-fetch for dedup)
+     │
+     ├── Semantic score  = 1 - cosine_distance   (60% weight)
+     └── Keyword score   = TF-IDF field matching  (40% weight)
+                │
+                ▼
+         Hybrid score = (semantic × 0.6) + (keyword × 0.4)
+                │
+                ▼
+     Deduplicate by bid_no → top-K unique bids
+                │
+                ▼
+     LLM (Ollama/OpenAI) generates answer  OR  retrieval-only output
+                │
+                ▼
+     Answer + source bids with relevance scores
+```
+
+Every new bid scraped is **automatically indexed** into ChromaDB via `database.upsert()`.
+No manual step needed — scrape → index → query all happen in one pipeline.
+
+---
+
+## Hybrid Scoring
+
+The search combines two signals:
+
+| Signal | Weight | What it captures |
+|---|---|---|
+| Semantic similarity | 60% | Meaning, intent, synonyms |
+| Keyword matching | 40% | Exact words in item name, dept, type |
+
+**Field weights for keyword scoring:**
+
+| Field | Weight |
+|---|---|
+| `full_item_name` | 3.0 |
+| `department` | 1.5 |
+| `bid_type` | 1.0 |
+| `product_type` | 1.0 |
+
+When using retrieval-only mode (`RAG_LLM_PROVIDER=""`), each result shows a full score breakdown:
+```
+Overall Score : 72%
+  • Semantic (60%)  : 85%
+  • Keyword  (40%)  : 52%
+```
+
+---
+
+## Query Engine Features
+
+### Smart Top-K Selection
+The query engine automatically adjusts how many results to fetch based on query intent:
+
+| Intent | Example | top_k |
+|---|---|---|
+| Listing intent | "show all bids", "list every product bid", "how many bids" | max(default, 15) |
+| Focused lookup | "find bid GEM/2024/B/123", "specific bid" | max(1, default // 2) |
+| Default | "IT hardware bids" | default (5) |
+
+### Exit Detection
+In `--chat` mode, exit words are checked **before** any query processing. Supported exit words: `quit`, `exit`, `q`, `bye`, `goodbye`, `stop`, `close`, `end`, `done`, `ok bye`.
+
+### /search Command
+In chat mode, `/search <question>` performs retrieval only (no LLM) and displays:
+- Bid number
+- Full item name (from metadata, not raw chunk text)
+- End date
+- Hybrid score
+
+---
+
+## Example Queries
+
+```bash
+python main.py --ask "Find laptop or computer bids from NIC"
+python main.py --ask "Which bids are ending this month?"
+python main.py --ask "Service bids above 50 lakh" --filter product_type=Service
+python main.py --ask "Global tenders in defence or military"
+python main.py --ask "Show BOQ bids from Gujarat"
+python main.py --ask "List all ongoing product bids"
+```
+
+---
+
+## JSON Output Fields
+
+```json
+{
+  "bid_type":        "Product Bid/RAs",
+  "product_type":    "Product",
+  "bid_no":          "GEM/2026/B/7382409",
+  "ra_no":           "GEM/2026/R/1234567",
+  "full_item_name":  "All in One PC (V2) (Q2)",
+  "quantity":        "200",
+  "department":      "Department Of Electronics And Information Technology",
+  "start_date":      "11-12-2025 16:30:00",
+  "end_date":        "11-01-2026 16:00:00",
+  "estimated_value": "13000000",
+  "bid_packet_type": "Two Packet Bid",
+  "document_url":    "https://bidplus.gem.gov.in/showbidDocument/...",
+  "corrigendum_url": "",
+  "first_seen":      "2026-05-25T10:00:00",
+  "last_seen":       "2026-05-25T11:00:00",
+  "is_new":          1
+}
+```
+
+> `full_pdf_text` is stored in SQLite but stripped from the JSON export to keep file size manageable.
+
+---
+
+## Running as a Background Service (Linux)
+
+```ini
+# /etc/systemd/system/gem-scraper.service
+[Unit]
+Description=GeM Bid Scraper
+After=network.target
+
+[Service]
+WorkingDirectory=/path/to/gem_tender
+ExecStart=/usr/bin/python3 main.py
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl enable gem-scraper
+sudo systemctl start gem-scraper
+```
+
+## Running with Cron (alternative)
+
+```bash
+# Every hour — scrape active bids + auto-index new ones into RAG
+0 * * * * cd /path/to/gem_tender && python main.py --once >> logs/cron.log 2>&1
+```
+
+---
+
+## Logs
+
+Each module writes to its own rotating log file in `logs/`:
+
+| File | Module |
+|---|---|
+| `main.log` | Entry point |
+| `scraper.log` | Scrape runs |
+| `scheduler.log` | Scheduler loop |
+| `browser.log` | Playwright browser |
+| `parser.log` | PDF + card parsing |
+| `database.log` | SQLite operations |
+| `embedder.log` | Embedding model |
+| `vector_store.log` | ChromaDB operations |
+
+Logs rotate at 5 MB, keeping 5 backups per file.
