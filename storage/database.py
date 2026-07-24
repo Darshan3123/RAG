@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS bids (
     estimated_value  TEXT,
     bid_packet_type  TEXT,
     corrigendum_url  TEXT,
+    pdf_hyperlinks   TEXT DEFAULT '[]',
     full_pdf_text    TEXT,
     first_seen       TEXT,
     last_seen        TEXT,
@@ -66,6 +67,9 @@ class BidDatabase:
     def _init(self):
         with self._conn() as conn:
             conn.executescript(SCHEMA)
+            cols = [r["name"] for r in conn.execute("PRAGMA table_info(bids)").fetchall()]
+            if "pdf_hyperlinks" not in cols:
+                conn.execute("ALTER TABLE bids ADD COLUMN pdf_hyperlinks TEXT DEFAULT '[]'")
         log.info(f"Database ready: {self.db_path}")
 
     # -------------------------------------------------------
@@ -86,6 +90,7 @@ class BidDatabase:
     def upsert(self, bid: dict) -> bool:
         now = datetime.utcnow().isoformat()
         is_new = not self.exists(bid["document_url"])
+        hyperlinks_val = bid.get("pdf_hyperlinks", "[]") or "[]"
 
         with self._conn() as conn:
             if is_new:
@@ -96,7 +101,7 @@ class BidDatabase:
                         quantity, department,
                         start_date, end_date,
                         estimated_value, bid_packet_type,
-                        corrigendum_url, full_pdf_text,
+                        corrigendum_url, pdf_hyperlinks, full_pdf_text,
                         first_seen, last_seen, is_new
                     ) VALUES (
                         :document_url, :bid_no, :ra_no,
@@ -104,21 +109,23 @@ class BidDatabase:
                         :quantity, :department,
                         :start_date, :end_date,
                         :estimated_value, :bid_packet_type,
-                        :corrigendum_url, :full_pdf_text,
+                        :corrigendum_url, :pdf_hyperlinks, :full_pdf_text,
                         :first_seen, :last_seen, 1
                     )
-                """, {**bid, "first_seen": now, "last_seen": now})
+                """, {**bid, "pdf_hyperlinks": hyperlinks_val, "first_seen": now, "last_seen": now})
                 log.info(f"  NEW BID saved: {bid.get('bid_no')}")
             else:
                 conn.execute("""
                     UPDATE bids
                     SET last_seen = ?, is_new = 0,
-                        ra_no = ?, corrigendum_url = ?
+                        ra_no = ?, corrigendum_url = ?,
+                        pdf_hyperlinks = ?
                     WHERE document_url = ?
                 """, (
                     now,
                     bid.get("ra_no", ""),
                     bid.get("corrigendum_url", ""),
+                    hyperlinks_val,
                     bid["document_url"],
                 ))
 

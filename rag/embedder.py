@@ -72,6 +72,18 @@ def _get_model():
 # =========================================================
 def _metadata_card(bid: dict) -> str:
     """Compact, repeat-key block — high signal for retrieval."""
+    links_summary = ""
+    raw_links = bid.get("pdf_hyperlinks", "[]")
+    try:
+        import json
+        links = json.loads(raw_links) if isinstance(raw_links, str) else (raw_links or [])
+        if links:
+            descriptions = [hl.get("text", "Document Link") for hl in links if hl.get("text")]
+            if descriptions:
+                links_summary = " Extracted links available: " + ", ".join(descriptions[:5]) + "."
+    except Exception:
+        pass
+
     return (
         f"Bid Number: {bid.get('bid_no', '')}. "
         f"RA Number: {bid.get('ra_no', '')}. "
@@ -85,6 +97,7 @@ def _metadata_card(bid: dict) -> str:
         f"End Date: {bid.get('end_date', '')}. "
         f"Estimated Value: {bid.get('estimated_value', '')}. "
         f"Bid Packet Type: {bid.get('bid_packet_type', '')}."
+        f"{links_summary}"
     ).strip()
 
 

@@ -40,6 +40,7 @@ from core.parser import (
     get_card_details,
     parse_bid_data,
     clean_text,
+    extract_pdf_hyperlinks,
 )
 from storage.database import BidDatabase
 from utils.antibot import sleep_between_cards
@@ -251,13 +252,30 @@ def process_card_item(
         log.warning(f"Download failed for doc_url: {doc_url}")
         return {"status": "error_download"}
 
+    # Extract hyperlinks from main Bid PDF
+    bid_links = extract_pdf_hyperlinks(pdf_path, source_tag="bid")
+
     # 4. Download Reverse Auction (RA) PDF into downloads/<Bid_No>/ if available
+    ra_pdf_path = None
+    ra_links = []
     if ra_url:
-        browser.download_pdf(
+        ra_pdf_path = browser.download_pdf(
             document_url=ra_url,
             save_dir=bid_dir,
             filename=f"{safe_bid_no}_RA.pdf"
         )
+        if ra_pdf_path and os.path.exists(ra_pdf_path):
+            ra_links = extract_pdf_hyperlinks(ra_pdf_path, source_tag="ra")
+
+    # Combine and deduplicate links
+    combined_links = bid_links + ra_links
+    seen_keys = set()
+    unique_links = []
+    for link in combined_links:
+        key = (link["url"], link["text"], link["source"])
+        if key not in seen_keys:
+            seen_keys.add(key)
+            unique_links.append(link)
 
     # 5. Execute Mineru VLM Engine Markdown Conversion (Zero Save Mode: output_dir=None)
     pdf_text = ""
@@ -292,13 +310,21 @@ def process_card_item(
         card_data["bid"]["process_kind"] = parsed_pdf_data.pop("process_kind", "")
         card_data["bid"]["base_type"] = parsed_pdf_data.pop("base_type", "")
 
-        # Save Markdown File Artifact inside downloads/<Bid_No>/
-        pdf_md_path = os.path.join(bid_dir, f"{safe_bid_no}.md")
-        try:
-            with open(pdf_md_path, "w", encoding="utf-8-sig") as f:
-                f.write(pdf_text)
-        except Exception as e:
-            log.warning(f"Could not save Markdown for {safe_bid_no}: {e}")
+    # Attach hyperlinks to parsed PDF data structure
+    parsed_pdf_data["hyperlinks"] = unique_links
+
+    # Save Markdown File Artifact inside downloads/<Bid_No>/ (with appended Extracted Hyperlinks section)
+    pdf_md_path = os.path.join(bid_dir, f"{safe_bid_no}.md")
+    try:
+        md_out = pdf_text
+        if unique_links:
+            md_out += "\n\n## Extracted Hyperlinks\n"
+            for hl in unique_links:
+                md_out += f"- **[{hl['text']}]({hl['url']})** (Page {hl['page']}, Source: {hl['source'].upper()})\n"
+        with open(pdf_md_path, "w", encoding="utf-8-sig") as f:
+            f.write(md_out)
+    except Exception as e:
+        log.warning(f"Could not save Markdown for {safe_bid_no}: {e}")
 
     # 7. Assemble Final Unified JSON Schema Artifact inside downloads/<Bid_No>/
     final_bid = {
@@ -346,6 +372,7 @@ def process_card_item(
         "estimated_value": str(parsed_pdf_data.get("financials", {}).get("estimated_value") or ""),
         "bid_packet_type": str(bid_packet_type_val or ""),
         "corrigendum_url": str(corr_url or ""),
+        "pdf_hyperlinks":  json.dumps(unique_links),
         "full_pdf_text":   clean_text(pdf_text),
     }
 

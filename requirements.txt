@@ -1,4 +1,7 @@
+
+
 # ── Usage of requirements.txt ─────────────────────────────
+#uv venv -p 3.12 --seed ~/VLLM_Env
 # pip install uv "packaging>=24.2" "setuptools>=77.0.0"
 # uv pip install -r requirements.txt --torch-backend=cu130  --index-strategy unsafe-best-match --no-build-isolation
 # ── PyTorch CUDA Index ────────────────────────────────────
@@ -23,6 +26,7 @@ flash-attn @ https://github.com/mjun0812/flash-attention-prebuild-wheels/release
 
 # ── Scraper & Document Processing ────────────────────────
 playwright>=1.44.0
+PyMuPDF>=1.24.0
 Mineru_Document_To_Markdown[all] @ git+https://github.com/ThriveX2025/Mineru_Document_To_Markdown.git
 git+https://github.com/ThriveX2025/Mineru_Utils.git
 

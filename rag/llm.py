@@ -69,6 +69,26 @@ def _extract_item(chunk_text: str, metadata_item: str) -> str:
     return "N/A"
 
 
+def _format_links_for_prompt(raw_links) -> str:
+    if not raw_links:
+        return "N/A"
+    try:
+        import json
+        links = json.loads(raw_links) if isinstance(raw_links, str) else raw_links
+        if not links or not isinstance(links, list):
+            return "N/A"
+        formatted = []
+        for l in links[:5]:
+            text = l.get("text", "Link")
+            url = l.get("url", "")
+            src = l.get("source", "bid").upper()
+            if url:
+                formatted.append(f"{text} ({url}) [{src}]")
+        return ", ".join(formatted) if formatted else "N/A"
+    except Exception:
+        return "N/A"
+
+
 def build_prompt(question: str, chunks: list[dict]) -> str:
     if not chunks:
         return (
@@ -81,6 +101,7 @@ def build_prompt(question: str, chunks: list[dict]) -> str:
 
     for c in capped:
         item = _extract_item(c.get("chunk", ""), c.get("full_item_name", ""))
+        links_str = _format_links_for_prompt(c.get("pdf_hyperlinks"))
         block = (
             f"Bid No    : {c.get('bid_no', 'N/A')}\n"
             f"Item      : {item}\n"
@@ -90,7 +111,8 @@ def build_prompt(question: str, chunks: list[dict]) -> str:
             f"Start Date: {c.get('start_date') or 'N/A'}\n"
             f"End Date  : {c.get('end_date') or 'N/A'}\n"
             f"Est. Value: {c.get('estimated_value') or 'N/A'}\n"
-            f"URL       : {c.get('document_url', 'N/A')}"
+            f"URL       : {c.get('document_url', 'N/A')}\n"
+            f"Doc Links : {links_str}"
         )
         parts.append(f"--- BID ---\n{block}")
 
@@ -191,6 +213,7 @@ def _format_retrieval_only(question: str, chunks: list[dict]) -> str:
             f"   End Date  : {c.get('end_date') or 'N/A'}\n"
             f"   Est. Value: {c.get('estimated_value') or 'N/A'} INR\n"
             f"   URL       : {c.get('document_url', 'N/A')}\n"
+            f"   Doc Links : {_format_links_for_prompt(c.get('pdf_hyperlinks'))}\n"
             f"   ──────────────────────────────────────\n"
             f"   Score        : {score:.2%}   "
             f"(rerank {ce:.2%} | dense {sem:.2%} | bm25 {bm:.2%})"
