@@ -26,9 +26,9 @@ flash-attn @ https://github.com/mjun0812/flash-attention-prebuild-wheels/release
 
 # ── Scraper & Document Processing ────────────────────────
 playwright>=1.44.0
-PyMuPDF>=1.24.0
 Mineru_Document_To_Markdown[all] @ git+https://github.com/ThriveX2025/Mineru_Document_To_Markdown.git
 git+https://github.com/ThriveX2025/Mineru_Utils.git
+pymupdf>=1.24.0
 
 # ── RAG — Embeddings (local, no API key needed) ───────────
 sentence-transformers>=3.0.0

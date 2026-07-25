@@ -7,7 +7,6 @@
 # - Uses Mineru VLM engine output (Markdown/HTML) with BeautifulSoup
 #   and structured regex extraction.
 # =========================================================
-import os
 import re
 import sys
 import html
@@ -1041,67 +1040,6 @@ def parse_bid_data(md_content: str | dict, product_type: str = "PRODUCT") -> dic
         "financials":     financials,
         "terms":          terms,
     }
-
-
-# =========================================================
-# HYPERLINK EXTRACTION (PyMuPDF / fitz)
-# =========================================================
-def extract_pdf_hyperlinks(pdf_path: str, source_tag: str = "bid") -> list[dict]:
-    """
-    Extract external embedded hyperlinks from a PDF file using PyMuPDF (fitz).
-    Deduplicates links by (uri, text, source_tag) and ignores internal page-jump links.
-    
-    Args:
-        pdf_path (str): Path to the PDF file.
-        source_tag (str): Origin label for the document ('bid' or 'ra').
-        
-    Returns:
-        list[dict]: List of extracted hyperlink objects.
-    """
-    if not pdf_path or not os.path.exists(pdf_path):
-        return []
-    
-    extracted_data = []
-    seen = set()
-    
-    try:
-        import fitz
-        with fitz.open(pdf_path) as doc:
-            for page_num in range(len(doc)):
-                page = doc[page_num]
-                links = page.get_links()
-                for link in links:
-                    try:
-                        # 1. Filter: Only external URI links
-                        if link.get("kind") != fitz.LINK_URI:
-                            continue
-                        uri = link.get("uri", "").strip()
-                        if not uri or not uri.lower().startswith(("http://", "https://")):
-                            continue
-                        
-                        # 2. Extract bounding text with correct empty fallback
-                        rect = link.get("from")
-                        raw_text = page.get_textbox(rect).strip() if rect else ""
-                        text = clean_text(raw_text) or "View Document"
-                        
-                        # 3. Deduplicate identical (uri, text, source_tag) entries
-                        key = (uri, text, source_tag)
-                        if key in seen:
-                            continue
-                        seen.add(key)
-                        
-                        extracted_data.append({
-                            "page": page_num + 1,
-                            "text": text,
-                            "url": uri,
-                            "source": source_tag
-                        })
-                    except Exception as link_err:
-                        log.debug(f"Skipping malformed link on page {page_num+1} ({source_tag}): {link_err}")
-    except Exception as e:
-        log.debug(f"Error extracting PDF hyperlinks from {pdf_path}: {e}")
-        
-    return extracted_data
 
 
 # =========================================================

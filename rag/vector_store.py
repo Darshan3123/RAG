@@ -138,7 +138,6 @@ def upsert_bid(bid: dict):
             "ra_no":           bid.get("ra_no", ""),
             "document_url":    bid.get("document_url", ""),
             "corrigendum_url": bid.get("corrigendum_url", ""),
-            "pdf_hyperlinks":  str(bid.get("pdf_hyperlinks", "[]") or "[]"),
             "chunk_index":     i,
         }
         for i in range(len(chunks))
@@ -335,7 +334,6 @@ def search(
             "ra_no":           meta.get("ra_no", ""),
             "document_url":    meta.get("document_url", ""),
             "corrigendum_url": meta.get("corrigendum_url", ""),
-            "pdf_hyperlinks":  meta.get("pdf_hyperlinks", "[]"),
         })
 
     # Rule B: drop results scoring less than 70% of top result

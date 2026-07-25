@@ -40,11 +40,11 @@ from core.parser import (
     get_card_details,
     parse_bid_data,
     clean_text,
-    extract_pdf_hyperlinks,
 )
 from storage.database import BidDatabase
 from utils.antibot import sleep_between_cards
 from utils.logger import get_logger
+from utils.pdf_hyperlinks import extract_hyperlinks, inject_hyperlinks_into_markdown
 
 log = get_logger("scraper")
 
@@ -200,10 +200,12 @@ def process_card_item(
     2. Extract document links (Bid PDF, RA PDF, Corrigendum).
     3. Create subfolder named after Bid No inside DOWNLOAD_DIR: downloads/{safe_bid_no}/
     4. Download PDF files (Bid PDF and optional RA PDF) directly into the bid subfolder.
-    5. Convert Bid PDF to Markdown via Mineru VLM engine in Zero Save Mode (output_dir=None).
-    6. Parse Markdown into structured schema using core parser.
-    7. Save all 4 output artifacts (.html, .pdf, .md, .json) inside downloads/{safe_bid_no}/.
-    8. Upsert record into SQLite database & ChromaDB vector store.
+    5. Extract hyperlinks from the downloaded PDF using PyMuPDF.
+    6. Convert Bid PDF to Markdown via Mineru VLM engine in Zero Save Mode (output_dir=None).
+    7. Inject extracted hyperlinks as a section into the Markdown for RAG enrichment.
+    8. Parse Markdown into structured schema using core parser.
+    9. Save all 4 output artifacts (.html, .pdf, .md, .json) inside downloads/{safe_bid_no}/.
+    10. Upsert record into SQLite database & ChromaDB vector store.
     
     Args:
         card: Playwright Locator pointing to bid card node.
@@ -252,32 +254,34 @@ def process_card_item(
         log.warning(f"Download failed for doc_url: {doc_url}")
         return {"status": "error_download"}
 
-    # Extract hyperlinks from main Bid PDF
-    bid_links = extract_pdf_hyperlinks(pdf_path, source_tag="bid")
-
     # 4. Download Reverse Auction (RA) PDF into downloads/<Bid_No>/ if available
-    ra_pdf_path = None
-    ra_links = []
     if ra_url:
-        ra_pdf_path = browser.download_pdf(
+        browser.download_pdf(
             document_url=ra_url,
             save_dir=bid_dir,
             filename=f"{safe_bid_no}_RA.pdf"
         )
-        if ra_pdf_path and os.path.exists(ra_pdf_path):
-            ra_links = extract_pdf_hyperlinks(ra_pdf_path, source_tag="ra")
 
-    # Combine and deduplicate links
-    combined_links = bid_links + ra_links
-    seen_keys = set()
-    unique_links = []
-    for link in combined_links:
-        key = (link["url"], link["text"], link["source"])
-        if key not in seen_keys:
-            seen_keys.add(key)
-            unique_links.append(link)
+    # 5. Extract hyperlinks from the Bid PDF using PyMuPDF
+    #    Done before Mineru conversion so links can be injected into the Markdown.
+    bid_hyperlinks: list[dict] = []
+    try:
+        bid_hyperlinks = extract_hyperlinks(pdf_path, source="bid")
+        log.info(f"Hyperlinks extracted for {safe_bid_no}: {len(bid_hyperlinks)} links")
+    except Exception as e:
+        log.warning(f"Hyperlink extraction failed for {safe_bid_no}: {e}")
 
-    # 5. Execute Mineru VLM Engine Markdown Conversion (Zero Save Mode: output_dir=None)
+    # Also extract from RA PDF if it was downloaded
+    ra_pdf_path = os.path.join(bid_dir, f"{safe_bid_no}_RA.pdf")
+    if ra_url and os.path.exists(ra_pdf_path):
+        try:
+            ra_links = extract_hyperlinks(ra_pdf_path, source="ra")
+            bid_hyperlinks.extend(ra_links)
+            log.info(f"RA hyperlinks extracted for {safe_bid_no}: {len(ra_links)} links")
+        except Exception as e:
+            log.warning(f"RA hyperlink extraction failed for {safe_bid_no}: {e}")
+
+    # 6. Execute Mineru VLM Engine Markdown Conversion (Zero Save Mode: output_dir=None)
     pdf_text = ""
     parsed_pdf_data = {}
     conv_timer = ProgressTimer(f"Converting PDF ({safe_bid_no}) to Markdown Via Mineru VLLM Server")
@@ -303,35 +307,36 @@ def process_card_item(
     if not pdf_text:
         log.warning(f"Mineru markdown result empty for {safe_bid_no}")
 
-    # 6. Parse PDF Markdown into Structured Data Schema
+    # 7. Inject hyperlinks into Markdown for RAG text enrichment
+    #    URLs become searchable via BM25 / dense retrieval in addition to
+    #    being stored in the structured hyperlinks[] JSON field.
+    if pdf_text and bid_hyperlinks:
+        pdf_text = inject_hyperlinks_into_markdown(pdf_text, bid_hyperlinks)
+
+    # 8. Parse PDF Markdown into Structured Data Schema
     product_type = card_data.get("bid", {}).get("product_type", "PRODUCT")
     if pdf_text.strip():
         parsed_pdf_data = parse_bid_data(pdf_text, product_type)
         card_data["bid"]["process_kind"] = parsed_pdf_data.pop("process_kind", "")
         card_data["bid"]["base_type"] = parsed_pdf_data.pop("base_type", "")
 
-    # Attach hyperlinks to parsed PDF data structure
-    parsed_pdf_data["hyperlinks"] = unique_links
+        # Save Markdown File Artifact inside downloads/<Bid_No>/
+        pdf_md_path = os.path.join(bid_dir, f"{safe_bid_no}.md")
+        try:
+            with open(pdf_md_path, "w", encoding="utf-8-sig") as f:
+                f.write(pdf_text)
+        except Exception as e:
+            log.warning(f"Could not save Markdown for {safe_bid_no}: {e}")
 
-    # Save Markdown File Artifact inside downloads/<Bid_No>/ (with appended Extracted Hyperlinks section)
-    pdf_md_path = os.path.join(bid_dir, f"{safe_bid_no}.md")
-    try:
-        md_out = pdf_text
-        if unique_links:
-            md_out += "\n\n## Extracted Hyperlinks\n"
-            for hl in unique_links:
-                md_out += f"- **[{hl['text']}]({hl['url']})** (Page {hl['page']}, Source: {hl['source'].upper()})\n"
-        with open(pdf_md_path, "w", encoding="utf-8-sig") as f:
-            f.write(md_out)
-    except Exception as e:
-        log.warning(f"Could not save Markdown for {safe_bid_no}: {e}")
-
-    # 7. Assemble Final Unified JSON Schema Artifact inside downloads/<Bid_No>/
+    # 9. Assemble Final Unified JSON Schema Artifact inside downloads/<Bid_No>/
+    #    hyperlinks[] is a top-level sibling of 'pdf', matching the schema
+    #    already observed in scraped bids (e.g. GEM_2026_B_7495766).
     final_bid = {
         "_id": safe_bid_no,
         "bid": card_data.get("bid", {}),
         "card": card_data.get("card", {}),
         "pdf": parsed_pdf_data,
+        "hyperlinks": bid_hyperlinks,          # ← all URI links extracted from the PDF
         "normalized": {},
         "validation": {"issues": []},
         "full_pdf_text": pdf_text,
@@ -343,7 +348,7 @@ def process_card_item(
     except Exception as e:
         log.warning(f"Could not save JSON for {safe_bid_no}: {e}")
 
-    # 8. Upsert Record into SQLite & ChromaDB Vector Store
+    # 10. Upsert Record into SQLite & ChromaDB Vector Store
     card_items = card_data.get("card", {}).get("items", [])
     item_name = card_items[0].get("name", "") if card_items else ""
     qty_val = str(card_items[0].get("quantity", "")) if card_items else ""
@@ -372,7 +377,6 @@ def process_card_item(
         "estimated_value": str(parsed_pdf_data.get("financials", {}).get("estimated_value") or ""),
         "bid_packet_type": str(bid_packet_type_val or ""),
         "corrigendum_url": str(corr_url or ""),
-        "pdf_hyperlinks":  json.dumps(unique_links),
         "full_pdf_text":   clean_text(pdf_text),
     }
 
@@ -514,7 +518,14 @@ def scrape_specific_bid(db: BidDatabase, bid_no: str) -> dict:
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
     worker = AsyncWorker()
-    set_vlm_config(batch_size=16, max_gpu_util=0.8, model_len=4096)
+    # RTX 2050 (4 GB VRAM) tuning:
+    #   max_gpu_util=0.95  → gives the VLM ~3.8 GB instead of 3.2 GB
+    #   model_len=2048     → halves KV-cache footprint, freeing room for
+    #                        larger effective batch; GeM PDFs rarely need
+    #                        more than 2048 tokens of context per page
+    #   batch_size=4       → realistic ceiling for 4 GB; vLLM will use
+    #                        whatever fits rather than silently falling to 1
+    set_vlm_config(batch_size=4, max_gpu_util=0.95, model_len=2048)
 
     server_timer = ProgressTimer("Starting Mineru vLLM server")
     server_timer.start()
@@ -587,7 +598,8 @@ def run_full_scrape(db: BidDatabase) -> dict:
     log.info("=" * 60)
 
     worker = AsyncWorker()
-    set_vlm_config(batch_size=16, max_gpu_util=0.8, model_len=4096)
+    # RTX 2050 (4 GB VRAM) tuning — see scrape_specific_bid for rationale
+    set_vlm_config(batch_size=4, max_gpu_util=0.95, model_len=2048)
 
     server_timer = ProgressTimer("Starting Mineru vLLM server")
     server_timer.start()
