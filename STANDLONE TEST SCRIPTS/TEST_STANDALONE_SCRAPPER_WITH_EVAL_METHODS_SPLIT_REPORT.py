@@ -16,6 +16,7 @@ import time
 import subprocess
 import json
 import shutil
+import datetime
 from concurrent.futures import ThreadPoolExecutor
 
 # -------------------------------------------------------------------------
@@ -63,7 +64,7 @@ for directory in [OUTPUT_DIR_PDF, OUTPUT_DIR_TXT]:
         os.makedirs(os.path.join(directory, cat), exist_ok=True)
 
 START_PAGE = 1
-END_PAGE = 10
+END_PAGE = 15
 MAX_WORKERS = 32 
 MAX_BUFFER_ITEMS = 2000 
 
@@ -173,6 +174,21 @@ def scrape_bids_in_memory():
                     for i in range(card_count):
                         card = cards.nth(i)
                         text = card.inner_text()
+                        
+                        # --- Time Constraint Check ---
+                        date_match = re.search(r"End Date:\s*(\d{2}-\d{2}-\d{4}\s+\d{1,2}:\d{2}\s+[AP]M)", text, re.IGNORECASE)
+                        if date_match:
+                            end_date_str = date_match.group(1)
+                            try:
+                                end_date = datetime.datetime.strptime(end_date_str, "%d-%m-%Y %I:%M %p")
+                                time_left_mins = (end_date - datetime.datetime.now()).total_seconds() / 60
+                                if time_left_mins <= 10:
+                                    print(f"[-] Skipping bid (Ends in {time_left_mins:.1f} mins - Less than 10 mins remaining).")
+                                    continue
+                            except ValueError:
+                                pass # Proceed normally if date parsing fails
+                        # -----------------------------
+                        
                         m = re.search(r"GEM/\d{4}/B/\d+", text)
                         bid_no = m.group().replace('/', '_') if m else f"UNKNOWN_BID_P{current_page}_C{i}"
                         

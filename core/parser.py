@@ -270,7 +270,14 @@ def parse_items_section(docling: dict, kv: dict, soup: BeautifulSoup = None) -> 
 
     if not found_docling_items:
         cat_raw = md_get(kv, "Item Category", "वस्तु श्रेणी") or ""
-        names = [clean(x) for x in cat_raw.split(",") if clean(x)]
+        # GeM separates items with " , " (space-comma-space).
+        # Item names themselves can contain commas without surrounding spaces
+        # e.g. "Printing, supply of ACP vinyl Board" is ONE item.
+        # Split on " , " first; fall back to plain "," only if that yields 1 token.
+        if " , " in cat_raw:
+            names = [clean(x) for x in cat_raw.split(" , ") if clean(x)]
+        else:
+            names = [clean(x) for x in cat_raw.split(",") if clean(x)]
         
         item_quantities = []
         if soup:
@@ -279,7 +286,13 @@ def parse_items_section(docling: dict, kv: dict, soup: BeautifulSoup = None) -> 
                 if not rows:
                     continue
                 hdr = " ".join(clean(td.get_text()) for td in rows[0].find_all(["td", "th"])).lower()
-                
+
+                # Skip the group-wise evaluation schedules table — it aggregates
+                # all items and would count as one extra entry, breaking the
+                # positional zip with names.
+                if "evaluation schedules" in hdr:
+                    continue
+
                 if ("consignee" in hdr or "परेषिती" in hdr) and ("quantity" in hdr or "मात्रा" in hdr):
                     hdr_cells = [clean(td.get_text()).lower() for td in rows[0].find_all(["td", "th"])]
                     i_qty = next((i for i, h in enumerate(hdr_cells) if "quantity" in h or "मात्रा" in h), 3)
@@ -380,73 +393,149 @@ def _normalise_group_key(raw_key: str) -> str:
     return raw_key
 
 
-def _cell_at(item_cells: list[tuple[str, int, int]], idx_in_full_row: int) -> str:
+def _expand_table_grid(rows) -> list[list[str]]:
     """
-    Safely retrieve text from row cell list taking offset into account.
+    Expand an HTML <table> row list into a dense rectangular grid of strings.
+
+    Cells carrying rowspan/colspan are replicated into every slot they cover,
+    so grid[r][c] always holds the value logically present at that position.
+    This makes column indices derived from the header row valid on EVERY row,
+    including rows where a merged cell (e.g. the evaluation-schedule letter)
+    is physically absent from the markup.
+
+    Args:
+        rows (list): List of <tr> Tag objects.
+
+    Returns:
+        list[list[str]]: Rectangular grid, padded with "" where needed.
     """
-    adj = idx_in_full_row - 1
-    return item_cells[adj][0] if 0 <= adj < len(item_cells) else ""
+    grid: list[list[Optional[str]]] = []
+
+    def _ensure_row(r: int) -> None:
+        while len(grid) <= r:
+            grid.append([])
+
+    def _ensure_col(r: int, c: int) -> None:
+        while len(grid[r]) <= c:
+            grid[r].append(None)
+
+    for r_idx, row in enumerate(rows):
+        _ensure_row(r_idx)
+        col = 0
+        for cell in row.find_all(["td", "th"]):
+            # skip columns already occupied by a rowspan coming from above
+            while col < len(grid[r_idx]) and grid[r_idx][col] is not None:
+                col += 1
+
+            text = clean(cell.get_text())
+            try:
+                colspan = max(1, int(cell.get("colspan", 1) or 1))
+            except (TypeError, ValueError):
+                colspan = 1
+            try:
+                rowspan = max(1, int(cell.get("rowspan", 1) or 1))
+            except (TypeError, ValueError):
+                rowspan = 1
+
+            for dr in range(rowspan):
+                rr = r_idx + dr
+                _ensure_row(rr)
+                for dc in range(colspan):
+                    cc = col + dc
+                    _ensure_col(rr, cc)
+                    grid[rr][cc] = text
+            col += colspan
+
+    width = max((len(r) for r in grid), default=0)
+    return [
+        [(c if c is not None else "") for c in r] + [""] * (width - len(r))
+        for r in grid
+    ]
+
+
+def _grid_cell(row: list[str], idx: Optional[int]) -> str:
+    """Safely fetch a stripped cell value from an expanded grid row."""
+    if idx is None or not (0 <= idx < len(row)):
+        return ""
+    return row[idx].strip()
+
+
+_HEADER_ITEM_LABELS = ("item/category", "item", "वस्तु श्रेणी", "वस्तु")
 
 
 def _parse_group_wise_schedules(soup: BeautifulSoup) -> dict:
     """
-    Parse group-wise/package-wise evaluation schedules from BeautifulSoup HTML tables.
-    
+    Parse group-wise / package-wise evaluation schedules from HTML tables.
+
+    Rowspan-safe. GeM renders the schedule key with rowspan when a schedule
+    holds more than one item, so continuation rows carry one column fewer.
+    The table is expanded into a full grid first, which carries the key down
+    and keeps every header-derived column index valid on every row.
+
     Args:
         soup (BeautifulSoup): Parsed HTML content.
-        
+
     Returns:
-        dict: Group/Package schedule mapping containing items and consignee/quantity details.
+        dict: {schedule_key: {"Item_1": {...}, "Item_2": {...}, ...}}
     """
     rows, header_cells = _find_table_by_headers(
         soup, must_have=["evaluation schedules"], must_not_have=[])
     if rows is None:
         return {}
+
     header_text = " ".join(header_cells).lower()
     if not any(kw in header_text for kw in ("consignee", "reporting", "officer")):
-        return {} 
+        return {}
 
-    idx_item     = _col_index(header_cells, "item/category", "item")
-    idx_officer  = _col_index(header_cells, "consignee/reporting", "reporting officer", "consignee")
-    idx_address  = _col_index(header_cells, "address")
-    idx_quantity = _col_index(header_cells, "quantity")
+    grid = _expand_table_grid(rows)
+    if len(grid) < 2:
+        return {}
+    header = grid[0]
+
+    idx_sched    = _col_index(header, "evaluation schedules", "schedule",
+                              "मूल्यांकन अनुसूचियां")
+    idx_item     = _col_index(header, "item/category", "item", "वस्तु")
+    idx_officer  = _col_index(header, "consignee/reporting", "reporting officer",
+                              "consignee /", "officer")
+    idx_address  = _col_index(header, "address", "पता")
+    idx_quantity = _col_index(header, "quantity", "मात्रा")
+    if idx_sched    is None: idx_sched    = 0
     if idx_item     is None: idx_item     = 1
     if idx_officer  is None: idx_officer  = 2
     if idx_address  is None: idx_address  = 3
     if idx_quantity is None: idx_quantity = 4
 
     schedules: dict = {}
-    current_group = None
-    for row in rows[1:]:
-        cells = row.find_all(["td", "th"])
-        if not cells:
+    current_group: Optional[str] = None
+
+    for row in grid[1:]:
+        if not any(c.strip() for c in row):
             continue
-        cell_data = [
-            (clean(c.get_text()), int(c.get("colspan", 1)), int(c.get("rowspan", 1)))
-            for c in cells
-        ]
-        if cell_data and cell_data[0][2] > 1:
-            group_name = cell_data[0][0]
-            if group_name:
-                current_group = _normalise_group_key(group_name)
+
+        sched_raw = _grid_cell(row, idx_sched)
+        item_cat  = _grid_cell(row, idx_item)
+        officer   = _grid_cell(row, idx_officer)
+        address   = _grid_cell(row, idx_address)
+        quantity  = _grid_cell(row, idx_quantity)
+
+        # skip repeated header rows and rows with no item at all
+        if not item_cat or item_cat.lower() in _HEADER_ITEM_LABELS:
+            continue
+
+        if sched_raw and sched_raw.lower() != "evaluation schedules":
+            key = _normalise_group_key(sched_raw)
+            if key != current_group:
+                current_group = key
                 schedules.setdefault(current_group, {})
-            item_cells = cell_data[1:]
-        elif cell_data and re.match(r"^group\s+g\d+", cell_data[0][0], re.IGNORECASE):
-            current_group = _normalise_group_key(cell_data[0][0])
+
+        if current_group is None:
+            # table had no usable key column - fall back to sequential numbering
+            current_group = _normalise_group_key(str(len(schedules) + 1))
             schedules.setdefault(current_group, {})
-            item_cells = cell_data[1:]
-        else:
-            item_cells = cell_data
 
-        if current_group is None or not item_cells:
-            continue
-
-        item_cat = _cell_at(item_cells, idx_item)
-        officer  = _cell_at(item_cells, idx_officer)
-        address  = _cell_at(item_cells, idx_address)
-        quantity = _cell_at(item_cells, idx_quantity)
-        if not item_cat or item_cat.lower() in ("item/category", "item", ""):
-            continue
+        # quantity must be numeric, otherwise the cell was misread
+        if quantity and not re.fullmatch(r"\d+(\.\d+)?", quantity):
+            quantity = ""
 
         item_no = len(schedules[current_group]) + 1
         schedules[current_group][f"Item_{item_no}"] = {
@@ -455,7 +544,51 @@ def _parse_group_wise_schedules(soup: BeautifulSoup) -> dict:
             "Consignee Address":           address,
             "Quantity":                    quantity,
         }
+
     return schedules
+
+
+def _schedules_look_corrupt(schedules: dict) -> bool:
+    """
+    Heuristic check for column-shifted group-wise schedules.
+
+    Detects the classic rowspan misalignment where Item/Category picks up the
+    officer name, Consignee Address picks up a bare quantity, and Quantity is
+    left empty. Used to decide whether upstream (VLM) schedules should be
+    rebuilt from the HTML tables.
+
+    Args:
+        schedules (dict): Group-wise schedule map.
+
+    Returns:
+        bool: True if the data looks shifted and should be re-parsed.
+    """
+    if not schedules:
+        return False
+
+    officers = {
+        (it.get("Consignee/Reporting Officer") or "").strip()
+        for grp in schedules.values() if isinstance(grp, dict)
+        for it in grp.values() if isinstance(it, dict)
+    }
+    officers.discard("")
+
+    for grp in schedules.values():
+        if not isinstance(grp, dict):
+            continue
+        for it in grp.values():
+            if not isinstance(it, dict):
+                continue
+            item = (it.get("Item/Category") or "").strip()
+            addr = (it.get("Consignee Address") or "").strip()
+            qty  = (it.get("Quantity") or "").strip()
+            if item and item in officers and len(item) < 60:
+                return True          # item name equals an officer name
+            if addr.isdigit():
+                return True          # address is a bare number
+            if addr and not qty:
+                return True          # quantity fell off the end of the row
+    return False
 
 
 def _cell_val(cells: list, idx: int) -> str:
@@ -465,28 +598,35 @@ def _cell_val(cells: list, idx: int) -> str:
 
 def _parse_item_wise_schedules(soup: BeautifulSoup) -> dict:
     """
-    Parse item-wise evaluation schedules from BeautifulSoup HTML tables.
-    
+    Parse item-wise evaluation schedules from HTML tables (rowspan-safe).
+
     Args:
         soup (BeautifulSoup): Parsed HTML document.
-        
+
     Returns:
-        dict: Item-wise evaluation schedule map indexed by schedule number.
+        dict: {schedule_no: {"Item/Category", "Estimated Value", "Quantity"}}
     """
     rows, header_cells = _find_table_by_headers(
         soup, must_have=["evaluation schedules"], must_not_have=[])
     if rows is None:
         return {}
+
     header_text = " ".join(header_cells).lower()
     if any(kw in header_text for kw in ("consignee", "reporting", "officer")):
         return {}
-    if not any(kw in header_text for kw in ("estimated value", "अनुमानित मूल्य", "item", "वस्तु")):
+    if not any(kw in header_text for kw in
+               ("estimated value", "अनुमानित मूल्य", "item", "वस्तु")):
         return {}
 
-    idx_sched = _col_index(header_cells, "evaluation schedules", "मूल्यांकन अनुसूचियां")
-    idx_item  = _col_index(header_cells, "item/category", "item", "वस्तु")
-    idx_value = _col_index(header_cells, "estimated value", "अनुमानित मूल्य")
-    idx_qty   = _col_index(header_cells, "quantity", "मात्रा")
+    grid = _expand_table_grid(rows)
+    if len(grid) < 2:
+        return {}
+    header = grid[0]
+
+    idx_sched = _col_index(header, "evaluation schedules", "मूल्यांकन अनुसूचियां")
+    idx_item  = _col_index(header, "item/category", "item", "वस्तु")
+    idx_value = _col_index(header, "estimated value", "अनुमानित मूल्य")
+    idx_qty   = _col_index(header, "quantity", "मात्रा")
     if idx_sched is None: idx_sched = 0
     if idx_item  is None: idx_item  = 1
     if idx_value is None: idx_value = 2
@@ -494,21 +634,19 @@ def _parse_item_wise_schedules(soup: BeautifulSoup) -> dict:
 
     schedules: dict = {}
     running = 0
-    for row in rows[1:]:
-        cells = [clean(td.get_text()) for td in row.find_all(["td", "th"])]
-        if not cells:
+    for row in grid[1:]:
+        if not any(c.strip() for c in row):
             continue
-        item_cat = _cell_val(cells, idx_item)
-        if not item_cat or item_cat.lower() in ("item/category", "item", ""):
+        item_cat = _grid_cell(row, idx_item)
+        if not item_cat or item_cat.lower() in _HEADER_ITEM_LABELS:
             continue
-        sched_label = _cell_val(cells, idx_sched)
-        num = to_int(sched_label)
         running += 1
+        num = to_int(_grid_cell(row, idx_sched))
         key = str(num) if num else str(running)
         schedules[key] = {
             "Item/Category":   item_cat,
-            "Estimated Value": _cell_val(cells, idx_value),
-            "Quantity":        _cell_val(cells, idx_qty),
+            "Estimated Value": _grid_cell(row, idx_value),
+            "Quantity":        _grid_cell(row, idx_qty),
         }
     return schedules
 
@@ -571,8 +709,15 @@ def parse_evaluation_section(docling: dict, kv: dict, soup: BeautifulSoup = None
                                         "Qua ntity", item_val.get("Quantity", "")),
                                 }
                         schedules[new_key] = items
-        if not schedules and soup is not None:
-            schedules = _parse_group_wise_schedules(soup)
+        # Rebuild from HTML if upstream gave us nothing, or gave us data that
+        # shows the classic rowspan column shift.
+        if soup is not None and (not schedules or _schedules_look_corrupt(schedules)):
+            rebuilt = _parse_group_wise_schedules(soup)
+            if rebuilt:
+                if schedules:
+                    log.warning("Group-wise schedules looked column-shifted; "
+                                "rebuilt %d schedules from HTML tables.", len(rebuilt))
+                schedules = rebuilt
         return {"evaluation_method": method, "schedules": schedules}
 
     return {"evaluation_method": method, "schedules": d.get("schedules", {})}
@@ -714,7 +859,15 @@ def parse_consignees_section(docling: dict, soup: BeautifulSoup = None) -> list:
             continue
         if "quantity" not in hdr and "मात्रा" not in hdr and "माना" not in hdr:
             continue
-        hdr_cells = [clean(td.get_text()).lower() for td in rows[0].find_all(["td", "th"])]
+        # The group-wise evaluation table also carries "Consignee" + "Quantity"
+        # headers but is NOT a consignee table - skip it.
+        if "evaluation schedules" in hdr or "item/category" in hdr:
+            continue
+        # Expand rowspan/colspan so header column indices stay valid per row
+        grid = _expand_table_grid(rows)
+        if len(grid) < 2:
+            continue
+        hdr_cells = [h.lower() for h in grid[0]]
         i_sno  = _col_idx(hdr_cells, "s.no", "क्र.सं")
         i_off  = _col_idx(hdr_cells, "reporting", "consignee reporting", "परेषिती/रिपोर्टिंग")
         i_addr = _col_idx(hdr_cells, "address", "पता")
@@ -723,18 +876,18 @@ def parse_consignees_section(docling: dict, soup: BeautifulSoup = None) -> list:
         if i_off is None: i_off  = 1
         if i_addr is None: i_addr = 2
         if i_qty is None:  i_qty  = 3
-        if i_del is None:  i_del  = 4
-        for row in rows[1:]:
-            cells = [clean(td.get_text()) for td in row.find_all(["td", "th"])]
+        # Do NOT default i_del - a missing Delivery column used to fall back to
+        # index 4 and silently copy Quantity into delivery_days.
+        for cells in grid[1:]:
             if len(cells) < 4:
                 continue
             if i_sno is not None and i_sno < len(cells):
-                if not re.fullmatch(r"\d+", cells[i_sno]):
+                if not re.fullmatch(r"\d+", cells[i_sno].strip()):
                     continue
-            officer  = cells[i_off]  if i_off  < len(cells) else ""
-            address  = cells[i_addr] if i_addr < len(cells) else ""
-            quantity = cells[i_qty]  if i_qty  < len(cells) else ""
-            delivery = cells[i_del]  if i_del  < len(cells) else ""
+            officer  = _grid_cell(cells, i_off)
+            address  = _grid_cell(cells, i_addr)
+            quantity = _grid_cell(cells, i_qty)
+            delivery = _grid_cell(cells, i_del) if i_del is not None else ""
             if not officer or any(kw in officer.lower() for kw in
                                   ["officer", "consignee", "reporting", "अधिकारी"]):
                 continue
