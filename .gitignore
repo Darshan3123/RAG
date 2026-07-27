@@ -13,11 +13,11 @@ venv/
 env/
 .env
 
-# # Downloaded tender files
-# downloads/
+# Downloaded tender files
+downloads/
 
 # # Standalone test scripts and scrape data
-# STANDLONE TEST SCRIPTS/
+STANDLONE TEST SCRIPTS/Scrape_Data
 
 # # Storage (database, vector store, etc.)
 # #storage/
