@@ -12,12 +12,12 @@ logs/
 venv/
 env/
 .env
-x
-# Downloaded tender files
-downloads/
 
-# Standalone test scripts and scrape data
-STANDLONE TEST SCRIPTS/
+# # Downloaded tender files
+# downloads/
 
-# Storage (database, vector store, etc.)
-storage/
+# # Standalone test scripts and scrape data
+# STANDLONE TEST SCRIPTS/
+
+# # Storage (database, vector store, etc.)
+# #storage/

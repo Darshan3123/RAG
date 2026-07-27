@@ -519,13 +519,14 @@ def scrape_specific_bid(db: BidDatabase, bid_no: str) -> dict:
 
     worker = AsyncWorker()
     # RTX 2050 (4 GB VRAM) tuning:
-    #   max_gpu_util=0.95  → gives the VLM ~3.8 GB instead of 3.2 GB
-    #   model_len=2048     → halves KV-cache footprint, freeing room for
-    #                        larger effective batch; GeM PDFs rarely need
-    #                        more than 2048 tokens of context per page
-    #   batch_size=4       → realistic ceiling for 4 GB; vLLM will use
-    #                        whatever fits rather than silently falling to 1
-    set_vlm_config(batch_size=4, max_gpu_util=0.95, model_len=2048)
+    #   max_gpu_util=0.78  → requests ~3.12 GB, fits within the ~3.22 GB
+    #                        actually free at startup (display driver holds
+    #                        ~780 MB on WSL2, leaving <3.8 GB available)
+    #   model_len=4096     → 4K context for longer PDFs; pushes KV cache
+    #                        but still fits in 4GB with batch_size=16
+    #   batch_size=16      → higher throughput for multi-page PDFs; vLLM
+    #                        will auto-adjust if it exceeds available memory
+    set_vlm_config(batch_size=16, max_gpu_util=0.78, model_len=4096)
 
     server_timer = ProgressTimer("Starting Mineru vLLM server")
     server_timer.start()
@@ -599,7 +600,7 @@ def run_full_scrape(db: BidDatabase) -> dict:
 
     worker = AsyncWorker()
     # RTX 2050 (4 GB VRAM) tuning — see scrape_specific_bid for rationale
-    set_vlm_config(batch_size=4, max_gpu_util=0.95, model_len=2048)
+    set_vlm_config(batch_size=16, max_gpu_util=0.78, model_len=4096)
 
     server_timer = ProgressTimer("Starting Mineru vLLM server")
     server_timer.start()

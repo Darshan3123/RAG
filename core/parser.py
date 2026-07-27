@@ -638,13 +638,69 @@ def parse_consignees_section(docling: dict, soup: BeautifulSoup = None) -> list:
     if raw:
         result = []
         for c in raw:
+            officer = c.get("consignee_reporting_officer", "")
+            address = c.get("consignee_address", "")
+            quantity = str(c.get("quantity", ""))
+            delivery = str(c.get("delivery_days", ""))
+            
+            # Fix 1: Skip if officer field contains the address (field misalignment)
+            # Detect if officer field looks like an address (contains comma or pincode pattern)
+            if re.search(r'\d{6}|,.*,', officer):
+                # This is likely misaligned - officer field has address
+                # Try to extract actual officer name if it's at the start
+                parts = officer.split(',')
+                if len(parts) > 1 and len(parts[0]) < 50 and not parts[0].isdigit():
+                    # First part might be actual name
+                    officer = parts[0].strip()
+                    # Rest is address
+                    if not address or address.isdigit():
+                        address = ','.join(parts[1:]).strip()
+                else:
+                    # Can't salvage, skip this malformed entry
+                    continue
+            
+            # Fix 2: Skip if address field is just a number (quantity got misaligned)
+            if address.strip().isdigit() and not officer:
+                # This is malformed - skip
+                continue
+                
+            # Fix 3: Delivery days should not equal quantity (common LLM hallucination)
+            if delivery and quantity and delivery == quantity:
+                # Check if delivery value is unreasonably high (e.g., 900 days, 1700 days)
+                try:
+                    del_int = int(delivery)
+                    if del_int > 365:  # More than 1 year delivery is suspicious
+                        # This is likely a hallucination where quantity was copied to delivery
+                        # Reset delivery to empty - will be filled from proper source if available
+                        delivery = ""
+                except:
+                    pass
+            
+            # Fix 4: Skip entirely empty or mostly empty rows
+            if not officer and not address:
+                continue
+                
             result.append({
-                "consignee_reporting_officer": c.get("consignee_reporting_officer", ""),
-                "consignee_address":           c.get("consignee_address", ""),
-                "quantity":                    str(c.get("quantity", "")),
-                "delivery_days":               str(c.get("delivery_days", "")),
+                "consignee_reporting_officer": officer,
+                "consignee_address":           address,
+                "quantity":                    quantity,
+                "delivery_days":               delivery,
             })
-        return result
+        
+        # Fix 5: Deduplicate based on officer+address+quantity combo
+        # (Keep first occurrence, remove exact duplicates)
+        seen = set()
+        deduped = []
+        for entry in result:
+            key = (entry["consignee_reporting_officer"], 
+                   entry["consignee_address"], 
+                   entry["quantity"])
+            if key not in seen:
+                seen.add(key)
+                deduped.append(entry)
+        
+        return deduped
+        
     if soup is None:
         return []
     seen: set[tuple] = set()
