@@ -1,7 +1,9 @@
+# ──────────────Usage of requirements.txt ────────────────
+# sudo apt-get update && wget https://github.com/pdf2htmlEX/pdf2htmlEX/releases/download/v0.18.8.rc1/pdf2htmlEX-0.18.8.rc1-master-20200630-Ubuntu-bionic-x86_64.deb && sudo apt-get install -y ninja-build ghostscript ./pdf2htmlEX-0.18.8.rc1-master-20200630-Ubuntu-bionic-x86_64.deb
+# uv venv -p 3.12 --seed ~/VLLM_Env
+# source ~/VLLM_Env/bin/activate
 
-
-# ── Usage of requirements.txt ─────────────────────────────
-#uv venv -p 3.12 --seed ~/VLLM_Env
+# THINGS TO DO INSIDE ENV
 # pip install uv "packaging>=24.2" "setuptools>=77.0.0"
 # uv pip install -r requirements.txt --torch-backend=cu130  --index-strategy unsafe-best-match --no-build-isolation
 # ── PyTorch CUDA Index ────────────────────────────────────

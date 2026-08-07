@@ -1,0 +1,198 @@
+--- Document required from seller ---
+विक्रेता से मांगे गए दस्तावेज्ञ / Document required from seller : Experience Criteria, Past Performance, Bidder Turnover, Certificate (Requested in ATC), OEM Authorization Certificate, Additional Doc 1 (Requested in ATC), Additional Doc 2 (Requested in ATC), Additional Doc 3 (Requested in ATC), Additional Doc 4 (Requested in ATC), Compliance of BoQ specification and supporting document*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer
+
+==================================================
+
+--- Buyer Added Bid Specific Terms and Conditions ---
+1. Experience Certificate for the supply of the same to any Govt/ PSU/ any renowned private organisation along with Supply/ Purchase Order.  
+2. Make in india specific authorisation certificate needs to be enclosed.  
+3. Generic
+
+End User Certificate: Wherever Bidders are insisting for End User Certificate from the Buyer, same shall be provided in Buyer's standard format only.
+
+4. Generic
+
+Data Sheet of the product(s) offered in the bid, are to be uploaded along with the bid documents. Buyers can match and verify the Data Sheet with the product specifications offered. In case of any unexplained mismatch of technical parameters, the bid is liable for rejection.
+
+5. Generic
+
+Installation, Commissioning, Testing, Configuration, Training (if any - which ever is applicable as per scope of supply) is to be carried out by OEM / OEM Certified resource or OEM authorised Reseller.
+
+6. Generic
+
+OPTION CLAUSE: The Purchaser reserves the right to increase or decrease the quantity to be ordered up to 50 percent of bid quantity at the time of placement of contract. The purchaser also reserves the right to increase the ordered quantity up to $50\%$ of the contracted quantity during the currency of the contract at the contracted rates. The delivery period of quantity shall commence from the last date of original delivery order and in cases where option clause is exercised during the extended delivery period the additional time shall commence from the last date of extended delivery period. The additional delivery time shall be (Increased quantity $\div$ Original quantity) $\times$ Original delivery period (in days), subject to minimum of 30 days. If the original delivery period is less than 30 days, the additional time equals the original delivery period. The Purchaser may extend this calculated delivery duration up to the original delivery period while exercising the option clause. Bidders must comply with these terms.
+
+7. Generic
+
+Manufacturer Authorization: Wherever Authorised Distributors/service providers are submitting the bid, Authorisation Form /Certificate with OEM/Original Service Provider details such as name, designation,
+
+address, e-mail Id and Phone No. required to be furnished along with the bid
+
+# 8. Scope of Supply
+
+Scope of supply (Bid price to include all cost components) : Supply Installation Testing and Commissioning of Goods
+
+# 9. Turnover
+
+Bidder Turn Over Criteria: The minimum average annual financial turnover of the bidder during the last three years, ending on 31st March of the previous financial year, should be as indicated in the bid document. Documentary evidence in the form of certified Audited Balance Sheets of relevant periods or a certificate from the Chartered Accountant / Cost Accountant indicating the turnover details for the relevant period shall be uploaded with the bid. In case the date of constitution / incorporation of the bidder is less than 3 year old, the average turnover in respect of the completed financial years after the date of constitution shall be taken into account for this criteria.
+
+# 10. OEM
+
+IMPORTED PRODUCTS: In case of imported products, OEM or Authorized Seller of OEM should have a registered office in India to provide after sales service support in India. The certificate to this effect should be submitted.
+
+# 11. Certificates
+
+Material Test Certificate Should Be Sent Along with The Supply. The Material Will Be Checked by Buyer's Lab & the Results of the Lab will be the Sole Criteria for Acceptance of the Item.
+
+# 12. Warranty
+
+Warranty period of the supplied products shall be 3 years from the date of final acceptance of goods or after completion of installation, commissioning & testing of goods (if included in the scope of supply), at consignee location. OEM Warranty certificates must be submitted by Successful Bidder at the time of delivery of Goods. The seller should guarantee the rectification of goods in case of any break down during the guarantee period. Seller should have well established Installation, Commissioning, Training, Troubleshooting and Maintenance Service group in INDIA for attending the after sales service. Details of Service Centres near consignee destinations are to be uploaded along with the bid.
+
+# 13. Buyer Added Bid Specific ATC
+
+Buyer Added text based ATC clauses
+
+Buyer added Specific Additional Terms and Conditions (ATC)
+
+1) Tender Inviting Authority: This tender enquiry for procurement of minor equipment are being invited by the Director, ICMR-NIPCR, Hyderabad to be supplied at the Institute. The bidders are requested to submit the most competitive quotation for the bid via GeM portal as per the specifications / requirements and Buyer's added terms & conditions (ATC) mentioned in the bid document, as follows. The bid documents must contain following duly signed documents on bidder's letterhead (where applicable).
+
+Format 1 - Technical Specification Compliance Certificate
+
+Format 2 – Format Of Bid Security Declaration From Bidders In Lieu Of EMD
+
+Format 3 – Manufacturer's Authorization Certificate
+
+Format 4 - Local service centre office of OEM & Escalation matrix
+
+Format 5 – Experience & Past Performance Certificate
+
+Format 6 - Bidder Legal & Financial standing Certificate
+
+Format 7 - Site visit certificate
+
+Format 8 – Letter for Letter of Undertaking-Acceptance of terms and Conditions
+
+Format 9 – Format Of Make-In-India Declaration Certificate
+
+Format 10- Format Under GFR 144 Land Border Clause
+
+2) ICMR- NIPCR reserves the right to cancel the bid in part or full without assigning any reason and liability on the buyer. On such cancellation the decision of the Director, ICMR- NIPCR will be binding and final on the subject.
+
+3) The bidder must upload the duly signed Technical Specification Compliance Certificate in provide format on the bidder's letterhead. (Format 1 - Technical Specification Compliance Certificate).
+
+4) Bidders needs to sign a Bid securing declaration accepting that if they withdraw or modify their Bids during the period of validity, or if they are awarded the contract and they fail to sign the contract, or to submit a performance security before the deadline defined in the request for bids/request for proposals document, the y will be suspended for the period of 1 year for bids/request for proposals document from being eligible to submit Bids/Proposals for contracts with ICMR-NIPCR. . (Format 2 – Format Of Bid Security Declaration From Bidders In Lieu Of EMD).
+
+5) Eligibility: The Bidder must be a Manufacturer or its authorized Agent. The bidder must upload the tender specific authorization certificate (containing the GeM bid No.) issued by the respective original equipment manufacturer, OEM. The manufacturer's authorisation must be insisted upon on a tender specific basis, not general authorisation/ dealership, by so declaring in the bid documents clearly. In cases where the manufacturer has submitted the bid, the bids of its authorized dealer will not be considered. In cases of agents quoting in offshore procurements, on behalf of their principal manufacturers, one agent cannot represent two manufacturers or quote on their behalf in a particular tender enquiry. One manufacturer can also authorise only one agent/dealer. (Format 3 – Manufacturer's Authorization Certificate).
+
+6) Inspections and Tests: ICMR-NIPCR or its representative shall have the right to inspect and/or to test the Goods to confirm their conformity to the Contract specifications. Further, The Supplier may have an independent quality test conducted and the cost of such tests will be borne by the Supplier. b. Inspection of goods shall be carried out by representative of ICMR-NIPCR and they will issue an acceptance certificate.
+
+7) Packing:
+
+(a) The Supplier shall provide such packing of the Goods as is required to prevent their damage or deterioration during transit to their final destination, as indicated in the Contract. The packing shall be sufficient to with stand, without limitation, rough handling during transit and exposure to extreme temperatures, salt, and precipitation during transit and open storage. Packing case size and weights shall take into consideration, where appropriate, the remoteness of the Goods, final destination and the absence of heavy handling facilities at all points in transit
+
+(b) The packing, marking, and documentation within and outside the packages shall comply strictly with such special requirements as shall be expressly provided for in the Contract, including additional requirements strictly as per Technical Specifications, and in any subsequent instructions ordered by the Procurement agency.
+
+(c) Packing and Marking shall be strictly as per Technical Specifications and will be inspected in terms of provisions of specifications before clearing for dispatch.
+
+8) Payment: 100% payment shall be made after receipt of complete goods/Equipment in good condition, acceptance and successful installation of goods/Equipment and subject to submission of Performance Bank Guarantee (where applicable). This payment is subject to recoveries, if any, either on account of statutory deduction/ taxes/ Liquidated Damages, if any and non-rectification of defects/ deficiencies not attended by the Supplier or otherwise. The firm is required to submit the following documents to ICMR-NIPCR, Hyderabad for payment:
+
+(a) Copy of Purchase Order;  
+(b) Copy of Extension Order (if any);  
+(c) Invoice in original showing contract number, goods description, quantity, unit price and total amount;  
+(d) Installation Report in original duly signed and sealed by the authorized officer of the consignee;  
+(e) Acknowledgement of Receipt of Goods issued by the consignee Institute/ Center;  
+(f) Performance Bank Guarantee (If any)
+
+9) Settlement of Disputes:
+
+a) If any dispute or difference of any kind whatsoever shall arise between the Procurement agency and the Supplier in connection with or arising out of the Contract, the parties shall make every effort to resolve amica bly such dispute or difference by mutual consultation.  
+b) If, after thirty (30) days, the parties have failed to resolve their dispute or difference by such mutual consultation, then either the Procurement agency or the Supplier may give notice to the other party of its intention to commence arbitration, as hereinafter provided, as to the matter in dispute, and no arbitration in respect of this matter may be commenced unless such notice is given.  
+c) Any dispute or difference in respect of which a notice of intention to commence arbitration has been given in accordance with this Clause shall be finally settled by arbitration. Arbitration may be commenced prior to or after delivery of the Goods under the Contract. In the case of a dispute or difference arising between the Purchaser/Consignee and a domestic Supplier relating to any matter arising out of or connected with the contract, such dispute or difference shall be referred to the sole arbitrator appointed by Director, ICMR-NIPCR.  
+d) Arbitration proceedings shall be conducted in accordance with the rules of procedure which are as follows.
+
+i. The venue of Arbitration shall be the place from where the contract is issued and the language of the arbitration proceedings and that of all councils and communications between the parties shall be English.
+
+ii. The decision of the majority of arbitrators shall be final and binding upon parties.
+
+iii. Settlement of disputes through pre-institution mediation and settlement in accordance with the commercial courts, commercial division and commercial appellate division of High Courts (Amendment) Act 2018, No. 28 of 2018 Chapter IIIA.
+
+e) Settlement of Disputes: Notwithstanding any reference to arbitration herein, a. the parties shall continue to perform their respective obligations under the Contract unless they otherwise agree; and The Procurement agency shall pay the Supplier any monies due to the Supplier.
+
+10) Consignee details (Place of Delivery, Installation, Commissioning) ICMR-National Institute for Pre-clinical Research, Hyderabad
+
+11) Insurance: Unless otherwise instructed, the supplier shall make arrangements for insuring the goods against loss or damage incidental to manufacture or acquisition, transportation, storage and delivery in the following manner:
+
+(a) In case of supply of goods on Consignee site basis, the supplier shall be responsible till the entire stores contracted for arrival in good condition a destination. The transit risk in this respect shall be covered by the Supplier by getting the stores duly insured. The insurance cover shall be obtained by the Supplier and should be valid till 3 months after the receipt of goods by the Consignee.
+
+(b) If the Equipment is not commissioned and handed over to the consignee within 3 months, the insurance will be got extended by the supplier at their cost till the successful installation, testing, commissioning and handling over of the goods to the consignee. In case the delay in the installation and commissioning is due to handling over of the site to the supplier by the consignee, such extensions of the insurance will still be done by the supplier, but the insurance extension charges at actual will be reimbursed.
+
+(c) Insurance would be borne by the Supplier. Insurance Certificate for 110% of the value to be insured in favour of Indian Council of Medical Research, covering all risks basis for the goods from supplier/ manufacturer warehouse to consignee warehouse.
+
+12) If the supplier fails to deliver any or all of the goods or fails to perform the services within the time frame(s) incorporated in the contract, the purchaser/consignee shall, without prejudice to other rights and remedies available to the purchaser/consignee under the contract, deduct from the contract price, as liquidity damages, calculated individually on each delayed performance of the contract including delivery, installation, non-sub mission of documents, etc. a sum equivalent to 0.5% per week of delay or part thereof until actual delivery or performance subject to a maximum of 10% of the contract price. Once the maximum is reached purchaser may consider termination of the contract. Since the Liquidated damages are in virtue of non-performance of services, it will attract GST or any other applicable taxes which in turn shall be deducted from the Supplier.
+
+13) GST will be applicable as per the latest Gol notification.  
+14) Delivery of Equipment means Supply, Installation, Testing and Commissioning of Equipment.  
+15) Following categories of Sellers are exempted from Years of Experience and Turnover:
+
+(a) Micro and Small Enterprises who are manufacturer of the Primary Product Category and give specific confirmation to this effect at the time of bid submission and whose credentials are validated online through Udyam Registration/ Udyog Aadhaar (as validated by Government from time to time) and through uploaded supporting documents.  
+(b) Start-ups as recognized by Department of Industrial Policy and Promotion (DIPP).  
+16) Offered product OEM must have Local service office and service support & detail to be filled in the provided format. (Format 4 - Local service centre office of OEM & Escalation matrix).  
+17) The Detailed original literature/broacher of quoted Model must be submitted, along with the technical bid and it must be available on public domain.  
+18) Bidder or its OEM {themselves or through reseller(s)} will submit relevant purchase orders of such purchase for three years has to be submitted with respect to the experience criteria. The Satisfactory performance certificates issued by the respective buyer organization (only for the above purchase orders of PSU & Government organization which are being submitted in the bid) should be uploaded with the bid. (Format 5 – Experience & Past Performance Certificate).  
+19) Past Project Experience: For fulfilling the experience criteria, any one of the following documents may be considered as valid proof for meeting the experience criteria  
+a. Purchase Order copy along with Invoice(s) with self-certification by the bidder that supplies against the invoices have been executed.  
+b. Execution certificate by client with order value.  
+c. Any documents in support of order execution like Third Party Inspection release note, etc.  
+d. The Satisfactory Performance Certificates issued by the respective buyer organization (only for the above Purchase orders which are being submitted in the bid) should be uploaded with the bid.  
+20) Seller can deposit the penalty with to Buyer directly, else the buyer shall have a right to recover all such penalty amount from the Performance Security (PBG). Cumulative penalty cannot exceed more than 10% of the total contract value after which the Buyer shall have the right to get the service / rectification done from a lternate sources at the risk and cost of the Seller besides forfeiture of PBG. Seller shall be liable to re-imburse the cost of such service / rectification to the Buyer.  
+a) Time Limit for Service/Rectification of defects shall be of 07 days from day of intimation.  
+b) Penalty shall be per week of delay as 0.5% of unit price of product.  
+21) The tenderer must indicate the make, model and detailed specification of quoted equipment, failing which the tender will not be considered.  
+22) The jurisdiction for settlement of any legal dispute shall be referred to the District Court, Hyderabad and the decision of the court will be final.  
+23) Loading and unloading at Institute (location as mentioned in the bid) shall be under the scope of the supplier/bidder.  
+24) The price and amount quoted by the Bidding party shall include for all cost including labour, Material, Transport charges or any other expenses to fulfil the obligations towards, Custom duty, Octroi, Excise duty, Income Tax, Sale Tax, Turn over Tax, Service Tax, Professional Tax, or any other duties, levies, taxes or charges whatsoever to the state or central department or to the local bodies on the components or the completed works or the defect liability of the work and for satisfactory performance of the Bidding party obligations under this contract.  
+25) The bidder must upload submit the self-declaration undertaking for Not Blacklisted & Not Banned since I ast 10 years by any Central / State Government Organization / PSU / Public Listed Company. The bidder/man ufacturer and/or service provider firm should not have been declared Bankrupt by any statutory body. The bidders who have been suspended/ blacklisted/banned by Central Government Institution, State Government I nstitution, PSU etc shall be ineligible for participation in the bidding process. In this context, a declaration must be furnished by service provider's firm that there is no complaint/vigilance inquiry against them in any Go vernment Department/PSU and they have not been black listed or debarred by any Government Department/ PSU. (Format 6 - Bidder Legal & Financial standing Certificate).  
+26) Generic
+
+a. The Seller shall not assign the contract in whole or part without obtaining the prior written consent of buyer.  
+b. The Seller shall not sub-contract the Contract in whole or part to any entity without obtaining the prior written consent of buyer.  
+c. The Seller shall, notwithstanding the consent and assignment/sub-contract, remain jointly and severally liable and responsible to buyer together with the assignee/ sub-contractor, for and in respect of the due performance of the Contract and the Sellers obligations there under.
+
+27) Source of supply: It shall be responsibility of seller to provide Documents regarding source of equipment such as copy of Proforma invoice or any other documents to establish that the products supplied are manufactured by OEM indicated and sourced from them.  
+28) Payment will be released only after satisfactory delivery, acceptance and installation of goods at consig nee location. Warranty period shall be counted after the date of installation.  
+29) Spare Parts / consumables: Seller shall provide materials, information etc. pertaining to spare parts /consumables manufactured and supplied by the OEM. It shall be ensured that the required spares/consumables are available for purchase from date of supplies. In case due to any reasons the production of the spare parts is discontinued sufficient advance notice should be given to the buyer/consignee before such discontinuation to provide adequate time to purchase the required spare parts etc. Further, OEM and their service centers/dealers shall carry sufficient inventories to assure ex-stock supply of consumables and spares for the equipment so that the same are available.  
+30) The OEM or reseller shall always accord most favoured client status to the buyer/consignee and shall give the most competitive price for spares and consumables of its machines/equipment supplied.  
+31) Installation, Training, Manuals: The seller shall be responsible to carry out Installation & commissioning, Supervision and Demonstration of the goods during the time of installation.  
+32) Electrical safety checking: Sellers are required to make sure that they furnish the list of equipment for carrying out routine and preventive maintenance to buyer/consignee. They should make sure to periodically check the electrical safety aspects as per BIS (Bureau of Indian Standards) Safety Standards or equivalent. In case they do not have required equipment for such testing should ensure that the equipment checked for electrical safety compliance through labs with facilities for such checking during every preventive maintenance call. (Format 7 - Site visit certificate).  
+33) Software: All the software supplied should have a license version and its updates / version upgradation should be provided free of cost during warranty period.  
+34) The ATC in Letterhead must be submitted that all the terms and conditions of bid ATC are accepted. (Format 8 - Letter of undertaking-Acceptance of terms and Conditions).  
+35) Declaration to be given with regard to local content percentage whether belonging to Class-I / Class-II or Non-local supplier respectively in compliance to the Public Procurement (Preference to Make-in-India) Order 2017 issued by Department of Promotion of Industry and Internal Trade (Public Procurement Section), Ministry of Commerce and Industry, Government of India, dated 16.06.2020, 04.03.2021 & 19.07.2024, 08-07-2025 (as amended). (Format 9 - Format Of Make-In-India Declaration Certificate)  
+36) Bidder is requested to give undertaking Certificate regarding land border "I/ We have read the clause issued by Government of India regarding restrictions on procurement from a bidder of a country which shares a land border with India; I/ We certify that the bidder is not from such a country or, if from such a country, have been registered with the Competent Authority. (Format 10 - Format Under GFR 144 Land Border Clause).  
+37) Bidder must provide self-declaration for authorised signatory letter for all submitted documents.  
+38) Conditional bid shall not be considered and will be summarily rejected.  
+39) No deviation certificate with data sheet of items.  
+40) If any of above certificates/ details not given by the Bidder, will be disqualified from the bid.  
+41) Bidder will be rejected due to reasons mentioned below.
+
+1. Non submission of required Documents.
+
+2. Conditional and / Or vague offers.
+
+3. Unsatisfactory past performance of the bidder.  
+4. Submission misleading / Contradictory / False statement/information and fabricated / invalid documents.  
+5. Bid document not uploaded properly.  
+6. Non submission of Manufacturer authorised letter.  
+7. Other than these terms and conditions, bidder will be rejected if not submitting any document which is mentioned in the Bid document.  
+42) Specifications for the Minor Equipments.
+
+Technical Specifications of the Equipment
+
+<table><tr><td>Name of the Equipment</td><td>Specifications</td><td>Quantity</td></tr><tr><td>1. Portable OT Light</td><td>i. Type of portable OT light: Single domeii. Light emission of OT light: LEDiii. Type of lamp head: Single non winged round shape lamp headv. Minimum light Intensity in luminous: ≥120000 at 1 meter distancev. User selectable intensity variation with digital display: 30 to 100% in minimum 5 or more stepsvi. Depth of illumination of OT light: 100 to 140 cm or morevii. Type of control panel: Manual, touch screenviii. Battery backup: 30 minutes or moreix. Electrical safety compliance standard: IEC 60601 or BIS equivalentx. Compliance to Medical Device Rules (MDR) 2017 as amended till date</td><td>01</td></tr><tr><td>2. General operating table</td><td>i. Material: 304 grade SSii. Type of OT table actuator: Hydraulic with foot pumpiii. Type of mechanism for functioning or controlling the table movements: Manualiv. C-Arm compatible tablev. Table top shall be X-ray compatible and stain resistantvi. Table matters material: 2 inch latex free fully radiolucent, detach able, impermeable to fluid and easily washablevii. Patient weight capacity: upto 250 Kgsviii. Unit must have trendelenburg angle and reverse trendelenburg angle of range  $25^{\circ} -30^{\circ}$ ix. Conformity to standards: European CE (with 4 digit notified number) or equivalentx. Confirmity to standard for electrical safety latest amendment: IEC- 60601-2-40 or BIS equivalentxi. Warranty: 3 years</td><td>01</td></tr><tr><td rowspan="11">3. Otoscope i.</td><td>Material of the device body: Medical grade stainless steel.</td><td rowspan="11">01</td></tr><tr><td>ii. Light source: LED/Halogen bulb.</td></tr><tr><td>iii. Magnification: 3X or more.</td></tr><tr><td>iv. Otoscope rechargeable set is to be provided in leather/hard case preferably high impact plastic with internal soft cushion material for easy portability and protection.</td></tr><tr><td>v. Speculum adapter must be provided.</td></tr><tr><td>vi. On no. of spare bulbs to be provided along with the otoscope</td></tr><tr><td>vii. 3 no. of sets of different sizes of ear specula to be provided along with the otoscope</td></tr><tr><td>viii. Removable Otoscope head and lens</td></tr><tr><td>ix. Rechargable handle with Ni-Cd/Li-ion rechargeable battery of capacity 2900 mAh or more and charger to be provided along with the device</td></tr><tr><td>x. Electrical safety compliance standard: IEC 60601 or BIS equivalent</td></tr><tr><td>xi. Compliance to Medical Device Rules (MDR) 2017 as amended till date.</td></tr><tr><td rowspan="9">4. Syringe Infusion Pump i.</td><td>Microprocessor-based and programmable</td><td rowspan="9">01</td></tr><tr><td>ii. Operating modes: Flow rate mode, volume and time, rate and time, weight mode</td></tr><tr><td>iii. Flow rate range: 0.1 - 1500 ml/h with flowrate increment 0.01 ml/h</td></tr><tr><td>iv. Bolus administration: Manual and automatic</td></tr><tr><td>v. Syringe compatibility: 5 ml,10 ml,20 ml,50 ml of different brands of syringes</td></tr><tr><td>vi. Audio visual alarm: Occlusion, syringe near-empty, syringe-empty, low battery, internal malfunction, syringe wrongly fitted, power supply failure</td></tr><tr><td>vii. Minimum battery run time: 4 h or more</td></tr><tr><td>viii. Electrical safety compliance standard: IEC 60601 or BIS equivalent</td></tr><tr><td>ix. Compliance to Medical Device Rules (MDR) 2017 as amended till date</td></tr><tr><td>5. Oxygen concentratiorii.iii.iv.v.vi.vii.viii.ix.</td><td>Single oxygen outletMaximum flow rate: 5 LPM with continuous flow setting 0.5 LPMOxygen purity: 93% ( $\pm$  3%)Oxygen concentration monitorNoise level:  $\leq$  60 dBAudio and video alarm for technical fault, low oxygen purity, high/low breathElectrical safety compliance standard: IEC 60601 or BIS equivalentCompliance to Medical Device Rules (MDR) 2017 as amended till dateWarranty: 3 years</td><td>01</td></tr><tr><td>6. Surgical head lighti.ii.iii.iv.v.vi.vii.viii.ix.x.xi.</td><td>Light chip: LED technologyIntensity: Max 70,000 LuxBattery life: 6 hours at 50% intensity; 3 hours at 100% intensityLED life: &gt; 50,000 hoursVariable intensity control: 0 to 1,00,000 LUXAdjustable spot diameter; max. diameter of light spot: 14.5 inches and min. diameter of light spot: 1.5 inchesCharger output: DC 5 voltCharger input: AC 110~250V (extension plug provided for US and EU)Charging cable with battery indicator.Loupes magnification: 3.5x/2.5x,Working distance: 280-320mm for 3.5x / 420-450mm for 2.5x</td><td>1</td></tr><tr><td>7. Adult Laryngoscopei.ii.iii.iv.v.vi.vii.viii.ix.</td><td>Miller / Macintosh laryngoscopeSurgical/medical grade stainless steel, suitable for autoclave sterilizationNumber of blades included: 4 sizesSize of blades: Size 1 - 4 as per IS:4113-2003 or latestHandle with universal adapter for interchangeable bladesProvision for locking or unlocking the bladeLight source: LEDSuitable for adultsConformity to standard: EU-CE &amp; US-FDA or equivalent</td><td>1</td></tr><tr><td>8. Pediatric Laryngosc i.ope</td><td>Miller / Macintosh laryngoscopeSurgical/medical grade stainless steel, suitable for autoclave sterilizationNumber of blades included: 4 sizesSize of blades: Size 1 - 4 as per IS:4113-2003 or latestHandle with universal adapter for interchangeable bladesProvision for locking or unlocking the bladeLight source: LEDSuitable for pediatricConformity to standard: EU-CE &amp; US-FDA or equivalent</td><td>1</td></tr><tr><td>9. Fumigator</td><td>i. Portable automatic ULV fogger for aerial fumigation and sanitization.ii. Stainless steel construction with corrosion-resistant body.iii. Produces high-density fog with droplet size less than 20 microns.iv. Operates on 220V AC, 3.5A, 50Hz.v. Equipped with vertically adjustable and horizontally rotatable spray head for efficient coverage.vi. Compact, lightweight design requiring minimal installation space and no structural modifications.vii. Pre-fitted liquid flow control valve for adjustable fog output.viii. Approx. 5 L chemical tank capacity.ix. Supplied with a 60-minute timer.x. Warranty: 3 years.</td><td>01</td></tr></table>
+
+Click the link below for Annexures / Format.
+
+# 14. Buyer Added Bid Specific ATC
+
+Buyer uploaded ATC document Click here to view the file.
+
+#
