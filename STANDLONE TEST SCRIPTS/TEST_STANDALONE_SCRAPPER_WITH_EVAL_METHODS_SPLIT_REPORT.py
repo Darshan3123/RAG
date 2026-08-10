@@ -180,10 +180,18 @@ def scrape_bids_in_memory():
                         if date_match:
                             end_date_str = date_match.group(1)
                             try:
+                                # Parse the scraped date
                                 end_date = datetime.datetime.strptime(end_date_str, "%d-%m-%Y %I:%M %p")
-                                time_left_mins = (end_date - datetime.datetime.now()).total_seconds() / 60
-                                if time_left_mins <= 10:
-                                    print(f"[-] Skipping bid (Ends in {time_left_mins:.1f} mins - Less than 10 mins remaining).")
+                                
+                                # Calculate current IST time (UTC + 5:30) to match the GeM portal
+                                now_utc = datetime.datetime.now(datetime.timezone.utc)
+                                now_ist_naive = (now_utc + datetime.timedelta(hours=5, minutes=30)).replace(tzinfo=None)
+                                
+                                # Calculate the difference in minutes
+                                time_left_mins = (end_date - now_ist_naive).total_seconds() / 60
+                                
+                                if time_left_mins <= 20:
+                                    print(f"[-] Skipping bid (Ends in {time_left_mins:.1f} mins - Less than 20 mins remaining).")
                                     continue
                             except ValueError:
                                 pass # Proceed normally if date parsing fails
