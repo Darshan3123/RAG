@@ -70,6 +70,7 @@ cd "$TARGET_DIR" || exit
 ./llama-server \
   -hf unsloth/Qwen3-4B-Instruct-2507-GGUF:Q4_K_M \
   -c 9216 \
+  -np 1 \
   --threads -1 \
   --n-gpu-layers 999 \
   --jinja \
