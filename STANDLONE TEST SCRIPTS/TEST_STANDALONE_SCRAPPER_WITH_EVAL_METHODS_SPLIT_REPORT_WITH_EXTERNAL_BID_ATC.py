@@ -266,7 +266,8 @@ def has_digital_layer(file_path, threshold=50):
 def extract_all_texts():
     """
     Execute Phase 2: Batch text extraction using PyMuPDF for downloaded PDFs.
-    Categorize bids by Evaluation Method (Item_Wise, Total_Wise, Group_Wise, Other),
+    Categorizes bids ONLY IF the ATC document text is present.
+    Categorize by Evaluation Method (Item_Wise, Total_Wise, Group_Wise, Other),
     move PDF files into corresponding category subdirectories, and compile a text report.
     """
     # Only get root PDF files (ignore those already categorized into subfolders)
@@ -329,6 +330,21 @@ def extract_all_texts():
         end_time = time.time()
         infer_duration = end_time - start_time
         
+        # --- ATC Document Check ---
+        # Only process if this string is found. \s+ handles spaces, tabs, and newlines.
+        atc_pattern = r"Buyer\s+uploaded\s+ATC\s+document\s+Click\s+here\s+to\s+view\s+the\s+file"
+        if not re.search(atc_pattern, raw_text, re.IGNORECASE):
+            skipped_files += 1
+            # Move non-ATC files to "Other" folder
+            shutil.move(file_path, os.path.join(OUTPUT_DIR_PDF, "Other", file_name))
+            
+            # Check if an RA PDF exists and move it too
+            ra_file_name = f"{base_name}_RA.pdf"
+            ra_file_path = os.path.join(OUTPUT_DIR_PDF, ra_file_name)
+            if os.path.exists(ra_file_path):
+                shutil.move(ra_file_path, os.path.join(OUTPUT_DIR_PDF, "Other", ra_file_name))
+            continue
+        
         infer_times.append(infer_duration)
         total_pages_processed += num_pages
         
@@ -370,8 +386,8 @@ def extract_all_texts():
     if infer_times:
         total_infer_time = sum(infer_times)
         pages_per_sec = total_pages_processed / total_infer_time if total_infer_time > 0 else 0
-        print(f"Total PDFs Processed : {len(infer_times)}")
-        print(f"Total PDFs Skipped   : {skipped_files}")
+        print(f"Total PDFs Checked   : {len(pdf_files)}")
+        print(f"Total PDFs Skipped   : {skipped_files} (No ATC Doc or Non-Digital)")
         print(f"Total Pages Extracted: {total_pages_processed}")
         print("-" * 30)
         print(f"📦 Item-Wise Bids    : {len(categorized_bids['Item_Wise'])}")

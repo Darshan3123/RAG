@@ -138,7 +138,7 @@ def extract_hyperlinks(pdf_path: str, source: str = "bid") -> list[dict]:
                     Each dict has keys: page, name, text, url, source.
     """
     try:
-        import fitz  # PyMuPDF
+        import pymupdf
     except ImportError:
         log.warning(
             "PyMuPDF (fitz) is not installed — hyperlink extraction skipped. "
@@ -150,7 +150,7 @@ def extract_hyperlinks(pdf_path: str, source: str = "bid") -> list[dict]:
     seen_urls: set[str] = set()          # deduplicate identical URLs
 
     try:
-        doc = fitz.open(pdf_path)
+        doc = pymupdf.open(pdf_path)
     except Exception as e:
         log.warning(f"PyMuPDF could not open '{pdf_path}': {e}")
         return []
