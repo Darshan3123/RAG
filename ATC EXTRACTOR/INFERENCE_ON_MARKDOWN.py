@@ -10,27 +10,23 @@ Two modes, chosen automatically per document folder:
   SINGLE-SHOT  -> only one ATC chunk exists (markdown-only case, no PDF).
                   The full analysis prompt is run once, directly.
 
-  MAP-REDUCE   -> multiple ATC_CHUNK_N.txt page chunks exist (PDF case).
-                  Stage 1 (MAP):    each page chunk is sent through a small
-                                    "extract relevant evidence sentences"
-                                    prompt, bucketed into the 5 categories.
-                                    No interpretation/inference happens here.
+  MAP-REDUCE   -> multiple page chunks exist (PDF case, or long Markdown case).
+                  Stage 1 (MAP):    The original embedded Markdown chunk is processed 
+                                    first as a standalone. Remaining downloaded chunks 
+                                    (DOCX chunks and PDF pages) are processed using a 
+                                    dynamic self-healing queue. It batches up to the 
+                                    maximum context limit. If the model breaks JSON format, 
+                                    the batch shrinks by 1 chunk, pushes the removed chunk 
+                                    to the next batch, and retries until successful.
                   Stage 2 (REDUCE): all buckets are merged + de-duplicated
                                     across pages, and the ORIGINAL full
                                     analysis prompt is run once on the
-                                    compacted evidence instead of the raw
-                                    (too-large) ATC text. All inference
-                                    (e.g. exemption doc "(Inferred)") happens
-                                    here, where the model finally has the
-                                    full picture.
-                  Stage 2b (SAFETY): if the merged evidence itself would
-                                    still overflow the context window, it is
-                                    split into batches and pre-compressed
-                                    with an extra reduce pass before the
-                                    final analysis call.
+                                    compacted evidence instead of raw ATC text.
+                  Stage 2b (SAFETY): if merged evidence overflows context window,
+                                    it is split into batches and pre-compressed
+                                    with an extra reduce pass before final analysis.
 
-Requires: the local llama-server already running (per your launch command),
-OpenAI-compatible /v1/chat/completions endpoint.
+Requires: local llama-server running (OpenAI-compatible /v1/chat/completions endpoint).
 """
 
 import sys
@@ -41,6 +37,7 @@ import json
 import glob
 import time
 import multiprocessing
+import tempfile
 
 # --- Auto-install deps ---
 def install_and_import(package, import_name):
@@ -54,11 +51,15 @@ install_and_import("requests", "requests")
 install_and_import("transformers", "transformers")
 install_and_import("beautifulsoup4", "bs4")
 install_and_import("pymupdf", "pymupdf")
+install_and_import("tabulate", "tabulate")
 
 import requests
 import pymupdf
 from bs4 import BeautifulSoup
 from transformers import AutoTokenizer
+from tabulate import tabulate
+
+from Mineru_Document_To_Markdown import safe_convert_docx_to_md
 
 # =========================================================================
 # CONFIG
@@ -70,26 +71,16 @@ CHAT_ENDPOINT = f"{LLAMA_SERVER_URL}/v1/chat/completions"
 CONTEXT_WINDOW = 9216
 
 # The tokenizer must match the model actually being served by llama-server
-# (payload["model"] = "local-qwen3-4b" below), so budgeting is accurate
-# instead of approximated with an unrelated tokenizer.
 QWEN_TOKENIZER_NAME = "Qwen/Qwen3-4B"
 
-# Reserve tokens for chat-template overhead (role markers, special tokens,
-# BOS/EOS, etc.) that count_tokens() doesn't see but the actual llama-server
-# request does.
+# Reserve tokens for chat-template overhead
 TEMPLATE_OVERHEAD_TOKENS = 100
 
-# Output caps: doubled from the 4096-context values now that CONTEXT_WINDOW
-# is 7424, giving longer documents/analyses more room before getting cut off
-# mid-section, while still leaving plenty of budget for input on both stages.
-MAP_MAX_OUTPUT_TOKENS = 2000         # map stage: short per-page JSON evidence dump
+# Output caps
+MAP_MAX_OUTPUT_TOKENS = 2000         # map stage: short JSON evidence dump
 REDUCE_MAX_OUTPUT_TOKENS = 2000      # reduce/single-shot: full 5-section checklist
 
-# Input budgets get everything else in the context window - this used to be
-# hardcoded independently of the output caps, and REDUCE's 3000+1200=4200
-# actually exceeded CONTEXT_WINDOW (4096) before template overhead was even
-# added. Deriving these from CONTEXT_WINDOW keeps input+output+overhead
-# guaranteed to fit.
+# Input budgets derived from CONTEXT_WINDOW (Provides exactly 7,116 tokens for MAP input)
 MAP_MAX_INPUT_TOKENS = CONTEXT_WINDOW - MAP_MAX_OUTPUT_TOKENS - TEMPLATE_OVERHEAD_TOKENS
 REDUCE_MAX_INPUT_TOKENS = CONTEXT_WINDOW - REDUCE_MAX_OUTPUT_TOKENS - TEMPLATE_OVERHEAD_TOKENS
 
@@ -97,12 +88,7 @@ REQUIRED_DOCS_HEADER = "Document required from seller"
 ATC_SECTION_HEADER = "Buyer Added Bid Specific Terms and Conditions"
 
 # =========================================================================
-# EXTRACTION-STAGE CONFIG (merged in from CHUNKS_EXTRACTOR.py)
-# -------------------------------------------------------------------------
-# Chunks are now built directly from the source .md/.json files and held in
-# memory for the duration of one document's analysis - nothing under here
-# is ever written to disk. Only the final per-document analysis (written by
-# process_document() below) is saved, to ANALYSIS_OUTPUT_DIR.
+# EXTRACTION-STAGE CONFIG
 # =========================================================================
 INPUT_MARKDOWNS_DIR = "TEST_MARKDOWNS_EXTRA"   # source .md (+ sibling .json) files
 ATC_SECTION_START_MARKER = "Buyer Added Bid Specific Terms and Conditions"
@@ -117,8 +103,6 @@ CATEGORIES = [
     "COMMERCIAL_TERMS",
 ]
 
-# Real Qwen3 tokenizer, matching the model actually served by llama-server,
-# so budgeting against CONTEXT_WINDOW is accurate rather than approximated.
 print(f"Loading tokenizer for {QWEN_TOKENIZER_NAME} (used for context-window budgeting)...")
 _enc = AutoTokenizer.from_pretrained(QWEN_TOKENIZER_NAME, trust_remote_code=True)
 
@@ -130,24 +114,25 @@ def count_tokens(text: str) -> int:
 
 
 # =========================================================================
-# PROGRESS SPINNER (from CHUNKS_EXTRACTOR.py) - used around the download /
-# PDF-parse steps, which are the only extraction steps slow enough to need it.
+# PROGRESS SPINNER
 # =========================================================================
 def _run_spinner(description, stop_event):
-    """Runs in a separate process so it can't be blocked by PyTorch/requests locking the main thread."""
     start_time = time.time()
     spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
     idx = 0
+    
+    if len(description) > 70:
+        description = description[:67] + "..."
+        
     while not stop_event.is_set():
         elapsed = time.time() - start_time
-        sys.stdout.write(f"\r{spinner[idx]} {description} | Elapsed time: {elapsed:.1f}s")
+        sys.stdout.write(f"\r\033[2K{spinner[idx]} {description} | Elapsed time: {elapsed:.1f}s")
         sys.stdout.flush()
         idx = (idx + 1) % len(spinner)
         time.sleep(0.1)
 
 
 class ProgressTimer:
-    """A multiprocessing background timer that prints a spinner and elapsed time."""
     def __init__(self, description):
         self.description = description
         self._stop_event = multiprocessing.Event()
@@ -157,6 +142,7 @@ class ProgressTimer:
     def start(self):
         self.start_time = time.time()
         self._process = multiprocessing.Process(target=_run_spinner, args=(self.description, self._stop_event))
+        self._process.daemon = True
         self._process.start()
 
     def stop(self):
@@ -164,17 +150,18 @@ class ProgressTimer:
         if self._process:
             self._process.join()
         elapsed = time.time() - self.start_time
-        sys.stdout.write(f"\r✅ {self.description} | Completed in {elapsed:.1f}s" + " " * 15 + "\n")
+        
+        desc = self.description
+        if len(desc) > 70:
+            desc = desc[:67] + "..."
+            
+        sys.stdout.write(f"\r\033[2K✅ {desc} | Completed in {elapsed:.1f}s\n")
         sys.stdout.flush()
 
 
 # =========================================================================
 # TOKEN / TIMING USAGE TRACKING
 # =========================================================================
-# Reset per-document in process_document(); each LLM call site logs
-# (stage_label, input_tokens, output_tokens, elapsed_seconds) here via
-# record_call(). GRAND_TOTAL_SECONDS accumulates across the whole run so a
-# single overall total can be printed at the end of main().
 TOKEN_RECORDS = []
 GRAND_TOTAL_SECONDS = 0.0
 
@@ -189,42 +176,23 @@ def record_call(label: str, system_prompt: str, user_prompt: str, output_text: s
 
 
 def print_token_table(records, title: str) -> None:
-    """
-    Prints a mathematically aligned Stage / Input Tokens / Output Tokens /
-    Time (s) table, with horizontal borders separating every row, plus a
-    totals row.
-    """
     if not records:
         return
 
+    headers = ["Stage", "Input Tokens", "Output Tokens", "Time (s)"]
     rows = [(label, str(i), str(o), f"{t:.2f}") for label, i, o, t in records]
+    
     total_in = sum(i for _, i, _, _ in records)
     total_out = sum(o for _, _, o, _ in records)
     total_time = sum(t for _, _, _, t in records)
     rows.append(("TOTAL", str(total_in), str(total_out), f"{total_time:.2f}"))
 
-    col1_max = max(len("Stage"), max(len(r[0]) for r in rows))
-    col2_max = max(len("Input Tokens"), max(len(r[1]) for r in rows))
-    col3_max = max(len("Output Tokens"), max(len(r[2]) for r in rows))
-    col4_max = max(len("Time (s)"), max(len(r[3]) for r in rows))
-
-    col1_width = col1_max + 2
-    col2_width = col2_max + 2
-    col3_width = col3_max + 2
-    col4_width = col4_max + 2
-
-    top_border = f"┌{'─' * col1_width}┬{'─' * col2_width}┬{'─' * col3_width}┬{'─' * col4_width}┐"
-    middle_border = f"├{'─' * col1_width}┼{'─' * col2_width}┼{'─' * col3_width}┼{'─' * col4_width}┤"
-    bottom_border = f"└{'─' * col1_width}┴{'─' * col2_width}┴{'─' * col3_width}┴{'─' * col4_width}┘"
-
     print(f"\n    Token Usage — {title}")
-    print("    " + top_border)
-    print(f"    │ {'Stage'.ljust(col1_max)} │ {'Input Tokens'.rjust(col2_max)} │ {'Output Tokens'.rjust(col3_max)} │ {'Time (s)'.rjust(col4_max)} │")
-    print("    " + middle_border)
-    for i, (label, in_t, out_t, tm) in enumerate(rows):
-        divider = middle_border if i < len(rows) - 1 else bottom_border
-        print(f"    │ {label.ljust(col1_max)} │ {in_t.rjust(col2_max)} │ {out_t.rjust(col3_max)} │ {tm.rjust(col4_max)} │")
-        print("    " + divider)
+    
+    table_str = tabulate(rows, headers=headers, tablefmt="fancy_grid", maxcolwidths=[60, None, None, None])
+    
+    for line in table_str.splitlines():
+        print(f"    {line}")
     print()
 
 
@@ -232,7 +200,7 @@ def print_token_table(records, title: str) -> None:
 # LLAMA-SERVER CALL
 # =========================================================================
 def call_llm(system_prompt: str, user_prompt: str, max_tokens: int,
-             frequency_penalty: float = 0.0, seed: int = 42) -> str:
+             frequency_penalty: float = 0.0, seed: int = 42, require_json: bool = False) -> str:
     payload = {
         "model": "local-qwen3-4b",
         "messages": [
@@ -249,6 +217,10 @@ def call_llm(system_prompt: str, user_prompt: str, max_tokens: int,
         "max_tokens": max_tokens,
         "seed": seed,
     }
+    
+    if require_json:
+        payload["response_format"] = {"type": "json_object"}
+        
     try:
         resp = requests.post(CHAT_ENDPOINT, json=payload, timeout=300)
         resp.raise_for_status()
@@ -262,8 +234,6 @@ def call_llm(system_prompt: str, user_prompt: str, max_tokens: int,
 # =========================================================================
 # PROMPTS
 # =========================================================================
-# This is your original big instruction block, split so the rules live in the
-# system message and only the actual data goes in the user message.
 ANALYSIS_SYSTEM_PROMPT = """Role & Objective:
 You are an expert Procurement and Tender Document Analyst. Your task is to analyze government bid documents, clarify exact document requirements by cross-referencing placeholders with the ATC text, and extract actionable requirements into a highly structured, scannable checklist.
 
@@ -337,7 +307,7 @@ Extract strict operational, pricing, or compliance rules the bidder must adhere 
 """
 
 
-MAP_SYSTEM_PROMPT = """You are extracting raw evidence sentences from ONE PAGE of a larger government tender ATC document. Do NOT summarize, interpret, categorize with judgment, or infer anything — copy exact sentences/clauses verbatim (or near-verbatim if a sentence is broken across a page boundary) into the correct bucket. If a bucket has nothing relevant on this page, its list must be empty.
+MAP_SYSTEM_PROMPT = """You are extracting raw evidence sentences from ONE OR MORE PAGES of a larger government tender ATC document. Do NOT summarize, interpret, categorize with judgment, or infer anything — copy exact sentences/clauses verbatim (or near-verbatim if a sentence is broken across a page boundary) into the correct bucket. If a bucket has nothing relevant in these pages, its list must be empty.
 
 Reference — "Document required from seller" list (top section), for spotting which placeholders/documents/exemptions are being discussed. Do NOT re-output this list, it is context only:
 {table_result}
@@ -351,23 +321,77 @@ Buckets:
 
 Output STRICTLY as minified JSON, no markdown fences, no commentary, with exactly these keys:
 {{"STANDARD_DOCS": [], "ATC_PLACEHOLDER_CLARIFICATION": [], "EXEMPTION": [], "PHYSICAL_SUBMISSION": [], "COMMERCIAL_TERMS": []}}
-Each value is a list of extracted sentence strings. Use an empty list if nothing on this page belongs in that bucket."""
+Each value is a list of extracted sentence strings. Use an empty list if nothing on these pages belongs in that bucket."""
 
 COMPRESS_SYSTEM_PROMPT = """You are merging duplicate/overlapping evidence sentences that were extracted from different pages of the same tender document, for a single category: {category}.
 Remove exact or near-exact duplicates (e.g. repeated boilerplate/headers). Keep every distinct fact, deadline, name, amount, or condition. Do not summarize away specifics or invent anything not present in the input. Output ONE sentence per line, plain text, no numbering, no commentary."""
 
 
 # =========================================================================
-# IN-MEMORY CHUNK EXTRACTION (merged in from CHUNKS_EXTRACTOR.py)
-# -------------------------------------------------------------------------
-# Chunks are extracted straight from the source .md/.json (and the linked
-# PDF, downloaded straight into memory) and handed to the MAP/REDUCE stages
-# as plain (label, text) tuples. Nothing here ever touches disk - the PDF
-# bytes and every page's text live only as local variables for the
-# duration of one document's analysis.
+# IN-MEMORY CHUNK EXTRACTION
 # =========================================================================
+def chunk_markdown_by_tokens(md_text: str, base_name: str, max_tokens: int = 1000) -> list:
+    """
+    Splits continuous markdown text into logical chunks of roughly `max_tokens`.
+    Respects semantic boundaries in this order: Paragraphs (\n\n) -> Table Rows/Lines (\n) -> Sentences (. )
+    """
+    if not md_text:
+        return []
+
+    chunks = []
+    current_chunk = ""
+
+    blocks = md_text.split('\n\n')
+
+    for block in blocks:
+        if count_tokens((current_chunk + "\n\n" + block).strip()) > max_tokens:
+            if current_chunk:
+                chunks.append(current_chunk.strip())
+                current_chunk = ""
+            
+            if count_tokens(block) > max_tokens:
+                lines = block.split('\n')
+                sub_chunk = ""
+                
+                for line in lines:
+                    if count_tokens((sub_chunk + "\n" + line).strip()) > max_tokens:
+                        if sub_chunk:
+                            chunks.append(sub_chunk.strip())
+                            sub_chunk = ""
+                            
+                        if count_tokens(line) > max_tokens:
+                            sentences = re.split(r'(?<=\.)\s+', line)
+                            sentence_chunk = ""
+                            
+                            for sentence in sentences:
+                                if count_tokens((sentence_chunk + " " + sentence).strip()) > max_tokens:
+                                    if sentence_chunk:
+                                        chunks.append(sentence_chunk.strip())
+                                    sentence_chunk = sentence
+                                else:
+                                    sentence_chunk = (sentence_chunk + " " + sentence).strip() if sentence_chunk else sentence
+                            
+                            if sentence_chunk:
+                                sub_chunk = sentence_chunk
+                        else:
+                            sub_chunk = line
+                    else:
+                        sub_chunk = (sub_chunk + "\n" + line).strip() if sub_chunk else line
+                
+                if sub_chunk:
+                    current_chunk = sub_chunk
+            else:
+                current_chunk = block
+        else:
+            current_chunk = (current_chunk + "\n\n" + block).strip() if current_chunk else block
+
+    if current_chunk.strip():
+        chunks.append(current_chunk.strip())
+
+    return [(f"{base_name}_DOWNLOADED_DOCX_CHUNK_{i+1}", text) for i, text in enumerate(chunks)]
+
+
 def extract_table_value(filepath: str, search_key: str) -> str:
-    """Reads the markdown/HTML file, parses tables, and returns the key-value pair."""
     if not os.path.exists(filepath):
         return f"Error: The file '{filepath}' was not found.\n"
 
@@ -387,7 +411,6 @@ def extract_table_value(filepath: str, search_key: str) -> str:
 
 
 def extract_text_chunk(filepath: str, start_marker: str, end_marker: str) -> str:
-    """Reads a file and extracts the text between a start_marker and an end_marker."""
     if not os.path.exists(filepath):
         return f"Error: The file '{filepath}' was not found.\n"
 
@@ -408,8 +431,10 @@ def extract_text_chunk(filepath: str, start_marker: str, end_marker: str) -> str
 
 def download_pdf_bytes(url: str):
     """
-    Downloads a PDF straight into memory (never written to disk). Returns
-    the raw bytes, or None if the link is a login wall / not actually a PDF.
+    Validates and returns file bytes for PDF or DOCX formats. 
+    Checks the full URL string to support query parameters.
+    Throws a hard error and exits instantly if any other format is detected.
+    Returns: (bytes, file_type_string)
     """
     try:
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
@@ -417,31 +442,43 @@ def download_pdf_bytes(url: str):
         resp.raise_for_status()
 
         if "login" in resp.url.lower():
-            print(f"    [-] Skipped: Redirected to login page -> {url}")
-            return None
+            print(f"\n    [-] Skipped: Redirected to login page -> {url}")
+            return None, None
 
         content_type = resp.headers.get("Content-Type", "").lower()
         if "text/html" in content_type:
-            print(f"    [-] Skipped: URL requires authentication -> {url}")
-            return None
+            print(f"\n    [-] Skipped: URL requires authentication -> {url}")
+            return None, None
 
-        return resp.content
+        url_lower = url.lower()
+        
+        is_pdf = "pdf" in content_type or ".pdf" in url_lower
+        is_docx = "wordprocessingml.document" in content_type or ".docx" in url_lower
+
+        if is_pdf:
+            return resp.content, "pdf"
+        elif is_docx:
+            return resp.content, "docx"
+        else:
+            print(f"\n\n    [FATAL ERROR] Unsupported file type detected.")
+            print(f"    URL: {url}")
+            print(f"    Content-Type: '{content_type}'")
+            print("    Only PDF or DOCX external files are supported. Terminating execution.")
+            os._exit(1)
+
     except Exception as e:
-        print(f"    [-] Failed to download {url}: {e}")
-        return None
+        print(f"\n\n    [FATAL ERROR] Failed to download ATC document: {e}")
+        print("    Terminating execution.")
+        os._exit(1)
 
 
 def extract_pdf_pages_in_memory(pdf_bytes: bytes, base_name: str):
-    """
-    Opens the downloaded PDF straight from the in-memory byte stream (no
-    temp file) and returns [(chunk_label, page_text), ...] in page order.
-    """
     chunks = []
     try:
         doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
         for page_num in range(1, len(doc) + 1):
             page_text = doc.load_page(page_num - 1).get_text("text").strip()
-            chunks.append((f"{base_name}_ATC_CHUNK_{page_num}", page_text))
+            chunks.append((f"{base_name}_ATC_PDF_CHUNK_{page_num}", page_text))
         doc.close()
     except Exception as e:
         print(f"    [-] Error extracting text from PDF: {e}")
@@ -449,11 +486,6 @@ def extract_pdf_pages_in_memory(pdf_bytes: bytes, base_name: str):
 
 
 def extract_document_chunks_in_memory(md_filepath: str):
-    """
-    Mirrors CHUNKS_EXTRACTOR.py's per-document extraction, but keeps every
-    chunk in memory only. Returns (table_result, [(chunk_label, atc_text), ...])
-    in page order - the same shape the MAP/REDUCE stages already expect.
-    """
     base_name = os.path.splitext(os.path.basename(md_filepath))[0]
 
     table_result = extract_table_value(md_filepath, REQUIRED_DOCS_HEADER)
@@ -470,11 +502,13 @@ def extract_document_chunks_in_memory(md_filepath: str):
 
     chunks = []
     if md_chunk_result and not md_chunk_result.startswith("Error:"):
+        # Original embedded Markdown is preserved as a single, unbatched chunk
         chunks.append((f"{base_name}_ATC_MARKDOWN_CHUNK", md_chunk_result))
 
-    # --- locate the linked ATC PDF (via the sibling .json) and pull it straight into memory ---
     json_filepath = os.path.join(os.path.dirname(md_filepath), f"{base_name}.json")
-    pdf_bytes = None
+    downloaded_bytes = None
+    file_type = None
+
     if os.path.exists(json_filepath):
         try:
             with open(json_filepath, "r", encoding="utf-8") as jf:
@@ -483,7 +517,7 @@ def extract_document_chunks_in_memory(md_filepath: str):
                 name = link.get("name", "")
                 url = link.get("url")
                 if ATC_PDF_LINK_NAME.lower() in name.lower() and url:
-                    pdf_bytes = download_pdf_bytes(url)
+                    downloaded_bytes, file_type = download_pdf_bytes(url)
                     break
         except json.JSONDecodeError:
             print(f"    [-] Error: Failed to parse JSON in {json_filepath}")
@@ -492,11 +526,32 @@ def extract_document_chunks_in_memory(md_filepath: str):
     else:
         print(f"    [-] No corresponding JSON file found at {json_filepath}")
 
-    if pdf_bytes:
-        chunks.extend(extract_pdf_pages_in_memory(pdf_bytes, base_name))
+    if downloaded_bytes:
+        if file_type == "pdf":
+            chunks.extend(extract_pdf_pages_in_memory(downloaded_bytes, base_name))
+        
+        elif file_type == "docx":
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
+                tmp.write(downloaded_bytes)
+                tmp_path = tmp.name
+            
+            try:
+                print(f"    -> Converting downloaded DOCX to Markdown...")
+                md_text = safe_convert_docx_to_md(
+                    input_path=tmp_path,
+                    output_dir=None,
+                    format="gfm"
+                )
+                if md_text:
+                    # Apply semantic chunking strictly to the external downloaded DOCX
+                    docx_chunks = chunk_markdown_by_tokens(md_text, base_name, max_tokens=1000)
+                    chunks.extend(docx_chunks)
+            except Exception as e:
+                print(f"    [-] Error during DOCX to Markdown conversion: {e}")
+            finally:
+                os.remove(tmp_path) 
 
     if not chunks:
-        # Safeguard so downstream analysis always has something to work with.
         chunks.append((f"{base_name}_ATC_CHUNK_1", "No Valid ATC Found"))
 
     return table_result, chunks
@@ -505,27 +560,27 @@ def extract_document_chunks_in_memory(md_filepath: str):
 # =========================================================================
 # MAP STAGE
 # =========================================================================
-def map_extract_chunk(table_result: str, chunk_label: str, atc_text: str) -> dict:
+def map_extract_chunk(table_result: str, chunk_label: str, atc_text: str, strict: bool = False) -> dict:
     empty = {c: [] for c in CATEGORIES}
 
     system_prompt = MAP_SYSTEM_PROMPT.format(table_result=table_result)
     budget_check = count_tokens(system_prompt) + count_tokens(atc_text)
 
     if budget_check > MAP_MAX_INPUT_TOKENS:
-        # Page itself is unusually large for the tokenizer estimate (rare for
-        # single-page PDF text, but guard anyway) - truncate defensively
-        # rather than let the server error out or silently drop context.
         allowed_chars = int(len(atc_text) * (MAP_MAX_INPUT_TOKENS / budget_check) * 0.95)
         atc_text = atc_text[:allowed_chars]
-        print(f"    [!] {chunk_label}: page text truncated to fit map-stage context budget")
+        print(f"    [!] {chunk_label}: text truncated to fit map-stage context budget")
 
     _t0 = time.time()
     timer = ProgressTimer(f"Processing {chunk_label} (MAP stage, llama.cpp)")
     timer.start()
-    raw = call_llm(system_prompt, atc_text, max_tokens=MAP_MAX_OUTPUT_TOKENS)
+    raw = call_llm(system_prompt, atc_text, max_tokens=MAP_MAX_OUTPUT_TOKENS, require_json=True)
     timer.stop()
     record_call(f"MAP: {chunk_label}", system_prompt, atc_text, raw, time.time() - _t0)
+    
     if not raw:
+        if strict: 
+            raise ValueError("Empty response")
         return empty
 
     raw_clean = re.sub(r"^```(json)?|```$", "", raw.strip(), flags=re.MULTILINE).strip()
@@ -537,9 +592,9 @@ def map_extract_chunk(table_result: str, chunk_label: str, atc_text: str) -> dic
             result[c] = v if isinstance(v, list) else [str(v)]
         return result
     except Exception:
-        # Model didn't return clean JSON - don't lose the page's content,
-        # just dump it into COMMERCIAL_TERMS/misc so a human/reduce pass can
-        # still see it rather than silently discarding.
+        if strict:
+            raise ValueError("Invalid JSON format from model")
+            
         print(f"    [!] {chunk_label}: map-stage output wasn't valid JSON, keeping raw text as fallback evidence")
         fallback = empty
         fallback["COMMERCIAL_TERMS"] = [f"[UNPARSED PAGE OUTPUT - {chunk_label}] {raw_clean[:1500]}"]
@@ -558,17 +613,10 @@ def dedupe_preserve_order(items):
 
 
 def strip_stray_hr_lines(text: str) -> str:
-    """
-    The model inconsistently emits markdown horizontal-rule lines (---, ***,
-    ___) between the five output sections. The prompt already forbids
-    anything outside the five '###' headings and their bullets, so these are
-    stripped here rather than relying on the model to self-police every time.
-    """
     if not text:
         return text
     lines = [ln for ln in text.splitlines() if not re.fullmatch(r"\s*(-{3,}|\*{3,}|_{3,})\s*", ln)]
     cleaned = "\n".join(lines)
-    # Collapse any blank-line runs left behind by the removed separators.
     cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
     return cleaned.strip()
 
@@ -577,7 +625,6 @@ def strip_stray_hr_lines(text: str) -> str:
 # REDUCE STAGE
 # =========================================================================
 def compress_category(category: str, lines: list) -> list:
-    """Second-level reduce for a single category when it's still too large."""
     joined = "\n".join(lines)
     system_prompt = COMPRESS_SYSTEM_PROMPT.format(category=category)
     _t0 = time.time()
@@ -608,8 +655,6 @@ def reduce_stage(table_result: str, merged: dict) -> str:
     evidence_text = build_reduced_evidence_text(merged)
     budget_check = count_tokens(ANALYSIS_SYSTEM_PROMPT) + count_tokens(table_result) + count_tokens(evidence_text)
 
-    # Safety valve: if the merged evidence alone is still too big for the
-    # context window, compress the largest categories one at a time and retry.
     attempts = 0
     while budget_check > REDUCE_MAX_INPUT_TOKENS and attempts < 3:
         attempts += 1
@@ -638,7 +683,7 @@ def reduce_stage(table_result: str, merged: dict) -> str:
 
 
 # =========================================================================
-# SINGLE-SHOT (markdown-only, no PDF chunks)
+# SINGLE-SHOT 
 # =========================================================================
 def single_shot_stage(table_result: str, atc_text: str) -> str:
     total = count_tokens(ANALYSIS_SYSTEM_PROMPT) + count_tokens(table_result) + count_tokens(atc_text)
@@ -675,7 +720,7 @@ def process_document(md_filepath: str, base_name: str):
     table_result, chunks = extract_document_chunks_in_memory(md_filepath)
     timer.stop()
 
-    chunks = [(name, atc) for name, atc in chunks if atc]  # drop empty parses
+    chunks = [(name, atc) for name, atc in chunks if atc]  
 
     if not chunks:
         print(f"    [-] No usable chunk text found in {md_filepath}, skipping.")
@@ -685,12 +730,67 @@ def process_document(md_filepath: str, base_name: str):
         print(f"    -> Single chunk detected ({chunks[0][0]}): running one-shot analysis")
         final_answer = single_shot_stage(table_result, chunks[0][1])
     else:
-        print(f"    -> {len(chunks)} page chunks detected: running MAP stage")
+        print(f"    -> {len(chunks)} chunks detected. Processing Markdown first, then batching external documents.")
         merged = {c: [] for c in CATEGORIES}
-        for name, atc_text in chunks:
-            page_result = map_extract_chunk(table_result, name, atc_text)
+        
+        # 1. Separate original embedded Markdown chunk from external downloaded chunks
+        md_chunk = next((c for c in chunks if "ATC_MARKDOWN_CHUNK" in c[0]), None)
+        downloaded_chunks = [c for c in chunks if "ATC_MARKDOWN_CHUNK" not in c[0]]
+        
+        # 2. Run original Markdown chunk alone first (if it exists)
+        if md_chunk:
+            print(f"    -> Isolating explicit terms. Running standalone MAP stage for: {md_chunk[0]}")
+            md_result = map_extract_chunk(table_result, md_chunk[0], md_chunk[1], strict=False)
             for c in CATEGORIES:
-                merged[c].extend(page_result.get(c, []))
+                merged[c].extend(md_result.get(c, []))
+        
+        # 3. Dynamic Self-Healing Queue for the remaining downloaded chunks (PDF or DOCX)
+        if downloaded_chunks:
+            base_prompt_tokens = count_tokens(MAP_SYSTEM_PROMPT.format(table_result=table_result))
+            pending_chunks = downloaded_chunks.copy()
+            
+            while pending_chunks:
+                current_batch_names = []
+                current_batch_texts = []
+                current_tokens = base_prompt_tokens
+                
+                for name, atc_text in pending_chunks:
+                    chunk_addition = f"\n\n--- [START {name}] ---\n{atc_text}\n--- [END {name}] ---\n"
+                    chunk_tokens = count_tokens(chunk_addition)
+                    
+                    if current_tokens + chunk_tokens > (MAP_MAX_INPUT_TOKENS - 200) and current_batch_names:
+                        break
+                        
+                    current_batch_names.append(name)
+                    current_batch_texts.append(chunk_addition)
+                    current_tokens += chunk_tokens
+                
+                success = False
+                while current_batch_names and not success:
+                    batch_label = " + ".join(current_batch_names)
+                    batch_text = "".join(current_batch_texts)
+                    
+                    try:
+                        page_result = map_extract_chunk(table_result, batch_label, batch_text, strict=True)
+                        for c in CATEGORIES:
+                            merged[c].extend(page_result.get(c, []))
+                            
+                        success = True
+                        pending_chunks = pending_chunks[len(current_batch_names):]
+                        
+                    except ValueError:
+                        if len(current_batch_names) > 1:
+                            print(f"    [!] JSON decode failed for large batch. Removing last chunk and retrying...")
+                            current_batch_names.pop()
+                            current_batch_texts.pop()
+                        else:
+                            print(f"    [!] Single chunk '{batch_label}' failed JSON parsing. Using text fallback.")
+                            page_result = map_extract_chunk(table_result, batch_label, batch_text, strict=False)
+                            for c in CATEGORIES:
+                                merged[c].extend(page_result.get(c, []))
+                                
+                            success = True
+                            pending_chunks = pending_chunks[1:]
 
         for c in CATEGORIES:
             merged[c] = dedupe_preserve_order(merged[c])
@@ -714,12 +814,8 @@ def process_document(md_filepath: str, base_name: str):
 
 
 def main():
-    # Multiprocessing support check for Windows/macOS compatibility (spinner process).
     multiprocessing.freeze_support()
 
-    # Usage: python3 INFER.py [path/to/markdowns_folder]
-    # Falls back to INPUT_MARKDOWNS_DIR if no path is given. Always a folder
-    # containing .md files with their sibling .json files alongside them.
     root = sys.argv[1] if len(sys.argv) > 1 else INPUT_MARKDOWNS_DIR
 
     if not os.path.isdir(root):
