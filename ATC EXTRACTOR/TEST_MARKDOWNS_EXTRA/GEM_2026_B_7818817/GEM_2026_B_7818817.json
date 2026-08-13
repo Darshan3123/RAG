@@ -1,0 +1,304 @@
+{
+    "_id": "GEM_2026_B_7818817",
+    "bid": {
+        "bid_no": "GEM/2026/B/7818817",
+        "ra_no": "",
+        "bid_type": "Product Bid/RAs",
+        "product_type": "Product",
+        "base_type": "BOQ",
+        "process_kind": "BOQ"
+    },
+    "card": {
+        "items": [
+            {
+                "name": "1S1 AIR OPERATED SEALANT GUN WITH ENGINE DRIVEN AIR COMPRESSOR,1S2 HYDRAULIC SEALANT GUN, HAND OPER",
+                "quantity": 443
+            }
+        ],
+        "departments": [
+            {
+                "name": "Ministry of Petroleum and Natural Gas",
+                "address": "GAIL India Limited",
+                "city": "",
+                "state": "",
+                "pincode": ""
+            }
+        ],
+        "start_datetime": "22-07-2026 16:23:00",
+        "end_datetime": "12-08-2026 14:00:00",
+        "bid_pdf_url": "https://bidplus.gem.gov.in/showbidDocument/9643135",
+        "ra_pdf_url": ""
+    },
+    "pdf": {
+        "timing": {
+            "bid_end_datetime": "12-08-2026 14:00:00",
+            "bid_opening_datetime": "12-08-2026 14:30:00",
+            "bid_offer_validity_days": 90
+        },
+        "departments": {
+            "ministry_state_name": "Ministry Of Petroleum And Natural Gas",
+            "department_name": "Gail India Limited",
+            "organisation_name": "Gail India Limited",
+            "office_name": "Mumbai"
+        },
+        "items": {
+            "total_quantity_extracted": 443,
+            "quantity_match_flag": "Yes",
+            "item 1": {
+                "item_category": "1S1 AIR OPERATED SEALANT GUN WITH ENGINE DRIVEN AIR COMPRESSOR",
+                "quantity": 2
+            },
+            "item 2": {
+                "item_category": "1S2 HYDRAULIC SEALANT GUN, HAND OPERATED",
+                "quantity": 34
+            },
+            "item 3": {
+                "item_category": "2S1 CLEANER OR FLUSH AND LUBRICANT FOR VALVES",
+                "quantity": 170
+            },
+            "item 4": {
+                "item_category": "2S2 SEALANT FOR LUBRICATION AND NORMAL PASSING VALVES",
+                "quantity": 170
+            },
+            "item 5": {
+                "item_category": "2S3 SEALANT FOR SEVERELY PASSING VALVES",
+                "quantity": 51
+            },
+            "item 6": {
+                "item_category": "2S4 CLEANER OR FLUSH AND LUBRICANT FOR VALVES",
+                "quantity": 6
+            },
+            "item 7": {
+                "item_category": "2S5 SEALANT FOR LUBRICATION AND NORMAL PASSING VALVES",
+                "quantity": 6
+            },
+            "item 8": {
+                "item_category": "2S6 SEALANT FOR SEVERELY PASSING VALVES",
+                "quantity": 4
+            }
+        },
+        "evaluation": {
+            "evaluation_method": "Group wise evaluation",
+            "schedules": {
+                "PROCUREMENT OF SEALANT GUNS FOR MAHARASHTRA REGION PIPELINES INCLUDING MNJPL": {
+                    "Item_1": {
+                        "Item/Category": "1s1 Air Operated Sealant Gun With Engine Driven Air Compressor",
+                        "Consignee/Reporting Officer": "Ankush Vijay Wankhede",
+                        "Consignee Address": "3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010",
+                        "Quantity": "2"
+                    },
+                    "Item_2": {
+                        "Item/Category": "1s2 Hydraulic Sealant Gun, Hand Operated",
+                        "Consignee/Reporting Officer": "Ankush Vijay Wankhede",
+                        "Consignee Address": "3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010",
+                        "Quantity": "34"
+                    }
+                },
+                "PROCUREMENT OF SEALANT FOR MAHARASHTRA REGION PIPELINES INCLUDING MNJPL": {
+                    "Item_1": {
+                        "Item/Category": "2s1 Cleaner Or Flush And Lubricant For Valves",
+                        "Consignee/Reporting Officer": "Ankush Vijay Wankhede",
+                        "Consignee Address": "3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010",
+                        "Quantity": "170"
+                    },
+                    "Item_2": {
+                        "Item/Category": "2s2 Sealant For Lubrication And Normal Passing Valves",
+                        "Consignee/Reporting Officer": "Ankush Vijay Wankhede",
+                        "Consignee Address": "3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010",
+                        "Quantity": "170"
+                    },
+                    "Item_3": {
+                        "Item/Category": "2s3 Sealant For Severely Passing Valves",
+                        "Consignee/Reporting Officer": "Ankush Vijay Wankhede",
+                        "Consignee Address": "3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010",
+                        "Quantity": "51"
+                    }
+                },
+                "PIPELINES INCLUDING MNJPL": {
+                    "Item_1": {
+                        "Item/Category": "2s4 Cleaner Or Flush And Lubricant For Valves",
+                        "Consignee/Reporting Officer": "Ankush Vijay Wankhede",
+                        "Consignee Address": "3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010",
+                        "Quantity": "6"
+                    },
+                    "Item_2": {
+                        "Item/Category": "2s5 Sealant For Lubrication And Normal Passing Valves",
+                        "Consignee/Reporting Officer": "Ankush Vijay Wankhede",
+                        "Consignee Address": "3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010",
+                        "Quantity": "6"
+                    },
+                    "Item_3": {
+                        "Item/Category": "2s6 Sealant For Severely Passing Valves",
+                        "Consignee/Reporting Officer": "Ankush Vijay Wankhede",
+                        "Consignee Address": "3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010",
+                        "Quantity": "4"
+                    }
+                }
+            }
+        },
+        "documents": {
+            "required_from_seller": [
+                "Experience Criteria",
+                "Certificate (Requested in ATC)*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer"
+            ],
+            "show_uploaded_docs_to_all_bidders": "No",
+            "attachments": []
+        },
+        "consignees": [
+            {
+                "consignee_reporting_officer": "Ankush Vijay Wankhede",
+                "consignee_address": "440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra",
+                "quantity": "2",
+                "delivery_days": "60"
+            },
+            {
+                "consignee_reporting_officer": "Ankush Vijay Wankhede",
+                "consignee_address": "440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra",
+                "quantity": "34",
+                "delivery_days": "60"
+            },
+            {
+                "consignee_reporting_officer": "Ankush Vijay Wankhede",
+                "consignee_address": "440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra",
+                "quantity": "170",
+                "delivery_days": "60"
+            },
+            {
+                "consignee_reporting_officer": "Ankush Vijay Wankhede",
+                "consignee_address": "440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra",
+                "quantity": "51",
+                "delivery_days": "60"
+            },
+            {
+                "consignee_reporting_officer": "Ankush Vijay Wankhede",
+                "consignee_address": "440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra",
+                "quantity": "6",
+                "delivery_days": "60"
+            },
+            {
+                "consignee_reporting_officer": "Ankush Vijay Wankhede",
+                "consignee_address": "440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra",
+                "quantity": "4",
+                "delivery_days": "60"
+            }
+        ],
+        "relaxations": {
+            "mse_relaxation_experience_turnover": "No",
+            "startup_relaxation_experience_turnover": "No"
+        },
+        "auto_extension": {
+            "min_bids_to_disable_extension": 1,
+            "auto_extend_days": 7,
+            "auto_extension_count": 1
+        },
+        "ra": {
+            "bid_to_ra_enabled": "No",
+            "ra_qualification_rule": null
+        },
+        "bid_type": {
+            "type_of_bid": "Two Packet Bid",
+            "technical_clarification_window_days": 4
+        },
+        "inspection": {
+            "inspection_required": "No",
+            "inspection_agency_type": null
+        },
+        "clauses": {
+            "arbitration_clause": "No",
+            "mediation_clause": "No"
+        },
+        "mii": {
+            "mii_purchase_preference": "No",
+            "mii_price_band_percent": null,
+            "mii_max_quantity_percent": null,
+            "allow_only_class_1_2_local_suppliers": null
+        },
+        "mse": {
+            "mse_purchase_preference": "Yes",
+            "mse_price_band_percent": 15,
+            "mse_max_quantity_percent": 25
+        },
+        "financials": {
+            "emd": {
+                "required": true,
+                "advisory_bank": "State Bank of India",
+                "amount_total": 151200,
+                "schedule_breakup": []
+            },
+            "epbg": {
+                "required": true,
+                "advisory_bank": "State Bank of India",
+                "percent": 5.0,
+                "duration_months": 17
+            },
+            "emd_exemption_text": "The bidder seeking EMD exemption, must submit the valid supporting document for the relevant category as per GeM GTC with the bid. Under MSE category, only manufacturers for goods and Service Providers for Services are eligible for exemption from EMD. Traders are excluded from the purview of this Policy."
+        },
+        "terms": {
+            "special_terms_version": "",
+            "special_terms_text": "",
+            "buyer_atc": {
+                "generic": "Buyer Added Bid Specific Terms and Conditions # 1. Buyer Added Bid Specific ATC Buyer uploaded ATC document Click here to view the file.",
+                "items": [],
+                "hard_requirements": [],
+                "info_clauses": []
+            },
+            "disclaimer": "The Additional Terms and Conditions (ATC) have been incorporated by the Buyer after approval of their Competent Authority. The Buyer, is solely responsible for the impact of these clauses on the bidding process, its outcome, and consequences thereof including any restriction arising in the bidding process due to these ATCs and including the modification of technical specifications and / or terms and conditions governing the bid. All representations / grievances pertaining to the ATC clauses shall be raised with the buyer organization directly and not with GeM. If any of the clause(s) is/are incorporated by the Buyer regarding the following, the bid & resultant contract shall be treated as null & void. Further, GeM reserves the right, at its sole discretion, to cancel the bid forthwith, without issuance of any prior notice or intimation :- 1. Publishing Custom / BOQ bids for items for which regular GeM categories are available (unless such Custom / BOQ item is bunched with the major regular product Category Item). 2. Mandating procurement of / from specific Brand / Make / Model / Manufacturer / Dealer except in case of Single Bid / Proprietary Article Certificate (PAC) Buying. 3. Inclusion of disqualification criteria related to suspension of seller / service provider, where such suspension period has already expired. 4. Mandating submission of documents in physical form as a pre-requisite to qualify bidders. 5. Publishing bids on GeM for procurement of works. 6. Procurement of Goods by creating a Service bid on GeM & vice-versa. 7. Seeking sample with bid or approval of samples during bid evaluation process. However, trial / sample, as the case may be, shall be permitted in cases where trial / sample are allowed as per approved and published procurement policy of the Buyers' controlling Ministry / Department / State / Public Sector Enterprises Headquarters. If there is any violation of trial / sample clause with regard to approved policy of the Buyers' Ministry / Department / State / Public Sector Enterprises Headquarters, then this is to be determined and redressed by the concerned Buyer Organisation only. 8. Seeking experience from specific organization / department / institute only or from foreign / export experience. 9. Creating bid for items from incorrect categories. 10. Reference of conditions published on any external site or reference to external documents/clauses. 11. Asking for any Tender fee / Bid Participation fee, as the case may be. 12. Buyer added ATC Clauses which are in contravention of clauses defined in bid detail section, including specifications, EMD Detail, ePBG Detail and MII and MSE Purchase Preference sections of the bid, unless otherwise allowed by the applicable GeM GTC. 13. Any ATC clause in contravention with GeM GTC Clause 4 (xiii) (h) will be invalid. In case of multiple L1 bidders against a service bid, the buyer shall place the Contract by selection of a bidder amongst the L-1 bidders through a Random Algorithm executed by GeM system. 14. In a category based bid, adding additional items, through buyer added, additional scope of work/additional terms and conditions/or any other document. If buyer needs more items along with the main item, the same must be added through bunching category based items or by bunching custom catalogues or bunching a BoQ with the main category based item, the same must not be done through ATC or Scope of Work. Further, if any seller has any objection/grievance against these additional clauses or otherwise on any aspect of this bid, they can raise their representation against the same by using the Representation window provided in the bid details field in Seller dashboard after logging in as a seller. Buyer is duty bound to reply to all such representations and would not be allowed to open bids if he fails to reply to such representations. All GeM Sellers/Service Providers shall ensure full compliance with all applicable labour laws, including the provisions, rules, schemes and guidelines under the four Labour Codes i.e. the Code on Wages, 2019; the Industrial Relations Code, 2020; the Occupational Safety, Health and Working Conditions Code, 2020; and the Code on Social Security, 2020 as and when notified and brought into force by the Government of India. For all provisions of the Labour Codes that are pending operationalisation through rules, schemes or notifications, the corresponding provisions of the pre-existing labour enactments (such as The Minimum Wages Act, 1948, The Payment of Wages Act, 1936, The Payment of Bonus Act, 1965, The Equal Remuneration Act, 1976, The Payment of Gratuity Act, 1972, etc. and relevant State Rules) shall continue to remain applicable. The Seller/ Service Providers shall, therefore, be responsible for ensuring compliance under: - All notified and enforceable provisions of the new Labour Codes as mentioned hereinabove; and - All operative provisions of the erstwhile Labour Laws until their complete substitution. All obligations relating to wages, social security, safety, working conditions, industrial relations etc. and any other statutory requirements shall be strictly met by the Seller/ Service Provider. Any non-compliance shall constitute a breach of the contract and shall entitle the Buyer to take appropriate action in accordance with the contract and applicable law. This Bid is governed by the General Terms and Conditions, conditions stipulated in Bid and Service Level Agreement specific to the Service, as the case may be, as provided in the Marketplace. However, in case of Service, if any condition specified in General Terms and Conditions is contradicted by the conditions stipulated in Service Level Agreement specific to said Service, then it will over-ride the conditions in the General Terms and Conditions. यह बिड सामान्य शर्तों के अंतर्गत भी शासित है /This Bid is also governed by the General Terms and Conditions जेम की सामान्य शर्तों के खंड 26 के संदर्भ में भारत के साथ भूमि सीमा साझा करने वाले देश के बिडर से खरीद पर प्रतिबंध के संबंध में भारत के साथ भूमि सीमा साझा करने वाले देश का कोई भी बिडर इस निविदा में बिड देने के लिए तभी पात्र होगा जब वह बिड देने वाला सक्षम प्राधिकारी के पास पंजीकृत हो।बिड में भाग लेते समय बिडर को इसका अनुपालन करना होगा और कोई भी गलत घोषणा किए जाने य इसका अनुपालन न करने पर अनुबंध को तत्काल समास करने और कानून के अनुसार आगे की कानूनी कार्वाई का आधार होगा।/In terms of GeM GTC clause 26 regarding Restrictions on procurement from a bidder of a country which shares a land border with India, any bidder from a country which shares a land border with India will be eligible to bid in this tender only if the bidder is registered with the Competent Authority. While participating in bid, Bidder has to undertake compliance of this and any false declaration and non-compliance of this would be a ground for immediate termination of the contract and further legal action in accordance with the laws."
+        }
+    },
+    "hyperlinks": [
+        {
+            "page": 4,
+            "name": "Competent Authority Approval for not opting Make In India Preference",
+            "text": "View Document",
+            "url": "https://bidplus.gem.gov.in/bidding/bid/downloadMseMiiDoc/9643135/1784700686.pdf",
+            "source": "bid"
+        },
+        {
+            "page": 5,
+            "name": "OM_No.1_4_2021_PPD_dated_18.05.2023",
+            "text": "OM_No.1_4_2021_PPD_dated_18.05.2023",
+            "url": "https://bidplus.gem.gov.in/bidding/downloadOmppdfile/",
+            "source": "bid"
+        },
+        {
+            "page": 5,
+            "name": "1784714472.xlsx",
+            "text": "1784714472.xlsx",
+            "url": "https://bidplus.gem.gov.in/resources/upload_nas/JulQ326/bidding/excel/bid-9643135/1784714472.xlsx",
+            "source": "bid"
+        },
+        {
+            "page": 6,
+            "name": "Specification Document",
+            "text": "View File",
+            "url": "https://mkp.gem.gov.in/uploaded_documents/51/16/877/OrderItem/BoqDocument/2026/7/22/ts_boq_2026-07-22-11-18-36_9c4ec8f0c32a84e566819368e8abeba6.pdf",
+            "source": "bid"
+        },
+        {
+            "page": 6,
+            "name": "BOQ Detail Document",
+            "text": "View File",
+            "url": "https://mkp.gem.gov.in/uploaded_documents/51/16/877/OrderItem/BoqLineItemsDocument/2026/7/22/boq_item_sample_file__2026-07-22-11-18-36_f33f43ca21e2d3d84473b8944d2bc4a9.csv",
+            "source": "bid"
+        },
+        {
+            "page": 11,
+            "name": "Buyer uploaded ATC document",
+            "text": "Click here to view the file",
+            "url": "https://fulfilment.gem.gov.in/contract/slafds?fileDownloadPath=SLA_UPLOAD_PATH/2026/Jul/GEM_2026_B_7818817/CLM0010/ITB26_17_F_f3906f03-a3dd-4de1-92dd1784717282243_sadhankumar.pdf",
+            "source": "bid"
+        },
+        {
+            "page": 12,
+            "name": "यह �बड सामा�य शत� के अंतग�त भी शािसत है /This Bid is also governed by the General Terms and Conditions",
+            "text": "यह �बड सामा�य शत� के अंतग�त भी शािसत है /This Bid is also governed by the General Terms and Conditions",
+            "url": "https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20260722",
+            "source": "bid"
+        }
+    ],
+    "normalized": {},
+    "validation": {
+        "issues": []
+    },
+    "full_pdf_text": "बिड दस्तावेज / Bid Document\n\n<table><tr><td colspan=\"2\">बिड विवरण/Bid Details</td></tr><tr><td>बिड बंद होने की तारीख/समय /Bid End Date/Time</td><td>12-08-2026 14:00:00</td></tr><tr><td>बिड खुलने की तारीख/समय /Bid Opening Date/Time</td><td>12-08-2026 14:30:00</td></tr><tr><td>बिड पेशकश वैधता (बंद होने की तारीख से)/Bid Offer Validity (From End Date)</td><td>90 (Days)</td></tr><tr><td>मंत्रालय/राज्य का नाम/Ministry/State Name</td><td>Ministry Of Petroleum And Natural Gas</td></tr><tr><td>विभाग का नाम/Department Name</td><td>Gail India Limited</td></tr><tr><td>संगठन का नाम/Organisation Name</td><td>Gail India Limited</td></tr><tr><td>कार्यालय का नाम/Office Name</td><td>Mumbai</td></tr><tr><td>शिकायत निवारण के संपर्क विवरण/ Contact details of Grievance redressal</td><td>HOD Email id :hod1.gail.dl@gembuyer.in Buyer Email id: sadhan.guntru@gail.co.in</td></tr><tr><td>कुल मात्रा/Total Quantity</td><td>443</td></tr><tr><td>वस्तु श्रेणी /Item Category</td><td>1S1 AIR OPERATED SEALANT GUN WITH ENGINE DRIVEN AIR COMPRESSOR , 1S2 HYDRAULIC SEALANT GUN, HAND OPERATED , 2S1 CLEANER OR FLUSH AND LUBRICANT FOR VALVES , 2S2 SEALANT FOR LUBRICATION AND NORMAL PASSING VALVES , 2S3 SEALANT FOR SEVERELY PASSING VALVES , 2S4 CLEANER OR FLUSH AND LUBRICANT FOR VALVES , 2S5 SEALANT FOR LUBRICATION AND NORMAL PASSING VALVES , 2S6 SEALANT FOR SEVERELY PASSING VALVES</td></tr><tr><td>GeMARPTS में खोजी गई स्ट्रिंग्स / Searched Strings used in GeMARPTS</td><td>Sealant gun and valve sealant</td></tr><tr><td>GeMARPTS में खोजा गया परिणाम / Searched Result generated in GeMARPTS</td><td>Pneumatic Sealant gun, Aerospace sealant, Fibrin Sealant, Silicone sealant, Thread sealant, Spiral Wound Metallic Gasket, Portable Toilet, Thread Sealant Tape, Silicon Sealent, Modular Toilet</td></tr><tr><td>अधिसूचना के लिए चयनित प्रासंगिक श्रेणियाँ / Relevant Categories selected for notification</td><td>Silicone sealantPneumatic Sealant gun</td></tr><tr><td>बीओक्यू शीर्षक /BOQ Title</td><td>SCHEDULE OF RATES FOR 2 SCHEDULES</td></tr><tr><td>एमाएसएमई के लिए अनुभव के वर्षों और टर्नओवर से छूट प्रदान की गई है/MSE Relaxation for Years of Experience and Turnover</td><td>No</td></tr><tr><td>स्टार्टअप के लिए अनुभव के वर्षों और टर्नओवर से छूट प्रदान की गई है /Startup Relaxation for Years of Experience and Turnover</td><td>No</td></tr><tr><td>विक्रेता से मांगे गए दस्तावेज्ञ/Document required from seller</td><td>Experience Criteria,Certificate (Requested in ATC)*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer</td></tr><tr><td>क्या आप निविदाकरों द्वारा अपलोड किए गए दस्तावेजों को निविदा में भाग लेने वाले सभी निविदाकरों को दिखाना चाहते है? संदर्भ मेनू है/Do you want to show documents uploaded by bidders to all bidders participated in bid?</td><td>No</td></tr><tr><td>बिड लगाने की समय सीमा स्वतः नहीं बढ़ने के लिए आवश्यक बिड की संख्या। / Minimum number of bids required to disable automatic bid extension</td><td>1</td></tr><tr><td>दिनों की संख्या, जिनके लिए बिड लगाने की समय-सीमा बढ़रई जाएगी। / Number of days for which Bid would be auto-extended</td><td>7</td></tr><tr><td>ऑटो एक्सर्टेशन अधिकतम कितनी बार किया जाना है। / Number of Auto Extension count</td><td>1</td></tr><tr><td>बिड से रिवर्स नीलामी सक्रिय किया/Bid to RA enabled</td><td>No</td></tr><tr><td>क्रेता के लिए उपलब्ध आईटीसी/ITC available to buyer</td><td>Yes</td></tr><tr><td>बिड का प्रकार/Type of Bid</td><td>Two Packet Bid</td></tr><tr><td>प्राथमिक उत्पाद श्रेणी/Primary product category</td><td>1S1 AIR OPERATED SEALANT GUN WITH ENGINE DRIVEN AIR COMPRESSOR</td></tr><tr><td>तकनीकी मूल्यांकन के दौरान तकनीकी स्पष्टीकरण हेतु अनुमत समय /Time allowed for Technical Clarifications during technical evaluation</td><td>4 Days</td></tr><tr><td>निरीक्षण आवश्यक (सूचीबढ़ निरीक्षण प्राधिकरण /जेम के साथ पूर्य पंजीकृत एजेसियों द्वारा)/Inspection Required (By Empanelled Inspection Authority / Agencies pre-registered with GeM)</td><td>No</td></tr><tr><td>Payment Timelines</td><td>Payments shall be made to the Seller within 15 days of issue of consignee receipt-cum-acceptance certificate (CRAC) and on-line submission of bills (This is in supersession of 10 days time as provided in clause 12 of GeM GTC)</td></tr><tr><td>मूल्यांकन पढ़ति/Evaluation Method</td><td>Group wise evaluation</td></tr><tr><td>वितीय दस्तावेज की आवश्यकता है / Financial Document Required</td><td>Yes</td></tr><tr><td>मध्यस्थता खंड/Arbitration Clause</td><td>No</td></tr><tr><td>सुलह खंड/Mediation Clause</td><td>No</td></tr></table>\n\nईएमडी विवरण/EMD Detail\n\n<table><tr><td>एडवाईजरी बैंक/Advisory Bank</td><td>State Bank of India</td></tr><tr><td>PROCUREMENT OF SEALANT GUNS FOR MAHARASHTRA REGION PIPELINES INCLUDING MNJPL ईएमडी राशि/EMD Amount (In INR)</td><td>54300</td></tr><tr><td>PROCUREMENT OF SEALANT FOR MAHARASHTRA REGION PIPELINES INCLUDING MNJPL ईएमडी राशि/EMD Amount (In INR)</td><td>96900</td></tr></table>\n\nईपीबीजी विवरण /ePBG Detail\n\n<table><tr><td>एडवाइजरी बैंक/Advisory Bank</td><td>State Bank of India</td></tr><tr><td>ईपीबीजी प्रतिशत (%)/ePBG Percentage(%)</td><td>5.00</td></tr><tr><td>ईपीबीजी की आवश्यक अवधि (माह) /Duration of ePBG required (Months).</td><td>17</td></tr></table>\n\n(a). जेम की शर्ताँ के अनुसार ईएमडी छूट के इच्छुक बिडर को संबंधित केटेगरी के लिए बिड के साथ वैध समर्थित दस्तावेज प्रस्तुत करने है। एमएसई केटेगरी के अंतर्गत केवल वस्तुओं के लिए विनिमांता तथा सेवाओं के लिए सेवा प्रदाता ईएमडी से छूट के पात्र हैं। व्यापारियों को इस नीति के दायरे से बाहर रखा गया है।/EMD EXEMPTION: The bidder seeking EMD exemption, must submit the valid supporting document for the relevant category as per GeM GTC with the bid. Under MSE category, only manufacturers for goods and Service Providers for Services are eligible for exemption from EMD. Traders are excluded from the purview of this Policy.  \n(b). The EMD Amount will be applicable for each schedule/group selected during Bid creation.  \n(c).ईएमडी और संपादन जमानत राशि, जहां यह लागू होती है, लाभार्थी के पक्ष में होनी चाहिए। / EMD & Performance security should be in favour of Beneficiary, wherever it is applicable.  \n(d).ईएमडी और संपादन जमानत राशि लाभार्थी के पक्ष में होनी चाहिए। / Earnest Money Deposit (EMD) shall also be accepted by the buyer in the form of a surety bond.\n\n# लाभार्थी /Beneficiary :\n\nGAIL INDIA LIMITED\n\nGAIL Bhawan, Plot No. 73, Road No. 3 Sector – 15, CBD Belapur Navi Mumbai – 400614 Maharashtra IndiaGAIL India Limited, GAIL India Limited, Ministry of Petroleum and Natural Gas (Gail India Limited)\n\nबोली विभाजन लागू नहीं किया गया/ Bid splitting not applied.\n\n# एमआईआई खरीद वरीयता/MII Purchase Preference\n\n<table><tr><td>एमआईआई खरीद वरीयता/MII Purchase Preference</td><td>No</td></tr></table>\n\nएमआईआई के लिए सक्षम प्राधिकारी का विवरण:/Details of the Competent Authority for MII\n\n<table><tr><td>सक्षम प्राधिकारी का नाम/Name of Competent Authority</td><td>As per Internal Approval</td></tr><tr><td>सक्षम प्राधिकारी का पदनाम/Designation of Competent Authority</td><td>As per Internal Approval</td></tr><tr><td>सक्षम प्राधिकारी का कार्यालय/विभाग/प्रभाग/Office / Department / Division of Competent Authority</td><td>As per Internal Approval</td></tr><tr><td>सीए अनुमोदन संख्या/CA Approval Number</td><td>As per Internal Approval</td></tr><tr><td>सक्षम प्राधिकारी अनुमोदन तिथि/Competent Authority Approval Date</td><td>22-07-2026</td></tr><tr><td>सक्षम प्राधिकारी द्वारा प्रदान की गई स्वीकृति का संक्षिस विवरण/Brief Description of the Approval Granted by Competent Authority</td><td>As per Ministry of Petroleum &amp; Natural Gas vide Notification No. FP-20013/2/2017- FP-PNGPart(4) (E-41432) dated 26.04.2022, has notified that Public Procurement (Preference to Make in India), Order 2017 (PPP-MII) issued by DPIIT and as amended from time to time shall be applicable to all the Public Sector Undertakings. However, for the subject tender (PPP-MII) is not applicable as estimated value is less than as notified in the order.</td></tr></table>\n\nCompetent Authority Approval for not opting Make In India Preference : View Document\n\nएमएसई खरीद वरीयता/MSE Purchase Preference\n\n<table><tr><td>एमएसई खरीद वरीयता/MSE Purchase Preference</td><td>Yes</td></tr><tr><td>सूक्ष्म और लघु उयम मूल उपकरण निर्माताओं/सेवा प्रदाता को खरीद में प्राथमिकता, यदि उनका मूल्य L1+X% /Purchase Preference to MSE OEMs/ Service Provider available upto price within L1+X%</td><td>15</td></tr><tr><td>सूक्ष्म और लघु उयम मूल उपकरण निर्माता/सेवा प्रदाता को खरीद में प्राथमिकता के लिए बिड की मात्रा का अधिकतम प्रतिशत / Percentage of Bid quantity/amount for MSE OEMs/ Service Provider Purchase preference</td><td>25</td></tr></table>\n\n# ट्रेड्स भुगतान संबंधी विवरण/TReDS Payment Details\n\nThis Bid provides for Trade Receivables Discounting System (TReDS) as Preferred mode of payment. For MSME sellers, payments may be processed through a TReDS exchange in which the Buyer is registered, subject to applicable policy and regulatory guidelines. Accordingly, sellers intending to avail payment through TReDS are required to be registered with at least one TReDS exchange in which the buyer is registered.\n\n1. Purchase preference to Micro and Small Enterprises (MSEs): Purchase preference will be given to MSEs having valid Udyam Certificate and whose credentials are validated online through Udyam Registration portal as defined in Public Procurement Policy for Micro and Small Enterprises (MSEs) Order, 2012 dated 23.03.2012 issued by Ministry of Micro, Small and Medium Enterprises and its subsequent Orders/Notifications issued by concerned Ministry. If the bidder wants to avail themselves of the Purchase preference, the bidder must be the manufacturer / OEM of the offered product on GeM. In respect of bid for Services, the bidder must be the Service provider of the offered Service. Traders are excluded from the purview of Public Procurement Policy for Micro and Small Enterprises and hence resellers offering products manufactured by some other OEM are not eligible for any purchase preference. Relevant documentary evidence in this regard shall be uploaded along with the bid in\n\nrespect of the offered product or service, and Buyer will decide eligibility for purchase preference based on documentary evidence submitted in case of product bids, whereas in case of services the eligibility is automatically validated. If L-1 is not an MSE and MSE Seller (s) has / have quoted price within L-1+ 15% (Selected by Buyer) of margin of purchase preference /price band defined in relevant policy, such MSE Seller shall be given opportunity to match L-1 price and contract will be awarded for 25% (selected by Buyer) percentage of total quantity. The buyers are advised to refer the OM\\_No.1\\_4\\_2021\\_PPD\\_dated\\_18.05.2023 for compliance of Concurrent application of Public Procurement Policy for Micro and Small Enterprises Order, 2012 and Public Procurement (Preference to Make in India) Order, 2017. Benefits of MSE will be allowed only if seller is validated on-line in GeM profile as well as validated and approved by Buyer after evaluation of documents submitted. 2. Estimated Bid Value indicated above is being declared solely for the purpose of guidance on EMD amount and for determining the Eligibility Criteria related to Turn Over, Past Performance and Project / Past Experience etc. This has no relevance or bearing on the price to be quoted by the bidders and is also not going to have any impact on bid participation. Also this is not going to be used as a criteria in determining reasonableness of quoted prices which would be determined by the buyer based on its own assessment of reasonableness and based on competitive prices received in Bid / RA process.\n\nIf the buyer has mentioned MSE purchase preference in ATC then service provider is required to upload necessary documents for MSE purchase preference for verification by the buyer during evaluation.\n\nएक्सेल में अपलोड किए जाने की आवश्यकता /Excel Upload Required :\n\nSOR - 1784714472.xlsx\n\nPre Bid Detail(s)\n\n<table><tr><td>मूल्य भिन्चता खंड दस्तावेज्र/Pre-Bid Date and Time</td><td>प्री-बिड स्थान/Pre-Bid Venue</td></tr><tr><td>29-07-2026 15:00:00</td><td>THROUGH MICROSOFT TEAMS. LINK SHARED IN TENDER DOCUMENT</td></tr></table>\n\n# Evaluation Method ( Group Wise Evaluation Method )\n\nContract will be awarded schedulewise and the determination of L1 will be done separately for each schedule. The details of item-consignee combination covered under each schedule are as under:\n\n<table><tr><td>Evaluation Schedules</td><td>Item/Category</td><td>Consignee/Reporting Officer</td><td>Consignee Address</td><td>Quantity</td></tr><tr><td rowspan=\"2\">PROCUREMENT OF SEALANT GUNS FOR MAHARASHTRA REGION PIPELINES INCLUDING MNJPL</td><td>1s1 Air Operated Sealant Gun With Engine Driven Air Compressor</td><td>Ankush Vijay Wankhede</td><td>3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010</td><td>2</td></tr><tr><td>1s2 Hydraulic Sealant Gun, Hand Operated</td><td>Ankush Vijay Wankhede</td><td>3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010</td><td>34</td></tr><tr><td rowspan=\"3\">PROCUREMENT OF SEALANT FOR MAHARASHTRA REGION PIPELINES INCLUDING MNJPL</td><td>2s1 Cleaner Or Flush And Lubricant For Valves</td><td>Ankush Vijay Wankhede</td><td>3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010</td><td>170</td></tr><tr><td>2s2 Sealant For Lubrication And Normal Passing Valves</td><td>Ankush Vijay Wankhede</td><td>3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010</td><td>170</td></tr><tr><td>2s3 Sealant For Severely Passing Valves</td><td>Ankush Vijay Wankhede</td><td>3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010</td><td>51</td></tr><tr><td rowspan=\"3\">PIPELINES INCLUDING MNJPL</td><td>2s4 Cleaner Or Flush And Lubricant For Valves</td><td>Ankush Vijay Wankhede</td><td>3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010</td><td>6</td></tr><tr><td>2s5 Sealant For Lubrication And Normal Passing Valves</td><td>Ankush Vijay Wankhede</td><td>3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010</td><td>6</td></tr><tr><td>2s6 Sealant For Severely Passing Valves</td><td>Ankush Vijay Wankhede</td><td>3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra 440010</td><td>4</td></tr></table>\n\n# 1S1 AIR OPERATED SEALANT GUN WITH ENGINE DRIVEN AIR COMPRESSOR\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><td>Specification Document</td><td>View File</td></tr><tr><td>BOQ Detail Document</td><td>View File</td></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nइनपुट कर क्रेडिट(आईटीसी) तथा रिवर्स प्रभार (आरसीएम)/Input Tax Credit(ITC) and Reverse Charge(RCM) Details\n\n<table><tr><td>जीएसटी पर इन्पुट कर क्रेडिट /ITC on GST</td><td>जीएसटी उपकर कर क्रेडिट /ITC on GST Cess</td></tr><tr><td>100%</td><td>NA</td></tr></table>\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><td>क्र.सं./S.No.</td><td>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</td><td>पता/Address</td><td>मात्रा /Quantity</td><td>डिलीवरी के दिन/Delivery Days</td></tr><tr><td>1</td><td>Ankush Vijay Wankhede</td><td>440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra</td><td>2</td><td>60</td></tr></table>\n\n# 1S2 HYDRAULIC SEALANT GUN, HAND OPERATED\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><td>Specification Document</td><td>View File</td></tr><tr><td>BOQ Detail Document</td><td>View File</td></tr></table>\n\nइनपुट कर क्रेडिट(आईटीसी) तथा रिवर्स प्रभार (आरसीएम)/Input Tax Credit(ITC) and Reverse Charge(RCM) Details\n\n<table><tr><td>जीएसटी पर इनपुट कर क्रेडिट /ITC on GST</td><td>जीएसटी उपकर कर क्रेडिट /ITC on GST Cess</td></tr><tr><td>100%</td><td>NA</td></tr></table>\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><td>क्र.सं./S.No.</td><td>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</td><td>पता/Address</td><td>मात्रा /Quantity</td><td>डिलीवरी के दिन/Delivery Days</td></tr><tr><td>1</td><td>Ankush Vijay Wankhede</td><td>440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra</td><td>34</td><td>60</td></tr></table>\n\n# 2S1 CLEANER OR FLUSH AND LUBRICANT FOR VALVES\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><td>Specification Document</td><td>View File</td></tr><tr><td>BOQ Detail Document</td><td>View File</td></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nइनपुट कर क्रेडिट(आईटीसी) तथा रिवर्स प्रभार (आरसीएम)/Input Tax Credit(ITC) and Reverse Charge(RCM) Details\n\n<table><tr><td>जीएसटी पर इन्पुट कर क्रेडिट /ITC on GST</td><td>जीएसटी उपकर कर क्रेडिट /ITC on GST Cess</td></tr><tr><td>100%</td><td>NA</td></tr></table>\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><td>क्र.सं./S.No.</td><td>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</td><td>पता/Address</td><td>मात्रा /Quantity</td><td>डिलीवरी के दिन/Delivery Days</td></tr><tr><td>1</td><td>Ankush Vijay Wankhede</td><td>440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra</td><td>170</td><td>60</td></tr></table>\n\n# 2S2 SEALANT FOR LUBRICATION AND NORMAL PASSING VALVES\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><td>Specification Document</td><td>View File</td></tr><tr><td>BOQ Detail Document</td><td>View File</td></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nइनपुट कर क्रेडिट(आईटीसी) तथा रिवर्स प्रभार (आरसीएम)/Input Tax Credit(ITC) and Reverse Charge(RCM) Details\n\n<table><tr><td>जीएसटी पर इनपुट कर क्रेडिट /ITC on GST</td><td>जीएसटी उपकर कर क्रेडिट /ITC on GST Cess</td></tr><tr><td>100%</td><td>NA</td></tr></table>\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><td>क्र.सं./S.No.</td><td>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</td><td>पता/Address</td><td>मात्रा /Quantity</td><td>डिलीवरी के दिन/Delivery Days</td></tr><tr><td>1</td><td>Ankush Vijay Wankhede</td><td>440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra</td><td>170</td><td>60</td></tr></table>\n\n# 2S3 SEALANT FOR SEVERELY PASSING VALVES\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><td>Specification Document</td><td>View File</td></tr><tr><td>BOQ Detail Document</td><td>View File</td></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nइनपुट कर क्रेडिट(आईटीसी) तथा रिवर्स प्रभार (आरसीएम)/Input Tax Credit(ITC) and Reverse Charge(RCM) Details\n\n<table><tr><td>जीएसटी पर इनपुट कर क्रेडिट /ITC on GST</td><td>जीएसटी उपकर कर क्रेडिट /ITC on GST Cess</td></tr><tr><td>100%</td><td>NA</td></tr></table>\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><td>क्र.सं./S.No.</td><td>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</td><td>पता/Address</td><td>मात्रा /Quantity</td><td>डिलीवरी के दिन/Delivery Days</td></tr><tr><td>1</td><td>Ankush Vijay Wankhede</td><td>440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra</td><td>51</td><td>60</td></tr></table>\n\n# 2S4 CLEANER OR FLUSH AND LUBRICANT FOR VALVES\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><td>Specification Document</td><td>View File</td></tr><tr><td>BOQ Detail Document</td><td>View File</td></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nइनपुट कर क्रेडिट(आईटीसी) तथा रिवर्स प्रभार (आरसीएम)/Input Tax Credit(ITC) and Reverse Charge(RCM) Details\n\n<table><tr><td>जीएसटी पर इनपुट कर क्रेडिट /ITC on GST</td><td>जीएसटी उपकर कर क्रेडिट /ITC on GST Cess</td></tr><tr><td>100%</td><td>NA</td></tr></table>\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><td>क्र.सं./S.No.</td><td>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</td><td>पता/Address</td><td>मात्रा /Quantity</td><td>डिलीवरी के दिन/Delivery Days</td></tr><tr><td>1</td><td>Ankush Vijay Wankhede</td><td>440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra</td><td>6</td><td>60</td></tr></table>\n\n# 2S5 SEALANT FOR LUBRICATION AND NORMAL PASSING VALVES\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><td>Specification Document</td><td>View File</td></tr><tr><td>BOQ Detail Document</td><td>View File</td></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nइनपुट कर क्रेडिट(आईटीसी) तथा रिवर्स प्रभार (आरसीएम)/Input Tax Credit(ITC) and Reverse Charge(RCM) Details\n\n<table><tr><td>जीएसटी पर इनपुट कर क्रेडिट /ITC on GST</td><td>जीएसटी उपकर कर क्रेडिट /ITC on GST Cess</td></tr><tr><td>100%</td><td>NA</td></tr></table>\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><td>क्र.सं./S.No.</td><td>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</td><td>पता/Address</td><td>मात्रा /Quantity</td><td>डिलीवरी के दिन/Delivery Days</td></tr><tr><td>1</td><td>Ankush Vijay Wankhede</td><td>440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra</td><td>6</td><td>60</td></tr></table>\n\n# 2S6 SEALANT FOR SEVERELY PASSING VALVES\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><td>Specification Document</td><td>View File</td></tr><tr><td>BOQ Detail Document</td><td>View File</td></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nइनपुट कर क्रेडिट(आईटीसी) तथा रिवर्स प्रभार (आरसीएम)/Input Tax Credit(ITC) and Reverse Charge(RCM) Details\n\n<table><tr><td>जीएसटी पर इनपुट कर क्रेडिट /ITC on GST</td><td>जीएसटी उपकर कर क्रेडिट /ITC on GST Cess</td></tr><tr><td>100%</td><td>NA</td></tr></table>\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><td>क्र.सं./S.No.</td><td>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</td><td>पता/Address</td><td>मात्रा /Quantity</td><td>डिलीवरी के दिन/Delivery Days</td></tr><tr><td>1</td><td>Ankush Vijay Wankhede</td><td>440010,3rd Floor, 100, E High Ct Rd, Near IIT Home, Ramdaspeth, Nagpur, Maharashtra</td><td>4</td><td>60</td></tr></table>\n\n# क्रेता द्वारा जोड़ी गई बिड की विशेष शर्त/Buyer Added Bid Specific Terms and Conditions\n\n# 1. Buyer Added Bid Specific ATC\n\nBuyer uploaded ATC document Click here to view the file.\n\n# अस्वीकरण/Disclaimer\n\nThe Additional Terms and Conditions (ATC) have been incorporated by the Buyer after approval of their Competent Authority. The Buyer, is solely responsible for the impact of these clauses on the bidding process, its outcome, and consequences thereof including any restriction arising in the bidding process due to these ATCs and including the modification of technical specifications and / or terms and conditions governing the bid. All representations / grievances pertaining to the ATC clauses shall be raised with the buyer organization directly and not with GeM. If any of the clause(s) is/are incorporated by the Buyer regarding the following, the bid & resultant contract shall be treated as null & void. Further, GeM reserves the right, at its sole discretion, to cancel the bid forthwith, without issuance of any prior notice or intimation :-\n\n1. Publishing Custom / BOQ bids for items for which regular GeM categories are available (unless such Custom / BOQ item is bunched with the major regular product Category Item).  \n2. Mandating procurement of / from specific Brand / Make / Model / Manufacturer / Dealer except in case of Single Bid / Proprietary Article Certificate (PAC) Buying.  \n3. Inclusion of disqualification criteria related to suspension of seller / service provider, where such suspension period has already expired.  \n4. Mandating submission of documents in physical form as a pre-requisite to qualify bidders.  \n5. Publishing bids on GeM for procurement of works.  \n6. Procurement of Goods by creating a Service bid on GeM & vice-versa.  \n7. Seeking sample with bid or approval of samples during bid evaluation process. However, trial / sample, as the case may be, shall be permitted in cases where trial / sample are allowed as per approved and published procurement policy of the Buyers' controlling Ministry / Department / State / Public Sector Enterprises Headquarters. If there is any violation of trial / sample clause with regard to approved policy of the Buyers' Ministry / Department / State / Public Sector Enterprises Headquarters, then this is to be determined and redressed by the concerned Buyer Organisation only.  \n8. Seeking experience from specific organization / department / institute only or from foreign / export experience.  \n9. Creating bid for items from incorrect categories.  \n10. Reference of conditions published on any external site or reference to external documents/clauses.  \n11. Asking for any Tender fee / Bid Participation fee, as the case may be.  \n12. Buyer added ATC Clauses which are in contravention of clauses defined in bid detail section, including specifications, EMD Detail, ePBG Detail and MII and MSE Purchase Preference sections of the bid, unless otherwise allowed by the applicable GeM GTC.  \n13. Any ATC clause in contravention with GeM GTC Clause 4 (xiii) (h) will be invalid. In case of multiple L1\n\nbidders against a service bid, the buyer shall place the Contract by selection of a bidder amongst the L-1 bidders through a Random Algorithm executed by GeM system.\n\n14. In a category based bid, adding additional items, through buyer added, additional scope of work/additional terms and conditions/or any other document. If buyer needs more items along with the main item, the same must be added through bunching category based items or by bunching custom catalogues or bunching a BoQ with the main category based item, the same must not be done through ATC or Scope of Work.\n\nFurther, if any seller has any objection/grievance against these additional clauses or otherwise on any aspect of this bid, they can raise their representation against the same by using the Representation window provided in the bid details field in Seller dashboard after logging in as a seller. Buyer is duty bound to reply to all such representations and would not be allowed to open bids if he fails to reply to such representations.\n\nAll GeM Sellers/Service Providers shall ensure full compliance with all applicable labour laws, including the provisions, rules, schemes and guidelines under the four Labour Codes i.e. the Code on Wages, 2019; the Industrial Relations Code, 2020; the Occupational Safety, Health and Working Conditions Code, 2020; and the Code on Social Security, 2020 as and when notified and brought into force by the Government of India.\n\nFor all provisions of the Labour Codes that are pending operationalisation through rules, schemes or notifications, the corresponding provisions of the pre-existing labour enactments (such as The Minimum Wages Act, 1948, The Payment of Wages Act, 1936, The Payment of Bonus Act, 1965, The Equal Remuneration Act, 1976, The Payment of Gratuity Act, 1972, etc. and relevant State Rules) shall continue to remain applicable.\n\nThe Seller/ Service Providers shall, therefore, be responsible for ensuring compliance under:\n\n- All notified and enforceable provisions of the new Labour Codes as mentioned hereinabove; and  \n- All operative provisions of the erstwhile Labour Laws until their complete substitution.\n\nAll obligations relating to wages, social security, safety, working conditions, industrial relations etc. and any other statutory requirements shall be strictly met by the Seller/ Service Provider. Any non-compliance shall constitute a breach of the contract and shall entitle the Buyer to take appropriate action in accordance with the contract and applicable law.\n\nThis Bid is governed by the General Terms and Conditions, conditions stipulated in Bid and Service Level Agreement specific to the Service, as the case may be, as provided in the Marketplace.\n\nHowever, in case of Service, if any condition specified in General Terms and Conditions is contradicted by the conditions stipulated in Service Level Agreement specific to said Service, then it will over-ride the conditions in the General Terms and Conditions.\n\nयह बिड सामान्य शर्तों के अंतर्गत भी शासित है /This Bid is also governed by the General Terms and Conditions\n\nजेम की सामान्य शर्तों के खंड 26 के संदर्भ में भारत के साथ भूमि सीमा साझा करने वाले देश के बिडर से खरीद पर प्रतिबंध के संबंध में भारत के साथ भूमि सीमा साझा करने वाले देश का कोई भी बिडर इस निविदा में बिड देने के लिए तभी पात्र होगा जब वह बिड देने वाला सक्षम प्राधिकारी के पास पंजीकृत हो।बिड में भाग लेते समय बिडर को इसका अनुपालन करना होगा और कोई भी गलत घोषणा किए जाने य इसका अनुपालन न करने पर अनुबंध को तत्काल समास करने और कानून के अनुसार आगे की कानूनी कार्वाई का आधार होगा।/In terms of GeM GTC clause 26 regarding Restrictions on procurement from a bidder of a country which shares a land border with India, any bidder from a country which shares a land border with India will be eligible to bid in this tender only if the bidder is registered with the Competent Authority. While participating in bid, Bidder has to undertake compliance of this and any false declaration and non-compliance of this would be a ground for immediate termination of the contract and further legal action in accordance with the laws.\n\n---धन्यवाद/Thank You---\n\n## Hyperlinks\n\n- **Competent Authority Approval for not opting Make In India Preference**: [View Document](https://bidplus.gem.gov.in/bidding/bid/downloadMseMiiDoc/9643135/1784700686.pdf)  <!-- page 4 -->\n- [OM_No.1_4_2021_PPD_dated_18.05.2023](https://bidplus.gem.gov.in/bidding/downloadOmppdfile/)  <!-- page 5 -->\n- [1784714472.xlsx](https://bidplus.gem.gov.in/resources/upload_nas/JulQ326/bidding/excel/bid-9643135/1784714472.xlsx)  <!-- page 5 -->\n- **Specification Document**: [View File](https://mkp.gem.gov.in/uploaded_documents/51/16/877/OrderItem/BoqDocument/2026/7/22/ts_boq_2026-07-22-11-18-36_9c4ec8f0c32a84e566819368e8abeba6.pdf)  <!-- page 6 -->\n- **BOQ Detail Document**: [View File](https://mkp.gem.gov.in/uploaded_documents/51/16/877/OrderItem/BoqLineItemsDocument/2026/7/22/boq_item_sample_file__2026-07-22-11-18-36_f33f43ca21e2d3d84473b8944d2bc4a9.csv)  <!-- page 6 -->\n- **Buyer uploaded ATC document**: [Click here to view the file](https://fulfilment.gem.gov.in/contract/slafds?fileDownloadPath=SLA_UPLOAD_PATH/2026/Jul/GEM_2026_B_7818817/CLM0010/ITB26_17_F_f3906f03-a3dd-4de1-92dd1784717282243_sadhankumar.pdf)  <!-- page 11 -->\n- [यह �बड सामा�य शत� के अंतग�त भी शािसत है /This Bid is also governed by the General Terms and Conditions](https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20260722)  <!-- page 12 -->"
+}
