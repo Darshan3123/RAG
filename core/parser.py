@@ -1412,33 +1412,23 @@ def get_quantity_from_card(card) -> int:
 
 def get_departments_from_card(card) -> list:
     """
-    Extract department name, address, and pincode list from card text.
-    
+    Returns a placeholder department entry.
+    The real ministry/department/organisation/office values are extracted
+    from the PDF by parse_pdf_section and written into card.departments
+    by the scraper after PDF parsing.
+
     Args:
         card: Playwright Locator of card node.
-        
+
     Returns:
-        list[dict]: Department details dictionary list.
+        list[dict]: Single-element list with empty department fields.
     """
-    try:
-        text = card.inner_text()
-        m = re.search(r"Department\s+Name(?:\s+And\s+Address)?\s*[:\-]?\s*\n?([^\n]+(?:\n[^\n]+)*?(?=\nStart Date|\Z))", text, re.IGNORECASE)
-        if m:
-            lines = [l.strip() for l in m.group(1).split('\n') if l.strip()]
-            if lines:
-                name = lines[0]
-                address = ", ".join(lines[1:]) if len(lines) > 1 else ""
-                pincode = re.search(r'\b\d{6}\b', address)
-                return [{
-                    "name": name,
-                    "address": address,
-                    "city": "",   
-                    "state": "",  
-                    "pincode": pincode.group() if pincode else ""
-                }]
-    except Exception as e:
-        log.debug(f"Department card scrape: {e}")
-    return []
+    return [{
+        "ministry_state_name": "",
+        "department_name":     "",
+        "organisation_name":   "",
+        "office_name":         "",
+    }]
 
 
 def get_bid_no_from_card(card) -> str:

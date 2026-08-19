@@ -320,6 +320,18 @@ def process_card_item(
         card_data["bid"]["process_kind"] = parsed_pdf_data.pop("process_kind", "")
         card_data["bid"]["base_type"] = parsed_pdf_data.pop("base_type", "")
 
+        # Overwrite card.departments with the richer PDF-extracted values
+        # (Ministry/State, Department, Organisation, Office) which are far
+        # more reliable than what can be scraped from the card HTML.
+        pdf_depts = parsed_pdf_data.get("departments", {})
+        if any(pdf_depts.values()):
+            card_data["card"]["departments"] = [{
+                "ministry_state_name": pdf_depts.get("ministry_state_name", ""),
+                "department_name":     pdf_depts.get("department_name", ""),
+                "organisation_name":   pdf_depts.get("organisation_name", ""),
+                "office_name":         pdf_depts.get("office_name", ""),
+            }]
+
         # Save Markdown File Artifact inside downloads/<Bid_No>/
         pdf_md_path = os.path.join(bid_dir, f"{safe_bid_no}.md")
         try:
