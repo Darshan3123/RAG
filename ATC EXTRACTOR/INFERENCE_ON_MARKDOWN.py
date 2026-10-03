@@ -3,67 +3,32 @@
 USAGE
 =========================================================================
 Run from the command line, pointing at a directory that contains the
-per-document Markdown files produced upstream (typically the output of
-CHUNKS_EXTRACTOR.py):
+per-document Markdown files produced upstream:
 
     python INFERENCE_ON_MARKDOWN.py <path_to_markdowns_directory>
 
 Example:
 
-    python INFERENCE_ON_MARKDOWN.py OUTPUT_EXTRACTED_CHUNKS_TXT
+    python INFERENCE_ON_MARKDOWN.py TEST_MARKDOWNS
+    python INFERENCE_ON_MARKDOWN.py downloads
 
 What it does:
   - Recursively finds every *.md file under <path_to_markdowns_directory>.
-  - For each one, extracts ATC chunks and runs either the SINGLE-SHOT or
-    MAP-REDUCE analysis pipeline (see below) against a local llama-server.
+  - For each one, extracts ATC chunks and runs procurement analysis:
+      * Gemini Mode (Default): Runs Full-Context Direct Analysis across all
+        embedded Markdown and external PDF/DOCX attachments using the 1M
+        token context window. Zero local GPU/server required!
+      * Local Qwen Mode: Runs MAP-REDUCE chunking with dynamic self-healing
+        batch queues against a local llama-server instance on port 8080.
   - Writes "<base_name>_INFER_OUTPUT.md" for each document into the
     ANALYSIS_OUTPUT_DIR folder ("OUTPUT" by default, see CONFIG section).
 
-Requirements before running:
-  1. A local llama-server instance must already be running and reachable
-     at LLAMA_SERVER_URL (default: http://localhost:8080), exposing the
-     OpenAI-compatible /v1/chat/completions endpoint.
-  2. The model actually being served by llama-server should match
-     QWEN_TOKENIZER_NAME (default: "Qwen/Qwen3-4B"), since that tokenizer
-     is used locally purely for token-budgeting/context-window math.
-  3. Mineru_Document_To_Markdown.py (providing safe_convert_docx_to_md)
-     must be importable from the same environment/directory.
-  4. Python dependencies (requests, transformers, beautifulsoup4,
-     pymupdf, tabulate) are auto-installed on first run if missing, but
-     an internet connection / package index access is needed for that.
-
-Key CONFIG values you may want to adjust before running (see CONFIG
-section below): ANALYSIS_OUTPUT_DIR, LLAMA_SERVER_URL, CONTEXT_WINDOW,
-QWEN_TOKENIZER_NAME.
-
-=========================================================================
-ANALYZE_CHUNKS.py
-------------------
-Consumes the per-document chunk folders produced by CHUNKS_EXTRACTOR.py
-(under OUTPUT_EXTRACTED_CHUNKS_TXT/<base_name>/...) and runs the final
-procurement-analysis prompt against the local llama-server.
-
-Two modes, chosen automatically per document folder:
-
-  SINGLE-SHOT  -> only one ATC chunk exists (markdown-only case, no PDF).
-                  The full analysis prompt is run once, directly.
-
-  MAP-REDUCE   -> multiple page chunks exist (PDF case, or long Markdown case).
-                  Stage 1 (MAP):    The original embedded Markdown chunk is processed 
-                                    first as a standalone using maximum context. Remaining downloaded chunks 
-                                    (DOCX chunks and PDF pages) are processed using a 
-                                    dynamic self-healing queue with a 50-50 split limit. 
-                                    If the model breaks JSON format, the batch shrinks by 1 chunk, pushes the removed chunk 
-                                    to the next batch, and retries until successful.
-                  Stage 2 (REDUCE): all buckets are merged + de-duplicated
-                                    across pages, and the ORIGINAL full
-                                    analysis prompt is run once on the
-                                    compacted evidence instead of raw ATC text.
-                  Stage 2b (SAFETY): if merged evidence overflows context window,
-                                    it is split into batches and pre-compressed
-                                    with an extra reduce pass before final analysis.
-
-Requires: local llama-server running (OpenAI-compatible /v1/chat/completions endpoint).
+Configuration:
+  Set in your .env file or environment:
+    ATC_LLM_PROVIDER=gemini        # "gemini" (default) or "local_qwen"
+    GEMINI_API_KEY=your_key_here   # required when using gemini
+    GEMINI_MODEL=gemini-2.5-flash  # or gemini-1.5-flash
+    ATC_MODE=auto                  # "auto", "full_context", or "map_reduce"
 """
 
 import sys
@@ -77,14 +42,7 @@ import tempfile
 
 # --- Auto-install deps ---
 def install_and_import(package, import_name):
-    """Ensure a third-party package is available before it is imported.
-
-    Tries to import `import_name` (the name used in `import` statements,
-    e.g. "bs4"). If that fails, pip-installs `package` (the PyPI
-    distribution name, e.g. "beautifulsoup4") using the current
-    interpreter, so the rest of the script can import it unconditionally
-    right after this call.
-    """
+    """Ensure a third-party package is available before it is imported."""
     try:
         __import__(import_name)
     except ImportError:
@@ -92,7 +50,6 @@ def install_and_import(package, import_name):
         subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 install_and_import("requests", "requests")
-install_and_import("transformers", "transformers")
 install_and_import("beautifulsoup4", "bs4")
 install_and_import("pymupdf", "pymupdf")
 install_and_import("tabulate", "tabulate")
@@ -100,46 +57,67 @@ install_and_import("tabulate", "tabulate")
 import requests
 import pymupdf
 from bs4 import BeautifulSoup
-from transformers import AutoTokenizer
 from tabulate import tabulate
 
-from Mineru_Document_To_Markdown import safe_convert_docx_to_md
+try:
+    from Mineru_Document_To_Markdown import safe_convert_docx_to_md
+except ImportError:
+    safe_convert_docx_to_md = None
 
 # =========================================================================
-# CONFIG
+# CONFIG & ENVIRONMENT
 # =========================================================================
-ANALYSIS_OUTPUT_DIR = "OUTPUT"                   # where final .md analyses are written
-LLAMA_SERVER_URL = "http://localhost:8080"       # base URL of the local llama-server instance
-CHAT_ENDPOINT = f"{LLAMA_SERVER_URL}/v1/chat/completions"  # OpenAI-compatible chat completions endpoint
+# Load .env from project root
+try:
+    from dotenv import load_dotenv
+    _base_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    load_dotenv(os.path.join(_base_root, ".env"))
+except Exception:
+    pass
 
-CONTEXT_WINDOW = 9216  # total context window (in tokens) the served model supports
+ANALYSIS_OUTPUT_DIR = "OUTPUT"  # where final .md analyses are written
 
-# The tokenizer must match the model actually being served by llama-server
+# Provider selection: "gemini" (default) or "local_qwen"
+LLM_PROVIDER = os.getenv("ATC_LLM_PROVIDER", "gemini").strip().lower()
+
+# Gemini API configuration
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip()
+
+# Local Qwen / llama-server configuration
+LLAMA_SERVER_URL = os.getenv("LLAMA_SERVER_URL", "http://localhost:8080").strip()
+CHAT_ENDPOINT = f"{LLAMA_SERVER_URL}/v1/chat/completions"
 QWEN_TOKENIZER_NAME = "Qwen/Qwen3-4B"
 
-# Reserve tokens for chat-template overhead
-TEMPLATE_OVERHEAD_TOKENS = 100  # buffer subtracted from CONTEXT_WINDOW to account for chat-template formatting tokens
+# Execution mode: "auto" (full-context for gemini, map-reduce for qwen) | "full_context" | "map_reduce"
+ATC_MODE = os.getenv("ATC_MODE", "auto").strip().lower()
 
-# 50-50 Split for Map Stage (Chunking)
-# During the MAP stage, the remaining context budget (after overhead) is split
-# evenly between how much input text a batch may contain and how much output
-# JSON the model is allowed to generate for that batch.
+# Dynamic context window configuration based on provider
+if LLM_PROVIDER == "gemini":
+    CONTEXT_WINDOW = 1000000  # 1M token context window for Gemini
+    FINAL_STAGE_OUTPUT_TOKENS = 4000
+    print(f"[*] ATC Extractor configured: Provider=GEMINI (model='{GEMINI_MODEL}', context={CONTEXT_WINDOW:,} tokens)")
+else:
+    CONTEXT_WINDOW = 9216  # llama-server Qwen limit
+    FINAL_STAGE_OUTPUT_TOKENS = 2000
+    print(f"[*] ATC Extractor configured: Provider=LOCAL_QWEN (endpoint='{CHAT_ENDPOINT}', context={CONTEXT_WINDOW:,} tokens)")
+
+# Reserve tokens for chat-template overhead
+TEMPLATE_OVERHEAD_TOKENS = 100
+
+# Budget splits
 CHUNK_CATEGORIZING_MAX_OUTPUT_TOKENS = int((CONTEXT_WINDOW - TEMPLATE_OVERHEAD_TOKENS) * 0.5)
 CHUNK_CATEGORIZING_MAX_INPUT_TOKENS = int((CONTEXT_WINDOW - TEMPLATE_OVERHEAD_TOKENS) * 0.5)
-
-# Output caps for Final Stage
-FINAL_STAGE_OUTPUT_TOKENS = 2000      # max tokens the model may generate for the final analysis answer
-FINAL_STAGE_INPUT_TOKENS = CONTEXT_WINDOW - FINAL_STAGE_OUTPUT_TOKENS - TEMPLATE_OVERHEAD_TOKENS  # remaining budget for the final-stage prompt
+FINAL_STAGE_INPUT_TOKENS = CONTEXT_WINDOW - FINAL_STAGE_OUTPUT_TOKENS - TEMPLATE_OVERHEAD_TOKENS
 
 # =========================================================================
 # EXTRACTION-STAGE CONFIG
 # =========================================================================
-REQUIRED_DOCS_HEADER = "Document required from seller"  # label used to locate the "required docs" table row in the source markdown
-ATC_SECTION_START_MARKER = "Buyer Added Bid Specific Terms and Conditions"  # marks the start of the embedded ATC text block
-ATC_SECTION_END_MARKER = "अस्वीकरण/Disclaimer"  # marks the end of the embedded ATC text block
-ATC_PDF_LINK_NAME = "Buyer uploaded ATC document"  # hyperlink display-name used to find the downloadable ATC file (PDF/DOCX)
+REQUIRED_DOCS_HEADER = "Document required from seller"
+ATC_SECTION_START_MARKER = "Buyer Added Bid Specific Terms and Conditions"
+ATC_SECTION_END_MARKER = "अस्वीकरण/Disclaimer"
+ATC_PDF_LINK_NAME = "Buyer uploaded ATC document"
 
-# The five evidence/requirement buckets used throughout the MAP and REDUCE stages
 CATEGORIES = [
     "STANDARD_DOCS",
     "ATC_PLACEHOLDER_CLARIFICATION",
@@ -148,19 +126,29 @@ CATEGORIES = [
     "COMMERCIAL_TERMS",
 ]
 
-print(f"Loading tokenizer for {QWEN_TOKENIZER_NAME} (used for context-window budgeting)...")
-_enc = AutoTokenizer.from_pretrained(QWEN_TOKENIZER_NAME, trust_remote_code=True)  # module-level tokenizer used only for token counting/budgeting
+_enc = None
+if LLM_PROVIDER == "local_qwen":
+    try:
+        install_and_import("transformers", "transformers")
+        from transformers import AutoTokenizer
+        print(f"Loading tokenizer for {QWEN_TOKENIZER_NAME} (used for context-window budgeting)...")
+        _enc = AutoTokenizer.from_pretrained(QWEN_TOKENIZER_NAME, trust_remote_code=True)
+    except Exception as e:
+        print(f"    [!] Warning: Failed to load Qwen tokenizer ({e}). Falling back to character estimation.")
+        _enc = None
 
 
 def count_tokens(text: str) -> int:
-    """Return the number of tokens `text` would occupy per the loaded tokenizer.
-
-    Used everywhere in this script to budget prompts against CONTEXT_WINDOW.
-    Returns 0 for empty/falsy input instead of erroring.
-    """
+    """Return token count via tokenizer if loaded, else fast character estimation."""
     if not text:
         return 0
-    return len(_enc.encode(text, add_special_tokens=False))
+    if _enc is not None:
+        try:
+            return len(_enc.encode(text, add_special_tokens=False))
+        except Exception:
+            pass
+    # Fast standard estimation: ~4 chars per token for English text
+    return max(1, len(text) // 4)
 
 
 # =========================================================================
@@ -277,24 +265,85 @@ def print_token_table(records, title: str) -> None:
 
 
 # =========================================================================
-# LLAMA-SERVER CALL
+# LLM API DISPATCH (GEMINI / LOCAL LLAMA-SERVER)
 # =========================================================================
+def call_gemini(system_prompt: str, user_prompt: str, max_tokens: int,
+                temperature: float = 0.1, require_json: bool = False, retries: int = 3) -> str:
+    """Send request to Google Gemini API using direct REST endpoint.
+    Handles rate-limits (429) and transient errors with backoff retries.
+    """
+    if not GEMINI_API_KEY:
+        print("    [!] Error: GEMINI_API_KEY is not set. Please set it in .env or environment.")
+        return ""
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
+    
+    payload = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [{"text": user_prompt}]
+            }
+        ],
+        "generationConfig": {
+            "temperature": temperature,
+            "maxOutputTokens": max_tokens,
+        }
+    }
+    
+    if system_prompt:
+        payload["system_instruction"] = {
+            "parts": [{"text": system_prompt}]
+        }
+        
+    if require_json:
+        payload["generationConfig"]["responseMimeType"] = "application/json"
+
+    headers = {"Content-Type": "application/json"}
+
+    for attempt in range(1, retries + 1):
+        try:
+            resp = requests.post(url, json=payload, headers=headers, timeout=180)
+            if resp.status_code == 200:
+                data = resp.json()
+                candidates = data.get("candidates", [])
+                if candidates:
+                    parts = candidates[0].get("content", {}).get("parts", [])
+                    if parts:
+                        return parts[0].get("text", "").strip()
+                return ""
+            elif resp.status_code == 429:
+                wait_time = attempt * 5
+                print(f"    [!] Gemini rate limited (429). Retrying in {wait_time}s (attempt {attempt}/{retries})...")
+                time.sleep(wait_time)
+            else:
+                print(f"    [-] Gemini API returned HTTP {resp.status_code}: {resp.text[:300]}")
+                if attempt < retries and resp.status_code >= 500:
+                    time.sleep(attempt * 2)
+                else:
+                    return ""
+        except requests.exceptions.RequestException as e:
+            print(f"    [-] Gemini network error (attempt {attempt}/{retries}): {e}")
+            if attempt < retries:
+                time.sleep(attempt * 2)
+            else:
+                return ""
+
+    return ""
+
+
 def call_llm(system_prompt: str, user_prompt: str, max_tokens: int,
              frequency_penalty: float = 0.0, seed: int = 42, require_json: bool = False) -> str:
-    """Send a single chat-completion request to the local llama-server and
-    return the model's reply text (stripped).
+    """Send a chat-completion request to either Gemini API or local llama-server."""
+    if LLM_PROVIDER == "gemini":
+        return call_gemini(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            max_tokens=max_tokens,
+            temperature=0.1,
+            require_json=require_json,
+        )
 
-    system_prompt:     content of the system message.
-    user_prompt:        content of the user message.
-    max_tokens:        generation cap for this call.
-    frequency_penalty: passed through to the server; higher = less repetition.
-    seed:              fixed sampling seed for reproducibility.
-    require_json:      if True, asks the server to constrain output to a JSON object
-                        via response_format.
-
-    Returns the response text, or "" if the request fails for any reason
-    (network error, non-2xx status, malformed response body, etc.).
-    """
     payload = {
         "model": "local-qwen3-4b",
         "messages": [
@@ -713,7 +762,8 @@ def map_extract_chunk(table_result: str, chunk_label: str, atc_text: str, strict
     else:
         output_limit = CHUNK_CATEGORIZING_MAX_OUTPUT_TOKENS
 
-    raw = timed_llm_call(f"Processing {chunk_label} (MAP stage, llama.cpp)", f"MAP: {chunk_label}",
+    backend_label = "Gemini API" if LLM_PROVIDER == "gemini" else "llama.cpp"
+    raw = timed_llm_call(f"Processing {chunk_label} (MAP stage, {backend_label})", f"MAP: {chunk_label}",
                          system_prompt, atc_text, max_tokens=output_limit, require_json=True)
     
     if not raw:
@@ -783,7 +833,8 @@ def compress_category(category: str, lines: list) -> list:
     """
     joined = "\n".join(lines)
     system_prompt = COMPRESS_SYSTEM_PROMPT.format(category=category)
-    out = timed_llm_call(f"Compressing category '{category}' (llama.cpp)", f"COMPRESS: {category}",
+    backend_label = "Gemini API" if LLM_PROVIDER == "gemini" else "llama.cpp"
+    out = timed_llm_call(f"Compressing category '{category}' ({backend_label})", f"COMPRESS: {category}",
                          system_prompt, joined, max_tokens=CHUNK_CATEGORIZING_MAX_OUTPUT_TOKENS)
     if not out:
         return lines
@@ -843,7 +894,8 @@ def reduce_stage(table_result: str, merged: dict) -> str:
         f"Additional Terms and Conditions (compacted evidence extracted from all pages):\n{evidence_text}\n"
     )
 
-    result = timed_llm_call("Running Combining Stage - final analysis (llama.cpp)", "Combining Stage",
+    backend_label = "Gemini API" if LLM_PROVIDER == "gemini" else "llama.cpp"
+    result = timed_llm_call(f"Running Combining Stage - final analysis ({backend_label})", "Combining Stage",
                             ANALYSIS_SYSTEM_PROMPT, user_prompt, max_tokens=FINAL_STAGE_OUTPUT_TOKENS,
                             frequency_penalty=1.0)
     return result
@@ -853,19 +905,21 @@ def reduce_stage(table_result: str, merged: dict) -> str:
 # SINGLE-SHOT 
 # =========================================================================
 def single_shot_stage(table_result: str, atc_text: str) -> str:
-    """SINGLE-SHOT mode: used when a document has exactly one ATC chunk.
+    """SINGLE-SHOT mode: used when a document has exactly one ATC chunk,
+    or when running under a large-context model (e.g. Gemini 1M window)
+    where all document chunks are analyzed in a single unified prompt.
     Runs ANALYSIS_SYSTEM_PROMPT once directly against the raw `atc_text`.
 
     If the combined prompt is too large for FINAL_STAGE_INPUT_TOKENS, falls
-    back to routing this single chunk through the MAP/REDUCE pipeline instead
+    back to routing this chunk through the MAP/REDUCE pipeline instead
     (map_extract_chunk with the full context window, then reduce_stage) so
-    oversized single-chunk documents are still handled safely.
+    oversized documents are still handled safely.
 
     Returns the final analysis text.
     """
     total = count_tokens(ANALYSIS_SYSTEM_PROMPT) + count_tokens(table_result) + count_tokens(atc_text)
     if total > FINAL_STAGE_INPUT_TOKENS:
-        print(f"    [!] Single chunk is large (~{total} tokens) - routing through map/reduce instead of one-shot")
+        print(f"    [!] Document text is large (~{total} tokens) - routing through map/reduce instead of one-shot")
         merged = map_extract_chunk(table_result, "single_chunk", atc_text, use_full_context=True)
         for c in CATEGORIES:
             merged[c] = dedupe_preserve_order(merged[c])
@@ -876,7 +930,8 @@ def single_shot_stage(table_result: str, atc_text: str) -> str:
         f"======\n\n"
         f"Additional Terms and Conditions:\n{atc_text}\n"
     )
-    result = timed_llm_call("Running SINGLE-SHOT analysis (llama.cpp)", "SINGLE-SHOT (final)",
+    backend_label = "Gemini API" if LLM_PROVIDER == "gemini" else "llama.cpp"
+    result = timed_llm_call(f"Running analysis ({backend_label})", "SINGLE-SHOT (final)",
                             ANALYSIS_SYSTEM_PROMPT, user_prompt, max_tokens=FINAL_STAGE_OUTPUT_TOKENS,
                             frequency_penalty=1.0)
     return result
@@ -888,12 +943,12 @@ def single_shot_stage(table_result: str, atc_text: str) -> str:
 def process_document(md_filepath: str, base_name: str):
     """End-to-end pipeline for a single source markdown document:
       1. Extract in-memory ATC chunks (extract_document_chunks_in_memory).
-      2. Choose SINGLE-SHOT (one chunk) or MAP-REDUCE (multiple chunks) mode.
-         In MAP-REDUCE mode: run the embedded markdown chunk standalone first
-         (full context), then process any downloaded PDF/DOCX chunks through
-         a dynamic self-healing batching queue (shrinks a batch by one chunk
-         and retries on JSON failure, falling back to non-strict parsing for
-         a lone chunk that still fails), then merge + dedupe + reduce.
+      2. Choose execution mode:
+         - If 1 chunk: runs SINGLE-SHOT analysis directly.
+         - If multiple chunks AND provider is Gemini (default, ATC_MODE != "map_reduce"):
+           runs Full-Context Direct Analysis across all concatenated chunks (1M context).
+         - Otherwise (local Qwen or explicit ATC_MODE="map_reduce"):
+           runs the MAP-REDUCE pipeline with self-healing batch shrinking queue.
       3. Write the final answer to "<ANALYSIS_OUTPUT_DIR>/<base_name>_INFER_OUTPUT.md".
       4. Print a per-document token/timing usage table.
 
@@ -913,11 +968,23 @@ def process_document(md_filepath: str, base_name: str):
         print(f"    [-] No usable chunk text found in {md_filepath}, skipping.")
         return
 
+    should_run_full_context = (
+        LLM_PROVIDER == "gemini" and ATC_MODE != "map_reduce"
+    ) or ATC_MODE == "full_context"
+
     if len(chunks) == 1:
         print(f"    -> Single chunk detected ({chunks[0][0]}): running one-shot analysis")
         final_answer = single_shot_stage(table_result, chunks[0][1])
+    elif should_run_full_context:
+        backend_name = f"Gemini ({GEMINI_MODEL})" if LLM_PROVIDER == "gemini" else LLM_PROVIDER.upper()
+        print(f"    -> {len(chunks)} chunks detected. Running Full-Context Direct Analysis via {backend_name}...")
+        all_parts = []
+        for name, text in chunks:
+            all_parts.append(f"\n--- [START {name}] ---\n{text}\n--- [END {name}] ---\n")
+        combined_atc = "".join(all_parts)
+        final_answer = single_shot_stage(table_result, combined_atc)
     else:
-        print(f"    -> {len(chunks)} chunks detected. Processing Markdown first, then batching external documents.")
+        print(f"    -> {len(chunks)} chunks detected. Processing Markdown first, then batching external documents (MAP-REDUCE).")
         merged = {c: [] for c in CATEGORIES}
         
         # 1. Separate original embedded Markdown chunk from external downloaded chunks
@@ -1012,7 +1079,7 @@ def main():
     multiprocessing.freeze_support()  # required on Windows/frozen builds for the spinner subprocess
 
     if len(sys.argv) < 2:
-        print("Usage: python ANALYZE_CHUNKS.py <path_to_markdowns_directory>")
+        print("Usage: python INFERENCE_ON_MARKDOWN.py <path_to_markdowns_directory>")
         sys.exit(1)
 
     root = sys.argv[1]  # root directory to search for .md files
