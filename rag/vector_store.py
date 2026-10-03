@@ -101,7 +101,14 @@ def _get_reranker():
         os.environ.setdefault("HF_HUB_OFFLINE", "1")
 
         log.info(f"Loading reranker: {RAG_RERANKER_MODEL} on device '{device}' (offline mode)")
-        _reranker = CrossEncoder(RAG_RERANKER_MODEL, device=device, local_files_only=True)
+        try:
+            _reranker = CrossEncoder(RAG_RERANKER_MODEL, device=device, local_files_only=True)
+        except Exception:
+            log.info(f"Offline load failed for reranker, fetching {RAG_RERANKER_MODEL}...")
+            os.environ.pop("TRANSFORMERS_OFFLINE", None)
+            os.environ.pop("HF_DATASETS_OFFLINE", None)
+            os.environ.pop("HF_HUB_OFFLINE", None)
+            _reranker = CrossEncoder(RAG_RERANKER_MODEL, device=device, local_files_only=False)
         log.info(f"Reranker ready on device '{device}'")
     except Exception as e:
         log.warning(f"Reranker load failed: {e}")
@@ -189,7 +196,20 @@ def search(
     col   = _get_collection()
     total = col.count()
     if total == 0:
-        log.warning("Vector store empty — run --reindex first")
+        # Self-healing auto-reindex if SQLite has bids
+        try:
+            from storage.database import BidDatabase
+            db = BidDatabase()
+            bids = db.get_all()
+            if bids:
+                log.info(f"Vector store empty but found {len(bids)} bids in SQLite. Auto-indexing...")
+                reindex_all(db)
+                total = col.count()
+        except Exception as e:
+            log.warning(f"Auto-index check failed: {e}")
+
+    if total == 0:
+        log.warning("Vector store empty — no bids found to index.")
         return []
 
     fetch_n = min(RAG_FETCH_K, total)

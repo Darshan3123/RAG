@@ -26,14 +26,21 @@ from contextlib import contextmanager
 os.environ["MINERU_LOG_LEVEL"] = "WARNING"
 os.environ["VLLM_LOGGING_LEVEL"] = "WARNING"
 
-from Mineru_Document_To_Markdown import (
-    async_convert_document,
-    set_vlm_config,
-    async_start_vllm_server,
-    close_vllm_server,
-)
+try:
+    from Mineru_Document_To_Markdown import (
+        async_convert_document,
+        set_vlm_config,
+        async_start_vllm_server,
+        close_vllm_server,
+    )
+except ImportError:
+    async_convert_document = None
+    set_vlm_config = None
+    async_start_vllm_server = None
+    close_vllm_server = None
 from config.settings import (
-    BID_TYPES, TARGET_PER_TYPE, MAX_EMPTY_PAGES, DOWNLOAD_DIR
+    BID_TYPES, TARGET_PER_TYPE, MAX_EMPTY_PAGES, DOWNLOAD_DIR,
+    MAX_RETRIES_PER_BID, RETRY_DELAY_SECONDS, ENABLE_ATC_ANALYSIS
 )
 from core.browser import GemBrowser
 from core.parser import (
@@ -41,6 +48,11 @@ from core.parser import (
     parse_bid_data,
     clean_text,
 )
+from core.normalizer import (
+    normalize_bid_data,
+    validate_bid_data,
+)
+from pipeline.atc_analyzer import analyze_bid_atc
 from storage.database import BidDatabase
 from utils.antibot import sleep_between_cards
 from utils.logger import get_logger
@@ -248,7 +260,8 @@ def process_card_item(
     pdf_path = browser.download_pdf(
         document_url=doc_url,
         save_dir=bid_dir,
-        filename=f"{safe_bid_no}.pdf"
+        filename=f"{safe_bid_no}.pdf",
+        retries=MAX_RETRIES_PER_BID
     )
     if not pdf_path or not os.path.exists(pdf_path):
         log.warning(f"Download failed for doc_url: {doc_url}")
@@ -259,7 +272,8 @@ def process_card_item(
         browser.download_pdf(
             document_url=ra_url,
             save_dir=bid_dir,
-            filename=f"{safe_bid_no}_RA.pdf"
+            filename=f"{safe_bid_no}_RA.pdf",
+            retries=MAX_RETRIES_PER_BID
         )
 
     # 5. Extract hyperlinks from the Bid PDF using PyMuPDF
@@ -332,6 +346,19 @@ def process_card_item(
                 "office_name":         pdf_depts.get("office_name", ""),
             }]
 
+        # Enrich card.items if detailed PDF items exist
+        pdf_items = parsed_pdf_data.get("items", {})
+        detailed_items = []
+        if pdf_items and isinstance(pdf_items, dict):
+            for k, v in pdf_items.items():
+                if re.match(r"^item \d+$", k, re.IGNORECASE) and isinstance(v, dict):
+                    cat = v.get("item_category", "").strip()
+                    q = v.get("quantity")
+                    if cat:
+                        detailed_items.append({"name": cat, "quantity": q if q is not None else 0})
+        if detailed_items:
+            card_data["card"]["items"] = detailed_items
+
         # Save Markdown File Artifact inside downloads/<Bid_No>/
         pdf_md_path = os.path.join(bid_dir, f"{safe_bid_no}.md")
         try:
@@ -340,17 +367,39 @@ def process_card_item(
         except Exception as e:
             log.warning(f"Could not save Markdown for {safe_bid_no}: {e}")
 
-    # 9. Assemble Final Unified JSON Schema Artifact inside downloads/<Bid_No>/
-    #    hyperlinks[] is a top-level sibling of 'pdf', matching the schema
-    #    already observed in scraped bids (e.g. GEM_2026_B_7495766).
+    # 9. Normalize & Validate Bid Data
+    normalized_data = normalize_bid_data(card_data, parsed_pdf_data, pdf_text)
+    validation_data = validate_bid_data(
+        bid_no=safe_bid_no,
+        card_data=card_data,
+        parsed_pdf_data=parsed_pdf_data,
+        normalized=normalized_data,
+        pdf_path=pdf_path
+    )
+
+    # 10. Run ATC (Additional Terms and Conditions) Compliance Analysis
+    atc_result = {}
+    if ENABLE_ATC_ANALYSIS and (os.getenv("GEMINI_API_KEY") or os.getenv("ATC_LLM_PROVIDER") == "local_qwen"):
+        try:
+            atc_result = analyze_bid_atc(
+                bid_no=safe_bid_no,
+                markdown_text=pdf_text,
+                hyperlinks=bid_hyperlinks,
+                save_dir=bid_dir
+            )
+        except Exception as e:
+            log.warning(f"ATC analysis encountered an error for {safe_bid_no}: {e}")
+
+    # 11. Assemble Final Unified JSON Schema Artifact inside downloads/<Bid_No>/
     final_bid = {
         "_id": safe_bid_no,
         "bid": card_data.get("bid", {}),
         "card": card_data.get("card", {}),
         "pdf": parsed_pdf_data,
         "hyperlinks": bid_hyperlinks,          # ← all URI links extracted from the PDF
-        "normalized": {},
-        "validation": {"issues": []},
+        "normalized": normalized_data,
+        "validation": validation_data,
+        "atc_analysis": atc_result,
         "full_pdf_text": pdf_text,
     }
     json_path = os.path.join(bid_dir, f"{safe_bid_no}.json")
@@ -360,13 +409,21 @@ def process_card_item(
     except Exception as e:
         log.warning(f"Could not save JSON for {safe_bid_no}: {e}")
 
-    # 10. Upsert Record into SQLite & ChromaDB Vector Store
+    # 12. Upsert Record into SQLite & ChromaDB Vector Store
     card_items = card_data.get("card", {}).get("items", [])
-    item_name = card_items[0].get("name", "") if card_items else ""
-    qty_val = str(card_items[0].get("quantity", "")) if card_items else ""
+    item_names = [it.get("name", "") for it in card_items if it.get("name")]
+    item_name = ", ".join(item_names) if item_names else (card_items[0].get("name", "") if card_items else "")
+
+    total_qty_sum = sum(int(it.get("quantity") or 0) for it in card_items if str(it.get("quantity", "")).isdigit())
+    if total_qty_sum > 0:
+        qty_val = str(total_qty_sum)
+    else:
+        qty_val = str(card_items[0].get("quantity", "")) if card_items else ""
 
     card_depts = card_data.get("card", {}).get("departments", [])
-    dept_name = card_depts[0].get("name", "") if card_depts else ""
+    dept_name = ""
+    if card_depts:
+        dept_name = card_depts[0].get("department_name", "") or card_depts[0].get("name", "")
 
     bid_packet_type_val = ""
     bt_data = parsed_pdf_data.get("bid_type")
@@ -374,6 +431,13 @@ def process_card_item(
         bid_packet_type_val = bt_data.get("type_of_bid", "")
     elif isinstance(bt_data, str):
         bid_packet_type_val = bt_data
+
+    # Use normalized estimated value in INR if present, or parsed fallback
+    est_val_inr = normalized_data.get("financials", {}).get("estimated_value_inr")
+    if est_val_inr:
+        est_val_str = str(int(est_val_inr))
+    else:
+        est_val_str = str(parsed_pdf_data.get("financials", {}).get("estimated_value") or "")
 
     db_record = {
         "document_url":    str(doc_url or ""),
@@ -386,10 +450,11 @@ def process_card_item(
         "department":      str(dept_name or ""),
         "start_date":      str(card_data.get("card", {}).get("start_datetime", "") or ""),
         "end_date":        str(card_data.get("card", {}).get("end_datetime", "") or ""),
-        "estimated_value": str(parsed_pdf_data.get("financials", {}).get("estimated_value") or ""),
+        "estimated_value": est_val_str,
         "bid_packet_type": str(bid_packet_type_val or ""),
         "corrigendum_url": str(corr_url or ""),
         "full_pdf_text":   clean_text(pdf_text),
+        "atc_analysis":    atc_result.get("raw_markdown", ""),
     }
 
     embed_timer = ProgressTimer(f"Embedding & indexing vectors ({safe_bid_no})")
@@ -466,15 +531,38 @@ def scrape_bid_type(
                         continue
                     seen_urls.add(doc_url)
 
-                    res = process_card_item(
-                        card=card,
-                        browser=browser,
-                        db=db,
-                        worker=worker,
-                        bid_type_name=bid_type_name,
-                    )
+                    res = None
+                    last_err = None
+                    for attempt in range(1, MAX_RETRIES_PER_BID + 1):
+                        try:
+                            res = process_card_item(
+                                card=card,
+                                browser=browser,
+                                db=db,
+                                worker=worker,
+                                bid_type_name=bid_type_name,
+                            )
+                            if res.get("status") == "success":
+                                break
+                            elif res.get("status") == "error_download":
+                                log.warning(
+                                    f"  Attempt {attempt}/{MAX_RETRIES_PER_BID} download failed for card {i}"
+                                )
+                                if attempt < MAX_RETRIES_PER_BID:
+                                    backoff = RETRY_DELAY_SECONDS * (2 ** (attempt - 1))
+                                    log.info(f"  Backing off for {backoff:.1f}s before retry...")
+                                    time.sleep(backoff)
+                            else:
+                                break
+                        except Exception as e:
+                            last_err = e
+                            log.warning(f"  Attempt {attempt}/{MAX_RETRIES_PER_BID} error for card {i}: {e}")
+                            if attempt < MAX_RETRIES_PER_BID:
+                                backoff = RETRY_DELAY_SECONDS * (2 ** (attempt - 1))
+                                log.info(f"  Backing off for {backoff:.1f}s before retry...")
+                                time.sleep(backoff)
 
-                    if res.get("status") == "success":
+                    if res and res.get("status") == "success":
                         collected += 1
                         stats["scraped"] += 1
                         if res.get("is_new"):
@@ -484,11 +572,12 @@ def scrape_bid_type(
                             f"Item: {res['item'][:40]} | {'NEW' if res.get('is_new') else 'seen'}"
                         )
                         sleep_between_cards()
-                    elif res.get("status") == "error_download":
+                    else:
                         stats["errors"] += 1
-
+                        if last_err:
+                            log.error(f"  Card {i} failed after {MAX_RETRIES_PER_BID} attempts: {last_err}")
                 except Exception as e:
-                    log.error(f"  Card {i} error: {e}")
+                    log.error(f"  Card {i} unexpected error: {e}")
                     stats["errors"] += 1
 
         if collected == before:
@@ -562,14 +651,33 @@ def scrape_specific_bid(db: BidDatabase, bid_no: str) -> dict:
 
             log.info(f"Found {total} card(s) matching search.")
             card = cards.nth(0)
-            res = process_card_item(
-                card=card,
-                browser=browser,
-                db=db,
-                worker=worker,
-                bid_type_name="Product Bid/RAs",
-            )
-            return res
+            res = None
+            last_err = None
+            for attempt in range(1, MAX_RETRIES_PER_BID + 1):
+                try:
+                    res = process_card_item(
+                        card=card,
+                        browser=browser,
+                        db=db,
+                        worker=worker,
+                        bid_type_name="Product Bid/RAs",
+                    )
+                    if res.get("status") == "success":
+                        break
+                    elif res.get("status") == "error_download":
+                        log.warning(f"  Attempt {attempt}/{MAX_RETRIES_PER_BID} download failed for {bid_no}")
+                        if attempt < MAX_RETRIES_PER_BID:
+                            backoff = RETRY_DELAY_SECONDS * (2 ** (attempt - 1))
+                            log.info(f"  Backing off for {backoff:.1f}s before retry...")
+                            time.sleep(backoff)
+                except Exception as e:
+                    last_err = e
+                    log.warning(f"  Attempt {attempt}/{MAX_RETRIES_PER_BID} failed for {bid_no}: {e}")
+                    if attempt < MAX_RETRIES_PER_BID:
+                        backoff = RETRY_DELAY_SECONDS * (2 ** (attempt - 1))
+                        log.info(f"  Backing off for {backoff:.1f}s before retry...")
+                        time.sleep(backoff)
+            return res or {"status": "error", "error": str(last_err)}
     finally:
         close_timer = ProgressTimer("Closing Mineru vLLM server")
         close_timer.start()

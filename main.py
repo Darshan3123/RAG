@@ -24,6 +24,13 @@ CLI Usage Examples:
 import sys
 import os
 import shutil
+
+# Ensure UTF-8 output on Windows consoles
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 sys.path.insert(0, os.path.dirname(__file__))
 
 from utils.logger import get_logger
@@ -202,6 +209,75 @@ def run_reindex():
     print("\nVector store re-indexing complete. Run 'python main.py --stats' to verify.\n")
 
 
+def run_analyze_atc(target: str):
+    """
+    Run ATC compliance analysis on a file, directory, or bid folder.
+    """
+    from pipeline.atc_analyzer import analyze_bid_atc
+    import json
+    target_path = os.path.abspath(target)
+    
+    md_files = []
+    if os.path.isfile(target_path) and target_path.endswith(".md"):
+        md_files = [target_path]
+    elif os.path.isdir(target_path):
+        for root, _, files in os.walk(target_path):
+            for f in files:
+                if f.endswith(".md") and not f.endswith("_ATC.md") and not f.endswith("_INFER_OUTPUT.md"):
+                    md_files.append(os.path.join(root, f))
+    else:
+        # Check if it corresponds to a folder under downloads
+        safe_bid = target.replace("/", "_")
+        cand = os.path.join("downloads", safe_bid, f"{safe_bid}.md")
+        if os.path.exists(cand):
+            md_files = [cand]
+        else:
+            print(f"Target '{target}' not found as a .md file, directory, or downloads folder.")
+            return
+
+    if not md_files:
+        print(f"No source markdown files found for target '{target}'.")
+        return
+
+    print(f"\nRunning ATC compliance analysis on {len(md_files)} file(s)...\n")
+    for md_file in md_files:
+        base_name = os.path.splitext(os.path.basename(md_file))[0]
+        bid_dir = os.path.dirname(md_file)
+        
+        # Check for companion JSON to pull hyperlinks
+        json_file = os.path.join(bid_dir, f"{base_name}.json")
+        hyperlinks = []
+        if os.path.exists(json_file):
+            try:
+                with open(json_file, "r", encoding="utf-8") as jf:
+                    jdata = json.load(jf)
+                    hyperlinks = jdata.get("hyperlinks", [])
+            except Exception:
+                pass
+
+        try:
+            with open(md_file, "r", encoding="utf-8") as mf:
+                content = mf.read()
+            
+            res = analyze_bid_atc(
+                bid_no=base_name,
+                markdown_text=content,
+                hyperlinks=hyperlinks,
+                save_dir=bid_dir
+            )
+            print(f"  [{res.get('status').upper()}] {base_name} ({res.get('elapsed_seconds', 0)}s)")
+            chk = res.get("checklist", {})
+            std_docs = len(chk.get("standard_documents", []))
+            atc_docs = len(chk.get("clarified_atc_documents", []))
+            exm_docs = len(chk.get("exemption_documents", []))
+            phy_subs = len(chk.get("physical_submissions", []))
+            com_trms = len(chk.get("commercial_terms", []))
+            print(f"       Std Docs: {std_docs} | Clarified ATC: {atc_docs} | Exemptions: {exm_docs} | Physical: {phy_subs} | Terms: {com_trms}")
+        except Exception as e:
+            print(f"  [ERROR] {base_name}: {e}")
+    print("\nATC analysis batch finished.\n")
+
+
 # ---------------------------------------------------------------------------
 # MAIN CLI DISPATCHER
 # ---------------------------------------------------------------------------
@@ -221,6 +297,15 @@ if __name__ == "__main__":
         elif "--reindex" in args:
             log.info("Mode: full vector store re-index")
             run_reindex()
+
+        # 4. Analyze ATC Compliance Checklist
+        elif "--analyze-atc" in args:
+            idx = args.index("--analyze-atc")
+            target = args[idx + 1] if idx + 1 < len(args) else ""
+            if target:
+                run_analyze_atc(target)
+            else:
+                print('Usage: python main.py --analyze-atc <file_path_or_folder>')
 
         # 4. Scrape Specific Single Bid Number
         elif "--bid" in args:

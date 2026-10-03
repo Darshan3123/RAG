@@ -629,8 +629,11 @@ def _parse_item_wise_schedules(soup: BeautifulSoup) -> dict:
     idx_qty   = _col_index(header, "quantity", "मात्रा")
     if idx_sched is None: idx_sched = 0
     if idx_item  is None: idx_item  = 1
-    if idx_value is None: idx_value = 2
-    if idx_qty   is None: idx_qty   = 3
+    # Only assign default column positions if not already found
+    if idx_qty is None:
+        idx_qty = 3 if len(header) >= 4 else 2
+    if idx_value is None and len(header) >= 4 and idx_qty != 2:
+        idx_value = 2
 
     schedules: dict = {}
     running = 0
@@ -1102,7 +1105,34 @@ def parse_financials_section(docling: dict, kv: dict = None, md_content: str = "
 
     emd_exempt = docling_first(fin, "emd_exemption_text", _emd_exempt_fallback)
 
+    def _estimated_value_fallback():
+        for k, v in kv.items():
+            kl = k.lower()
+            if "estimated bid value" in kl or "अनुमानित बिड मूल्य" in kl:
+                amt = to_float(v)
+                if amt:
+                    return amt
+            elif "estimated value" in kl or "अनुमानित मूल्य" in kl:
+                amt = to_float(v)
+                if amt:
+                    return amt
+        if md_content:
+            m = re.search(
+                r"(?:Estimated\s+Bid\s+Value|अनुमानित\s+बिड\s+मूल्य)[^\d<|\n]*([\d,]+(?:\.\d+)?)",
+                md_content, re.IGNORECASE
+            )
+            if m:
+                clean_num = m.group(1).replace(",", "")
+                try:
+                    return float(clean_num)
+                except ValueError:
+                    pass
+        return None
+
+    estimated_value = docling_first(fin, "estimated_value", _estimated_value_fallback)
+
     return {
+        "estimated_value":   estimated_value,
         "emd": {
             "required":         emd_required,
             "advisory_bank":    emd_bank,
@@ -1449,6 +1479,38 @@ def get_bid_no_from_card(card) -> str:
         return ""
 
 
+def get_items_from_card(card) -> list[dict]:
+    """
+    Extract structured item list from card, detecting and unpacking multi-item bids.
+    
+    Args:
+        card: Playwright card node locator.
+        
+    Returns:
+        list[dict]: List of {"name": str, "quantity": int} for all items on card.
+    """
+    full_name = get_full_item_name_from_card(card)
+    total_qty = get_quantity_from_card(card)
+
+    if not full_name:
+        return [{"name": "", "quantity": total_qty}]
+
+    # Check for multi-item list separated by " , " or ","
+    # e.g. "Schedule No 1: Pipe A, Schedule No 2: Pipe B" or "Item A , Item B"
+    if " , " in full_name:
+        parts = [clean(p) for p in full_name.split(" , ") if clean(p)]
+    elif "," in full_name:
+        parts = [clean(p) for p in full_name.split(",") if clean(p)]
+    else:
+        parts = [full_name]
+
+    if len(parts) > 1:
+        # Multi-item detected on card; attach total_qty or per-item placeholder
+        return [{"name": p, "quantity": total_qty if len(parts) == 1 else 0} for p in parts]
+
+    return [{"name": full_name, "quantity": total_qty}]
+
+
 def get_card_details(card, bid_type_name: str) -> dict:
     """
     Assemble complete structured card details dictionary from Playwright HTML card element.
@@ -1471,12 +1533,7 @@ def get_card_details(card, bid_type_name: str) -> dict:
             "process_kind": ""  
         },
         "card": {
-            "items": [
-                {
-                    "name": get_full_item_name_from_card(card),
-                    "quantity": get_quantity_from_card(card)
-                }
-            ],
+            "items": get_items_from_card(card),
             "departments": get_departments_from_card(card),
             "start_datetime": start_date,
             "end_datetime": end_date,

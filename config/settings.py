@@ -141,6 +141,14 @@ OPENAI_MODEL   = _str("OPENAI_MODEL",   "gpt-4o-mini")
 OLLAMA_BASE_URL = _str("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL    = _str("OLLAMA_MODEL",    "llama3")
 
+# ---------------------------------------------------------
+# ATC EXTRACTOR CONFIG
+# ---------------------------------------------------------
+ENABLE_ATC_ANALYSIS = _str("ENABLE_ATC_ANALYSIS", "true").lower() in ("1", "true", "yes", "on")
+ATC_LLM_PROVIDER    = _str("ATC_LLM_PROVIDER", "gemini").lower()
+GEMINI_API_KEY      = _str("GEMINI_API_KEY", "")
+GEMINI_MODEL        = _str("GEMINI_MODEL", "gemini-3.1-flash-lite")
+
 os.makedirs(CHROMA_DIR, exist_ok=True)
 
 # ---------------------------------------------------------

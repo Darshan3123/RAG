@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS bids (
     bid_packet_type  TEXT,
     corrigendum_url  TEXT,
     full_pdf_text    TEXT,
+    atc_analysis     TEXT,
     first_seen       TEXT,
     last_seen        TEXT,
     is_new           INTEGER DEFAULT 1
@@ -66,6 +67,11 @@ class BidDatabase:
     def _init(self):
         with self._conn() as conn:
             conn.executescript(SCHEMA)
+            # Safe migration for existing SQLite databases
+            try:
+                conn.execute("ALTER TABLE bids ADD COLUMN atc_analysis TEXT")
+            except Exception:
+                pass
         log.info(f"Database ready: {self.db_path}")
 
     # -------------------------------------------------------
@@ -87,6 +93,27 @@ class BidDatabase:
         now = datetime.utcnow().isoformat()
         is_new = not self.exists(bid["document_url"])
 
+        # Ensure all expected fields exist in dict to prevent key errors
+        record = {
+            "document_url": bid.get("document_url", ""),
+            "bid_no": bid.get("bid_no", ""),
+            "ra_no": bid.get("ra_no", ""),
+            "bid_type": bid.get("bid_type", ""),
+            "product_type": bid.get("product_type", ""),
+            "full_item_name": bid.get("full_item_name", ""),
+            "quantity": bid.get("quantity", ""),
+            "department": bid.get("department", ""),
+            "start_date": bid.get("start_date", ""),
+            "end_date": bid.get("end_date", ""),
+            "estimated_value": bid.get("estimated_value", ""),
+            "bid_packet_type": bid.get("bid_packet_type", ""),
+            "corrigendum_url": bid.get("corrigendum_url", ""),
+            "full_pdf_text": bid.get("full_pdf_text", ""),
+            "atc_analysis": bid.get("atc_analysis", ""),
+            "first_seen": now,
+            "last_seen": now,
+        }
+
         with self._conn() as conn:
             if is_new:
                 conn.execute("""
@@ -97,6 +124,7 @@ class BidDatabase:
                         start_date, end_date,
                         estimated_value, bid_packet_type,
                         corrigendum_url, full_pdf_text,
+                        atc_analysis,
                         first_seen, last_seen, is_new
                     ) VALUES (
                         :document_url, :bid_no, :ra_no,
@@ -105,20 +133,24 @@ class BidDatabase:
                         :start_date, :end_date,
                         :estimated_value, :bid_packet_type,
                         :corrigendum_url, :full_pdf_text,
+                        :atc_analysis,
                         :first_seen, :last_seen, 1
                     )
-                """, {**bid, "first_seen": now, "last_seen": now})
+                """, record)
                 log.info(f"  NEW BID saved: {bid.get('bid_no')}")
             else:
                 conn.execute("""
                     UPDATE bids
                     SET last_seen = ?, is_new = 0,
-                        ra_no = ?, corrigendum_url = ?
+                        ra_no = ?, corrigendum_url = ?,
+                        atc_analysis = CASE WHEN ? != '' THEN ? ELSE atc_analysis END
                     WHERE document_url = ?
                 """, (
                     now,
                     bid.get("ra_no", ""),
                     bid.get("corrigendum_url", ""),
+                    bid.get("atc_analysis", ""),
+                    bid.get("atc_analysis", ""),
                     bid["document_url"],
                 ))
 
