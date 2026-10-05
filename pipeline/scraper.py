@@ -13,6 +13,7 @@ All 4 output files (.html, .pdf, .md, .json) are saved inside downloads/<Bid_No>
 
 import os
 import sys
+import re
 import time
 import json
 import shutil
