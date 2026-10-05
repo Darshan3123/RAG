@@ -14,11 +14,17 @@ CLI Usage Examples:
     python main.py --once                 # Execute a single full scrape run and exit
     python main.py --bid "GEM/2026/B/..." # Search and scrape a specific bid number
     python main.py --reset                # Reset SQLite DB, JSON exports, and ChromaDB vector store
+    python main.py --reset-all            # Complete purge: DB, ChromaDB, downloads/, and logs/
+    python main.py --clear-db             # Delete SQLite DB and JSON export only
+    python main.py --clear-chroma         # Delete ChromaDB vector store only
+    python main.py --clear-downloads      # Delete all downloaded bid PDFs & folders only
+    python main.py --clear-logs           # Delete all log files only
     python main.py --stats                # Display SQLite database & ChromaDB vector store statistics
     python main.py --ask "query text"     # Execute single RAG question query against vector database
     python main.py --ask "q" --filter product_type=Product
     python main.py --chat                 # Launch interactive terminal RAG chat session
     python main.py --reindex              # Re-index all database records into ChromaDB
+    python main.py --analyze-atc <path>   # Run ATC compliance extraction on tender or folder
 """
 
 import sys
@@ -40,12 +46,58 @@ log = get_logger("main")
 # ---------------------------------------------------------------------------
 # RESET & STATS REPORTING
 # ---------------------------------------------------------------------------
-def run_reset():
+def clear_db():
+    """Delete SQLite database and JSON export."""
+    from config.settings import DB_PATH, JSON_OUT_PATH
+    log.info("Clearing SQLite database and JSON export...")
+    if os.path.exists(DB_PATH):
+        os.remove(DB_PATH)
+        log.info(f"  Removed: {DB_PATH}")
+    if os.path.exists(JSON_OUT_PATH):
+        os.remove(JSON_OUT_PATH)
+        log.info(f"  Removed: {JSON_OUT_PATH}")
+    print("\n✅ SQLite database and JSON export cleared successfully.\n")
+
+
+def clear_chroma():
+    """Delete ChromaDB vector store directory."""
+    from config.settings import CHROMA_DIR
+    log.info("Clearing ChromaDB vector store...")
+    if os.path.exists(CHROMA_DIR):
+        shutil.rmtree(CHROMA_DIR)
+        log.info(f"  Removed: {CHROMA_DIR}")
+    print("\n✅ ChromaDB vector store cleared successfully.\n")
+
+
+def clear_downloads():
+    """Delete downloaded bid PDFs and folders."""
+    from config.settings import DOWNLOAD_DIR
+    log.info("Clearing downloaded files and folders...")
+    if os.path.exists(DOWNLOAD_DIR):
+        shutil.rmtree(DOWNLOAD_DIR)
+        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+        log.info(f"  Cleared: {DOWNLOAD_DIR}")
+    print("\n✅ Downloads directory cleared successfully.\n")
+
+
+def clear_logs():
+    """Delete log files."""
+    from config.settings import LOG_DIR
+    log.info("Clearing logs...")
+    if os.path.exists(LOG_DIR):
+        shutil.rmtree(LOG_DIR)
+        os.makedirs(LOG_DIR, exist_ok=True)
+        log.info(f"  Cleared: {LOG_DIR}")
+    print("\n✅ Logs directory cleared successfully.\n")
+
+
+def run_reset(include_downloads: bool = False, include_logs: bool = False):
     """
-    Delete SQLite database, JSON export, and ChromaDB vector store directory for clean testing.
+    Delete SQLite database, JSON export, and ChromaDB vector store directory.
+    Optionally also purges downloads and logs.
     """
-    from config.settings import DB_PATH, JSON_OUT_PATH, CHROMA_DIR, DOWNLOAD_DIR
-    log.info("Resetting databases and vector store...")
+    from config.settings import DB_PATH, JSON_OUT_PATH, CHROMA_DIR, DOWNLOAD_DIR, LOG_DIR
+    log.info("Resetting databases and storage...")
     if os.path.exists(DB_PATH):
         os.remove(DB_PATH)
         log.info(f"  Removed: {DB_PATH}")
@@ -58,7 +110,19 @@ def run_reset():
     if os.path.exists("output_md"):
         shutil.rmtree("output_md")
         log.info(f"  Removed: output_md")
-    print("\nDatabase reset complete. System ready for fresh scrape testing.\n")
+    if include_downloads and os.path.exists(DOWNLOAD_DIR):
+        shutil.rmtree(DOWNLOAD_DIR)
+        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+        log.info(f"  Purged: {DOWNLOAD_DIR}")
+    if include_logs and os.path.exists(LOG_DIR):
+        shutil.rmtree(LOG_DIR)
+        os.makedirs(LOG_DIR, exist_ok=True)
+        log.info(f"  Purged: {LOG_DIR}")
+
+    if include_downloads or include_logs:
+        print("\n✅ Complete system purge finished (DB, ChromaDB, Downloads, Logs cleared).\n")
+    else:
+        print("\n✅ Database & ChromaDB reset complete. System ready for fresh scrape testing.\n")
 
 
 def print_stats():
@@ -285,9 +349,19 @@ if __name__ == "__main__":
     args = sys.argv[1:]
 
     try:
-        # 1. Reset Databases & Vector Store
-        if "--reset" in args:
+        # 1. Reset & Clear Operations
+        if "--reset-all" in args or "--purge" in args:
+            run_reset(include_downloads=True, include_logs=True)
+        elif "--reset" in args:
             run_reset()
+        elif "--clear-db" in args:
+            clear_db()
+        elif "--clear-chroma" in args:
+            clear_chroma()
+        elif "--clear-downloads" in args:
+            clear_downloads()
+        elif "--clear-logs" in args:
+            clear_logs()
 
         # 2. Print Database & Vector Store Statistics
         elif "--stats" in args:
