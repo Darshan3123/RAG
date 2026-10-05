@@ -146,6 +146,34 @@ def print_stats():
     print("=" * 42 + "\n")
 
 
+def print_usage(unknown_flag: str | None = None):
+    """Print clean command-line usage help table."""
+    if unknown_flag:
+        print(f"\n❌ Unrecognized argument: '{unknown_flag}'")
+    print("\n" + "=" * 66)
+    print("  GeM Bid Scraper & RAG Pipeline — Available Commands")
+    print("=" * 66)
+    print("  SCRAPING:")
+    print("    python main.py                        # Continuous hourly scraping daemon")
+    print("    python main.py --once                 # Single full scrape run and exit")
+    print("    python main.py --bid \"<bid_no>\"       # Scrape a specific single bid number")
+    print("\n  CLEANING & STORAGE MANAGEMENT:")
+    print("    python main.py --clean-db             # Delete SQLite database & JSON export")
+    print("    python main.py --clean-chroma         # Delete ChromaDB vector store only")
+    print("    python main.py --clean-downloads      # Delete all downloaded bid PDFs & folders")
+    print("    python main.py --clean-logs           # Delete all log files")
+    print("    python main.py --reset                # Reset SQLite DB + ChromaDB")
+    print("    python main.py --reset-all            # Complete wipe (DB, ChromaDB, downloads, logs)")
+    print("\n  INSPECTION & RAG:")
+    print("    python main.py --stats                # Show SQLite & ChromaDB statistics")
+    print("    python main.py --reindex              # Re-index all bids from SQLite into ChromaDB")
+    print("    python main.py --analyze-atc <path>   # Extract ATC compliance checklist")
+    print("    python main.py --ask \"<question>\"     # Ask natural language RAG question")
+    print("    python main.py --chat                 # Launch interactive terminal Q&A chat")
+    print("=" * 66 + "\n")
+
+
+
 # ---------------------------------------------------------------------------
 # RAG PRINTING & QUERY RUNNERS
 # ---------------------------------------------------------------------------
@@ -349,18 +377,22 @@ if __name__ == "__main__":
     args = sys.argv[1:]
 
     try:
+        # Help Flags
+        if "--help" in args or "-h" in args:
+            print_usage()
+
         # 1. Reset & Clear Operations
-        if "--reset-all" in args or "--purge" in args:
+        elif "--reset-all" in args or "--purge" in args or "--clean-all" in args or "--clear-all" in args:
             run_reset(include_downloads=True, include_logs=True)
         elif "--reset" in args:
             run_reset()
-        elif "--clear-db" in args:
+        elif "--clear-db" in args or "--clean-db" in args:
             clear_db()
-        elif "--clear-chroma" in args:
+        elif "--clear-chroma" in args or "--clean-chroma" in args:
             clear_chroma()
-        elif "--clear-downloads" in args:
+        elif "--clear-downloads" in args or "--clean-downloads" in args:
             clear_downloads()
-        elif "--clear-logs" in args:
+        elif "--clear-logs" in args or "--clean-logs" in args:
             clear_logs()
 
         # 2. Print Database & Vector Store Statistics
@@ -381,7 +413,7 @@ if __name__ == "__main__":
             else:
                 print('Usage: python main.py --analyze-atc <file_path_or_folder>')
 
-        # 4. Scrape Specific Single Bid Number
+        # 5. Scrape Specific Single Bid Number
         elif "--bid" in args:
             idx = args.index("--bid")
             bid_no = args[idx + 1] if idx + 1 < len(args) else ""
@@ -396,7 +428,7 @@ if __name__ == "__main__":
             else:
                 print('Usage: python main.py --bid "GEM/2026/B/7768206"')
 
-        # 5. Single RAG Query
+        # 6. Single RAG Query
         elif "--ask" in args:
             idx      = args.index("--ask")
             question = args[idx + 1] if idx + 1 < len(args) else ""
@@ -409,21 +441,25 @@ if __name__ == "__main__":
             else:
                 print('Usage: python main.py --ask "your question"')
 
-        # 6. Interactive Chat Mode
+        # 7. Interactive Chat Mode
         elif "--chat" in args:
             run_chat()
 
-        # 7. Single Scrape Run
+        # 8. Single Scrape Run
         elif "--once" in args:
             log.info("Mode: single scrape run")
             from pipeline.scheduler import start_scheduler
             start_scheduler(run_once=True)
 
-        # 8. Continuous Scheduled Hourly Scrape Loop (Default)
-        else:
+        # 9. Continuous Scheduled Hourly Scrape Loop (Only when explicitly launched)
+        elif len(args) == 0 or "--daemon" in args or "--schedule" in args:
             log.info("Mode: continuous hourly loop")
             from pipeline.scheduler import start_scheduler
             start_scheduler(run_once=False)
+
+        # 10. Fallback on Unknown / Mistyped Arguments
+        else:
+            print_usage(unknown_flag=args[0])
 
     except KeyboardInterrupt:
         print("\n")
