@@ -142,6 +142,17 @@ OLLAMA_BASE_URL = _str("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL    = _str("OLLAMA_MODEL",    "llama3")
 
 # ---------------------------------------------------------
+# OCR / DOCUMENT INTELLIGENCE CONFIG
+# Options: mistral | gemini | openai | mineru
+# ---------------------------------------------------------
+OCR_PROVIDER       = _str("OCR_PROVIDER", "mistral").lower()
+MISTRAL_API_KEY    = _str("MISTRAL_API_KEY", "")
+MISTRAL_OCR_MODEL  = _str("MISTRAL_OCR_MODEL", "mistral-ocr-3-0")
+GEMINI_OCR_MODEL   = _str("GEMINI_OCR_MODEL", "gemini-2.5-flash")
+OPENAI_OCR_MODEL   = _str("OPENAI_OCR_MODEL", "gpt-4o-mini")
+USD_TO_INR_RATE    = _float("USD_TO_INR_RATE", 86.50)
+
+# ---------------------------------------------------------
 # ATC EXTRACTOR CONFIG
 # ---------------------------------------------------------
 ENABLE_ATC_ANALYSIS = _str("ENABLE_ATC_ANALYSIS", "true").lower() in ("1", "true", "yes", "on")

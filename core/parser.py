@@ -1153,7 +1153,7 @@ def parse_financials_section(docling: dict, kv: dict = None, md_content: str = "
 # Section 10 — Terms / Buyer ATC
 # ---------------------------------------------------------------------------
 _ATC_HEADING_RE = re.compile(
-    r"buyer added bid specific terms and conditions", re.IGNORECASE)
+    r"buyer added bid specific (?:additional\s+)?terms and conditions", re.IGNORECASE)
 _DISCLAIMER_LABEL_RE = re.compile(r"disclaimer", re.IGNORECASE)
 _DISCLAIMER_BOILERPLATE_RE = re.compile(
     r"(?:the\s+additional\s+)?terms and conditions(?:\s*\(atc\))?\s+"

@@ -21,6 +21,7 @@ import threading
 import multiprocessing
 from pathlib import Path
 from contextlib import contextmanager
+from typing import Optional, Dict, Any, List, Sequence
 
 # Suppress noisy lower-level library logging output
 os.environ["MINERU_LOG_LEVEL"] = "WARNING"
@@ -40,8 +41,10 @@ except ImportError:
     close_vllm_server = None
 from config.settings import (
     BID_TYPES, TARGET_PER_TYPE, MAX_EMPTY_PAGES, DOWNLOAD_DIR,
-    MAX_RETRIES_PER_BID, RETRY_DELAY_SECONDS, ENABLE_ATC_ANALYSIS
+    MAX_RETRIES_PER_BID, RETRY_DELAY_SECONDS, ENABLE_ATC_ANALYSIS,
+    OCR_PROVIDER
 )
+from core.ocr import DocumentOCRFactory, OCRResult, OCRUsage
 from core.browser import GemBrowser
 from core.parser import (
     get_card_details,
@@ -202,8 +205,8 @@ def process_card_item(
     card,
     browser: GemBrowser,
     db: BidDatabase,
-    worker: AsyncWorker,
-    bid_type_name: str,
+    worker: Optional[AsyncWorker] = None,
+    bid_type_name: str = "Product Bid/RAs",
     base_download_dir: str = DOWNLOAD_DIR
 ) -> dict:
     """
@@ -295,31 +298,49 @@ def process_card_item(
         except Exception as e:
             log.warning(f"RA hyperlink extraction failed for {safe_bid_no}: {e}")
 
-    # 6. Execute Mineru VLM Engine Markdown Conversion (Zero Save Mode: output_dir=None)
+    # 6. Execute Pluggable Document OCR / Markdown Conversion
     pdf_text = ""
     parsed_pdf_data = {}
-    conv_timer = ProgressTimer(f"Converting PDF ({safe_bid_no}) to Markdown Via Mineru VLLM Server")
+    ocr_usage_data = {}
+
+    conv_timer = ProgressTimer(f"Converting PDF ({safe_bid_no}) via [{OCR_PROVIDER.upper()}] OCR")
     conv_timer.start()
     try:
-        with suppress_stdout_stderr():
-            conv_result = worker.run(
-                async_convert_document(
-                    input_path=pdf_path,
-                    output_dir=None,
-                    backend="vlm-engine",
-                    formula_enable=True,
-                    table_enable=True,
-                )
+        if OCR_PROVIDER == "mineru":
+            with suppress_stdout_stderr():
+                if worker:
+                    conv_result = worker.run(
+                        async_convert_document(
+                            input_path=pdf_path,
+                            output_dir=None,
+                            backend="vlm-engine",
+                            formula_enable=True,
+                            table_enable=True,
+                        )
+                    )
+                    if isinstance(conv_result, dict):
+                        pdf_text = conv_result.get("markdown", "")
+        else:
+            ocr_provider = DocumentOCRFactory.get_provider(OCR_PROVIDER)
+            ocr_result = ocr_provider.convert_pdf_to_markdown(
+                pdf_path=pdf_path,
+                save_json=True,
+                output_dir=bid_dir
             )
-            if isinstance(conv_result, dict):
-                pdf_text = conv_result.get("markdown", "")
+            pdf_text = ocr_result.markdown
+            ocr_usage_data = ocr_result.usage.to_dict()
+            log.info(
+                f"OCR [{ocr_result.provider.upper()}] completed for {safe_bid_no}: "
+                f"{ocr_result.usage.pages_processed} pages, {ocr_result.usage.latency_seconds:.1f}s, "
+                f"Cost: ${ocr_result.usage.estimated_cost_usd:.4f} (₹{ocr_result.usage.estimated_cost_inr:.2f})"
+            )
     except Exception as e:
-        log.error(f"Mineru VLM conversion failed for {safe_bid_no}: {e}")
+        log.error(f"Document OCR conversion failed for {safe_bid_no} using {OCR_PROVIDER}: {e}")
     finally:
         conv_timer.stop()
 
     if not pdf_text:
-        log.warning(f"Mineru markdown result empty for {safe_bid_no}")
+        log.warning(f"OCR markdown result empty for {safe_bid_no}")
 
     # 7. Inject hyperlinks into Markdown for RAG text enrichment
     #    URLs become searchable via BM25 / dense retrieval in addition to
@@ -400,6 +421,9 @@ def process_card_item(
         "normalized": normalized_data,
         "validation": validation_data,
         "atc_analysis": atc_result,
+        "telemetry": {
+            "ocr": ocr_usage_data,
+        },
         "full_pdf_text": pdf_text,
     }
     json_path = os.path.join(bid_dir, f"{safe_bid_no}.json")
@@ -473,9 +497,9 @@ def process_card_item(
 def scrape_bid_type(
     browser: GemBrowser,
     db: BidDatabase,
-    worker: AsyncWorker,
-    bid_type_name: str,
-    seen_urls: set,
+    worker: Optional[AsyncWorker] = None,
+    bid_type_name: str = "Product Bid/RAs",
+    seen_urls: Optional[set] = None,
 ) -> dict:
     """
     Iterate over pagination for a specific bid category (e.g. Product Bid/RAs)
@@ -618,24 +642,19 @@ def scrape_specific_bid(db: BidDatabase, bid_no: str) -> dict:
     """
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-    worker = AsyncWorker()
-    # RTX 2050 (4 GB VRAM) tuning:
-    #   max_gpu_util=0.78  → requests ~3.12 GB, fits within the ~3.22 GB
-    #                        actually free at startup (display driver holds
-    #                        ~780 MB on WSL2, leaving <3.8 GB available)
-    #   model_len=4096     → 4K context for longer PDFs; pushes KV cache
-    #                        but still fits in 4GB with batch_size=16
-    #   batch_size=16      → higher throughput for multi-page PDFs; vLLM
-    #                        will auto-adjust if it exceeds available memory
-    set_vlm_config(batch_size=16, max_gpu_util=0.78, model_len=4096)
+    is_mineru = (OCR_PROVIDER == "mineru")
+    worker = None
 
-    server_timer = ProgressTimer("Starting Mineru vLLM server")
-    server_timer.start()
-    try:
-        with suppress_stdout_stderr():
-            worker.run(async_start_vllm_server())
-    finally:
-        server_timer.stop()
+    if is_mineru:
+        worker = AsyncWorker()
+        set_vlm_config(batch_size=16, max_gpu_util=0.78, model_len=4096)
+        server_timer = ProgressTimer("Starting Mineru vLLM server")
+        server_timer.start()
+        try:
+            with suppress_stdout_stderr():
+                worker.run(async_start_vllm_server())
+        finally:
+            server_timer.stop()
 
     try:
         log.info(f"Starting browser for specific bid search: {bid_no}")
@@ -679,16 +698,17 @@ def scrape_specific_bid(db: BidDatabase, bid_no: str) -> dict:
                         time.sleep(backoff)
             return res or {"status": "error", "error": str(last_err)}
     finally:
-        close_timer = ProgressTimer("Closing Mineru vLLM server")
-        close_timer.start()
-        try:
-            with suppress_stdout_stderr():
-                worker.run_sync(close_vllm_server)
-        except Exception:
-            pass
-        finally:
-            close_timer.stop()
-        worker.stop()
+        if is_mineru and worker:
+            close_timer = ProgressTimer("Closing Mineru vLLM server")
+            close_timer.start()
+            try:
+                with suppress_stdout_stderr():
+                    worker.run_sync(close_vllm_server)
+            except Exception:
+                pass
+            finally:
+                close_timer.stop()
+            worker.stop()
 
 
 def run_full_scrape(db: BidDatabase) -> dict:
@@ -718,17 +738,19 @@ def run_full_scrape(db: BidDatabase) -> dict:
     log.info("FULL SCRAPE RUN STARTED (MINERU VLM PARSER)")
     log.info("=" * 60)
 
-    worker = AsyncWorker()
-    # RTX 2050 (4 GB VRAM) tuning — see scrape_specific_bid for rationale
-    set_vlm_config(batch_size=16, max_gpu_util=0.78, model_len=4096)
+    is_mineru = (OCR_PROVIDER == "mineru")
+    worker = None
 
-    server_timer = ProgressTimer("Starting Mineru vLLM server")
-    server_timer.start()
-    try:
-        with suppress_stdout_stderr():
-            worker.run(async_start_vllm_server())
-    finally:
-        server_timer.stop()
+    if is_mineru:
+        worker = AsyncWorker()
+        set_vlm_config(batch_size=16, max_gpu_util=0.78, model_len=4096)
+        server_timer = ProgressTimer("Starting Mineru vLLM server")
+        server_timer.start()
+        try:
+            with suppress_stdout_stderr():
+                worker.run(async_start_vllm_server())
+        finally:
+            server_timer.stop()
 
     try:
         with GemBrowser() as browser:
@@ -751,16 +773,17 @@ def run_full_scrape(db: BidDatabase) -> dict:
     except Exception as e:
         log.critical(f"Browser session failed: {e}")
     finally:
-        close_timer = ProgressTimer("Closing Mineru vLLM server")
-        close_timer.start()
-        try:
-            with suppress_stdout_stderr():
-                worker.run_sync(close_vllm_server)
-        except Exception:
-            pass
-        finally:
-            close_timer.stop()
-        worker.stop()
+        if is_mineru and worker:
+            close_timer = ProgressTimer("Closing Mineru vLLM server")
+            close_timer.start()
+            try:
+                with suppress_stdout_stderr():
+                    worker.run_sync(close_vllm_server)
+            except Exception:
+                pass
+            finally:
+                close_timer.stop()
+            worker.stop()
 
     db.export_json()
     db_stats = db.stats()

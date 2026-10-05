@@ -30,7 +30,7 @@ import requests
 from bs4 import BeautifulSoup
 
 try:
-    import fitz  # PyMuPDF
+    import pymupdf as fitz
 except ImportError:
     fitz = None
 
