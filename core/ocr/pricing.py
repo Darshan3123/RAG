@@ -115,3 +115,38 @@ def calculate_provider_cost(
     usage.details["usd_to_inr_rate"] = usd_to_inr_rate
 
     return usage
+
+
+def calculate_saved_cost(
+    provider: str,
+    model: str,
+    pages_saved: int,
+    usd_to_inr_rate: float = USD_TO_INR_RATE
+) -> Dict[str, float]:
+    """
+    Calculate the estimated financial savings in USD and INR for pages saved by selective slicing.
+    
+    Args:
+        provider: Provider name (e.g. 'mistral', 'gemini', 'openai', 'mineru').
+        model: Model name.
+        pages_saved: Number of pages trimmed from the OCR submission.
+        usd_to_inr_rate: Exchange rate to INR.
+        
+    Returns:
+        Dict with saved_usd and saved_inr.
+    """
+    provider_rates = PRICING_CATALOG.get(provider.lower(), {})
+    model_rates = provider_rates.get(model.lower())
+    if not model_rates and provider_rates:
+        model_rates = next(iter(provider_rates.values()))
+    elif not model_rates:
+        model_rates = {"per_page": 0.0}
+
+    saved_usd = pages_saved * model_rates.get("per_page", 0.0)
+    saved_inr = saved_usd * usd_to_inr_rate
+    return {
+        "pages_saved": pages_saved,
+        "saved_usd": round(saved_usd, 6),
+        "saved_inr": round(saved_inr, 4),
+    }
+

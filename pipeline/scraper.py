@@ -43,9 +43,16 @@ except ImportError:
 from config.settings import (
     BID_TYPES, TARGET_PER_TYPE, MAX_EMPTY_PAGES, DOWNLOAD_DIR,
     MAX_RETRIES_PER_BID, RETRY_DELAY_SECONDS, ENABLE_ATC_ANALYSIS,
-    OCR_PROVIDER
+    OCR_PROVIDER, ENABLE_PDF_ATC_SPLIT
 )
 from core.ocr import DocumentOCRFactory, OCRResult, OCRUsage
+from core.ocr.pricing import calculate_saved_cost
+from core.pdf_splitter import (
+    detect_atc_boundary,
+    create_core_pdf_for_ocr,
+    extract_atc_markdown_pymupdf,
+    stitch_hybrid_markdown,
+)
 from core.browser import GemBrowser
 from core.parser import (
     get_card_details,
@@ -299,7 +306,29 @@ def process_card_item(
         except Exception as e:
             log.warning(f"RA hyperlink extraction failed for {safe_bid_no}: {e}")
 
-    # 6. Execute Pluggable Document OCR / Markdown Conversion
+    # 6. Execute Selective PDF Slicing & Pluggable Document OCR
+    split_info = None
+    target_ocr_pdf = pdf_path
+    if ENABLE_PDF_ATC_SPLIT:
+        try:
+            split_info = detect_atc_boundary(pdf_path)
+            if split_info and split_info.pages_saved > 0:
+                sliced_pdf_path = os.path.join(bid_dir, f"{safe_bid_no}_core.pdf")
+                target_ocr_pdf = create_core_pdf_for_ocr(
+                    pdf_path=pdf_path,
+                    pages_for_ocr=split_info.pages_for_ocr,
+                    output_path=sliced_pdf_path
+                )
+                log.info(
+                    f"Selective PDF Slicing active for {safe_bid_no}: "
+                    f"Sending {split_info.pages_for_ocr}/{split_info.total_pages} pages to OCR "
+                    f"(Saved {split_info.pages_saved} pages via PyMuPDF)"
+                )
+        except Exception as e:
+            log.warning(f"Selective PDF slicing check failed for {safe_bid_no}: {e}")
+            split_info = None
+            target_ocr_pdf = pdf_path
+
     pdf_text = ""
     parsed_pdf_data = {}
     ocr_usage_data = {}
@@ -312,7 +341,7 @@ def process_card_item(
                 if worker:
                     conv_result = worker.run(
                         async_convert_document(
-                            input_path=pdf_path,
+                            input_path=target_ocr_pdf,
                             output_dir=None,
                             backend="vlm-engine",
                             formula_enable=True,
@@ -324,21 +353,55 @@ def process_card_item(
         else:
             ocr_provider = DocumentOCRFactory.get_provider(OCR_PROVIDER)
             ocr_result = ocr_provider.convert_pdf_to_markdown(
-                pdf_path=pdf_path,
+                pdf_path=target_ocr_pdf,
                 save_json=True,
                 output_dir=bid_dir
             )
             pdf_text = ocr_result.markdown
             ocr_usage_data = ocr_result.usage.to_dict()
+
+            # Record slicing savings telemetry if slicing was applied
+            if split_info and split_info.pages_saved > 0:
+                savings = calculate_saved_cost(
+                    provider=ocr_result.provider,
+                    model=ocr_result.model,
+                    pages_saved=split_info.pages_saved
+                )
+                ocr_usage_data["total_pdf_pages"] = split_info.total_pages
+                ocr_usage_data["pages_for_ocr"] = split_info.pages_for_ocr
+                ocr_usage_data["pages_saved_by_slicing"] = split_info.pages_saved
+                ocr_usage_data["estimated_savings_usd"] = savings["saved_usd"]
+                ocr_usage_data["estimated_savings_inr"] = savings["saved_inr"]
+
+            savings_str = (
+                f" [Saved: ${ocr_usage_data.get('estimated_savings_usd', 0):.4f} (₹{ocr_usage_data.get('estimated_savings_inr', 0):.2f})]"
+                if split_info and split_info.pages_saved > 0 else ""
+            )
             log.info(
                 f"OCR [{ocr_result.provider.upper()}] completed for {safe_bid_no}: "
                 f"{ocr_result.usage.pages_processed} pages, {ocr_result.usage.latency_seconds:.1f}s, "
-                f"Cost: ${ocr_result.usage.estimated_cost_usd:.4f} (₹{ocr_result.usage.estimated_cost_inr:.2f})"
+                f"Cost: ${ocr_result.usage.estimated_cost_usd:.4f} (₹{ocr_result.usage.estimated_cost_inr:.2f}){savings_str}"
             )
     except Exception as e:
         log.error(f"Document OCR conversion failed for {safe_bid_no} using {OCR_PROVIDER}: {e}")
     finally:
         conv_timer.stop()
+
+    # If sliced, stitch the PyMuPDF ATC markdown onto the OCR markdown
+    if split_info and split_info.pages_saved > 0 and pdf_text:
+        try:
+            atc_pymupdf_md = extract_atc_markdown_pymupdf(
+                pdf_path=pdf_path,
+                split_page_index=split_info.split_page_index,
+                heading_y0=split_info.heading_y0
+            )
+            pdf_text = stitch_hybrid_markdown(pdf_text, atc_pymupdf_md)
+            log.info(
+                f"Stitched PyMuPDF ATC markdown into {safe_bid_no} "
+                f"({len(atc_pymupdf_md)} chars added)"
+            )
+        except Exception as e:
+            log.warning(f"Error stitching PyMuPDF ATC text for {safe_bid_no}: {e}")
 
     if not pdf_text:
         log.warning(f"OCR markdown result empty for {safe_bid_no}")

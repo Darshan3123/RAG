@@ -151,6 +151,7 @@ MISTRAL_OCR_MODEL  = _str("MISTRAL_OCR_MODEL", "mistral-ocr-3-0")
 GEMINI_OCR_MODEL   = _str("GEMINI_OCR_MODEL", "gemini-2.5-flash")
 OPENAI_OCR_MODEL   = _str("OPENAI_OCR_MODEL", "gpt-4o-mini")
 USD_TO_INR_RATE    = _float("USD_TO_INR_RATE", 86.50)
+ENABLE_PDF_ATC_SPLIT = _str("ENABLE_PDF_ATC_SPLIT", "true").lower() in ("1", "true", "yes", "on")
 
 # ---------------------------------------------------------
 # ATC EXTRACTOR CONFIG
