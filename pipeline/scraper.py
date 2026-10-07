@@ -13,6 +13,7 @@ All 4 output files (.html, .pdf, .md, .json) are saved inside downloads/<Bid_No>
 
 import os
 import sys
+import re
 import time
 import json
 import shutil
@@ -21,19 +22,36 @@ import threading
 import multiprocessing
 from pathlib import Path
 from contextlib import contextmanager
+from typing import Optional, Dict, Any, List, Sequence
 
 # Suppress noisy lower-level library logging output
 os.environ["MINERU_LOG_LEVEL"] = "WARNING"
 os.environ["VLLM_LOGGING_LEVEL"] = "WARNING"
 
-from Mineru_Document_To_Markdown import (
-    async_convert_document,
-    set_vlm_config,
-    async_start_vllm_server,
-    close_vllm_server,
-)
+try:
+    from Mineru_Document_To_Markdown import (
+        async_convert_document,
+        set_vlm_config,
+        async_start_vllm_server,
+        close_vllm_server,
+    )
+except ImportError:
+    async_convert_document = None
+    set_vlm_config = None
+    async_start_vllm_server = None
+    close_vllm_server = None
 from config.settings import (
-    BID_TYPES, TARGET_PER_TYPE, MAX_EMPTY_PAGES, DOWNLOAD_DIR
+    BID_TYPES, TARGET_PER_TYPE, MAX_EMPTY_PAGES, DOWNLOAD_DIR,
+    MAX_RETRIES_PER_BID, RETRY_DELAY_SECONDS, ENABLE_ATC_ANALYSIS,
+    OCR_PROVIDER, ENABLE_PDF_ATC_SPLIT
+)
+from core.ocr import DocumentOCRFactory, OCRResult, OCRUsage
+from core.ocr.pricing import calculate_saved_cost
+from core.pdf_splitter import (
+    detect_atc_boundary,
+    create_core_pdf_for_ocr,
+    extract_atc_markdown_pymupdf,
+    stitch_hybrid_markdown,
 )
 from core.browser import GemBrowser
 from core.parser import (
@@ -41,9 +59,15 @@ from core.parser import (
     parse_bid_data,
     clean_text,
 )
+from core.normalizer import (
+    normalize_bid_data,
+    validate_bid_data,
+)
+from pipeline.atc_analyzer import analyze_bid_atc
 from storage.database import BidDatabase
 from utils.antibot import sleep_between_cards
 from utils.logger import get_logger
+from utils.pdf_hyperlinks import extract_hyperlinks, inject_hyperlinks_into_markdown
 
 log = get_logger("scraper")
 
@@ -189,8 +213,8 @@ def process_card_item(
     card,
     browser: GemBrowser,
     db: BidDatabase,
-    worker: AsyncWorker,
-    bid_type_name: str,
+    worker: Optional[AsyncWorker] = None,
+    bid_type_name: str = "Product Bid/RAs",
     base_download_dir: str = DOWNLOAD_DIR
 ) -> dict:
     """
@@ -199,10 +223,12 @@ def process_card_item(
     2. Extract document links (Bid PDF, RA PDF, Corrigendum).
     3. Create subfolder named after Bid No inside DOWNLOAD_DIR: downloads/{safe_bid_no}/
     4. Download PDF files (Bid PDF and optional RA PDF) directly into the bid subfolder.
-    5. Convert Bid PDF to Markdown via Mineru VLM engine in Zero Save Mode (output_dir=None).
-    6. Parse Markdown into structured schema using core parser.
-    7. Save all 4 output artifacts (.html, .pdf, .md, .json) inside downloads/{safe_bid_no}/.
-    8. Upsert record into SQLite database & ChromaDB vector store.
+    5. Extract hyperlinks from the downloaded PDF using PyMuPDF.
+    6. Convert Bid PDF to Markdown via Mineru VLM engine in Zero Save Mode (output_dir=None).
+    7. Inject extracted hyperlinks as a section into the Markdown for RAG enrichment.
+    8. Parse Markdown into structured schema using core parser.
+    9. Save all 4 output artifacts (.html, .pdf, .md, .json) inside downloads/{safe_bid_no}/.
+    10. Upsert record into SQLite database & ChromaDB vector store.
     
     Args:
         card: Playwright Locator pointing to bid card node.
@@ -245,7 +271,8 @@ def process_card_item(
     pdf_path = browser.download_pdf(
         document_url=doc_url,
         save_dir=bid_dir,
-        filename=f"{safe_bid_no}.pdf"
+        filename=f"{safe_bid_no}.pdf",
+        retries=MAX_RETRIES_PER_BID
     )
     if not pdf_path or not os.path.exists(pdf_path):
         log.warning(f"Download failed for doc_url: {doc_url}")
@@ -256,41 +283,166 @@ def process_card_item(
         browser.download_pdf(
             document_url=ra_url,
             save_dir=bid_dir,
-            filename=f"{safe_bid_no}_RA.pdf"
+            filename=f"{safe_bid_no}_RA.pdf",
+            retries=MAX_RETRIES_PER_BID
         )
 
-    # 5. Execute Mineru VLM Engine Markdown Conversion (Zero Save Mode: output_dir=None)
+    # 5. Extract hyperlinks from the Bid PDF using PyMuPDF
+    #    Done before Mineru conversion so links can be injected into the Markdown.
+    bid_hyperlinks: list[dict] = []
+    try:
+        bid_hyperlinks = extract_hyperlinks(pdf_path, source="bid")
+        log.info(f"Hyperlinks extracted for {safe_bid_no}: {len(bid_hyperlinks)} links")
+    except Exception as e:
+        log.warning(f"Hyperlink extraction failed for {safe_bid_no}: {e}")
+
+    # Also extract from RA PDF if it was downloaded
+    ra_pdf_path = os.path.join(bid_dir, f"{safe_bid_no}_RA.pdf")
+    if ra_url and os.path.exists(ra_pdf_path):
+        try:
+            ra_links = extract_hyperlinks(ra_pdf_path, source="ra")
+            bid_hyperlinks.extend(ra_links)
+            log.info(f"RA hyperlinks extracted for {safe_bid_no}: {len(ra_links)} links")
+        except Exception as e:
+            log.warning(f"RA hyperlink extraction failed for {safe_bid_no}: {e}")
+
+    # 6. Execute Selective PDF Slicing & Pluggable Document OCR
+    split_info = None
+    target_ocr_pdf = pdf_path
+    if ENABLE_PDF_ATC_SPLIT:
+        try:
+            split_info = detect_atc_boundary(pdf_path)
+            if split_info and split_info.pages_saved > 0:
+                sliced_pdf_path = os.path.join(bid_dir, f"{safe_bid_no}_core.pdf")
+                target_ocr_pdf = create_core_pdf_for_ocr(
+                    pdf_path=pdf_path,
+                    pages_for_ocr=split_info.pages_for_ocr,
+                    output_path=sliced_pdf_path
+                )
+                log.info(
+                    f"Selective PDF Slicing active for {safe_bid_no}: "
+                    f"Sending {split_info.pages_for_ocr}/{split_info.total_pages} pages to OCR "
+                    f"(Saved {split_info.pages_saved} pages via PyMuPDF)"
+                )
+        except Exception as e:
+            log.warning(f"Selective PDF slicing check failed for {safe_bid_no}: {e}")
+            split_info = None
+            target_ocr_pdf = pdf_path
+
     pdf_text = ""
     parsed_pdf_data = {}
-    conv_timer = ProgressTimer(f"Converting PDF ({safe_bid_no}) to Markdown Via Mineru VLLM Server")
+    ocr_usage_data = {}
+
+    conv_timer = ProgressTimer(f"Converting PDF ({safe_bid_no}) via [{OCR_PROVIDER.upper()}] OCR")
     conv_timer.start()
     try:
-        with suppress_stdout_stderr():
-            conv_result = worker.run(
-                async_convert_document(
-                    input_path=pdf_path,
-                    output_dir=None,
-                    backend="vlm-engine",
-                    formula_enable=True,
-                    table_enable=True,
-                )
+        if OCR_PROVIDER == "mineru":
+            with suppress_stdout_stderr():
+                if worker:
+                    conv_result = worker.run(
+                        async_convert_document(
+                            input_path=target_ocr_pdf,
+                            output_dir=None,
+                            backend="vlm-engine",
+                            formula_enable=True,
+                            table_enable=True,
+                        )
+                    )
+                    if isinstance(conv_result, dict):
+                        pdf_text = conv_result.get("markdown", "")
+        else:
+            ocr_provider = DocumentOCRFactory.get_provider(OCR_PROVIDER)
+            ocr_result = ocr_provider.convert_pdf_to_markdown(
+                pdf_path=target_ocr_pdf,
+                save_json=True,
+                output_dir=bid_dir
             )
-            if isinstance(conv_result, dict):
-                pdf_text = conv_result.get("markdown", "")
+            pdf_text = ocr_result.markdown
+            ocr_usage_data = ocr_result.usage.to_dict()
+
+            # Record slicing savings telemetry if slicing was applied
+            if split_info and split_info.pages_saved > 0:
+                savings = calculate_saved_cost(
+                    provider=ocr_result.provider,
+                    model=ocr_result.model,
+                    pages_saved=split_info.pages_saved
+                )
+                ocr_usage_data["total_pdf_pages"] = split_info.total_pages
+                ocr_usage_data["pages_for_ocr"] = split_info.pages_for_ocr
+                ocr_usage_data["pages_saved_by_slicing"] = split_info.pages_saved
+                ocr_usage_data["estimated_savings_usd"] = savings["saved_usd"]
+                ocr_usage_data["estimated_savings_inr"] = savings["saved_inr"]
+
+            savings_str = (
+                f" [Saved: ${ocr_usage_data.get('estimated_savings_usd', 0):.4f} (₹{ocr_usage_data.get('estimated_savings_inr', 0):.2f})]"
+                if split_info and split_info.pages_saved > 0 else ""
+            )
+            log.info(
+                f"OCR [{ocr_result.provider.upper()}] completed for {safe_bid_no}: "
+                f"{ocr_result.usage.pages_processed} pages, {ocr_result.usage.latency_seconds:.1f}s, "
+                f"Cost: ${ocr_result.usage.estimated_cost_usd:.4f} (₹{ocr_result.usage.estimated_cost_inr:.2f}){savings_str}"
+            )
     except Exception as e:
-        log.error(f"Mineru VLM conversion failed for {safe_bid_no}: {e}")
+        log.error(f"Document OCR conversion failed for {safe_bid_no} using {OCR_PROVIDER}: {e}")
     finally:
         conv_timer.stop()
 
-    if not pdf_text:
-        log.warning(f"Mineru markdown result empty for {safe_bid_no}")
+    # If sliced, stitch the PyMuPDF ATC markdown onto the OCR markdown
+    if split_info and split_info.pages_saved > 0 and pdf_text:
+        try:
+            atc_pymupdf_md = extract_atc_markdown_pymupdf(
+                pdf_path=pdf_path,
+                split_page_index=split_info.split_page_index,
+                heading_y0=split_info.heading_y0
+            )
+            pdf_text = stitch_hybrid_markdown(pdf_text, atc_pymupdf_md)
+            log.info(
+                f"Stitched PyMuPDF ATC markdown into {safe_bid_no} "
+                f"({len(atc_pymupdf_md)} chars added)"
+            )
+        except Exception as e:
+            log.warning(f"Error stitching PyMuPDF ATC text for {safe_bid_no}: {e}")
 
-    # 6. Parse PDF Markdown into Structured Data Schema
+    if not pdf_text:
+        log.warning(f"OCR markdown result empty for {safe_bid_no}")
+
+    # 7. Inject hyperlinks into Markdown for RAG text enrichment
+    #    URLs become searchable via BM25 / dense retrieval in addition to
+    #    being stored in the structured hyperlinks[] JSON field.
+    if pdf_text and bid_hyperlinks:
+        pdf_text = inject_hyperlinks_into_markdown(pdf_text, bid_hyperlinks)
+
+    # 8. Parse PDF Markdown into Structured Data Schema
     product_type = card_data.get("bid", {}).get("product_type", "PRODUCT")
     if pdf_text.strip():
         parsed_pdf_data = parse_bid_data(pdf_text, product_type)
         card_data["bid"]["process_kind"] = parsed_pdf_data.pop("process_kind", "")
         card_data["bid"]["base_type"] = parsed_pdf_data.pop("base_type", "")
+
+        # Overwrite card.departments with the richer PDF-extracted values
+        # (Ministry/State, Department, Organisation, Office) which are far
+        # more reliable than what can be scraped from the card HTML.
+        pdf_depts = parsed_pdf_data.get("departments", {})
+        if any(pdf_depts.values()):
+            card_data["card"]["departments"] = [{
+                "ministry_state_name": pdf_depts.get("ministry_state_name", ""),
+                "department_name":     pdf_depts.get("department_name", ""),
+                "organisation_name":   pdf_depts.get("organisation_name", ""),
+                "office_name":         pdf_depts.get("office_name", ""),
+            }]
+
+        # Enrich card.items if detailed PDF items exist
+        pdf_items = parsed_pdf_data.get("items", {})
+        detailed_items = []
+        if pdf_items and isinstance(pdf_items, dict):
+            for k, v in pdf_items.items():
+                if re.match(r"^item \d+$", k, re.IGNORECASE) and isinstance(v, dict):
+                    cat = v.get("item_category", "").strip()
+                    q = v.get("quantity")
+                    if cat:
+                        detailed_items.append({"name": cat, "quantity": q if q is not None else 0})
+        if detailed_items:
+            card_data["card"]["items"] = detailed_items
 
         # Save Markdown File Artifact inside downloads/<Bid_No>/
         pdf_md_path = os.path.join(bid_dir, f"{safe_bid_no}.md")
@@ -300,14 +452,42 @@ def process_card_item(
         except Exception as e:
             log.warning(f"Could not save Markdown for {safe_bid_no}: {e}")
 
-    # 7. Assemble Final Unified JSON Schema Artifact inside downloads/<Bid_No>/
+    # 9. Normalize & Validate Bid Data
+    normalized_data = normalize_bid_data(card_data, parsed_pdf_data, pdf_text)
+    validation_data = validate_bid_data(
+        bid_no=safe_bid_no,
+        card_data=card_data,
+        parsed_pdf_data=parsed_pdf_data,
+        normalized=normalized_data,
+        pdf_path=pdf_path
+    )
+
+    # 10. Run ATC (Additional Terms and Conditions) Compliance Analysis
+    atc_result = {}
+    if ENABLE_ATC_ANALYSIS and (os.getenv("GEMINI_API_KEY") or os.getenv("ATC_LLM_PROVIDER") == "local_qwen"):
+        try:
+            atc_result = analyze_bid_atc(
+                bid_no=safe_bid_no,
+                markdown_text=pdf_text,
+                hyperlinks=bid_hyperlinks,
+                save_dir=bid_dir
+            )
+        except Exception as e:
+            log.warning(f"ATC analysis encountered an error for {safe_bid_no}: {e}")
+
+    # 11. Assemble Final Unified JSON Schema Artifact inside downloads/<Bid_No>/
     final_bid = {
         "_id": safe_bid_no,
         "bid": card_data.get("bid", {}),
         "card": card_data.get("card", {}),
         "pdf": parsed_pdf_data,
-        "normalized": {},
-        "validation": {"issues": []},
+        "hyperlinks": bid_hyperlinks,          # ← all URI links extracted from the PDF
+        "normalized": normalized_data,
+        "validation": validation_data,
+        "atc_analysis": atc_result,
+        "telemetry": {
+            "ocr": ocr_usage_data,
+        },
         "full_pdf_text": pdf_text,
     }
     json_path = os.path.join(bid_dir, f"{safe_bid_no}.json")
@@ -317,13 +497,21 @@ def process_card_item(
     except Exception as e:
         log.warning(f"Could not save JSON for {safe_bid_no}: {e}")
 
-    # 8. Upsert Record into SQLite & ChromaDB Vector Store
+    # 12. Upsert Record into SQLite & ChromaDB Vector Store
     card_items = card_data.get("card", {}).get("items", [])
-    item_name = card_items[0].get("name", "") if card_items else ""
-    qty_val = str(card_items[0].get("quantity", "")) if card_items else ""
+    item_names = [it.get("name", "") for it in card_items if it.get("name")]
+    item_name = ", ".join(item_names) if item_names else (card_items[0].get("name", "") if card_items else "")
+
+    total_qty_sum = sum(int(it.get("quantity") or 0) for it in card_items if str(it.get("quantity", "")).isdigit())
+    if total_qty_sum > 0:
+        qty_val = str(total_qty_sum)
+    else:
+        qty_val = str(card_items[0].get("quantity", "")) if card_items else ""
 
     card_depts = card_data.get("card", {}).get("departments", [])
-    dept_name = card_depts[0].get("name", "") if card_depts else ""
+    dept_name = ""
+    if card_depts:
+        dept_name = card_depts[0].get("department_name", "") or card_depts[0].get("name", "")
 
     bid_packet_type_val = ""
     bt_data = parsed_pdf_data.get("bid_type")
@@ -331,6 +519,13 @@ def process_card_item(
         bid_packet_type_val = bt_data.get("type_of_bid", "")
     elif isinstance(bt_data, str):
         bid_packet_type_val = bt_data
+
+    # Use normalized estimated value in INR if present, or parsed fallback
+    est_val_inr = normalized_data.get("financials", {}).get("estimated_value_inr")
+    if est_val_inr:
+        est_val_str = str(int(est_val_inr))
+    else:
+        est_val_str = str(parsed_pdf_data.get("financials", {}).get("estimated_value") or "")
 
     db_record = {
         "document_url":    str(doc_url or ""),
@@ -343,10 +538,11 @@ def process_card_item(
         "department":      str(dept_name or ""),
         "start_date":      str(card_data.get("card", {}).get("start_datetime", "") or ""),
         "end_date":        str(card_data.get("card", {}).get("end_datetime", "") or ""),
-        "estimated_value": str(parsed_pdf_data.get("financials", {}).get("estimated_value") or ""),
+        "estimated_value": est_val_str,
         "bid_packet_type": str(bid_packet_type_val or ""),
         "corrigendum_url": str(corr_url or ""),
         "full_pdf_text":   clean_text(pdf_text),
+        "atc_analysis":    atc_result.get("raw_markdown", ""),
     }
 
     embed_timer = ProgressTimer(f"Embedding & indexing vectors ({safe_bid_no})")
@@ -365,9 +561,9 @@ def process_card_item(
 def scrape_bid_type(
     browser: GemBrowser,
     db: BidDatabase,
-    worker: AsyncWorker,
-    bid_type_name: str,
-    seen_urls: set,
+    worker: Optional[AsyncWorker] = None,
+    bid_type_name: str = "Product Bid/RAs",
+    seen_urls: Optional[set] = None,
 ) -> dict:
     """
     Iterate over pagination for a specific bid category (e.g. Product Bid/RAs)
@@ -423,15 +619,38 @@ def scrape_bid_type(
                         continue
                     seen_urls.add(doc_url)
 
-                    res = process_card_item(
-                        card=card,
-                        browser=browser,
-                        db=db,
-                        worker=worker,
-                        bid_type_name=bid_type_name,
-                    )
+                    res = None
+                    last_err = None
+                    for attempt in range(1, MAX_RETRIES_PER_BID + 1):
+                        try:
+                            res = process_card_item(
+                                card=card,
+                                browser=browser,
+                                db=db,
+                                worker=worker,
+                                bid_type_name=bid_type_name,
+                            )
+                            if res.get("status") == "success":
+                                break
+                            elif res.get("status") == "error_download":
+                                log.warning(
+                                    f"  Attempt {attempt}/{MAX_RETRIES_PER_BID} download failed for card {i}"
+                                )
+                                if attempt < MAX_RETRIES_PER_BID:
+                                    backoff = RETRY_DELAY_SECONDS * (2 ** (attempt - 1))
+                                    log.info(f"  Backing off for {backoff:.1f}s before retry...")
+                                    time.sleep(backoff)
+                            else:
+                                break
+                        except Exception as e:
+                            last_err = e
+                            log.warning(f"  Attempt {attempt}/{MAX_RETRIES_PER_BID} error for card {i}: {e}")
+                            if attempt < MAX_RETRIES_PER_BID:
+                                backoff = RETRY_DELAY_SECONDS * (2 ** (attempt - 1))
+                                log.info(f"  Backing off for {backoff:.1f}s before retry...")
+                                time.sleep(backoff)
 
-                    if res.get("status") == "success":
+                    if res and res.get("status") == "success":
                         collected += 1
                         stats["scraped"] += 1
                         if res.get("is_new"):
@@ -441,11 +660,12 @@ def scrape_bid_type(
                             f"Item: {res['item'][:40]} | {'NEW' if res.get('is_new') else 'seen'}"
                         )
                         sleep_between_cards()
-                    elif res.get("status") == "error_download":
+                    else:
                         stats["errors"] += 1
-
+                        if last_err:
+                            log.error(f"  Card {i} failed after {MAX_RETRIES_PER_BID} attempts: {last_err}")
                 except Exception as e:
-                    log.error(f"  Card {i} error: {e}")
+                    log.error(f"  Card {i} unexpected error: {e}")
                     stats["errors"] += 1
 
         if collected == before:
@@ -486,16 +706,19 @@ def scrape_specific_bid(db: BidDatabase, bid_no: str) -> dict:
     """
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-    worker = AsyncWorker()
-    set_vlm_config(batch_size=16, max_gpu_util=0.8, model_len=4096)
+    is_mineru = (OCR_PROVIDER == "mineru")
+    worker = None
 
-    server_timer = ProgressTimer("Starting Mineru vLLM server")
-    server_timer.start()
-    try:
-        with suppress_stdout_stderr():
-            worker.run(async_start_vllm_server())
-    finally:
-        server_timer.stop()
+    if is_mineru:
+        worker = AsyncWorker()
+        set_vlm_config(batch_size=16, max_gpu_util=0.78, model_len=4096)
+        server_timer = ProgressTimer("Starting Mineru vLLM server")
+        server_timer.start()
+        try:
+            with suppress_stdout_stderr():
+                worker.run(async_start_vllm_server())
+        finally:
+            server_timer.stop()
 
     try:
         log.info(f"Starting browser for specific bid search: {bid_no}")
@@ -511,25 +734,45 @@ def scrape_specific_bid(db: BidDatabase, bid_no: str) -> dict:
 
             log.info(f"Found {total} card(s) matching search.")
             card = cards.nth(0)
-            res = process_card_item(
-                card=card,
-                browser=browser,
-                db=db,
-                worker=worker,
-                bid_type_name="Product Bid/RAs",
-            )
-            return res
+            res = None
+            last_err = None
+            for attempt in range(1, MAX_RETRIES_PER_BID + 1):
+                try:
+                    res = process_card_item(
+                        card=card,
+                        browser=browser,
+                        db=db,
+                        worker=worker,
+                        bid_type_name="Product Bid/RAs",
+                    )
+                    if res.get("status") == "success":
+                        break
+                    elif res.get("status") == "error_download":
+                        log.warning(f"  Attempt {attempt}/{MAX_RETRIES_PER_BID} download failed for {bid_no}")
+                        if attempt < MAX_RETRIES_PER_BID:
+                            backoff = RETRY_DELAY_SECONDS * (2 ** (attempt - 1))
+                            log.info(f"  Backing off for {backoff:.1f}s before retry...")
+                            time.sleep(backoff)
+                except Exception as e:
+                    last_err = e
+                    log.warning(f"  Attempt {attempt}/{MAX_RETRIES_PER_BID} failed for {bid_no}: {e}")
+                    if attempt < MAX_RETRIES_PER_BID:
+                        backoff = RETRY_DELAY_SECONDS * (2 ** (attempt - 1))
+                        log.info(f"  Backing off for {backoff:.1f}s before retry...")
+                        time.sleep(backoff)
+            return res or {"status": "error", "error": str(last_err)}
     finally:
-        close_timer = ProgressTimer("Closing Mineru vLLM server")
-        close_timer.start()
-        try:
-            with suppress_stdout_stderr():
-                worker.run_sync(close_vllm_server)
-        except Exception:
-            pass
-        finally:
-            close_timer.stop()
-        worker.stop()
+        if is_mineru and worker:
+            close_timer = ProgressTimer("Closing Mineru vLLM server")
+            close_timer.start()
+            try:
+                with suppress_stdout_stderr():
+                    worker.run_sync(close_vllm_server)
+            except Exception:
+                pass
+            finally:
+                close_timer.stop()
+            worker.stop()
 
 
 def run_full_scrape(db: BidDatabase) -> dict:
@@ -559,16 +802,19 @@ def run_full_scrape(db: BidDatabase) -> dict:
     log.info("FULL SCRAPE RUN STARTED (MINERU VLM PARSER)")
     log.info("=" * 60)
 
-    worker = AsyncWorker()
-    set_vlm_config(batch_size=16, max_gpu_util=0.8, model_len=4096)
+    is_mineru = (OCR_PROVIDER == "mineru")
+    worker = None
 
-    server_timer = ProgressTimer("Starting Mineru vLLM server")
-    server_timer.start()
-    try:
-        with suppress_stdout_stderr():
-            worker.run(async_start_vllm_server())
-    finally:
-        server_timer.stop()
+    if is_mineru:
+        worker = AsyncWorker()
+        set_vlm_config(batch_size=16, max_gpu_util=0.78, model_len=4096)
+        server_timer = ProgressTimer("Starting Mineru vLLM server")
+        server_timer.start()
+        try:
+            with suppress_stdout_stderr():
+                worker.run(async_start_vllm_server())
+        finally:
+            server_timer.stop()
 
     try:
         with GemBrowser() as browser:
@@ -591,16 +837,17 @@ def run_full_scrape(db: BidDatabase) -> dict:
     except Exception as e:
         log.critical(f"Browser session failed: {e}")
     finally:
-        close_timer = ProgressTimer("Closing Mineru vLLM server")
-        close_timer.start()
-        try:
-            with suppress_stdout_stderr():
-                worker.run_sync(close_vllm_server)
-        except Exception:
-            pass
-        finally:
-            close_timer.stop()
-        worker.stop()
+        if is_mineru and worker:
+            close_timer = ProgressTimer("Closing Mineru vLLM server")
+            close_timer.start()
+            try:
+                with suppress_stdout_stderr():
+                    worker.run_sync(close_vllm_server)
+            except Exception:
+                pass
+            finally:
+                close_timer.stop()
+            worker.stop()
 
     db.export_json()
     db_stats = db.stats()

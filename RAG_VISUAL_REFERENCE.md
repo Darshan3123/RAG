@@ -1,7 +1,7 @@
 # RAG System — Visual Reference & Architecture Diagrams
 
 > Quick visual guides for understanding the system  
-> **Last Updated**: July 2026
+> **Last Updated**: August 2026
 
 ---
 
@@ -21,11 +21,13 @@
 │   only via     └─────────────┘    │                            │
 │   Ongoing                         ▼                            │
 │   Bids/RA                ┌─────────────┐                       │
-│   filter)                │  Parser     │────┐                  │
-│                          │(parser.py)  │    │                  │
+│   filter)                │  Mineru VLM │────┐                  │
+│                          │  & Parser   │    │                  │
+│                          │ (parser.py) │    │                  │
 │                          └─────────────┘    │                  │
 │                          ↑ dates from       ▼                  │
 │                          card HTML   SQLite DB                 │
+│                          & PyMuPDF                             │
 │                                      (database.py)            │
 │                                             ↓                  │
 │                                    ┌─────────────────────┐    │
@@ -42,17 +44,18 @@
                                               │
                               QUERY PIPELINE  ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  User Query ──→ Exit Check ──→ Smart top_k ──→ Embed Query     │
+│  User Query ──→ Exit Check ──→ Smart top_k ──→ BGE Embed Query │
 │                                                      │          │
 │                              ┌───────────────────────┘          │
 │                              ▼                                   │
 │                    ┌──────────────────┐                         │
-│                    │  Hybrid Search   │                         │
-│                    │  Semantic (60%)  │                         │
-│                    │  Keyword  (40%)  │                         │
+│                    │ Dense + BM25     │                         │
+│                    │ RRF Fusion       │                         │
+│                    │ Cross-Encoder    │                         │
+│                    │ Sigmoid Rerank   │                         │
 │                    └────────┬─────────┘                         │
 │                             ▼                                    │
-│                    Deduplicate → Sort → Top-K                   │
+│                    70% Relative Cutoff → Deduplicate → Top-K    │
 │                             │                                    │
 │              ┌──────────────┴──────────────┐                    │
 │              ▼                             ▼                    │
@@ -92,19 +95,21 @@ For each BID_TYPE in settings:
          │
          ├─ get_ra_from_card()          ← RA number from card HTML
          ├─ get_product_type_from_card() ← product type from card HTML
-         ├─ get_dates_from_card()        ← START + END dates from card HTML
-         │    ├─ Matches "Start Date: DD-MM-YYYY HH:MM AM/PM"
-         │    ├─ Matches "End Date: DD-MM-YYYY HH:MM AM/PM"
-         │    └─ Converts to 24h via _to_24h()
+         ├─ get_dates_from_card()        ← START + END dates in 24h format
          │
          ├─ browser.extract_card_links() ← document_url + corrigendum_url
-         ├─ browser.download_pdf()
-         ├─ extract_pdf_text()           ← PyMuPDF + OCR fallback
-         ├─ parse_bid_data()             ← regex field extraction
-         │
-         └─ Build bid record:
-              start_date = card_start OR pdf_start  (card preferred)
-              end_date   = card_end   OR pdf_end    (card preferred)
+         ├─ browser.download_pdf()       ← Save to downloads/<safe_bid_no>/
+         ├─ PyMuPDF extract_hyperlinks() ← extract clickable URIs
+         ├─ Mineru VLM conversion        ├─ Zero Save Mode (vLLM acceleration)
+         │                               └─ inject_hyperlinks_into_markdown()
+         ├─ parse_bid_data()             ← 10-section structured Markdown parser
+         │                                  with _expand_table_grid()
+         └─ Save artifacts:
+              downloads/<safe_bid_no>/
+              ├── <safe_bid_no>.html
+              ├── <safe_bid_no>.pdf
+              ├── <safe_bid_no>.md
+              └── <safe_bid_no>.json
 ```
 
 ---
@@ -122,43 +127,45 @@ HYBRID SCORING FORMULA
                 ┌──────────────┴──────────────┐
                 │                             │
                 ▼                             ▼
-         ┌─────────────────┐         ┌──────────────────┐
-         │ SEMANTIC TRACK  │         │  KEYWORD TRACK   │
-         └────────┬────────┘         │  _keyword_score()│
-                  │                  └──────┬───────────┘
+          ┌─────────────────┐         ┌──────────────────┐
+          │ DENSE RETRIEVAL │         │ SPARSE RETRIEVAL │
+          └────────┬────────┘         └──────┬───────────┘
                   │                         │
-         1. Embed query vector       1. Split query to words
-            (384 dims)               2. Remove stop words:
-         2. Cosine distance to          {for,the,a,an,and,
-            each chunk vector            or,in,of,is}
-         3. Convert to score         3. If all stop words →
-            score = 1 - distance        return 0.5 (neutral)
-                                     4. Find matches in:
-                                        full_item_name (w=3.0)
-                                        department     (w=1.5)
-                                        bid_type       (w=1.0)
-                                        product_type   (w=1.0)
-                  │                   5. Normalize 0-1
-                  │                      │
-         semantic_score        keyword_score
-         (0.0 to 1.0)          (0.0 to 1.0)
-                  │                      │
-                  └──────────────┬───────┘
+         1. Add BGE query prompt     1. Tokenize query
+         2. Cosine distance to       2. Match against rich
+            each chunk vector           metadata card corpus
+         3. semantic_score           3. bm25_score
+                  │                         │
+                  └──────────────┬──────────┘
                                  ▼
-                  ┌─────────────────────────┐
-                  │  COMBINE (60% + 40%)    │
-                  │                         │
-                  │ hybrid = (semantic *    │
-                  │          0.6) +         │
-                  │          (keyword *     │
-                  │          0.4)           │
-                  │                         │
-                  │ Result: 0.0 to 1.0      │
-                  └────────────┬────────────┘
-                               │
-                               ▼
-                        FINAL SCORE
-                        Used for ranking
+                   ┌──────────────────────────┐
+                   │ RECIPROCAL RANK FUSION   │
+                   │ rrf = Σ 1 / (60 + rank)  │
+                   └─────────────┬────────────┘
+                                 │
+                                 ▼
+                   ┌──────────────────────────┐
+                   │ CROSS-ENCODER RERANKER   │
+                   │ BAAI/bge-reranker-base   │
+                   │ rerank = Sigmoid(logit)  │
+                   └─────────────┬────────────┘
+                                 │
+                                 ▼
+                   ┌──────────────────────────┐
+                   │ WEIGHTED COMBINATION     │
+                   │ (0.60 rerank +           │
+                   │  0.25 dense +            │
+                   │  0.15 bm25)              │
+                   └─────────────┬────────────┘
+                                 │
+                                 ▼
+                   ┌──────────────────────────┐
+                   │ RELATIVE CUTOFF FILTER   │
+                   │ Drop scores < 70% of top │
+                   └─────────────┬────────────┘
+                                 │
+                                 ▼
+                            FINAL SCORES
 ```
 
 ---

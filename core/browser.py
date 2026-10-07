@@ -77,6 +77,7 @@ class GemBrowser:
             log.warning(f"Browser close error: {e}")
 
     # -------------------------------------------------------
+    # -------------------------------------------------------
     # OPEN GEM LISTING PAGE
     # -------------------------------------------------------
     def open_gem(self):
@@ -86,6 +87,11 @@ class GemBrowser:
             wait_until="domcontentloaded",
             timeout=120_000,
         )
+        # Ensure interactive elements are attached
+        try:
+            self.list_page.wait_for_selector(".by_type, div.card, #product, #ongoing_bids", state="attached", timeout=20_000)
+        except Exception:
+            pass
         sleep_page_load()
         human_mouse_move(self.list_page)
         log.info("GeM listing page loaded")
@@ -116,7 +122,7 @@ class GemBrowser:
             # Fallback to the first text input available in the search area
             self.list_page.locator("input[type='text']").first.fill(bid_no)
             
-        # UPDATED LOCATOR: Target Bootstrap .btn classes, <a> tags, and <input> tags as well
+        # Target Bootstrap .btn classes, <a> tags, and <input> tags
         search_btn = self.list_page.locator(".btn:has-text('Search'), button:has-text('Search'), input[value*='Search']").first
         search_btn.click()
         
@@ -129,9 +135,9 @@ class GemBrowser:
     # -------------------------------------------------------
     def reset_filters(self):
         try:
-            btn = self.list_page.locator("text=Reset")
-            if btn.count() > 0:
-                btn.first.click()
+            btn = self.list_page.locator("button:has-text('Reset'), text=Reset")
+            if btn.count() > 0 and btn.first.is_visible():
+                btn.first.click(timeout=5_000)
                 sleep_filter_click()
                 log.debug("Filters reset")
         except Exception as e:
@@ -144,8 +150,17 @@ class GemBrowser:
         log.info(f"Selecting filter: {bid_type_name}")
         label = self.list_page.locator(
             f"label:has-text('{bid_type_name}')"
-        )
-        label.click()
+        ).first
+        try:
+            label.wait_for(state="attached", timeout=10_000)
+            label.click(timeout=8_000)
+        except Exception:
+            log.debug(f"Standard click timeout for '{bid_type_name}', falling back to force click...")
+            try:
+                label.click(force=True, timeout=5_000)
+            except Exception as e:
+                log.warning(f"Could not click filter '{bid_type_name}': {e}")
+                return
         sleep_filter_click()
         human_mouse_move(self.list_page)
 
@@ -154,13 +169,22 @@ class GemBrowser:
     # Only scrape active/open bids, not completed ones
     # -------------------------------------------------------
     def select_ongoing_bids(self):
-        """Click the 'Ongoing Bids/RA' checkbox to filter only active bids"""
-        log.info("Selecting filter: Ongoing Bids/RA")
+        """Click the 'Ongoing Bids/RA' checkbox to filter only active bids (if not already checked)"""
         try:
+            # On GeM, Ongoing Bids/RA is often checked by default; don't uncheck it
+            ongoing_input = self.list_page.locator("#ongoing_bids, input[value='ongoing_bids']")
+            if ongoing_input.count() > 0 and ongoing_input.first.is_checked():
+                log.debug("Ongoing Bids/RA filter is already active")
+                return
+
+            log.info("Selecting filter: Ongoing Bids/RA")
             label = self.list_page.locator(
                 "label:has-text('Ongoing Bids/RA')"
-            )
-            label.click()
+            ).first
+            try:
+                label.click(timeout=8_000)
+            except Exception:
+                label.click(force=True, timeout=5_000)
             sleep_filter_click()
             human_mouse_move(self.list_page)
             log.debug("Ongoing Bids/RA filter applied")

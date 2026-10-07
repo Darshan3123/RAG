@@ -1,8 +1,8 @@
 # RAG Tuning & Optimization — Practical Guide
 
 > **Quick reference for improving RAG performance**  
-> **Last Updated:** July 2026  
-> **Status:** All known issues fixed; system production-ready
+> **Last Updated:** August 2026  
+> **Status:** Production-ready with BGE + BM25 + RRF + Cross-Encoder Reranker & Mineru VLM
 
 ---
 
@@ -11,7 +11,9 @@
 1. **Exit Detection Fixed** — `quit`/`bye`/`done` now checked BEFORE query processing
 2. **/search Display Fixed** — Shows `full_item_name` from metadata (not raw PDF text)
 3. **Active Bids Filter** — "Ongoing Bids/RA" filter applied automatically (no expired bids)
-4. **Card Date Extraction** — Accurate dates from HTML cards, PDF as fallback
+4. **Card Date Extraction** — 24h formatted dates from HTML card popovers (`get_dates_from_card()`)
+5. **Cross-Encoder Sigmoid Normalization** — Converts raw logits to clean [0,1] rerank scores
+6. **Relative Score Cutoff** — Automatically filters candidates scoring < 70% of the top result score
 
 ---
 
@@ -29,154 +31,82 @@
 
 ## Scenario 1: Results are Too Generic / Broad
 
-**Symptoms**: Query "laptop bids" returns furniture, office supplies, etc.
+**Symptoms**: Query "laptop bids" returns furniture, office supplies, or irrelevant items.
 
 **Solutions (in order of impact)**:
 
-### Step 1: Increase Semantic Weight
+### Step 1: Tune Relative Score Cutoff
 ```python
-# File: rag/vector_store.py  (search function, hybrid score line)
-# BEFORE:
-hybrid_score = (semantic_score * 0.6) + (keyword_score * 0.4)
+# File: rag/vector_store.py (search function, line ~345)
+# Default cutoff threshold is 70% of the top match score:
+cutoff = top_score * 0.70
 
-# AFTER:
-hybrid_score = (semantic_score * 0.8) + (keyword_score * 0.2)
+# Stricter matching (80% cutoff threshold):
+cutoff = top_score * 0.80
 
-# Effect: Prioritizes semantic matching over exact keyword match
-# Use when: Your queries are about intent/meaning, not exact keywords
+# Effect: Drops lower-confidence candidate matches more aggressively.
 ```
 
-### Step 2: Increase Item Name Weight
-```python
-# File: rag/vector_store.py  (_keyword_score function)
-# BEFORE (default):
-fields_text = {
-    "full_item_name": 3.0,
-    "department": 1.5,
-    "bid_type": 1.0,
-    "product_type": 1.0,
-}
+### Step 2: Enable / Adjust Cross-Encoder Reranker
+```env
+# File: .env
+RAG_USE_RERANKER=true
+RAG_RERANKER_MODEL=BAAI/bge-reranker-base
 
-# AFTER (stricter matching):
-fields_text = {
-    "full_item_name": 5.0,    # ← Much stricter
-    "department": 1.5,
-    "bid_type": 1.0,
-    "product_type": 1.0,
-}
-
-# Effect: Exact item name match becomes critical
-# Keyword score drops if query not found in item names
+# Effect: Re-ranks top candidates with high-precision CrossEncoder scoring.
 ```
 
 ### Step 3: Use Metadata Filters
 ```bash
-# Instead of:
+# Instead of generic query:
 python main.py --ask "laptop bids"
 
-# Try:
+# Filter by product category:
 python main.py --ask "laptop" --filter product_type=Product
 
 # In chat mode:
 # You > f:product_type=Product laptops
-
-# Effect: Reduces search space before scoring
 ```
 
 ### Step 4: Lower Top-K
 ```env
 # In .env:
-RAG_TOP_K=3  # Was 5
+RAG_TOP_K=3  # Default is 5
 
-# Effect: Returns only best 3 matches (vs 5)
-# Less noise, higher precision
-```
-
-**Full tuning config for "precision" mode**:
-```env
-# .env file
-RAG_TOP_K=3
-RAG_CHUNK_SIZE=600
-RAG_CHUNK_OVERLAP=50
-```
-```python
-# rag/vector_store.py — search function:
-hybrid_score = (semantic_score * 0.8) + (keyword_score * 0.2)
-
-# rag/vector_store.py — _keyword_score function:
-fields_text = {
-    "full_item_name": 5.0,
-    "department": 1.5,
-    "bid_type": 1.0,
-    "product_type": 1.0,
-}
+# Effect: Returns only the top 3 highest confidence matches.
 ```
 
 ---
 
 ## Scenario 2: Missing Relevant Results
 
-**Symptoms**: Query "IT hardware" returns only exact matches, misses "computer", "server", "network equipment"
+**Symptoms**: Query "IT hardware" returns only exact matches, misses "computer", "server", "network equipment".
 
 **Solutions (in order of impact)**:
 
-### Step 1: Better Embedding Model
+### Step 1: Increase Retrieval Fetch Depth
 ```env
-# BEFORE:
-RAG_EMBEDDING_MODEL=all-MiniLM-L6-v2
+# In .env:
+RAG_FETCH_K=60  # Default is 40
 
-# AFTER:
-RAG_EMBEDDING_MODEL=all-mpnet-base-v2
-
-# Effect: Better semantic understanding
-# Drawback: 20x larger model, slower indexing
-# MUST reindex: python main.py --reindex
+# Effect: Over-fetches more candidate chunks per retrieval leg (dense & BM25) before RRF fusion and reranking.
 ```
 
-### Step 2: Increase Semantic Weight
-```python
-# File: rag/vector_store.py  (search function)
-# BEFORE:
-hybrid_score = (semantic_score * 0.6) + (keyword_score * 0.4)
+### Step 2: Increase Top-K
+```env
+# In .env:
+RAG_TOP_K=15  # Default is 5
 
-# AFTER:
-hybrid_score = (semantic_score * 0.8) + (keyword_score * 0.2)
-
-# Effect: Finds more synonyms and related concepts
+# Effect: Returns more unique bid candidates in the final answer context.
 ```
 
-### Step 3: Increase Top-K
+### Step 3: Enable / Re-index BGE Dense Model
 ```env
-# BEFORE:
-RAG_TOP_K=5
+# In .env:
+RAG_EMBEDDING_MODEL=BAAI/bge-base-en-v1.5
 
-# AFTER:
-RAG_TOP_K=15
-
-# Effect: Returns more candidates
-# May include more noise
-```
-
-### Step 4: Larger Chunks
-```env
-# BEFORE:
-RAG_CHUNK_SIZE=800
-
-# AFTER:
-RAG_CHUNK_SIZE=1500
-
-# Effect: Each chunk has more context
-# Better for capturing multi-field relationships
-# MUST reindex
-```
-
-**Full tuning config for "recall" mode**:
-```env
-# .env file
-RAG_TOP_K=15
-RAG_CHUNK_SIZE=1500
-RAG_CHUNK_OVERLAP=200
-RAG_EMBEDDING_MODEL=all-mpnet-base-v2
+# After changing embedding model:
+python main.py --reindex
 ```
 ```python
 # rag/vector_store.py — search function:

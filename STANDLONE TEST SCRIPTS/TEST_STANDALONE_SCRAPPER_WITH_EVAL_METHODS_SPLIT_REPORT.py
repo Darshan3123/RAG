@@ -190,8 +190,8 @@ def scrape_bids_in_memory():
                                 # Calculate the difference in minutes
                                 time_left_mins = (end_date - now_ist_naive).total_seconds() / 60
                                 
-                                if time_left_mins <= 20:
-                                    print(f"[-] Skipping bid (Ends in {time_left_mins:.1f} mins - Less than 20 mins remaining).")
+                                if time_left_mins <= 10:
+                                    print(f"[-] Skipping bid (Ends in {time_left_mins:.1f} mins - Less than 10 mins remaining).")
                                     continue
                             except ValueError:
                                 pass # Proceed normally if date parsing fails

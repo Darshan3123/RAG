@@ -1,8 +1,8 @@
 # GeM Bid RAG System — Documentation Master Index
 
 > **Complete RAG system understanding & tuning guides**  
-> **Last Updated:** July 2026  
-> **Project Status:** Production-ready with active bid filtering & card-based date extraction
+> **Last Updated:** August 2026  
+> **Project Status:** Production-ready with Mineru VLM, PyMuPDF hyperlink extraction, BGE + BM25 + RRF + CrossEncoder reranking
 
 ---
 
@@ -11,7 +11,7 @@
 A complete set of RAG system documentation covering:
 
 - ✅ **How the RAG works** (architecture, all data flows, components)
-- ✅ **How scoring is calculated** (hybrid formula with real examples)
+- ✅ **How scoring is calculated** (BGE dense + BM25 + RRF + CrossEncoder reranker formula with real examples)
 - ✅ **How to tune it** (configuration strategies for your use case)
 - ✅ **Visual references** (diagrams, flowcharts, decision trees)
 - ✅ **Quick commands** (CLI reference, troubleshooting, examples)
@@ -27,9 +27,9 @@ A complete set of RAG system documentation covering:
 **Read time:** 5-10 minutes
 
 **Contains:**
-- What the system does (scraping + RAG + answering)
-- The scoring formula with visual example
-- All CLI commands (--ask, --chat, --stats, --reindex, --once)
+- What the system does (scraping + Mineru VLM + hybrid RAG + answering)
+- The BGE + BM25 + CrossEncoder reranker scoring formula with visual example
+- All CLI commands (--ask, --chat, --stats, --reindex, --once, --bid)
 - Configuration parameters & when to change them
 - Common issues & quick fixes (too generic results, missing results, slow queries)
 - Decision tree for "what should I change?"
@@ -47,36 +47,36 @@ A complete set of RAG system documentation covering:
 
 **Contains:**
 - System overview (all components shown in diagrams)
-- **Complete data flow** (6 steps: scraping → parsing → storage → indexing → querying → output)
+- **Complete data flow** (6 steps: scraping → Mineru VLM parsing → PyMuPDF hyperlink extraction → storage → hybrid indexing → querying → output)
 - **Scraper details:**
   - "Active Bids Only" filter via `select_ongoing_bids()` (no expired bids)
-  - Card-based date extraction (more accurate than PDFs)
+  - Card-based 24h date extraction (`get_dates_from_card()`)
   - 9 bid types scraped
   - Anti-bot measures (delays, UA rotation, stealth JS)
 - **Parser details:**
-  - `get_dates_from_card()` extracts dates from HTML
-  - `extract_pdf_text()` with PyMuPDF + OCR fallback
-  - `get_card_details()` gets untruncated fields
-  - `parse_bid_data()` extracts structure via regex
+  - Mineru VLM PDF document conversion in Zero Save Mode with vLLM acceleration
+  - PyMuPDF (`fitz`) hyperlink extraction (`utils/pdf_hyperlinks.py`)
+  - 10-section structured Markdown parser in `core/parser.py` (`parse_bid_data()`)
+  - Merged table cell grid expansion (`_expand_table_grid()`)
 - **Database schema** (bids table + run_log table)
 - **Embeddings:**
-  - `all-MiniLM-L6-v2` model (384-dim, local)
-  - Chunking strategy (800 chars, 100 overlap)
-  - Batch embedding for efficiency
+  - `BAAI/bge-base-en-v1.5` model (local offline mode with BGE query instruction prefixing)
+  - Chunking strategy (800 chars, 100 overlap + metadata card chunk 0)
 - **Vector Store (ChromaDB):**
-  - Upsert process
-  - Metadata storage
-  - HNSW search algorithm
-- **Hybrid Scoring in depth:**
-  - Semantic track (cosine similarity, 60% weight)
-  - Keyword track (TF-IDF field matching, 40% weight)
-  - Field weights for keyword scoring
-  - Deduplication logic
+  - Upsert process and chunk management
+  - Cosine similarity HNSW search algorithm
+- **Hybrid Search & Reranking in depth:**
+  - Dense retrieval (BGE embeddings)
+  - Sparse retrieval (BM25Okapi keyword search)
+  - Reciprocal Rank Fusion (RRF)
+  - Cross-Encoder Reranking (`BAAI/bge-reranker-base` with Sigmoid logit conversion)
+  - Weighted Score: `(Reranker × 0.6) + (Dense × 0.25) + (BM25 × 0.15)`
+  - Relative score cutoff filtering (70% top-score threshold)
 - **Query processing:**
   - Exit detection (quit/bye/done)
   - Smart top_k adjustment by intent
   - Vector search pipeline
-  - LLM integration or retrieval-only mode
+  - LLM integration (Ollama / OpenAI / Retrieval-only mode)
   - Score breakdown generation
 - **All configuration parameters explained**
 - **Performance optimization section**
@@ -97,16 +97,14 @@ A complete set of RAG system documentation covering:
 - Example 2: "IT Department Services"
 - Example 3: "Complex multi-word query"
 - Step-by-step calculation breakdown:
-  - How embeddings are generated
-  - How semantic score is calculated
-  - How keyword score is calculated
-  - How they're combined
-  - Final ranking
-- Stop word removal in action
-- Field weight impact analysis
-- Score distribution patterns
+  - BGE query instruction prefixing & embedding generation
+  - Dense cosine similarity score calculation
+  - BM25Okapi sparse keyword score calculation
+  - Reciprocal Rank Fusion (RRF) combination
+  - BAAI/bge-reranker-base Cross-Encoder Sigmoid logit scoring
+  - Final weighted ranking and relative 70% cutoff filtering
 - Score breakdown in retrieval-only mode
-- Formula reference sheet (easy copy-paste)
+- Formula reference sheet
 
 **Key Takeaway:** See exactly how each score is calculated with real examples
 
@@ -119,33 +117,29 @@ A complete set of RAG system documentation covering:
 
 **Contains:**
 - **9 real-world scenarios:**
-  1. Results too generic → decrease precision
-  2. Missing relevant results → increase recall
-  3. Wrong bid types in results → use filters
-  4. Slow queries → optimize performance
-  5. LLM hallucinating → better context
-  6. Duplicate results → dedup settings
-  7. Exit not working in chat → fixed in current version
-  8. /search showing garbled text → fixed in current version
-  9. Custom intent detection → advanced patterns
+  1. Results too generic → adjust top_k or relative cutoff threshold
+  2. Missing relevant results → increase recall or disable reranker
+  3. Wrong bid types in results → use metadata filters (`f:key=value`)
+  4. Slow queries → GPU memory tuning for vLLM & PyTorch
+  5. LLM hallucinating → zero-hallucination prompt & retrieval-only mode
+  6. Duplicate results → bid deduplication logic
+  7. Exit not working in chat → checked before query
+  8. /search showing garbled text → clean item name extraction
+  9. Custom intent detection → smart top_k rules
 - **For each scenario:**
-  - Problem description
-  - Root cause
+  - Problem description & root cause
   - Solutions in order of impact
-  - Code changes needed
-  - Configuration templates
+  - Code changes needed & configuration templates
 - **4 complete tuning templates:**
   - Precision mode (high accuracy, fewer results)
-  - Recall mode (more results, may include noise)
+  - Recall mode (more results, broader coverage)
   - Balanced mode (default settings)
-  - Production mode (optimized)
+  - Production mode (optimized GPU / offline deployment)
 - **Testing protocol** (how to measure improvement)
 - **Advanced topics:**
-  - Embedding model comparison
-  - Chunk size impact
-  - Field weight tuning
-  - Semantic vs keyword balance
-- **Debugging commands**
+  - Embedding model & reranker comparison
+  - Chunk size impact & metadata card strategy
+  - RRF & Cross-Encoder weighting tuning
 
 **Key Takeaway:** Know exactly which settings to change for your specific problem
 
@@ -158,31 +152,21 @@ A complete set of RAG system documentation covering:
 
 **Contains:**
 - **System architecture flowchart** (all components + data flow)
-- **Scraper pipeline diagram:**
-  - Filter selection
-  - Active bids only filter
-  - Card date extraction
-  - PDF download & parsing
-- **Scoring components breakdown:**
-  - Semantic track
-  - Keyword track
-  - Hybrid combination
-  - Field weights visualization
-- **Complete data flow** (4 colored stages)
-- **Embedding model comparison table**
-  - Model size, speed, accuracy
+- **Scraper & Mineru VLM pipeline diagram:**
+  - Filter selection & active bids only filter
+  - Card 24h date extraction
+  - PDF download, PyMuPDF hyperlink extraction, and Mineru VLM conversion
+  - Per-bid artifact storage in `downloads/<safe_bid_no>/`
+- **Hybrid Scoring breakdown:**
+  - Dense track (BGE embeddings)
+  - Sparse track (BM25Okapi keyword search)
+  - RRF fusion
+  - Cross-Encoder reranker with Sigmoid logit conversion
+- **Complete data flow** (colored stages)
+- **Embedding model & reranker comparison table**
 - **Query intent detection visual**
-  - Listing vs focused lookup vs generic
-- **Performance tuning map**
-  - Which settings affect what
-- **Index health monitoring**
-  - How to check vector store
 - **Parameter impact matrix**
-  - Top_k, chunk_size, overlap effects
 - **Help decision tree**
-  - "How do I solve X?"
-- **File organization diagram**
-  - Where everything is stored
 
 **Key Takeaway:** Visual quick reference for concepts and troubleshooting
 

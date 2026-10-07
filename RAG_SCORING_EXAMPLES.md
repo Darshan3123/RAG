@@ -1,8 +1,8 @@
 # RAG Scoring Deep Dive — Visual Guide
 
 > **How exactly are scores calculated?** Step-by-step examples with real numbers  
-> **Last Updated:** July 2026  
-> **For:** Understanding the hybrid scoring formula through concrete examples
+> **Last Updated:** August 2026  
+> **For:** Understanding the hybrid search and reranking pipeline through concrete examples
 
 ---
 
@@ -29,52 +29,41 @@
                │
                ▼
 ┌──────────────────────────────────────────┐
-│ Embed Query                              │
-│ "IT laptops" → 384-dim vector            │
-│ [0.234, -0.456, 0.892, ..., 0.045]      │
+│ LEG 1: DENSE RETRIEVAL (BGE)             │
+│ • BGE query prompt instruction prefix    │
+│ • BAAI/bge-base-en-v1.5 embeddings       │
+│ • Fetch top 40 candidates from ChromaDB  │
 └──────────────┬─────────────────────────┘
                │
                ▼
 ┌──────────────────────────────────────────┐
-│ Fetch ~top_k*4 chunks from ChromaDB      │
-│ (over-fetch for deduplication)           │
-└──────────────┬─────────────────────────┘
-               │
-         ┌─────┴──────────────┐
-         ▼                    ▼
-    FOR EACH CHUNK (calculate dual scores):
-    
-    TRACK 1: SEMANTIC SCORING
-    ├─ cosine_dist = distance(query_vec, chunk_vec)
-    ├─ semantic_score = 1 - cosine_dist
-    └─ Range: 0 (unrelated) to 1 (perfect match)
-    
-    TRACK 2: KEYWORD SCORING (_keyword_score)
-    ├─ Split query: "IT" + "laptops"
-    ├─ Remove stop words (for, the, a, an, and, or, in, of, is)
-    ├─ Remaining: "IT" + "laptops"
-    ├─ Match in fields:
-    │   • full_item_name     weight=3.0  ← highest weight
-    │   • department         weight=1.5
-    │   • bid_type           weight=1.0
-    │   • product_type       weight=1.0
-    ├─ Count matches
-    └─ keyword_score = normalized (0 to 1)
-    
-    TRACK 3: HYBRID COMBINATION
-    └─ final = (semantic × 0.6) + (keyword × 0.4)
-
-┌──────────────────────────────────────────┐
-│ Aggregate by Bid ID                      │
-│ • Multiple chunks per bid (from overlap) │
-│ • Keep highest scoring chunk per bid     │
-│ • Deduplicated results                   │
+│ LEG 2: SPARSE RETRIEVAL (BM25Okapi)      │
+│ • Tokenize query                         │
+│ • Search metadata-enriched corpus        │
+│ • Fetch top 40 candidate chunks          │
 └──────────────┬─────────────────────────┘
                │
                ▼
 ┌──────────────────────────────────────────┐
-│ Sort by Hybrid Score (highest first)     │
-│ Return top_k unique bids                 │
+│ RECIPROCAL RANK FUSION (RRF) & DEDUP     │
+│ • Combine dense + sparse rank lists      │
+│ • Keep best scoring chunk per unique Bid │
+└──────────────┬─────────────────────────┘
+               │
+               ▼
+┌──────────────────────────────────────────┐
+│ CROSS-ENCODER RERANKING                  │
+│ • BAAI/bge-reranker-base CrossEncoder    │
+│ • Compute Sigmoid(logit) per pair        │
+└──────────────┬─────────────────────────┘
+               │
+               ▼
+┌──────────────────────────────────────────┐
+│ WEIGHTED FINAL SCORE & 70% CUTOFF FILTER │
+│ Final = (rerank * 0.6)                   │
+│       + (semantic * 0.25)                │
+│       + (bm25 * 0.15)                    │
+│ Cutoff: Drop scores < 70% of top match   │
 └──────────────┬─────────────────────────┘
                │
                ▼
@@ -95,209 +84,93 @@ Query: "Laptops"
 top_k: 5 (default)
 
 Stored bids:
-  Bid 1: Item="Dell Laptops", Dept="IT", Type="Product"
-  Bid 2: Item="Office Furniture", Dept="Admin", Type="Product"
-  Bid 3: Item="Laptop Bags", Dept="Stationery", Type="Product"
-  Bid 4: Item="Computer Hardware", Dept="IT", Type="Product"
-  Bid 5: Item="Network Switches", Dept="IT", Type="Product"
+  Bid 1: Item="Dell Laptops 15-inch", Dept="IT Department", Type="Product"
+  Bid 2: Item="Office Furniture Set", Dept="Admin Department", Type="Product"
+  Bid 3: Item="Laptop Protective Carrying Bags", Dept="Stationery", Type="Product"
+  Bid 4: Item="Computer Server Hardware", Dept="IT Department", Type="Product"
+  Bid 5: Item="Enterprise Network Switches", Dept="IT Department", Type="Product"
 ```
 
-### Step 1: Query Embedding
+### Step 1: BGE Query Embedding
 
 ```
-Input:  "Laptops"
-Model:  all-MiniLM-L6-v2 (384-dimensional)
-Output: query_vec = [0.234, -0.456, 0.892, ..., 0.045]
+Input:  "Represent this sentence for searching relevant passages: Laptops"
+Model:  BAAI/bge-base-en-v1.5 (768-dimensional dense vector)
 ```
 
-### Step 2: Fetch Candidates
+### Step 2: Dual Retrieval (Dense + Sparse) & RRF
 
-ChromaDB returns all 5 bids (plus multiple chunks of each):
+Dense retrieval returns Bid 1 (dist=0.08), Bid 3 (dist=0.35), Bid 4 (dist=0.42), Bid 5 (dist=0.68), Bid 2 (dist=0.89).  
+BM25 retrieval matches "laptops" in Bid 1 (score=18.5 → norm=0.925) and Bid 3 (score=8.0 → norm=0.40).
 
-```
-Raw fetch (20 chunks):
-├─ Bid 1 chunk 0: text="Dell Laptops 15-inch Intel...", distance=0.12
-├─ Bid 1 chunk 1: text="Dell Laptops specs warranty...", distance=0.15
-├─ Bid 2 chunk 0: text="Office Furniture", distance=0.89
-├─ Bid 3 chunk 0: text="Laptop Bags leather", distance=0.35
-├─ Bid 4 chunk 0: text="Computer Hardware servers", distance=0.42
-├─ Bid 4 chunk 1: text="Hardware specs networking", distance=0.51
-├─ Bid 5 chunk 0: text="Network Switches enterprise", distance=0.68
-└─ (more chunks...)
-```
+Reciprocal Rank Fusion aggregates the candidate list, deduplicating chunks so only the top chunk per Bid No enters Cross-Encoder reranking.
 
-### Step 3: Calculate Scores for Each Chunk
+### Step 3: Cross-Encoder Reranking & Weighted Combination
 
-#### **Chunk: Bid 1 (Dell Laptops)**
+#### **Bid 1 (Dell Laptops 15-inch)**
 
 ```
-Distance from query: 0.12
-Semantic score = 1 - 0.12 = 0.88
+Dense Score (semantic) = 1.0 - 0.08 = 0.9200
+BM25 Score (keyword)   = 0.9250
+Cross-Encoder Reranker = Sigmoid(4.82) = 0.9920
 
-Keyword Analysis (_keyword_score):
-Query words after stop word removal: {"laptops"}
-
-Field matching:
-┌─ full_item_name: "Dell Laptops"
-│  Words: {"dell", "laptops"}
-│  Matches: {"laptops"} = 1 match out of 1 query word
-│  Contribution: 3.0 × (1/1) = 3.0
-│
-├─ department: "IT"
-│  Words: {"it"}
-│  Matches: {} = 0 matches
-│  Contribution: 0
-│
-├─ bid_type: "Product Bid/RAs"
-│  Matches: {} = 0
-│  Contribution: 0
-│
-└─ product_type: "Product"
-   Matches: {} = 0
-   Contribution: 0
-
-Total keyword score = min(1.0, 3.0 / 6.5) = 0.46
-(max_possible = 3.0 + 1.5 + 1.0 + 1.0 = 6.5)
-
-✓ Hybrid Score = (0.88 × 0.6) + (0.46 × 0.4)
-              = 0.528 + 0.184
-              = 0.712
+Weighted Final Score:
+  = (0.9920 × 0.60) + (0.9200 × 0.25) + (0.9250 × 0.15)
+  = 0.5952 + 0.2300 + 0.1387
+  = 0.9639  ✓ TOP MATCH
 ```
 
-#### **Chunk: Bid 2 (Office Furniture)**
+#### **Bid 3 (Laptop Protective Carrying Bags)**
 
 ```
-Distance from query: 0.89
-Semantic score = 1 - 0.89 = 0.11
+Dense Score (semantic) = 1.0 - 0.35 = 0.6500
+BM25 Score (keyword)   = 0.4000
+Cross-Encoder Reranker = Sigmoid(1.20) = 0.7685
 
-Keyword Analysis:
-Query words: {"laptops"}
-
-Field matching:
-┌─ full_item_name: "Office Furniture"
-│  Words: {"office", "furniture"}
-│  Matches: {} = 0 matches
-│  Contribution: 0
-
-Total keyword score = 0 / 6.5 = 0.00
-
-✗ Hybrid Score = (0.11 × 0.6) + (0.00 × 0.4)
-              = 0.066 + 0.000
-              = 0.066  ← Very low!
+Weighted Final Score:
+  = (0.7685 × 0.60) + (0.6500 × 0.25) + (0.4000 × 0.15)
+  = 0.4611 + 0.1625 + 0.0600
+  = 0.6836  ✓ Retained (Score >= 0.9639 * 0.70 = 0.6747)
 ```
 
-#### **Chunk: Bid 3 (Laptop Bags)**
+#### **Bid 4 (Computer Server Hardware)**
 
 ```
-Distance from query: 0.35
-Semantic score = 1 - 0.35 = 0.65
+Dense Score (semantic) = 1.0 - 0.42 = 0.5800
+BM25 Score (keyword)   = 0.0000
+Cross-Encoder Reranker = Sigmoid(-1.50) = 0.1824
 
-Keyword Analysis:
-Query words: {"laptops"}
-
-Field matching:
-┌─ full_item_name: "Laptop Bags"
-│  Words: {"laptop", "bags"}
-│  Matches: {} = 0 (query has "laptops", field has "laptop" — no exact match)
-│  Contribution: 0
-
-Total keyword score = 0 / 6.5 = 0.00
-
-✓ Hybrid Score = (0.65 × 0.6) + (0.00 × 0.4)
-              = 0.390 + 0.000
-              = 0.390  ← Semantic only
+Weighted Final Score:
+  = (0.1824 × 0.60) + (0.5800 × 0.25) + (0.0000 × 0.15)
+  = 0.1094 + 0.1450 + 0.0000
+  = 0.2544  ⬇ Filtered out by 70% relative threshold (0.2544 < 0.6747)
 ```
 
-#### **Chunk: Bid 4 (Computer Hardware)**
+#### **Bid 2 (Office Furniture Set)**
 
 ```
-Distance from query: 0.42
-Semantic score = 1 - 0.42 = 0.58
+Dense Score (semantic) = 0.1100
+BM25 Score (keyword)   = 0.0000
+Cross-Encoder Reranker = Sigmoid(-4.50) = 0.0109
 
-Keyword Analysis:
-Query words: {"laptops"}
-
-Field matching:
-┌─ full_item_name: "Computer Hardware"
-│  Words: {"computer", "hardware"}
-│  Matches: {} = 0 matches
-│  Contribution: 0
-
-Total keyword score = 0 / 6.5 = 0.00
-
-✗ Hybrid Score = (0.58 × 0.6) + (0.00 × 0.4)
-              = 0.348 + 0.000
-              = 0.348
+Weighted Final Score = 0.0340  ⬇ Filtered out
 ```
 
-#### **Chunk: Bid 5 (Network Switches)**
+### Step 4: Final Output Generation
+
+The system filters out low-confidence matches using the 70% relative threshold rule and returns Bid 1 as the top result with full score breakdown:
 
 ```
-Distance from query: 0.68
-Semantic score = 1 - 0.68 = 0.32
-
-No keyword matches.
-
-✗ Hybrid Score = (0.32 × 0.6) + (0.00 × 0.4) = 0.192
+1. Bid No    : GEM/2026/B/7549944
+   Item      : Dell Laptops 15-inch Intel i7
+   Dept      : IT Department
+   Type      : Product Bid/RAs
+   End Date  : 30-05-2026 16:00:00
+   URL       : https://bidplus.gem.gov.in/...
+   ──────────────────────────────────────
+   Score     : 96.39%  (rerank 99.20% | dense 92.00% | bm25 92.50%)
 ```
 
-### Step 4: Aggregate by Bid ID
-
-For each bid, keep the highest scoring chunk:
-
-```
-Bid 1: Max chunk score = 0.712 ✓ Winner!
-Bid 3: Max chunk score = 0.390
-Bid 4: Max chunk score = 0.348
-Bid 5: Max chunk score = 0.192
-Bid 2: Max chunk score = 0.066
-```
-
-### Step 5: Sort and Return Top-K
-
-```
-Results (top_k=5, sorted by hybrid score):
-
-1. Bid 1 (Dell Laptops)
-   ├─ Score: 0.712 (71.2%)
-   ├─ Semantic: 0.88 (88%)
-   ├─ Keyword: 0.46 (46%)
-   └─ Type: Product | Dept: IT | Value: 50 Lakhs
-
-2. Bid 3 (Laptop Bags)
-   ├─ Score: 0.390 (39.0%)
-   ├─ Semantic: 0.65 (65%)
-   ├─ Keyword: 0.00 (0%)
-   └─ Type: Product | Dept: Stationery | Value: 2 Lakhs
-
-3. Bid 4 (Computer Hardware)
-   ├─ Score: 0.348 (34.8%)
-   ├─ Semantic: 0.58 (58%)
-   ├─ Keyword: 0.00 (0%)
-   └─ Type: Product | Dept: IT | Value: 75 Lakhs
-
-4. Bid 5 (Network Switches)
-   ├─ Score: 0.192 (19.2%)
-   ├─ Semantic: 0.32 (32%)
-   ├─ Keyword: 0.00 (0%)
-   └─ Type: Product | Dept: IT | Value: 30 Lakhs
-
-5. Bid 2 (Office Furniture)
-   ├─ Score: 0.066 (6.6%)
-   ├─ Semantic: 0.11 (11%)
-   ├─ Keyword: 0.00 (0%)
-   └─ Type: Product | Dept: Admin | Value: 10 Lakhs
-```
-
-### Analysis
-
-**Why Bid 1 wins**:
-- ✓ Exact keyword match ("laptops" in item name)
-- ✓ High semantic similarity (0.88)
-- ✓ Keyword score boosted by high field weight (3.0 for item name)
-
-**Why Bid 3 is second**:
-- ✓ Moderate semantic match (0.65, "laptop bags" is related)
 - ✗ No keyword match (query "laptops" ≠ field word "laptop")
 - Purely semantic result
 

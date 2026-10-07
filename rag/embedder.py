@@ -99,12 +99,18 @@ def build_bid_chunks(bid: dict) -> list[str]:
     """
     Produce the chunks that will actually be indexed:
       - chunk[0] = high-signal metadata card (always present)
-      - chunk[1..] = sliding windows over the cleaned PDF text
+      - chunk[1..] = synthesized ATC terms & compliance checklist (if present)
+      - remaining = sliding windows over the cleaned PDF text
     """
     chunks: list[str] = []
     card = _metadata_card(bid)
     if card:
         chunks.append(card)
+
+    atc = bid.get("atc_analysis", "") or ""
+    if atc and len(atc.strip()) > 20:
+        atc_header = f"ATC Compliance Checklist & Specific Terms for {bid.get('bid_no', '')}:\n{atc}"
+        chunks.extend(chunk_text(atc_header))
 
     body = bid.get("full_pdf_text", "") or ""
     chunks.extend(chunk_text(body))

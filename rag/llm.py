@@ -12,6 +12,7 @@
 # =========================================================
 from __future__ import annotations
 import re
+import os
 from config.settings import (
     RAG_LLM_PROVIDER,
     OPENAI_API_KEY, OPENAI_MODEL,
@@ -23,28 +24,26 @@ log = get_logger("llm")
 
 MAX_BIDS_IN_PROMPT = 8
 
-SYSTEM_PROMPT = """You are an assistant for the Indian Government e-Marketplace (GeM) bid database.
+SYSTEM_PROMPT = """You are an expert procurement assistant for the Indian Government e-Marketplace (GeM) bid database.
 
 # Hard rules
-1. Use ONLY the bids listed under RETRIEVED BID CONTEXT. Never invent values.
-2. If a field is empty or missing, write `N/A`.
-3. If RETRIEVED BID CONTEXT is empty, answer exactly:
+1. Use ONLY the information provided in RETRIEVED BID CONTEXT. Never hallucinate or invent rules, dates, or values.
+2. If RETRIEVED BID CONTEXT is empty, answer:
    "No matching bids were found in the indexed data."
-4. Filter the listed bids to only those that *truly* answer the
-   USER QUESTION (e.g. if asked about pumps, do not include
-   tungsten-ball bids even if they are in the context).
-
-# Output format (one bid per block, blank line between blocks)
-Bid No    : <bid_no>
-Item      : <full_item_name>
-Dept      : <department>
-Type      : <bid_type> / <product_type>
-End Date  : <end_date>
-Est. Value: <estimated_value> INR
-URL       : <document_url>
-
-After the list, write ONE short summary sentence describing
-how many bids matched and any common theme. Never add anything else.
+3. When answering questions about specific requirements, exemptions (e.g. MSE or Startup), documents, physical submissions, EMD, or commercial terms:
+   - Provide a direct, concise answer addressing the user's question.
+   - Reference the relevant Bid Number(s).
+   - State the exact document names, percentages, or rules from the retrieved text.
+4. When the user asks a search/listing query (e.g. "What bids are there for X?"):
+   - Output each matching bid in the format:
+     Bid No    : <bid_no>
+     Item      : <full_item_name>
+     Dept      : <department>
+     Type      : <bid_type> / <product_type>
+     End Date  : <end_date>
+     Est. Value: <estimated_value> INR
+     URL       : <document_url>
+   - Conclude with a one-sentence summary.
 """
 
 
@@ -81,6 +80,7 @@ def build_prompt(question: str, chunks: list[dict]) -> str:
 
     for c in capped:
         item = _extract_item(c.get("chunk", ""), c.get("full_item_name", ""))
+        chunk_body = c.get("chunk", "").strip()
         block = (
             f"Bid No    : {c.get('bid_no', 'N/A')}\n"
             f"Item      : {item}\n"
@@ -90,7 +90,8 @@ def build_prompt(question: str, chunks: list[dict]) -> str:
             f"Start Date: {c.get('start_date') or 'N/A'}\n"
             f"End Date  : {c.get('end_date') or 'N/A'}\n"
             f"Est. Value: {c.get('estimated_value') or 'N/A'}\n"
-            f"URL       : {c.get('document_url', 'N/A')}"
+            f"URL       : {c.get('document_url', 'N/A')}\n"
+            f"Retrieved Content / Clauses:\n{chunk_body}"
         )
         parts.append(f"--- BID ---\n{block}")
 
@@ -105,11 +106,39 @@ def call_llm(question: str, chunks: list[dict]) -> str:
     prompt = build_prompt(question, chunks)
     provider = (RAG_LLM_PROVIDER or "").lower().strip()
 
+    if provider == "gemini":
+        return _call_gemini(prompt)
     if provider == "openai":
         return _call_openai(prompt)
     if provider == "ollama":
-        return _call_ollama(prompt)
+        res = _call_ollama(prompt)
+        if res and not res.startswith("Could not parse"):
+            return res
+        # Fallback to Gemini if Ollama fails and Gemini API key is available
+        if os.getenv("GEMINI_API_KEY"):
+            return _call_gemini(prompt)
+
+    if os.getenv("GEMINI_API_KEY"):
+        res = _call_gemini(prompt)
+        if res and not res.startswith("Could not parse"):
+            return res
+
     return _format_retrieval_only(question, chunks)
+
+
+def _call_gemini(prompt: str) -> str:
+    try:
+        from pipeline.atc_analyzer import call_gemini
+        ans = call_gemini(
+            system_prompt=SYSTEM_PROMPT,
+            user_prompt=prompt,
+            max_tokens=2048,
+            temperature=0.0
+        )
+        return ans.strip() if ans else _parse_prompt_as_table(prompt)
+    except Exception as e:
+        log.error(f"Gemini error: {e}")
+        return _parse_prompt_as_table(prompt)
 
 
 def _call_openai(prompt: str) -> str:
@@ -128,6 +157,8 @@ def _call_openai(prompt: str) -> str:
         return resp.choices[0].message.content.strip()
     except Exception as e:
         log.error(f"OpenAI error: {e}")
+        if os.getenv("GEMINI_API_KEY"):
+            return _call_gemini(prompt)
         return _parse_prompt_as_table(prompt)
 
 
@@ -148,12 +179,14 @@ def _call_ollama(prompt: str) -> str:
         resp = requests.post(
             f"{OLLAMA_BASE_URL}/api/generate",
             json=payload,
-            timeout=120,
+            timeout=10,
         )
         resp.raise_for_status()
         return resp.json().get("response", "").strip()
     except Exception as e:
-        log.error(f"Ollama error: {e}")
+        log.warning(f"Ollama unavailable ({e}). Falling back to Gemini...")
+        if os.getenv("GEMINI_API_KEY"):
+            return _call_gemini(prompt)
         return _parse_prompt_as_table(prompt)
 
 

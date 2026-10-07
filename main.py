@@ -14,16 +14,29 @@ CLI Usage Examples:
     python main.py --once                 # Execute a single full scrape run and exit
     python main.py --bid "GEM/2026/B/..." # Search and scrape a specific bid number
     python main.py --reset                # Reset SQLite DB, JSON exports, and ChromaDB vector store
+    python main.py --reset-all            # Complete purge: DB, ChromaDB, downloads/, and logs/
+    python main.py --clear-db             # Delete SQLite DB and JSON export only
+    python main.py --clear-chroma         # Delete ChromaDB vector store only
+    python main.py --clear-downloads      # Delete all downloaded bid PDFs & folders only
+    python main.py --clear-logs           # Delete all log files only
     python main.py --stats                # Display SQLite database & ChromaDB vector store statistics
     python main.py --ask "query text"     # Execute single RAG question query against vector database
     python main.py --ask "q" --filter product_type=Product
     python main.py --chat                 # Launch interactive terminal RAG chat session
     python main.py --reindex              # Re-index all database records into ChromaDB
+    python main.py --analyze-atc <path>   # Run ATC compliance extraction on tender or folder
 """
 
 import sys
 import os
 import shutil
+
+# Ensure UTF-8 output on Windows consoles
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 sys.path.insert(0, os.path.dirname(__file__))
 
 from utils.logger import get_logger
@@ -33,12 +46,58 @@ log = get_logger("main")
 # ---------------------------------------------------------------------------
 # RESET & STATS REPORTING
 # ---------------------------------------------------------------------------
-def run_reset():
+def clear_db():
+    """Delete SQLite database and JSON export."""
+    from config.settings import DB_PATH, JSON_OUT_PATH
+    log.info("Clearing SQLite database and JSON export...")
+    if os.path.exists(DB_PATH):
+        os.remove(DB_PATH)
+        log.info(f"  Removed: {DB_PATH}")
+    if os.path.exists(JSON_OUT_PATH):
+        os.remove(JSON_OUT_PATH)
+        log.info(f"  Removed: {JSON_OUT_PATH}")
+    print("\n✅ SQLite database and JSON export cleared successfully.\n")
+
+
+def clear_chroma():
+    """Delete ChromaDB vector store directory."""
+    from config.settings import CHROMA_DIR
+    log.info("Clearing ChromaDB vector store...")
+    if os.path.exists(CHROMA_DIR):
+        shutil.rmtree(CHROMA_DIR)
+        log.info(f"  Removed: {CHROMA_DIR}")
+    print("\n✅ ChromaDB vector store cleared successfully.\n")
+
+
+def clear_downloads():
+    """Delete downloaded bid PDFs and folders."""
+    from config.settings import DOWNLOAD_DIR
+    log.info("Clearing downloaded files and folders...")
+    if os.path.exists(DOWNLOAD_DIR):
+        shutil.rmtree(DOWNLOAD_DIR)
+        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+        log.info(f"  Cleared: {DOWNLOAD_DIR}")
+    print("\n✅ Downloads directory cleared successfully.\n")
+
+
+def clear_logs():
+    """Delete log files."""
+    from config.settings import LOG_DIR
+    log.info("Clearing logs...")
+    if os.path.exists(LOG_DIR):
+        shutil.rmtree(LOG_DIR)
+        os.makedirs(LOG_DIR, exist_ok=True)
+        log.info(f"  Cleared: {LOG_DIR}")
+    print("\n✅ Logs directory cleared successfully.\n")
+
+
+def run_reset(include_downloads: bool = False, include_logs: bool = False):
     """
-    Delete SQLite database, JSON export, and ChromaDB vector store directory for clean testing.
+    Delete SQLite database, JSON export, and ChromaDB vector store directory.
+    Optionally also purges downloads and logs.
     """
-    from config.settings import DB_PATH, JSON_OUT_PATH, CHROMA_DIR, DOWNLOAD_DIR
-    log.info("Resetting databases and vector store...")
+    from config.settings import DB_PATH, JSON_OUT_PATH, CHROMA_DIR, DOWNLOAD_DIR, LOG_DIR
+    log.info("Resetting databases and storage...")
     if os.path.exists(DB_PATH):
         os.remove(DB_PATH)
         log.info(f"  Removed: {DB_PATH}")
@@ -51,7 +110,19 @@ def run_reset():
     if os.path.exists("output_md"):
         shutil.rmtree("output_md")
         log.info(f"  Removed: output_md")
-    print("\nDatabase reset complete. System ready for fresh scrape testing.\n")
+    if include_downloads and os.path.exists(DOWNLOAD_DIR):
+        shutil.rmtree(DOWNLOAD_DIR)
+        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+        log.info(f"  Purged: {DOWNLOAD_DIR}")
+    if include_logs and os.path.exists(LOG_DIR):
+        shutil.rmtree(LOG_DIR)
+        os.makedirs(LOG_DIR, exist_ok=True)
+        log.info(f"  Purged: {LOG_DIR}")
+
+    if include_downloads or include_logs:
+        print("\n✅ Complete system purge finished (DB, ChromaDB, Downloads, Logs cleared).\n")
+    else:
+        print("\n✅ Database & ChromaDB reset complete. System ready for fresh scrape testing.\n")
 
 
 def print_stats():
@@ -73,6 +144,34 @@ def print_stats():
     print(f"  Vector store chunks: {vs['total_chunks']}")
     print(f"  ChromaDB path      : {vs['chroma_dir']}")
     print("=" * 42 + "\n")
+
+
+def print_usage(unknown_flag: str | None = None):
+    """Print clean command-line usage help table."""
+    if unknown_flag:
+        print(f"\n❌ Unrecognized argument: '{unknown_flag}'")
+    print("\n" + "=" * 66)
+    print("  GeM Bid Scraper & RAG Pipeline — Available Commands")
+    print("=" * 66)
+    print("  SCRAPING:")
+    print("    python main.py                        # Continuous hourly scraping daemon")
+    print("    python main.py --once                 # Single full scrape run and exit")
+    print("    python main.py --bid \"<bid_no>\"       # Scrape a specific single bid number")
+    print("\n  CLEANING & STORAGE MANAGEMENT:")
+    print("    python main.py --clean-db             # Delete SQLite database & JSON export")
+    print("    python main.py --clean-chroma         # Delete ChromaDB vector store only")
+    print("    python main.py --clean-downloads      # Delete all downloaded bid PDFs & folders")
+    print("    python main.py --clean-logs           # Delete all log files")
+    print("    python main.py --reset                # Reset SQLite DB + ChromaDB")
+    print("    python main.py --reset-all            # Complete wipe (DB, ChromaDB, downloads, logs)")
+    print("\n  INSPECTION & RAG:")
+    print("    python main.py --stats                # Show SQLite & ChromaDB statistics")
+    print("    python main.py --reindex              # Re-index all bids from SQLite into ChromaDB")
+    print("    python main.py --analyze-atc <path>   # Extract ATC compliance checklist")
+    print("    python main.py --ask \"<question>\"     # Ask natural language RAG question")
+    print("    python main.py --chat                 # Launch interactive terminal Q&A chat")
+    print("=" * 66 + "\n")
+
 
 
 # ---------------------------------------------------------------------------
@@ -202,6 +301,75 @@ def run_reindex():
     print("\nVector store re-indexing complete. Run 'python main.py --stats' to verify.\n")
 
 
+def run_analyze_atc(target: str):
+    """
+    Run ATC compliance analysis on a file, directory, or bid folder.
+    """
+    from pipeline.atc_analyzer import analyze_bid_atc
+    import json
+    target_path = os.path.abspath(target)
+    
+    md_files = []
+    if os.path.isfile(target_path) and target_path.endswith(".md"):
+        md_files = [target_path]
+    elif os.path.isdir(target_path):
+        for root, _, files in os.walk(target_path):
+            for f in files:
+                if f.endswith(".md") and not f.endswith("_ATC.md") and not f.endswith("_INFER_OUTPUT.md"):
+                    md_files.append(os.path.join(root, f))
+    else:
+        # Check if it corresponds to a folder under downloads
+        safe_bid = target.replace("/", "_")
+        cand = os.path.join("downloads", safe_bid, f"{safe_bid}.md")
+        if os.path.exists(cand):
+            md_files = [cand]
+        else:
+            print(f"Target '{target}' not found as a .md file, directory, or downloads folder.")
+            return
+
+    if not md_files:
+        print(f"No source markdown files found for target '{target}'.")
+        return
+
+    print(f"\nRunning ATC compliance analysis on {len(md_files)} file(s)...\n")
+    for md_file in md_files:
+        base_name = os.path.splitext(os.path.basename(md_file))[0]
+        bid_dir = os.path.dirname(md_file)
+        
+        # Check for companion JSON to pull hyperlinks
+        json_file = os.path.join(bid_dir, f"{base_name}.json")
+        hyperlinks = []
+        if os.path.exists(json_file):
+            try:
+                with open(json_file, "r", encoding="utf-8") as jf:
+                    jdata = json.load(jf)
+                    hyperlinks = jdata.get("hyperlinks", [])
+            except Exception:
+                pass
+
+        try:
+            with open(md_file, "r", encoding="utf-8") as mf:
+                content = mf.read()
+            
+            res = analyze_bid_atc(
+                bid_no=base_name,
+                markdown_text=content,
+                hyperlinks=hyperlinks,
+                save_dir=bid_dir
+            )
+            print(f"  [{res.get('status').upper()}] {base_name} ({res.get('elapsed_seconds', 0)}s)")
+            chk = res.get("checklist", {})
+            std_docs = len(chk.get("standard_documents", []))
+            atc_docs = len(chk.get("clarified_atc_documents", []))
+            exm_docs = len(chk.get("exemption_documents", []))
+            phy_subs = len(chk.get("physical_submissions", []))
+            com_trms = len(chk.get("commercial_terms", []))
+            print(f"       Std Docs: {std_docs} | Clarified ATC: {atc_docs} | Exemptions: {exm_docs} | Physical: {phy_subs} | Terms: {com_trms}")
+        except Exception as e:
+            print(f"  [ERROR] {base_name}: {e}")
+    print("\nATC analysis batch finished.\n")
+
+
 # ---------------------------------------------------------------------------
 # MAIN CLI DISPATCHER
 # ---------------------------------------------------------------------------
@@ -209,9 +377,23 @@ if __name__ == "__main__":
     args = sys.argv[1:]
 
     try:
-        # 1. Reset Databases & Vector Store
-        if "--reset" in args:
+        # Help Flags
+        if "--help" in args or "-h" in args:
+            print_usage()
+
+        # 1. Reset & Clear Operations
+        elif "--reset-all" in args or "--purge" in args or "--clean-all" in args or "--clear-all" in args:
+            run_reset(include_downloads=True, include_logs=True)
+        elif "--reset" in args:
             run_reset()
+        elif "--clear-db" in args or "--clean-db" in args:
+            clear_db()
+        elif "--clear-chroma" in args or "--clean-chroma" in args:
+            clear_chroma()
+        elif "--clear-downloads" in args or "--clean-downloads" in args:
+            clear_downloads()
+        elif "--clear-logs" in args or "--clean-logs" in args:
+            clear_logs()
 
         # 2. Print Database & Vector Store Statistics
         elif "--stats" in args:
@@ -222,7 +404,16 @@ if __name__ == "__main__":
             log.info("Mode: full vector store re-index")
             run_reindex()
 
-        # 4. Scrape Specific Single Bid Number
+        # 4. Analyze ATC Compliance Checklist
+        elif "--analyze-atc" in args:
+            idx = args.index("--analyze-atc")
+            target = args[idx + 1] if idx + 1 < len(args) else ""
+            if target:
+                run_analyze_atc(target)
+            else:
+                print('Usage: python main.py --analyze-atc <file_path_or_folder>')
+
+        # 5. Scrape Specific Single Bid Number
         elif "--bid" in args:
             idx = args.index("--bid")
             bid_no = args[idx + 1] if idx + 1 < len(args) else ""
@@ -237,7 +428,7 @@ if __name__ == "__main__":
             else:
                 print('Usage: python main.py --bid "GEM/2026/B/7768206"')
 
-        # 5. Single RAG Query
+        # 6. Single RAG Query
         elif "--ask" in args:
             idx      = args.index("--ask")
             question = args[idx + 1] if idx + 1 < len(args) else ""
@@ -250,21 +441,25 @@ if __name__ == "__main__":
             else:
                 print('Usage: python main.py --ask "your question"')
 
-        # 6. Interactive Chat Mode
+        # 7. Interactive Chat Mode
         elif "--chat" in args:
             run_chat()
 
-        # 7. Single Scrape Run
+        # 8. Single Scrape Run
         elif "--once" in args:
             log.info("Mode: single scrape run")
             from pipeline.scheduler import start_scheduler
             start_scheduler(run_once=True)
 
-        # 8. Continuous Scheduled Hourly Scrape Loop (Default)
-        else:
+        # 9. Continuous Scheduled Hourly Scrape Loop (Only when explicitly launched)
+        elif len(args) == 0 or "--daemon" in args or "--schedule" in args:
             log.info("Mode: continuous hourly loop")
             from pipeline.scheduler import start_scheduler
             start_scheduler(run_once=False)
+
+        # 10. Fallback on Unknown / Mistyped Arguments
+        else:
+            print_usage(unknown_flag=args[0])
 
     except KeyboardInterrupt:
         print("\n")

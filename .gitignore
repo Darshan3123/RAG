@@ -12,3 +12,22 @@ logs/
 venv/
 env/
 .env
+
+# Downloaded tender files
+downloads/
+
+# Standalone test scripts and scrape data
+STANDLONE TEST SCRIPTS/Scrape_Data/
+
+# Storage (database, vector store, etc.)
+storage/
+*storage/
+
+# Specific files
+commnad and prompat.txt
+
+# ATC Extractor binaries and output artifacts
+ATC EXTRACTOR/llama-cpp-binary/
+ATC EXTRACTOR/OUTPUT/
+ATC EXTRACTOR/OUTPUT_EXTRACTED_CHUNKS_TXT/
+*.zip

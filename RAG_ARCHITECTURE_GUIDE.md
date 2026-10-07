@@ -1,6 +1,6 @@
 # GeM Bid RAG System — Complete Architecture Guide
 
-> **Last Updated:** July 2026  
+> **Last Updated:** August 2026  
 > **Scope:** Full system design, all components, data flows, scoring theory, configuration  
 > **For:** Engineers, architects, advanced users
 
@@ -31,10 +31,10 @@ Your system is a **Retrieval Augmented Generation (RAG)** pipeline for GeM bids 
 │                                                               │
 │  Data Collection                  Data Processing              │
 │  ────────────────                 ──────────────              │
-│  • Web Scraper          →         • PDF Parser               │
-│  • GeM Portal                     • Card HTML Parser         │
-│  • Active Bids Filter             • Date Extraction          │
-│                                   • Field Normalization      │
+│  • Playwright Stealth Scraper →   • Mineru VLM Engine        │
+│  • GeM Portal                     • PyMuPDF Link Extractor   │
+│  • Active Bids Filter             • 24h Card HTML Parser     │
+│                                   • Structured 10-Sec Parser │
 │                                           │                   │
 │                                           ▼                   │
 │                                   ┌─────────────────┐        │
@@ -42,31 +42,32 @@ Your system is a **Retrieval Augmented Generation (RAG)** pipeline for GeM bids 
 │                                   │  (gem_bids.db)  │        │
 │                                   └────────┬────────┘        │
 │                                            │                  │
-│  Vector Embeddings          Vector Search                     │
-│  ──────────────────         ──────────────                    │
-│  • Sentence-Transformers    • Semantic Search (60%)          │
-│  • 384-dim vectors          • Keyword Matching (40%)         │
-│  • Local model              • Hybrid Scoring                 │
-│  • No API keys                                               │
+│  Vector & Hybrid Search       Cross-Encoder Reranking         │
+│  ──────────────────────       ───────────────────────         │
+│  • BAAI/bge-base-en-v1.5      • BAAI/bge-reranker-base        │
+│  • BM25Okapi Sparse Retrieval • Sigmoid logit conversion      │
+│  • Reciprocal Rank Fusion     • Relative 70% Cutoff Filter    │
+│  • Local offline models                                       │
 │          │                           │                        │
 │          └─────→ ChromaDB ←──────────┘                       │
 │                  (vector_store)                              │
 │                                                               │
 │  Query Time (User Interaction)                                │
 │  ──────────────────────────────────                          │
-│  Question → Embed → Search → Rank → LLM/Format → Answer     │
+│  Question → Embed → Hybrid Search → Rerank → LLM → Answer    │
 │                                                               │
 └──────────────────────────────────────────────────────────────┘
 ```
 
 ### Key Characteristics
 
-- **Active Bids Only:** Scraper uses "Ongoing Bids/RA" filter (no expired bids)
-- **Card-Based Dates:** Dates from HTML cards, not PDFs (more accurate)
-- **Hybrid Search:** 60% semantic + 40% keyword matching
-- **Local Embeddings:** No API keys, runs completely offline
-- **Optional LLM:** Works with Ollama, OpenAI, or retrieval-only mode
-- **Automatic Indexing:** New bids auto-indexed into ChromaDB
+- **Active Bids Only:** Scraper uses "Ongoing Bids/RA" filter (skips closed/expired tenders)
+- **Card-Based Dates:** 24h formatted start/end dates from HTML card popovers (`get_dates_from_card()`)
+- **Mineru VLM Conversion:** High-precision PDF layout & table extraction in Zero Save Mode with vLLM acceleration
+- **PyMuPDF Link Extraction:** Extracts clickable URI links and injects `## Hyperlinks` into Markdown
+- **Hybrid Retrieval & Reranking:** BGE Dense + BM25 Sparse + RRF + BAAI Cross-Encoder Reranker
+- **Local Offline Models:** Runs completely offline without external embedding API keys
+- **Multi-Artifact Storage:** Artifact subfolder `downloads/<safe_bid_no>/` (.html, .pdf, .md, .json)
 
 ---
 
@@ -78,7 +79,7 @@ Your system is a **Retrieval Augmented Generation (RAG)** pipeline for GeM bids 
 STEP 1: BROWSER INITIALIZATION (core/browser.py)
 ─────────────────────────────────────────────────
 ├─ Launch Chromium with stealth options
-├─ Disable webdriver detection flags
+├─ Disable webdriver detection flags (stealth JS injection)
 ├─ Set random User-Agent from pool
 ├─ Set random viewport size
 ├─ Apply anti-bot delays
@@ -101,31 +102,22 @@ For each bid card on page:
   │  ├─ full_item_name: "Reactor Coil..." (untruncated from popover)
   │  ├─ quantity:      "12"
   │  ├─ department:    "Ministry of..." (full name from card)
-  │  └─ start_date:    "20-05-2026 14:56" (FROM CARD HTML) ← IMPORTANT
+  │  └─ start_date:    "20-05-2026 14:56:00" (FROM CARD HTML)
   │
   └─ get_dates_from_card():
      ├─ Find "Start Date: DD-MM-YYYY HH:MM AM/PM"
      ├─ Find "End Date: DD-MM-YYYY HH:MM AM/PM"
-     └─ Convert AM/PM to 24-hour format
+     └─ Convert AM/PM to 24-hour format (DD-MM-YYYY HH:MM:SS)
 
-STEP 4: PDF DOWNLOAD & PARSING (core/parser.py & MINERU_MARKDOWN_PASER.py)
-─────────────────────────────────────────────────────────────────────────────
+STEP 4: VLM CONVERSION & LINK EXTRACTION (pipeline/scraper.py)
+─────────────────────────────────────────────────────────────
 For each card:
-  ├─ browser.download_pdf()
-  │  └─ Save to downloads/ folder
-  ├─ extract_pdf_text():
-  │  ├─ PyMuPDF (fitz) for standard PDFs
-  │  ├─ Tesseract OCR for scanned PDFs
-  │  ├─ MINERU_MARKDOWN_PASER.py (for VLM-based layout/table extraction)
-  │  └─ Return full PDF text / structured markdown
-  └─ parse_bid_data():
-     ├─ Regex field extraction:
-     │  ├─ ra_no:              GEM/2026/R/...
-     │  ├─ bid_type:           Product Bid/RAs
-     │  ├─ estimated_value:    1000000
-     │  ├─ bid_packet_type:    "Two Packet Bid"
-     │  └─ corrigendum_url:    (if present)
-     └─ Use PDF dates ONLY as fallback for start_date/end_date
+  ├─ browser.download_pdf() → Save to downloads/<safe_bid_no>/<safe_bid_no>.pdf
+  ├─ PyMuPDF (fitz) extract_hyperlinks() → extract clickable URIs
+  ├─ Mineru VLM async_convert_document() → Zero Save Mode PDF conversion
+  ├─ inject_hyperlinks_into_markdown() → inject ## Hyperlinks section into Markdown
+  ├─ parse_bid_data() → 10-section structured schema extraction with _expand_table_grid()
+  └─ Save artifacts: <safe_bid_no>.html, .pdf, .md, .json
 
 STEP 5: DATABASE UPSERT (storage/database.py)
 ──────────────────────────────────────────────
@@ -138,169 +130,87 @@ INSERT OR REPLACE INTO bids:
   ├─ full_item_name:  Reactor Coil...
   ├─ quantity:        12
   ├─ department:      Ministry of...
-  ├─ start_date:      2026-05-20 14:56:00 (card preferred)
-  ├─ end_date:        2026-05-30 16:00:00 (card preferred)
+  ├─ start_date:      20-05-2026 14:56:00
+  ├─ end_date:        30-05-2026 16:00:00
   ├─ estimated_value: 117000000
   ├─ bid_packet_type: Two Packet Bid
   ├─ corrigendum_url: (if any)
-  ├─ full_pdf_text:   [entire PDF content]
-  ├─ first_seen:      2026-05-30T10:12:42.291979
+  ├─ full_pdf_text:   [entire PDF Markdown content]
+  ├─ first_seen:      ISO timestamp
   ├─ is_new:          1 (if new to DB)
-  └─ last_seen:       2026-05-30T10:12:42.291979 (updated)
+  └─ last_seen:       ISO timestamp
 
-STEP 6: RAG INDEXING (rag/vector_store.py, rag/embedder.py)
-────────────────────────────────────────────────────────────
+STEP 6: HYBRID VECTOR & BM25 INDEXING (rag/vector_store.py, rag/embedder.py)
+───────────────────────────────────────────────────────────────────────────
 For each NEW bid:
-  ├─ build_bid_document():
-  │  └─ Create rich text with:
-  │     ├─ Structured fields (repeated for emphasis)
-  │     └─ Full PDF text body
-  │     
-  ├─ chunk_text(text):
-  │  ├─ Split into 800-char chunks
-  │  ├─ Overlap: 100 chars between chunks
-  │  ├─ Min size: 20 chars (filter noise)
-  │  └─ Returns: List of overlapping text chunks
-  │     Example: 2400-char doc → 4 chunks with overlap
+  ├─ build_bid_chunks(bid):
+  │  ├─ chunk[0] = metadata card text (high signal for structured fields)
+  │  └─ chunk[1..] = sliding windows (800 chars, 100 overlap) over PDF text
   │
   ├─ embed_texts(chunks):
-  │  ├─ Load all-MiniLM-L6-v2 model
-  │  ├─ Convert chunks to 384-dimensional vectors
-  │  ├─ Normalize (L2 norm = 1.0)
-  │  └─ Batch size: 32 for efficiency
+  │  ├─ Load BAAI/bge-base-en-v1.5 model (local offline mode)
+  │  ├─ Convert chunks to dense vectors (normalized)
+  │  └─ Upsert into ChromaDB collection ('gem_bids')
   │
-  └─ upsert_bid() to ChromaDB:
-     ├─ Delete old chunks for this bid (if re-indexing)
-     ├─ Create IDs: "{bid_no}__chunk_{i}"
-     └─ Store in ChromaDB:
-        ├─ Embeddings: 384-dim vectors
-        ├─ Documents: text chunks
-        └─ Metadata:
-           ├─ bid_no:          (for dedup)
-           ├─ document_url:    (for linking)
-           ├─ full_item_name:  (for /search display)
-           ├─ department:      (for keyword scoring)
-           ├─ bid_type:        (for keyword scoring)
-           ├─ product_type:    (for keyword scoring)
-           ├─ end_date:        (for display)
-           └─ relevance_score: (calculated at query)
+  └─ Invalidate BM25 cache → BM25Okapi lazily re-indexes rich metadata corpus
 
-RESULT: SQLite DB + ChromaDB vector store ready for queries
+RESULT: SQLite DB + ChromaDB vector store + BM25 index ready for queries
 ```
 
 ### Phase 2: Query Processing
 
 ```
-STEP 1: USER INPUT
-────────────────
+STEP 1: USER INPUT & EXIT CHECK (rag/query_engine.py)
+──────────────────────────────────────────────────────
 python main.py --ask "IT hardware bids"
         or
 python main.py --chat
 You > "laptop bids from NIC"
 
-STEP 2: EXIT DETECTION (query_engine.py)
-────────────────────────────────────────
-Check if input is exit word:
-  ├─ quit, exit, q, bye, goodbye, stop, close, end, done, ok bye
-  └─ If matched → exit immediately (NO query made)
-  └─ Checked BEFORE any other processing ← FIX
+Check if input is exit word (quit, exit, q, bye, done):
+  └─ Checked BEFORE any query processing → Exit immediately
 
-STEP 3: SMART TOP_K SELECTION (query_engine.py)
-───────────────────────────────────────────────
+STEP 2: SMART TOP_K SELECTION (rag/query_engine.py)
+───────────────────────────────────────────────────
 Analyze question intent:
-  ├─ List intent (show all, list, how many, every):
-  │  └─ top_k = max(5, 15) = 15
-  ├─ Focused lookup (bid number, GEM/, specific):
-  │  └─ top_k = max(1, 5//2) = 2
-  └─ Generic query:
-     └─ top_k = 5 (default)
+  ├─ List intent ("show all", "list", "how many"): top_k = max(default_k, 15)
+  ├─ Focused lookup ("bid number", "GEM/", "specific"): top_k = max(1, default_k // 2)
+  └─ Default: top_k = 5
 
-STEP 4: QUERY EMBEDDING (rag/embedder.py)
-─────────────────────────────────────────
-├─ Load sentence-transformers model
-├─ Encode question → 384-dim vector
-└─ This vector is used for similarity search
+STEP 3: HYBRID SEARCH & CROSS-ENCODER RERANKING (rag/vector_store.py)
+────────────────────────────────────────────────────────────────────
+1. Dense Retrieval:
+   ├─ BGE Query Instruction Prefixing: "Represent this sentence for searching relevant passages: "
+   ├─ BAAI/bge-base-en-v1.5 search → fetch top RAG_FETCH_K (40) chunks
+   └─ Compute semantic_score = 1 - cosine_distance
 
-STEP 5: VECTOR SEARCH (rag/vector_store.py)
-────────────────────────────────────────────
-search(question, top_k=top_k, filters=filters):
-  
-  1. ChromaDB semantic search:
-     ├─ Find top_k*4 raw chunks (over-fetch for dedup)
-     ├─ Calculate cosine distance to query vector
-     ├─ Convert: semantic_score = 1 - distance
-     │   Range: 0 (unrelated) to 1 (perfect match)
-     └─ Example: distance=0.12 → semantic_score=0.88
-  
-  2. Keyword matching (_keyword_score):
-     ├─ Split question into words
-     ├─ Remove stop words: {the,for,a,an,and,or,in,of,is}
-     ├─ If ALL words are stop words → return 0.5 (neutral)
-     ├─ Match remaining words against:
-     │  ├─ full_item_name    (weight 3.0) ← highest
-     │  ├─ department        (weight 1.5)
-     │  ├─ bid_type          (weight 1.0)
-     │  └─ product_type      (weight 1.0)
-     └─ keyword_score = Σ(match_count × field_weight) / total_weights
-        Range: 0 to 1
-  
-  3. Hybrid scoring:
-     ├─ For each chunk:
-     │  └─ hybrid = (semantic × 0.6) + (keyword × 0.4)
-     └─ Deduplicate by bid_no (keep BEST chunk per bid)
-  
-  4. Sort by hybrid score, return top_k unique bids
+2. BM25 Sparse Retrieval:
+   ├─ Tokenize query → search BM25Okapi metadata corpus
+   └─ Compute bm25_score = min(1.0, score / 20.0)
 
-STEP 6: LLM GENERATION (rag/llm.py) — OPTIONAL
-────────────────────────────────────────────
-If RAG_LLM_PROVIDER = "openai" or "ollama":
-  
-  1. Format retrieved bids:
-     ├─ Take up to 8 bids
-     ├─ Create structured context:
-     │  └─ Bid No | Item | Dept | End Date | Value
-     └─ Inject into prompt template
-  
-  2. Send to LLM:
-     ├─ System prompt: "You are a GeM bid assistant"
-     ├─ User message: Question + formatted bids
-     └─ Model: llama3 (Ollama) or gpt-4o-mini (OpenAI)
-  
-  3. Parse LLM response:
-     ├─ Extract answer text
-     ├─ Format with markdown
-     └─ Return to user
+3. Reciprocal Rank Fusion (RRF):
+   ├─ Combine dense + sparse rankings: rrf = Σ 1 / (60 + rank)
+   └─ Deduplicate candidates (keep best chunk per unique Bid No)
+
+4. Cross-Encoder Reranker:
+   ├─ BAAI/bge-reranker-base scores (query, chunk_doc) pairs
+   └─ rerank_score = Sigmoid(logit) (0 to 1)
+
+5. Weighted Score & Cutoff Filter:
+   ├─ final_score = (rerank_score × 0.6) + (semantic_score × 0.25) + (bm25_score × 0.15)
+   └─ Relative Cutoff: Drop results scoring < 70% of the top result score
+
+STEP 4: LLM ANSWER GENERATION (rag/llm.py)
+──────────────────────────────────────────
+If RAG_LLM_PROVIDER = "ollama" or "openai":
+   ├─ Format top candidates into prompt context
+   ├─ Apply zero-hallucination system prompt & N/A field rules
+   └─ Return formatted natural language answer
 
 ELSE (retrieval-only mode):
-  ├─ Return retrieved bids with score breakdown
-  │  Example:
-  │  Bid: GEM/2026/B/7549944
-  │  Item: Reactor Coil for Soft Starter
-  │  Scores:
-  │    Overall: 76%
-  │    • Semantic (60%): 82%
-  │    • Keyword  (40%): 67%
-
-STEP 7: OUTPUT
-──────────────
-Return structured result:
-  ├─ question:    "IT hardware bids"
-  ├─ answer:      "I found 5 IT hardware bids. Here's a summary..."
-  └─ sources:     [
-         {
-           "bid_no":          "GEM/2026/B/7549944",
-           "bid_type":        "Product Bid/RAs",
-           "product_type":    "Product",
-           "full_item_name":  "Reactor Coil...",
-           "department":      "Ministry of...",
-           "end_date":        "30-05-2026 16:00:00",
-           "estimated_value": "117000000",
-           "relevance_score": 0.845,
-           "document_url":    "https://bidplus.gem.gov.in/..."
-         },
-         ...
-       ]
+   └─ Return structured results with score breakdown (Rerank %, Dense %, BM25 %)
 ```
+
 
 ---
 

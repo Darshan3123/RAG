@@ -1,4 +1,9 @@
-# ── Usage of requirements.txt ─────────────────────────────
+# ──────────────Usage of requirements.txt ────────────────
+# sudo apt-get update && wget https://github.com/pdf2htmlEX/pdf2htmlEX/releases/download/v0.18.8.rc1/pdf2htmlEX-0.18.8.rc1-master-20200630-Ubuntu-bionic-x86_64.deb && sudo apt-get install -y ninja-build ghostscript ./pdf2htmlEX-0.18.8.rc1-master-20200630-Ubuntu-bionic-x86_64.deb
+# uv venv -p 3.12 --seed ~/VLLM_Env
+# source ~/VLLM_Env/bin/activate
+
+# THINGS TO DO INSIDE ENV
 # pip install uv "packaging>=24.2" "setuptools>=77.0.0"
 # uv pip install -r requirements.txt --torch-backend=cu130  --index-strategy unsafe-best-match --no-build-isolation
 # ── PyTorch CUDA Index ────────────────────────────────────
@@ -23,11 +28,16 @@ flash-attn @ https://github.com/mjun0812/flash-attention-prebuild-wheels/release
 
 # ── Scraper & Document Processing ────────────────────────
 playwright>=1.44.0
+mistralai>=1.0.0
 Mineru_Document_To_Markdown[all] @ git+https://github.com/ThriveX2025/Mineru_Document_To_Markdown.git
 git+https://github.com/ThriveX2025/Mineru_Utils.git
+pymupdf>=1.24.0
 
 # ── RAG — Embeddings (local, no API key needed) ───────────
 sentence-transformers>=3.0.0
+pymupdf
+pymupdf-fonts
+transformers
 
 # ── RAG — Sparse retrieval (BM25) ─────────────────────────
 rank-bm25>=0.2.2
