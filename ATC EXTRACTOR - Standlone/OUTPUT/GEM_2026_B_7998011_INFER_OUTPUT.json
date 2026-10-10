@@ -1,0 +1,46 @@
+{
+  "1. Standard Documents Required": [
+    "Experience Criteria",
+    "Bidder Turnover",
+    "OEM Authorization Certificate"
+  ],
+  "2. Clarified ATC Documents & Mandatory Uploads": [
+    "Certificate (Requested in ATC): Temperature test report and IP rating report",
+    "Additional Doc 1 (Requested in ATC): Compliance statement duly filled, signed and stamped",
+    "Additional Doc 2 (Requested in ATC): Scope of work with compliance of all clauses with sign and stamp on each page",
+    "Other Upload Required in ATC: PAN copy",
+    "Other Upload Required in ATC: GST registration certificate",
+    "Other Upload Required in ATC: Balance sheet of last 3 years with ITR Copy",
+    "Other Upload Required in ATC: Profit and loss statement of last 3 years",
+    "Other Upload Required in ATC: EMD in Original (Copy to be attached with Bid)",
+    "Other Upload Required in ATC: Proof of having successfully supplied and installed at least one (1) same/similar UVSS unit to any Central or State Government organization /PSU/Public Listed Companies (Work Completion Certificate/Performance Certificate/CRAC/SDAC along with purchase order)",
+    "Other Upload Required in ATC: Drawing & design of UVSS for technical acceptance",
+    "Other Upload Required in ATC: Quality plan of the item",
+    "Other Upload Required in ATC: Fall clause undertaking"
+  ],
+  "3. Exemption Documents Required": [
+    "Proof for Exemption (MSEs): Udyam Registration Certificate",
+    "Proof for Exemption (Start-ups): DPIIT Startup Recognition Certificate"
+  ],
+  "4. Physical Submissions (Offline)": [
+    {
+      "Item": "Earnest Money Deposit (EMD)",
+      "Deadline": "Before bid opening",
+      "In Favor Of": "Munitions India Limited High Explosives Factory",
+      "Payable At": "Khadki, Pune",
+      "Delivery Address": "High Explosives Factory, Khadki, Pune, Maharashtra (India)-411003"
+    }
+  ],
+  "5. Key Commercial Terms & Conditions to Follow": [
+    "Site Survey: Mandatory site survey at HEF is required before bid submission.",
+    "Common IP Address: Bids matching IP addresses with other bidders or the buyer will be outrightly rejected.",
+    "Technical Specification: HEF specification No. 6147/UVSS/SE/HEF dt. 24.08.2026 supersedes GeM category specifications.",
+    "Warranty: 3 years comprehensive onsite warranty (Spares + Service) is mandatory.",
+    "Payment Terms: 100% payment within 30 days after successful supply, installation, testing, and commissioning.",
+    "Liquidated Damages: 0.5% per week of delay, capped at 10% of the basic cost.",
+    "Performance Security Deposit: 5% of the total contract value.",
+    "Make in India: Minimum local content requirement is 50%.",
+    "Cartel Formation: Quoting pool rates or collusion will lead to rejection and penal action.",
+    "Inspection: Final inspection will be conducted at the buyer's premises (HEF Khadki, Pune)."
+  ]
+}

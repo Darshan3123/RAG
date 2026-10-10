@@ -1,0 +1,178 @@
+{
+  "pages": [
+    {
+      "index": 0,
+      "markdown": "# बिड दस्तावेज / Bid Document\n\n[tbl-0.html](tbl-0.html)",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-0.html",
+          "content": "<table><tr><th colspan=\"2\">बिड विवरण / Bid Details</th></tr><tr><td>बिड बंद होने की तारीख / समय / Bid End Date / Time</td><td>01-01-2026 13:00:00</td></tr><tr><td>बिड खुलने की तारीख / समय / Bid Opening Date / Time</td><td>01-01-2026 13:30:00</td></tr><tr><td>बिड पेशक्ष वैधता (बंद होने की तारीख से) / Bid Offer Validity (From End Date)</td><td>180 (Days)</td></tr><tr><td>मंत्रालय / राज्य का नाम / Ministry / State Name</td><td>Haryana</td></tr><tr><td>विभाग का नाम / Department Name</td><td>Electronics And Information Technology Department Haryana</td></tr><tr><td>संगठन का नाम / Organisation Name</td><td>Haryana State Electronics Development Corporation Ltd. (hartron)</td></tr><tr><td>कार्यालय का नाम / Office Name</td><td>Chandigarh</td></tr><tr><td>कुल मात्रा / Total Quantity</td><td>915</td></tr><tr><td>वस्तु श्रेणी / Item Category</td><td>Multifunction Machine MFM (V2) (Q2)</td></tr><tr><td>बिडर का न्यूनतम औसत वार्षिक टर्नओवर (3 वर्षों का) / Minimum Average Annual Turnover of the bidder (For 3 Years)</td><td>91 Lakh (s)</td></tr><tr><td>मूल उपकरण निर्माता का औसत टर्नओवर (गत 3 वर्षों का) / OEM Average Turnover (Last 3 Years)</td><td>732 Lakh (s)</td></tr><tr><td>उन्हीं / समान सेवा के लिए अपेक्षित विगत अनुभव के वर्ष / Years of Past Experience Required for same / similar service</td><td>3 Year (s)</td></tr><tr><td>एमएसएमई के लिए अनुभव के वर्ष और टर्नओवर से छूट प्रदान की गई है / MSE Exemption for Years of Experience and Turnover</td><td>No</td></tr><tr><td>स्टार्टअप के लिए अनुभव के वर्ष और टर्नओवर से छूट प्रदान की गई है / Startup Exemption for Years of Experience and Turnover</td><td>No</td></tr><tr><td>विक्रेता से मांगे गए दस्तावेज / Document required from seller</td><td>Experience Criteria, Past Performance, Bidder Turnover, Certificate (Requested in ATC), OEM Authorization Certificate, OEM Annual Turnover, Additional Doc 1 (Requested in ATC), Compliance of BoQ specification and supporting document<br/>*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "1 / 8\n\nGeM\n\nGovernment\n\ne Marketplace\n\nAzadi Ka\n\nAmrit Mahotsav\n\nबिड संख्या / Bid Number: GEM/2025/B/6955275",
+      "footer": "दिनांक / Dated: 02-12-2025",
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 1,
+      "markdown": "[tbl-1.html](tbl-1.html)\n\nईएमडी विवरण/EMD Detail\n\n[tbl-2.html](tbl-2.html)\n\nईपीबीजी विवरण /ePBG Detail",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-1.html",
+          "content": "<table><tr><th colspan=\"2\">बिड विवरण/Bid Details</th></tr><tr><td>क्या आप निविदाकारों द्वारा अपलोड किए गए दस्तावेजों को निविदा में भाग लेने वाले सभी निविदाकारों को दिखाना चाहते हैं? संदर्भ मेनू है/Do you want to show documents uploaded by bidders to all bidders participated in bid?</td><td>Yes (Documents submitted as part of a clarification or representation during the tender/bid process will also be displayed to other participated bidders after log in)</td></tr><tr><td>बिड लगाने की समय सीमा स्वत: नहीं बढ़ने के लिए आवश्यक बिड की संख्या। / Minimum number of bids required to disable automatic bid extension</td><td>3</td></tr><tr><td>दिनों की संख्या, जिनके लिए बिड लगाने की समय-सीमा बढ़ाई जाएगी। / Number of days for which Bid would be auto-extended</td><td>3</td></tr><tr><td>ऑटो एक्सटेंशन अधिकतम कितनी बार किया जाना है। / Number of Auto Extension count</td><td>1</td></tr><tr><td>विगत प्रदर्शन /Past Performance</td><td>80 %</td></tr><tr><td>बिड से रिवर्स नीलामी सक्रिय किया/Bid to RA enabled</td><td>Yes</td></tr><tr><td>रिवर्स नीलामी योग्यता नियम/RA Qualification Rule</td><td>50% Lowest Priced Technically Qualified Bidders</td></tr><tr><td>बिड का प्रकार/Type of Bid</td><td>Two Packet Bid</td></tr><tr><td>तकनीकी मूल्यांकन के दौरान तकनीकी स्पष्टीकरण हेतु अनुमत समय /Time allowed for Technical Clarifications during technical evaluation</td><td>2 Days</td></tr><tr><td>निरीक्षण आवश्यक (सूचीबद्ध निरीक्षण प्राधिकरण /जेम के साथ पूर्व पंजीकृत एजेंसियों द्वारा)/Inspection Required (By Empanelled Inspection Authority / Agencies pre-registered with GeM)</td><td>No</td></tr><tr><td>Payment Timelines</td><td>Payments shall be made to the Seller within 45 days of issue of consignee receipt-cum-acceptance certificate (CRAC) and on-line submission of bills (This is in supersession of 10 days time as provided in clause 12 of GeM GTC)</td></tr><tr><td>मूल्यांकन पद्धति/Evaluation Method</td><td>Total value wise evaluation</td></tr><tr><td>मध्यस्थता खंड/Arbitration Clause</td><td>No</td></tr><tr><td>सुलह खंड/Mediation Clause</td><td>No</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        },
+        {
+          "id": "tbl-2.html",
+          "content": "<table><tr><td>एडवाईजरी बैंक/Advisory Bank</td><td>HDFC Bank</td></tr><tr><td>ईएमडी राशि/EMD Amount</td><td>200000</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "2/8",
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 2,
+      "markdown": "[tbl-3.html](tbl-3.html)\n\n(a). जेम की शर्तों के अनुसार ईएमडी छूट के इच्छुक बिडर को संबंधित केटेगरी के लिए बिड के साथ वैध समर्थित दस्तावेज प्रस्तुत करने है। एमएसई केटेगरी के अंतर्गत केवल वस्तुओं के लिए विनिर्माता तथा सेवाओं के लिए सेवा प्रदाता ईएमडी से छूट के पात्र हैं। व्यापारियों को इस नीति के दायरे से बाहर रखा गया है।/EMD EXEMPTION: The bidder seeking EMD exemption, must submit the valid supporting document for the relevant category as per GeM GTC with the bid. Under MSE category, only manufacturers for goods and Service Providers for Services are eligible for exemption from EMD. Traders are excluded from the purview of this Policy.\n\n(b). ईएमडी और संपादन जमानत राशि, जहां यह लागू होती है, लाभार्थी के पक्ष में होनी चाहिए। / EMD &amp; Performance security should be in favour of Beneficiary, wherever it is applicable.\n\n**लाभार्थी /Beneficiary :**\n\nCo Procurement\nHaryana State Electronics Development Corporation Ltd. (HARTRON), Panchkula\n(Nirmal Parkash)\n\nबोली विभाजन लागू नहीं किया गया / Bid splitting not applied.\n\n**एमआईआई खरीद वरीयता /MII Purchase Preference**\n\n[tbl-4.html](tbl-4.html)\n\n**एमएसई खरीद वरीयता /MSE Purchase Preference**\n\n[tbl-5.html](tbl-5.html)\n\n1. The minimum average annual financial turnover of the bidder during the last three years, ending on 31st March of the previous financial year, should be as indicated above in the bid document. Documentary evidence in the form of certified Audited Balance Sheets of relevant periods or a certificate from the Chartered Accountant / Cost Accountant indicating the turnover details for the relevant period shall be uploaded with the bid. In case the date of constitution / incorporation of the bidder is less than 3-year-old, the average turnover in respect of the completed financial years after the date of constitution shall be taken into account for this criteria.\n\n2. Experience Criteria: In respect of the filter applied for experience criteria, the Bidder or its OEM of the product offered in the bid {themselves or through reseller(s)} should have regularly, manufactured and supplied same or similar Category Products to any Central / State Govt Organization / PSU for number of Financial years as indicated above in the bid document before the bid opening date. Copies of relevant contracts and delivery acceptance certificates like CRAC to be submitted along with bid in support of having supplied some quantity",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-3.html",
+          "content": "<table><tr><td>एडवाइजरी बैंक/Advisory Bank</td><td>HDFC Bank</td></tr><tr><td>ईपीबीजी प्रतिशत (%)/ePBG Percentage(%)</td><td>3.00</td></tr><tr><td>ईपीबीजी की आवश्यक अवधि (माह) /Duration of ePBG required (Months).</td><td>13</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        },
+        {
+          "id": "tbl-4.html",
+          "content": "<table><tr><td>एमआईआई खरीद वरीयता /MII Purchase Preference</td><td>No</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        },
+        {
+          "id": "tbl-5.html",
+          "content": "<table><tr><td>एमएसई खरीद वरीयता /MSE Purchase Preference</td><td>Yes</td></tr><tr><td>सूक्ष्म और लघु उद्यम मूल उपकरण निर्माताओं को खरीद में प्राथमिकता, यदि उनका मूल्य L1+X% तक की सीमा में हो / Purchase Preference to MSE OEMs available upto price within L1+X%</td><td>15</td></tr><tr><td>सूक्ष्म और लघु उद्यम को खरीद में प्राथमिकता के लिए बिड की मात्रा का अधिकतम प्रतिशत / Maximum Percentage of Bid quantity for MSE purchase preference</td><td>50</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "3 / 8",
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 3,
+      "markdown": "during each of the Financial year. In case of bunch bids, the category of primary product having highest value should meet this criterion.\n\n3. OEM Turn Over Criteria: The minimum average annual financial turnover of the OEM of the offered product during the last three years, ending on 31st March of the previous financial year, should be as indicated in the bid document. Documentary evidence in the form of certified Audited Balance Sheets of relevant periods or a certificate from the Chartered Accountant / Cost Accountant indicating the turnover details for the relevant period shall be uploaded with the bid. In case the date of constitution / incorporation of the OEM is less than 3 year old, the average turnover in respect of the completed financial years after the date of constitution shall be taken into account for this criteria.\n\n4. Purchase preference to Micro and Small Enterprises (MSEs) from the State of Bid Inviting Authority: Purchase preference will be given to MSEs as Micro and Small Enterprises from the State of Bid inviting Authority. If the bidder wants to avail the Purchase preference, the bidder must be the manufacturer of the offered product in case of bid for supply of goods. Traders are excluded from the purview of Public Procurement Policy for Micro and Small Enterprises. In respect of bid for Services, the bidder must be the Service provider of the offered Service. Relevant documentary evidence in this regard shall be uploaded along with the bid in respect of the offered product or service. If L-1 is not an MSE and MSE Seller (s) has/have quoted price within L-1+ 15% of margin of purchase preference /price band defined in relevant policy, such Seller shall be given opportunity to match L-1 price and contract will be awarded for percentage of 50% of total quantity as defined/decided in relevant policy.\n\n5. Estimated Bid Value indicated above is being declared solely for the purpose of guidance on EMD amount and for determining the Eligibility Criteria related to Turn Over, Past Performance and Project / Past Experience etc. This has no relevance or bearing on the price to be quoted by the bidders and is also not going to have any impact on bid participation. Also this is not going to be used as a criteria in determining reasonableness of quoted prices which would be determined by the buyer based on its own assessment of reasonableness and based on competitive prices received in Bid / RA process.\n\n6. Past Performance: The Bidder or its OEM {themselves or through re-seller(s)} should have supplied same or similar Category Products for 80% of bid quantity, in at least one of the last three Financial years before the bid opening date to any Central / State Govt Organization / PSU. Copies of relevant contracts (proving supply of cumulative order quantity in any one financial year) to be submitted along with bid in support of quantity supplied in the relevant Financial year. In case of bunch bids, the category related to primary product having highest bid value should meet this criterion.\n\n7. Reverse Auction would be conducted amongst first 50% of the technically qualified bidders arranged in the order of prices from lowest to highest. Number of sellers eligible for participating in RA would be rounded off to next higher integer value if number of technically qualified bidders is odd (e.g. if 7 bids are technically qualified, then RA will be conducted amongst L-1 to L-4). In case number of technically qualified bidders are 2 or 3, RA will be between all without any elimination. If Buyer has chosen to split the bid amongst N sellers, then minimum N sellers would be taken to RA round. In case Primary products of only one OEM are left in contention for participation in RA based on lowest 50% bidders qualifying for RA, the number of sellers qualifying for RA would be increased to get at least products of one more OEM (directly participated or through its reseller) if available. Further, if bid(s) of any seller(s) eligible for MSE preference is / are coming within price band of 15% of Non MSE L-1 or if bid of any seller(s) eligible for Make in India preference is / are coming within price band of 20% of non MII L-1, then such MSE / Make in India seller shall also be allowed to participate in the RA process.\n\n## Multifunction Machine MFM (V2) (915 pieces)\n\nतकनीकी विशिष्टियाँ / Technical Specifications\n\n* जेम केटेगरी विशिष्टि के अनुसार / As per GeM Category Specification\n\n[tbl-6.html](tbl-6.html)",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-6.html",
+          "content": "<table><tr><th>विवरण/Specification</th><th>विशिष्टि का नाम / Specification Name</th><th>बिड के लिए आवश्यक अनुमत मूल्य / Bid Requirement (Allowed Values)</th></tr><tr><td rowspan=\"3\">Generic</td><td>Description of Stores</td><td>Multifunction Machine Printer with Minimum 1 Year On Site Warranty, including Cartridge and Power Cord/Adapter</td></tr><tr><td>Print Technology</td><td>Laser</td></tr><tr><td>Type of Printing</td><td>Monochrome (Black), Colour Or higher</td></tr><tr><td>Printing</td><td>Print Paper Size</td><td>A4 and Legal</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": null,
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 4,
+      "markdown": "[tbl-7.html](tbl-7.html)\n\nAdditional Specification Parameters - Multifunction Machine MFM (V2) ( 915 pieces )\n\n[tbl-8.html](tbl-8.html)\n\n* Bidders offering must also comply with the additional specification parameters mentioned above.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n[tbl-9.html](tbl-9.html)",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-7.html",
+          "content": "<table><tr><th>विवरण/Specification</th><th>विशिष्ट का नाम /Specification Name</th><th>बिड के लिए आवश्यक अनुमत मूल्य /Bid Requirement (Allowed Values)</th></tr><tr><td rowspan=\"5\"></td><td>Minimum Print Speed per Minute as per ISO/IEC 24734 in A4 Size-Monochrome (Black) (in PPM)</td><td>11 to 15, 16 to 20, 21 to 25, 26 to 30, 31 to 35, 36 to 40, 41 to 45, 46 to 50, 51 to 55, 56 to 60, 61 to 65, 66 to 70, 71 to 80, 81 to 90, 91 to 100, 101 to 120, 121 to 140, 141 to 160, 161 to 180, 6 to 11 Or higher</td></tr><tr><td>Minimum Print Speed per Minute as per ISO/IEC 24734 in A4 Size-Colour (in PPM)</td><td>Not Applicable, 1 to 5, 6 to 10, 11 to 15, 16 to 20, 21 to 25, 26 to 30, 31 to 35, 36 to 40, 41 to 45, 46 to 50, 51 to 55, 56 to 60, 61 to 65, 66 to 70, 71 to 80, 81 to 90, 91 to 100, 101 to 120, 121 to 140, 141 to 160, 161 to 180 Or higher</td></tr><tr><td>Minimum Speed per Minute as per ISO/IEC 24734 in A3 Size-Mono (in PPM)</td><td>Not Applicable Or higher</td></tr><tr><td>Minimum Speed per Minute as per ISO/IEC 24734 in A3 Size-Color (in PPM)</td><td>Not Applicable Or higher</td></tr><tr><td>Auto Duplexing Printing/Coping (2-sided Feature)</td><td>No, Yes Or higher</td></tr><tr><td rowspan=\"2\">PAPER HANDLING</td><td>Original Document Feeder Type (For Scanning and Copying)</td><td>Platen, Automatic Document Feeders (ADF), Reverse/Duplex Automatic Document Feeders (RADF/DADF), Single-Pass Document Feeders (SPDF) Or higher</td></tr><tr><td>Number of Main Paper Tray</td><td>1, 2, 3, 4</td></tr><tr><td>Connectivity</td><td>Connectivity</td><td>USB Port, Ethernet Port, Wi-Fi</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        },
+        {
+          "id": "tbl-8.html",
+          "content": "<table><tr><th>Specification Parameter Name</th><th>Bid Requirement (Allowed Values)</th></tr><tr><td>Additional specifications parameters</td><td>The Additional specifications parameters mentioned in the ATC document mandatory to comply by Bidder and its OEM. Otherwise the bidder is liable for rejection without any notice. The Bidder is mandatory to submit the technical compliance of technical specifications from OEM with acceptance of each parameter.</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        },
+        {
+          "id": "tbl-9.html",
+          "content": "<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>Surender</td><td>134109, Hartron Bhawan Bays No. 73-76, Sector - 2 Panchkula</td><td>915</td><td>56</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "5/8",
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 5,
+      "markdown": "# Special terms and conditions-Version:4 effective from 31-01-2025 for category Multifunction Machine MFM (V2)\n\n1.\n\n[tbl-10.html](tbl-10.html)\n\n# कैला द्वारा जोड़ी गई बिड की विशेष शर्तें /Buyer Added Bid Specific Terms and Conditions\n\n## 1. Generic\n\nOPTION CLAUSE: The Purchaser reserves the right to increase or decrease the quantity to be ordered up to 25 percent of bid quantity at the time of placement of contract. The purchaser also reserves the right to increase the ordered quantity up to 25% of the contracted quantity during the currency of the contract at the contracted rates. The delivery period of quantity shall commence from the last date of original delivery order and in cases where option clause is exercised during the extended delivery period the additional time shall commence from the last date of extended delivery period. The additional delivery time shall be (Increased quantity ÷ Original quantity) × Original delivery period (in days), subject to minimum of 30 days. If the original delivery period is less than 30 days, the additional time equals the original delivery period. The Purchaser may extend this calculated delivery duration up to the original",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-10.html",
+          "content": "<table><tr><th colspan=\"3\">For Buyers</th></tr><tr><td>1</td><td>Product Verification</td><td>The buyer/consignee shall verify the complete product details, including configuration, through the OEM website. The buyer/consignee should be able to perform these verifications without needing to create an account on the OEM website.</td></tr><tr><td>2</td><td>Warranty</td><td>\n1. The buyer may ensure that as soon as supplies are received, a request for a warranty certificate is made, along with logging into the OEM website/call centre to verify the certificate.<br/>\n2. The product in GeM marketplace (Direct Purchase &amp; L1 purchase) comes with a minimum standard on site warranty of one year. In case the seller has standard warranty more than one year, the same may be mentioned in the catalogue (including in the model name) and in such case higher warranty offered shall prevail/supersede the minimum one year warranty.<br/>\n3. Buyer shall verify the actual number of prints completed by the Multifunction Machine Printer at the time of delivery (to ensure that the product has not been in use prior to delivery to the buyer) and may be verified using the Multifunction printer's built-in print counter or an equivalent tracking system as available with OEMs.<br/>\n4. Buyer may please note that warranty does not cover any consumables i.e. Cartridges/Toner/Ink/Developer and such consumables.\n</td></tr><tr><th colspan=\"3\">For Sellers</th></tr><tr><td>3</td><td>OEM Website Link/Part No for product verification</td><td>The OEM shall provide the OEM website link to the buyer at the time of delivery. The offered model details/configuration should be available on the OEM's website. A device serial number must also be provided at the time of supply, which must also be mentioned on the product supplied. The buyer/consignee must be able to verify the complete product details, including configuration, through the provided OEM website link.</td></tr><tr><td>4</td><td>Warranty</td><td>\n1. The seller shall furnish a valid warranty Certificate/Tag in physical or digital format from the OEM to the purchaser, guaranteeing the product's coverage under the specified warranty terms. The warranty certificate should be verifiable through the OEM website/customer care centre.<br/>\n2. The warranty period will be valid for the specified number of years or until the printer reaches the OEM-defined Minimum Number of Prints within the Warranty Period, whichever is earlier, i.e. once the printer meets either the Minimum Number of Prints within the Warranty Period or the time duration specified, the warranty coverage will end.<br/>\n3. The actual number of prints completed by the printer during the warranty period may be verified using the printer's built-in print counter or an equivalent tracking system.\n</td></tr><tr><td>5</td><td>Compliance of extended producer's responsibility</td><td>With effect from 1st April 2023, as per the E-waste rules 2022, EPR registration is mandatory for manufacturing entities. Therefore, all OEMs shall hold valid EPR registration, and the registration number should be reflected in the catalogue parameter. OEMs shall ensure compliance with all responsibilities as per EPR registration applicable from time to time.</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "6/8",
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    }
+  ],
+  "model": "mistral-ocr-3-0",
+  "usage_info": {
+    "pages_processed": 6,
+    "doc_size_bytes": 94881
+  },
+  "document_annotation": null
+}

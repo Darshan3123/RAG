@@ -1,0 +1,367 @@
+{
+    "_id": "GEM_2026_B_8103442",
+    "bid": {
+        "bid_no": "GEM/2026/B/8103442",
+        "ra_no": "",
+        "bid_type": "Limited Tender",
+        "product_type": "Limited Tender",
+        "base_type": "LIMITED TENDER",
+        "process_kind": "CATALOGUE"
+    },
+    "card": {
+        "items": [
+            {
+                "name": "Repair",
+                "quantity": 0
+            },
+            {
+                "name": "Maintenance",
+                "quantity": 0
+            },
+            {
+                "name": "and Installation of Plant/ Systems/Equipments (Version 2) - Construction of Parking Shed with CC flooring as per ATC and Spl Terms & Conditions in Rourkela Steel Township; Construction of Parking Shed with CC flooring as per ATC ..",
+                "quantity": 0
+            }
+        ],
+        "departments": [
+            {
+                "ministry_state_name": "Ministry Of Steel",
+                "department_name": "Steel Authority Of India Limited",
+                "organisation_name": "Rourkela Steel Plant",
+                "office_name": "Contract Cell Works Office"
+            }
+        ],
+        "start_datetime": "30-09-2026 16:00:00",
+        "end_datetime": "07-10-2026 16:00:00",
+        "bid_pdf_url": "https://bidplus.gem.gov.in/showbidDocument/9969390",
+        "ra_pdf_url": ""
+    },
+    "pdf": {
+        "timing": {
+            "bid_end_datetime": "07-10-2026 16:00:00",
+            "bid_opening_datetime": "08-10-2026 16:00:00",
+            "bid_offer_validity_days": 120
+        },
+        "departments": {
+            "ministry_state_name": "Ministry Of Steel",
+            "department_name": "Steel Authority Of India Limited",
+            "organisation_name": "Rourkela Steel Plant",
+            "office_name": "Contract Cell Works Office"
+        },
+        "items": {
+            "total_quantity_extracted": null,
+            "quantity_match_flag": "No",
+            "item 1": {
+                "item_category": "Repair",
+                "quantity": null
+            },
+            "item 2": {
+                "item_category": "Maintenance",
+                "quantity": null
+            },
+            "item 3": {
+                "item_category": "and Installation of Plant/ Systems/Equipments (Version 2) - Construction of Parking Shed with CC flooring as per ATC and Spl Terms & Conditions in Rourkela Steel Township; Construction of Parking Shed with CC flooring as per ATC ..",
+                "quantity": null
+            }
+        },
+        "evaluation": {
+            "evaluation_method": "Total value wise evaluation",
+            "schedules": {}
+        },
+        "documents": {
+            "required_from_seller": [
+                "Certificate (Requested in ATC)",
+                "Additional Doc 1 (Requested in ATC)*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer"
+            ],
+            "show_uploaded_docs_to_all_bidders": "Yes",
+            "attachments": []
+        },
+        "consignees": [
+            {
+                "consignee_reporting_officer": "PRADIPTA KUMAR MANDHATA",
+                "consignee_address": "769011,Contract Cell (Works) Office of GM I/c, CC(W), Near administrative Building , SAIL, Rourkela Steel Plant , Rourkela-769011",
+                "quantity": "Project / Lumpsum Based",
+                "delivery_days": ""
+            }
+        ],
+        "relaxations": {
+            "mse_relaxation_experience_turnover": "No",
+            "startup_relaxation_experience_turnover": "No"
+        },
+        "auto_extension": {
+            "min_bids_to_disable_extension": 3,
+            "auto_extend_days": 3,
+            "auto_extension_count": 1
+        },
+        "ra": {
+            "bid_to_ra_enabled": "Yes",
+            "ra_qualification_rule": "H1-Highest Priced Bid Elimination"
+        },
+        "bid_type": {
+            "type_of_bid": "Two Packet Bid",
+            "technical_clarification_window_days": 2
+        },
+        "inspection": {
+            "inspection_required": "No",
+            "inspection_agency_type": null
+        },
+        "clauses": {
+            "arbitration_clause": "No",
+            "mediation_clause": "No"
+        },
+        "mii": {
+            "mii_purchase_preference": null,
+            "mii_price_band_percent": null,
+            "mii_max_quantity_percent": null,
+            "allow_only_class_1_2_local_suppliers": null
+        },
+        "mse": {
+            "mse_purchase_preference": "Yes",
+            "mse_price_band_percent": 15,
+            "mse_max_quantity_percent": null
+        },
+        "financials": {
+            "estimated_value": 2116258.89,
+            "emd": {
+                "required": false,
+                "advisory_bank": "",
+                "amount_total": null,
+                "schedule_breakup": []
+            },
+            "epbg": {
+                "required": false,
+                "advisory_bank": "",
+                "percent": null,
+                "duration_months": null
+            },
+            "emd_exemption_text": "DOCUMENTS AS A"
+        },
+        "terms": {
+            "special_terms_version": "",
+            "special_terms_text": "",
+            "buyer_atc": {
+                "generic": "Buyer Added Bid Specific Terms and Conditions 1. Buyer Added Bid Specific ATC Buyer Added text based ATC clauses INVITATION TO TENDER SUB: Const of Parking shed with CC flooring in front of Qtr No B/33 Sec-3. INSTRUCTIONS TO THE BIDDERS I. BIDS NOT CONFORMING TO THE SPECIFICATION AND/OR TERMS &amp; CONDITIONS OF THIS INVITATION TO TENDER ARE LIABLE FOR REJECTION. II. FIRMS TO CLEARLY INDICATE THEIR INCOME TAX PERMANENT ACCOUNT NUMBER (PAN) AND THE ISSUING AUTHORITY CITY. III. BIDDERS ARE REQUESTED TO READ THE TENDER DOCUMENT CAREFULLY AND SUBMIT THEIR OFFER AS PER TERMS AND CONDITIONS GIVEN THEREIN. BIDDERS WHO SUBMIT THEIR OFFERS SHALL BE DEEMED TO HAVE READ, UNDERSTOOD AND ACCEPTED THE TERMS AND CONDITIONS OF THE DOCUMENT. IV. TENDERER SHALL SUBMIT THE TECHNO-COMMERCIAL BID AND PRICE BID THROUGH ONLINE GEM PORTAL. V. GENERAL CONDITIONS OF CONTRACT (HEREIN AFTER REFERRED AS GCC) FOR PROCUREMENT OF SERVICES (SAIL # S1) SHALL BE APPLICABLE FOR THE SUBJECT CONTRACT. THE GENERAL CONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) IS NOT ENCLOSED HEREWITH AND IS AVAILABLE IN THE STANDARD DOCUMENTS OF SAIL WEBSITE, WWW.SAILTENDERS.CO.IN FOR REFERENCE. VI. THE BIDDER NEED NOT SUBMIT COPY OF THE GENERAL CONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) ALONG WITH THE TENDER. HOWEVER, THE BIDDER BY SUBMITTING THE TENDER SHALL BE DEEMED TO HAVE READ AND UNDERSTOOD THE CONDITIONS OF THE GENERAL CONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) AND THE SAME SHALL, FOR ALL INTENTS AND PURPOSES, BE DEEMED TO BE FORMING INTEGRAL PART OF THE CONTRACT AND SHALL ALWAYS BE CONSTRUED ACCORDINGLY. VII. IN ADDITION TO GCC FOR PROCUREMENT OF SERVICES (SAIL # S1) THE INSTANT SPECIAL TERMS AND CONDITIONS AND STANDARD TERMS AND CONDITIONS SHALL ALSO APPLY FOR THE SUBJECT ## Buyer Added Bid Specific Additional Terms and Conditions ### 1. Buyer Added Bid Specific ATC Buyer Added text based ATC clauses INVITATION TO TENDER SUB: Const of Parking shed with CC flooring in front of Qtr No B/33 Sec-3. INSTRUCTIONS TO THE BIDDERS * I. BIDS NOT CONFORMING TO THE SPECIFICATION AND/OR TERMS & CONDITIONS OF THIS INVITATION TO TENDER ARE LIABLE FOR REJECTION. II. FIRMS TO CLEARLY INDICATE THEIR INCOME TAX PERMANENT ACCOUNT NUMBER (PAN) AND TH E ISSUING AUTHORITY CITY. III. BIDDERS ARE REQUESTED TO READ THE TENDER DOCUMENT CAREFULLY AND SUBMIT THEIR OFFE R AS PER TERMS AND CONDITIONS GIVEN THEREIN. BIDDERS WHO SUBMIT THEIR OFFERS SHALL BE D EEMED TO HAVE READ, UNDERSTOOD AND ACCEPTED THE TERMS AND CONDITIONS OF THE DOCUME NT. IV. TENDERER SHALL SUBMIT THE TECHNO-COMMERCIAL BID AND PRICE BID THROUGH ONLINE G EM PORTAL. * V. GENERAL CONDITIONS OF CONTRACT (HEREIN AFTER REFERRED AS GCC) FOR PROCUREMENT OF SERVICES (SAIL # S1) SHALL BE APPLICABLE FOR THE SUBJECT CONTRACT. THE GENERAL CONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) IS NOT ENCLOSED HEREWITH AND IS AVA ILABLE IN THE STANDARD DOCUMENTS OF SAIL WEBSITE, WWW.SAILTENDERS.CO.IN FOR REFERENCE. VI. THE BIDDER NEED NOT SUBMIT COPY OF THE GENERAL CONDITIONS OF CONTRACT FOR PROCURE MENT OF SERVICES (SAIL # S1) ALONG WITH THE TENDER. HOWEVER, THE BIDDER BY SUBMITTING TH E TENDER SHALL BE DEEMED TO HAVE READ AND UNDERSTOOD THE CONDITIONS OF THE GENERAL C ONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) AND THE SAME SHALL, FOR A LL INTENTS AND PURPOSES, BE DEEMED TO BE FORMING INTEGRAL PART OF THE CONTRACT AND SHA LL ALWAYS BE CONSTRUED ACCORDINGLY. VII. IN ADDITION TO GCC FOR PROCUREMENT OF SERVICES (SAIL # S1) THE INSTANT SPECIAL TERM S AND CONDITIONS AND STANDARD TERMS AND CONDITIONS SHALL ALSO APPLY FOR THE SUBJECT 5 / 11 TENDER/CONTRACT. VIII. WHEREVER SPECIAL TERMS & CONDITIONS DIFFER FROM STANDARD TERMS AND CONDITIONS / #GCC FOR PROCUREMENT OF SERVICES (SAIL # S1)#, SPECIAL TERMS & CONDITIONS SHALL OVER-RIDE STANDARD TERMS AND CONDITIONS / GCC. WHEREVER STANDARD TERMS AND CONDITIONS DIFFER FROM GCC FOR PROCUREMENT OF SERVICES (SAIL # S1), STANDARD TERMS AND CONDITIONS S HALL OVER-RIDE GCC. IX. WHEREVER GCC FOR PROCUREMENT OF SERVICES (SAIL # S1) DIFFERS FROM GEM GENERAL TERM S AND CONDITIONS (GTC), GEM GTC SHALL OVER-RIDE SAIL-S1. * X. IN CASE ANY SPECIFIC ADVERSE REPORT IS RECEIVED AGAINST A TENDERER, AS AN INFORMATIO N OR UPON ENQUIRY MADE BY SAIL, IN RESPECT OF CAPABILITIES AND PERFORMANCE OF THE TENDE RER, AFTER RECEIPT OF TENDER (EVEN AFTER OPENING OF PRICE BID), THE QUOTATION/ TENDER SUB MITTED BY SUCH TENDERER IS LIABLE TO BE REJECTED. XI. SHORTFALL DOCUMENTS/ CONFIRMATORY DOCUMENTS:- a) SAIL RESERVES ITS RIGHT TO, BUT WITHOUT ANY OBLIGATION TO DO SO, SEEK ANY SHORTFALL INFORMATION/ DOCUMENTS ONLY IN CASE OF HISTORICAL DOCUMENTS THAT PRE-EXISTED AT THE TI ME OF THE BID OPENING, AND WHICH HAVE NOT UNDERGONE CHANGE SINCE THEN. b) NO POST-BID CLARIFICATION AT THE INITIATIVE OF THE BIDDER SHALL BE ENTERTAINED. c) DURING EVALUATION AND COMPARISON OF BIDS, SAIL-RSP MAY, AT HIS DISCRETION, ASK THE B IDDER FOR SUBMISSION OF SHORTFALL DOCUMENTS/ CONFIRMATORY DOCUMENTS/ CLARIFICATION O N BID. THE REQUEST FOR SEEKING SHORTFALL DOCUMENTS/ CONFIRMATORY DOCUMENTS/ CLARIFIC ATION AND THE RESPONSE SHALL BE IN WRITING. MODIFICATION OF THE BID AND ANY FORM OF COMMUNICATION WITH SAIL-RSP FOR SUBMISSION OF ANY ADDITIONAL DOCUMENTS, NOT SPECIFICALLY ASKED FOR BY SAIL-RSP WILL NOT BE ALLOWED. AND EVEN IF SUBMITTED, THEY WILL NOT BE CONSIDE RED. d) IF REQUIRED, WRITTEN COMMUNICATION/S SHALL BE DONE THROUGH GEM PORTAL, FOR SUBMISSI ON OF THE SHORT FALL DOCUMENTS/CONFIRMATORY DOCUMENTS/CLARIFICATION WITH A SPECIFIED D ATE FOR SUBMISSION OF THE SAME. BIDDER SHALL BE REQUIRED TO SUBMIT SHORT FALL DOCUMENTS /CONFIRMATORY DOCUMENTS/CLARIFICATION TO THIS OFFICE BE DONE THROUGH GEM / E-PROCUREMENT PORTAL OR E-MAIL/ COURIER/ REGISTERED POST/SPEED POST WITH IN THE SPECIFIE D TIME MENTIONED IN THE COMMUNICATION/S. THE ALLOWABLE TIME PERIOD FOR SUBMISSION OF TH E SHORT FALL DOCUMENTS/CONFIRMATORY DOCUMENTS/CLARIFICATION WILL BE THE SOLE DISCRETI ON OF SAIL-RSP AND AS PER THE COMMUNICATION FROM SAIL-RSP BY THE BIDDER. IF THE TENDERER DOES NOT COMPLY OR RESPOND BY THE SPECIFIED DATE, HIS TENDER WILL BE EVALUATED BASED O N AVAILABLE DOCUMENTS. e) EVALUATION OF SIMILAR NATURE OF WORK OF RECEIVED OFFERS WILL BE DONE CONSIDERING T HE RELEVANT SCOPE OF THE JOB EXECUTED BY THE TENDERER. MERELY THE MENTION OF THE \"NAME OF WORK\" OF THE WORK ORDER SUBMITTED WILL NOT BE INTERPRETED AS SIMILAR WORK. DECISION OF RSP SHALL BE FINAL AND BINDING ON THE TENDERER. #BIDDERS ARE THEREFORE ADVISED THAT THEY SHOULD TAKE DUE CARE WHILE UPLOADING OFFER / C ONFIRMATORY DOCUMENTS IN ORDER TO AVOID REJECTION OF THEIR BID.# XII. MII & MSE PURCHASE PREFERENCE - PURCHASE PREFERENCE WILL BE GIVEN TO MAKE IN INDIA SU PPLIERS AND MSE SUPPLIERS,WHICH SHALL BE BASED ON THE EXTANT GUIDELINES OF GOVT. OF INDIA AND GUIDELINES OF SAIL PLANTS / UNITS. XIII. BID OF THE BIDDERS QUOTING BELOW 25% OF THE ESTIMATED VALUE SHALL BE TREATED AS A BNORMALLY LOW BID AND SUCH BIDDER/BIDDERS MAY BE ASKED TO SUBMIT PGB AS PER CLAUSE NO.3 8 OF STANDARD T&C. THIS IS NOT APPLICABLE FOR CASES WHERE MINIMUM FLOOR PRICE IS INDICATED IN THE TENDER. 6 / 11 ONLY RSP-SAIL REGISTERED VENDORS WHO HAVE BEEN SPECIFICALLY INVITED AGAINST THIS LIMITED T ENDER ENQUIRY (LTE) ARE ELIGIBLE TO PARTICIPATE IN THE TENDER. BIDS SUBMITTED BY THE SELLERS TO WHOM THE LTE INVITATION HAS BEEN ISSUED SHALL ONLY BE CONSIDERED FOR EVALUATION. ANY B ID SUBMITTED BY A SELLER WHO HAS NOT BEEN INVITED SHALL BE TREATED AS UNSOLICITED AND SHA LL NOT BE CONSIDERED FOR EVALUATION. HOWEVER, BIDS SUBMITTED BY AUTHORIZED REPRESENTATIVES OF THE INVITED SERVICE PROVIDER S SHALL ALSO BE CONSIDERED, PROVIDED THEY SUBMIT A VALID AUTHORIZATION LETTER ISSUED B Y THE RESPECTIVE INVITED FIRM. THE AUTHORIZATION LETTER MUST CLEARLY AUTHORIZE THE REPR ESENTATIVE TO PARTICIPATE IN AND SUBMIT THE BID FOR THE SUBJECT TENDER ON BEHALF OF THE INVITED FIRM. FIRMS INTERESTED IN OBTAINING REGISTRATION WITH SAIL MAY SUBMIT THE VENDOR REGISTRATION FORM AVAILABLE ON THE SAIL TENDERS PORTAL AND COMPLETE THE PRESCRIBED REGISTRATION PRO CESS WITH THE CONCERNED SAIL PLANT/UNIT. THE ABOVE INFORMATION REGARDING VENDOR REGISTRATION IS PROVIDED SOLELY TO FACILITATE EXPANSION OF THE VENDOR BASE, WHEREVER REQUIRED, AND SHALL NOT BE CONSTRUED AS A TE NDER INVITATION OR COMMITMENT FOR AWARD OF WORK. FUTURE TENDER ENQUIRIES MAY BE ISSU ED TO SUCH FIRMS SUBJECT TO SUCCESSFUL REGISTRATION AND FULFILLMENT OF THE APPLICABLE ELIGIBILITY REQUIREMENTS. DOCUMENTS TO BE SUBMITTED:- ### 1. COPY OF VALID \"GST\" REGISTRATION CERTIFICATE MENTIONING THE NEW GSTIN ALONG WIT H SAC/HSN CODES FOR THE ITEMS YOU ARE APPLYING IN THE ABOVE TENDER IN THE \"RFQ\". ### 2. DOCUMENTS IN SUPPORT OF TECHNICAL REQUIREMENTS. (AS PER ELIGIBILITY CRITERIA) ### 3. DOCUMENTS IN SUPPORT OF OWNERSHIP DETAILS (PROPRIETARY FIRM, PARTNERSHIP, PVT. LTD, PUBLIC LTD, ETC) ### 4. CERTIFICATE PERTAINING TO MSE, (IF REGISTERED AS MICRO OR SMALL ENTERPRISE UNDER M SMED ACT 2006). ### 5. VALID RSP VENDOR REGISTRATION CERTIFICATE (IF AVAILABLE) ### 6. UNDERTAKING AS PER ANNEXURE-A ON COMPANY LETTER HEAD ### 7. ACCEPTANCE OF ALL TERMS& CONDITIONS: ANNEXURE-1 ### 8. DETAILS AS PER ANNEXURE-S (MANADATORY FOR CASE VALUE MORE THAN/EQUAL TO 1 CRORE). ### 9. CERTIFICATION FOR LOCAL CONTENT IN THE QUOTED ITEM (GOODS/WORKS/SERVICES), I.E. LOCAL CONTENT CERTIFICATE AS PER ANNEXURE -2A/2B. ### 10. INTEGRITY PACT SIGNED BY THE BIDDER WHEREEVER APPLICABLE. ### 11. EMD/EMD EXEMPTION DOCUMENTS AS A PPLICABLE NOTE: I) NON-SUBMISSION OF THE ABOVE DOCUMENTS MAY RENDER THE BID LIABLE FOR REJECTION. II) SAIL RESERVES THE RIGHT TO VERIFY ANY SUPPORTING DOCUMENT(S) SUBMITTED BY A PARTICIPATING TENDERER / BIDDER FROM ITS SOURCE (DOCUMENT ISSUING AUTHORITY ). III) IN THE INTEREST OF EXPEDITIOUS COMPLETION OF VERIFICATION, A PARTICIPATING TENDERER /BIDDER SHALL PROVIDE A LIST OF EACH SUPPORTING DOCUMENT ON ITS LETTER-HEAD AS PER #AN NEXURE-S#, ALONG WITH THE CONTACT DETAILS (POSTAL ADDRESS, EMAIL ADDRESS, LANDLINE / M OBILE NUMBER) OF THE ISSUING AUTHORITY OF EACH SUPPORTING DOCUMENT FOR VERIFICATION. IV) NON-VERIFICATION OF ANY SUPPORTING DOCUMENT OR INFORMATION, AT THE SOLE DISCRETIO N OF SAIL, DOES NOT ABSOLVE THE TENDERER / BIDDER OF ITS ABSOLUTE RESPONSIBILITY TO PROV IDE ONLY GENUINE DOCUMENT(S) IN SUPPORT OF ELIGIBILITY CONDITIONS. 7 / 11 V) IN CASE A SUPPORTING DOCUMENT OR INFORMATION IS FOUND TO BE FAKE/FORGED/TAMPER ED/ NON-GENUINE AT ANY STAGE DURING TENDERING PROCESS & EVEN AFTER PLACEMENT OF PU RCHASE ORDER / WORK ORDER, THE TENDERER/BIDDER IS LIABLE FOR PUNITIVE ACTIONS AS PER EXTANT GUIDELINES OF SAIL. EVALUATION CRITERIA:- THE BIDDERS HAVE TO QUOTE OVERALL LOT VALUE FOR ENTIRE QUANTITY OF RFQ. PRICE EVALUATION WILL BE CARRIED OUT ON OVERALL LOT VALUE ON MATCHING PARTS BASIS. ITEM NO SERVICE NO DESCRIPTION QTY. UOM WEIGHTAGE 10 4001031166 SHUTTERING F/FDN,PL W/PRO PPING 70.000 M2 0.66 % 20 4001031186 ERECT STEEL STRUCTURE,MS AN GLE/CHANNEL 13,500.000 KG 63.85 % 30 4001080500 PROVG&LAYG R.C.C 1:1-1/2:3 AGG 20MM NOM 20.000 M3 5.09 % 40 4001301880 PRVDG&FIXG OF PVC PIPE,100 MM DIA 10.000 RM 0.06 % 50 4001331345 LAYG CC,1:2:4,<2ND FLOOR LVL 20.250 M3 5.12 % 60 4001331350 LAYG CC 1:4:8,AGGREGATE 40MM N MNL SIZE 28.000 M3 5.06 % 70 4001331372 PLCG STEEL REINF F/RCC & RB WRK 2,400.000 KG 7.52 % 80 4001331536 EARTH WRK IN OPEN EXCAV UPTO 2 M 80.000 M3 0.70 % 90 4001340515 P/F PRECOATED PROFILE SHHETS 300.000 M2 5.61 % 100 4001340516 P/F PRECOATED PROFILE SHHET AC CESSORIES 36.000 M 0.49 % 110 4001380141 PREPARG & PLACG CEMENTITIOUS G ROUT,214 20.000 L 0.06 % 120 4001411038 REFLG EXCAV EARTH,LEAD <50M & LIFT <1.5M 30.000 M3 0.23 % 130 4001411203 PRVDG&FIXG BOLT FE 410WB,IS-2062&nut 120.000 KG 1.15 % 140 4001422571 FILG PL W/SAND UNDER FLOOR W/ RAMMING 29.000 M3 0.84 % 150 4009011802 TRANSPT EARTH,MEC H MEANS,>2-5KM 41.450 M3 0.42 % 160 4001051692 APPLYG PRIMING COAT ON M2 8 / 11 ITEM NO SERVICE NO DESCRIPTION QTY. UOM WEIGHTAGE WOOD/STEEL 500.000 0.91 % 170 4001051751 PAINTG 2CT,NEW/OLD WRK W/ READY MIX PAINT 500.000 M2 2.23 % NOTE: - 1) WEIGHTAGE OF EACH ITEM AS MENTIONED ABOVE IN THE TENDER SCHEDULE IS THE VALUE OF TH AT ITEM AS PERCENTAGE (%) OF OVERALL LOT VALUE. 2) AFTER DISCOVERY OF L-1 VALUE, FURTHER PRICE BREAKUP SHALL NOT BE REQUIRED FROM L-1 BIDDERS AS THE ITEM WISE RATE (INCLUSIVE OF ALL TAXES, DUTIES, LEVIES AND CESS EXCEPT GS T) OF THE TENDER SCHEDULE SHALL BE DERIVED AS FOLLOWS: (I) ITEM-WISE TOTAL VALUE = L-1 OVERALL LOT VALUE X ITEM WISE WEIGHTAGE AS PER TENDER S CHEDULE / 100 (II) ITEM-WISE RATE = ITEM-WISE TOTAL VALUE AS ABOVE AT (I) / ITEM-WISE TOTAL QUANTITY AS P ER TENDER SCHEDULE. . ### 2. Buyer Added Bid Specific ATC Buyer uploaded ATC document Click here to view the file.",
+                "items": [],
+                "hard_requirements": [],
+                "info_clauses": []
+            },
+            "disclaimer": "The Additional Terms and Conditions (ATC) have been incorporated by the Buyer after approval of their Competent Authority. The Buyer ,is solely responsible for the impact of these clauses on the bidding process, its outcome, and consequences thereof including any restriction arising in the bidding process due to these ATCs and including the modification of technical specifications and / or terms and conditions governing the bid.All representations / grievances pertaining to the ATC clauses shall be raised with the buyer organization directly and not with GeM.If any of the clause(s) is/are incorporated by the Buyer regarding the following, the bid & resultant contract shall be treated as null & void. Further, GeM reserves the right, at its sole discretion, to cancel the bid forthwith, without issuance of any prior notice or intimation :- ### 1. Publishing Custom / BOQ bids for items for which regular GeM categories are available (unless such Custom / BOQ item is bunched with the major regular product Category Item). ### 2. Mandating procurement of / from specific Brand / Make / Model / Manufacturer / Dealer except in case of Single Bid / Proprietary Article Certificate (PAC) Buying. ### 3. Inclusion of disqualification criteria related to suspension of seller / service provider, where such suspension period has already expired. ### 4. Mandating submission of documents (other than EMD and signed Integrity Pact - which can be submitted within 5 days of bid opening) in physical form as a pre-requisite to qualify bidders. ### 5. Publishing bids on GeM for procurement of works. ### 6. Procurement of Goods by creating a Service bid on GeM & vice-versa. ### 7. Seeking sample with bid or approval of samples during bid evaluation process. However, trial / sample, as the case may be, shall be permitted in cases where trial / sample are allowed as per approved and published procurement policy of the Buyers’ controlling Ministry / Department / State / Public Sector Enterprises Headquarters. If there is any violation of trial / sample clause with regard to approved policy of the Buyers’ Ministry / Department / State / Public Sector Enterprises Headquarters, then this is to be determined and redressed by the concerned Buyer Organisation only. ### 8. Seeking experience from specific organization / department / institute only or from foreign / export experience. ### 9. Creating bid for items from incorrect categories. 9 / 11 ### 10. Reference of conditions published on any external site or reference to external documents/clauses. ### 11. Asking for any Tender fee / Bid Participation fee, as the case may be. ### 12. Buyer added ATC Clauses which are in contravention of clauses defined in bid detail section, including specifications, EMD Detail, ePBG Detail and MII and MSE Purchase Preference sections of the bid, unless otherwise allowed by the applicable GeM GTC. ### 13. Any ATC clause in contravention with GeM GTC Clause 4 (xiii) (h) will be invalid. In case of multiple L1 bidders against a service bid, the buyer shall place the Contract by selection of a bidder amongst the L-1 bidders through a Random Algorithm executed by GeM system. ### 14. In a category based bid, adding additional items, through buyer added, additional scope of work/ additional terms and conditions/or any other document. If buyer needs more items along with the main item, the same must be added through bunching category based items or by bunching custom catalogues or bunching a BoQ with the main category based item, the same must not be done through ATC or Scope of Work. Further, if any seller has any objection/grievance against these additional clauses or otherwise on any aspect of this bid, they can raise their representation against the same by using the Representation window provided in the bid details field in Seller dashboard after logging in as a seller. Buyer is duty bound to reply to all such representations and would not be allowed to open bids if he fails to reply to such representations. All GeM Sellers/Service Providers shall ensure full compliance with all applicable labour laws, including the provisions, rules, schemes and guidelines under the four Labour Codes i.e. the Code on Wages, 2019; the Industrial Relations Code, 2020; the Occupational Safety, Health and Working Conditions Code, 2020; and the Code on Social Security, 2020 as and when notified and brought into force by the Government of India. For all provisions of the Labour Codes that are pending operationalisation through rules, schemes or notifications, the corresponding provisions of the pre-existing labour enactments (such as The Minimum Wages Act, 1948, The Payment of Wages Act, 1936, The Payment of Bonus Act, 1965, The Equal Remuneration Act, 1976, The Payment of Gratuity Act, 1972, etc. and relevant State Rules) shall continue to remain applicable. The Seller/ Service Providers shall, therefore, be responsible for ensuring compliance under: All notified and enforceable provisions of the new Labour Codes as mentioned hereinabove; and All operative provisions of the erstwhile Labour Laws until their complete substitution. All obligations relating to wages, social security, safety, working conditions, industrial relations etc. and any other statutory requirements shall be strictly met by the Seller/ Service Provider. Any non- compliance shall constitute a breach of the contract and shall entitle the Buyer to take appropriate action in accordance with the contract and applicable law. This Bid is governed by the General Terms and Conditions, conditions stipulated in Bid and Service Level Agreement specific to the Service, as the case may be, as provided in the Marketplace. However, in case of Service, if any condition specified in General Terms and Conditions is contradicted by the conditions stipulated in Service Level Agreement specific to said Service, then it will over-ride the conditions in the General Terms and Conditions. This Bid is governed by the सामाdय िनयम और शतh/General Terms and Conditions, conditions stipulated in Bid and Service Level Agreement specific to this Service as provided in the Marketplace. However in case if any condition specified in सामाdय िनयम और शतh/General Terms and Conditions is contradicted by the conditions stipulated in Service Level Agreement, then it will over ride the conditions in the General Terms and Conditions. जेम क\u0010 सामाdय शत. के खंड 26 के संदभ% म< भारत के साथ भूिम सीमा साझा करने वाले देश के \u0001बडर से खर\u0013द पर 4ितबंध के संबंध म< भारत के साथ भूिम सीमा साझा करने वाले देश का कोई भी \u0001बडर इस िन\u0001वदा म< \u0001बड देने के िलए तभी पा होगा जब वह \u0001बड देने वाला सkम 4ािधकार\u0013 के पास पंजीकृत हो।\u0001बड म< भाग लेते समय \u0001बडर को इसका अनुपालन करना होगा और कोई भी गलत घोषणा ;कए जाने व इसका अनुपालन न करने पर अनुबंध को तmकाल समाn करने और कानून के अनुसार आगे क\u0010 कानूनी कार%वाई का आधार होगा।/In terms of GeM GTC clause 26 regarding Restrictions on procurement from a bidder of a country which shares a land border with India, any bidder from a country which shares a land border with India will be eligible to bid in this tender only if the bidder is registered with the Competent Authority. While participating in bid, Bidder has to undertake compliance of this and any false declaration and non-compliance of this would be a ground for immediate termination of the contract and further legal action in accordance with the laws. 10 / 11"
+        }
+    },
+    "hyperlinks": [
+        {
+            "page": 3,
+            "name": "OM_No.1_4_2021_PPD_dated_18.05.2023",
+            "text": "OM_No.1_4_2021_PPD_dated_18.05.2023",
+            "url": "https://bidplus.gem.gov.in/bidding/downloadOmppdfile/",
+            "source": "bid"
+        },
+        {
+            "page": 4,
+            "name": ":1790763752.pdf",
+            "text": ":1790763752.pdf",
+            "url": "https://bidplus.gem.gov.in/resources/upload_nas/SepQ326/bidding/biddoc/bid-9969390/1790763752.pdf",
+            "source": "bid"
+        },
+        {
+            "page": 4,
+            "name": "1790763759.pdf",
+            "text": "1790763759.pdf",
+            "url": "https://bidplus.gem.gov.in/resources/upload_nas/SepQ326/bidding/biddoc/bid-9969390/1790763759.pdf",
+            "source": "bid"
+        },
+        {
+            "page": 5,
+            "name": "S1) IS NOT ENCLOSED HERE WWW.SAILTENDERS.CO.IN",
+            "text": "S1) IS NOT ENCLOSED HERE WWW.SAILTENDERS.CO.IN",
+            "url": "http://www.sailtenders.co.in/",
+            "source": "bid"
+        },
+        {
+            "page": 9,
+            "name": "Buyer uploaded ATC document",
+            "text": "Click here to view the file",
+            "url": "https://fulfilment.gem.gov.in/contract/slafds?fileDownloadPath=SLA_UPLOAD_PATH/2026/Sep/GEM_2026_B_8103442/CLM0010/SAIL_5f47b1c0-24f1-46b8-b38b1790764090342_sourav.patra1.pdf",
+            "source": "bid"
+        },
+        {
+            "page": 10,
+            "name": "सामा�य िनयम और शत�/General Terms and Conditions,",
+            "text": "सामा�य िनयम और शत�/General Terms and Conditions,",
+            "url": "https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20260930",
+            "source": "bid"
+        },
+        {
+            "page": 10,
+            "name": "Service Level Agreement",
+            "text": "Service Level Agreement",
+            "url": "https://bidplus.gem.gov.in/bidding/bid/bidsla/99388736972100",
+            "source": "bid"
+        }
+    ],
+    "normalized": {
+        "financials": {
+            "estimated_value_inr": 2116258.89,
+            "estimated_value_formatted": "₹21.16 Lakh",
+            "high_value_tender": false,
+            "emd": {
+                "required": false,
+                "amount_inr": null,
+                "amount_formatted": "₹0",
+                "advisory_bank": ""
+            },
+            "epbg": {
+                "required": false,
+                "percentage": null,
+                "advisory_bank": "",
+                "duration_months": null
+            }
+        },
+        "dates": {
+            "start_date_iso": "2026-09-30T16:00:00+05:30",
+            "end_date_iso": "2026-10-07T16:00:00+05:30",
+            "bid_duration_days": 7.0,
+            "days_remaining": 0.04,
+            "is_expired": false
+        },
+        "items": {
+            "total_items_count": 3,
+            "total_quantity": 0,
+            "items_breakdown": [
+                {
+                    "name": "Repair",
+                    "quantity": 0
+                },
+                {
+                    "name": "Maintenance",
+                    "quantity": 0
+                },
+                {
+                    "name": "and Installation of Plant/ Systems/Equipments (Version 2) - Construction of Parking Shed with CC flooring as per ATC and Spl Terms & Conditions in Rourkela Steel Township; Construction of Parking Shed with CC flooring as per ATC ..",
+                    "quantity": 0
+                }
+            ]
+        },
+        "preferences": {
+            "mse_relaxation": false,
+            "startup_relaxation": false,
+            "mii_preference": false,
+            "mse_preference": false
+        }
+    },
+    "validation": {
+        "is_valid": true,
+        "error_count": 0,
+        "warning_count": 1,
+        "issues": [
+            {
+                "field": "quantity",
+                "severity": "warning",
+                "message": "Extracted total quantity is 0 or negative."
+            }
+        ]
+    },
+    "atc_analysis": {
+        "status": "success",
+        "bid_no": "GEM_2026_B_8103442",
+        "has_atc": true,
+        "elapsed_seconds": 25.81,
+        "raw_markdown": "### 1. Standard Documents Required\n* None specified in the provided text.\n\n### 2. Clarified ATC Documents & Mandatory Uploads\n* **Certificate**: Copy of valid **GST Registration Certificate** (mentioning new GSTIN with SAC/HSN codes), **Valid RSP Vendor Registration Certificate** (if available)\n* **Additional Doc 1**: Documents in support of **Technical Requirements** (as per eligibility criteria), Documents in support of **Ownership Details** (Proprietary/Partnership/Pvt. Ltd/Public Ltd), **Undertaking as per Annexure-A** (on company letterhead), **Acceptance of all Terms & Conditions** (Annexure-1), **Details as per Annexure-S** (mandatory for case value ≥ 1 Crore), **Local Content Certificate** (as per Annexure-2A/2B), **Integrity Pact** (signed by bidder), **EMD/EMD Exemption documents**\n* **Other Upload Required in ATC**: **List of supporting documents** on company letterhead (as per Annexure-S) including contact details (postal address, email, phone) of the issuing authority for verification.\n\n### 3. Exemption Documents Required\n* **Proof for Exemption (MSEs)**: **Udyam Registration Certificate (URC)** (Explicit)\n* **Proof for Exemption (Start-ups)**: **DPIIT Startup Recognition Certificate** (Inferred)\n\n### 4. Physical Submissions (Offline)\n* **Shortfall/Confirmatory Documents**: If requested by SAIL-RSP, documents may be submitted via courier/registered post/speed post.\n  * Deadline: As specified in the written communication from SAIL-RSP.\n  * In Favor Of: Steel Authority of India Limited (SAIL)\n  * Payable At: As specified in the tender/communication.\n  * Delivery Address: As specified in the written communication from SAIL-RSP.\n\n### 5. Key Commercial Terms & Conditions to Follow\n* **Eligibility**: Only **RSP-SAIL registered vendors** specifically invited against this Limited Tender Enquiry (LTE) are eligible.\n* **Pricing**: Bidders must quote the **overall lot value**. Item-wise rates will be derived based on the specified weightage percentages.\n* **Abnormally Low Bids**: Bids quoting below 25% of the estimated value may be required to submit a **Performance Guarantee (PGB)**.\n* **GST Compliance**: Bidders must ensure their accounting/IT systems are GST compliant to ensure timely availability of **Input Tax Credit (ITC)** to SAIL.\n* **Safety Compliance**: Contractor must obtain **written safety clearance** from the Safety Engineering Department before starting work.\n* **Penalty**: Penalty for safety violations will be assessed by the Head of Safety Engineering and the Head of the executing department; amounts are recoverable from bills or Security Deposit.\n* **Statutory Compliance**: Contractor must obtain a **Labour License** within 15 days of contract award.\n* **Verification**: SAIL reserves the right to verify any submitted document from the issuing authority; submission of fake/forged documents leads to punitive action and contract termination.",
+        "checklist": {
+            "standard_documents": [],
+            "clarified_atc_documents": [
+                {
+                    "placeholder": "Certificate",
+                    "requirement": "Copy of valid **GST Registration Certificate** (mentioning new GSTIN with SAC/HSN codes), **Valid RSP Vendor Registration Certificate** (if available)"
+                },
+                {
+                    "placeholder": "Additional Doc 1",
+                    "requirement": "Documents in support of **Technical Requirements** (as per eligibility criteria), Documents in support of **Ownership Details** (Proprietary/Partnership/Pvt. Ltd/Public Ltd), **Undertaking as per Annexure-A** (on company letterhead), **Acceptance of all Terms & Conditions** (Annexure-1), **Details as per Annexure-S** (mandatory for case value ≥ 1 Crore), **Local Content Certificate** (as per Annexure-2A/2B), **Integrity Pact** (signed by bidder), **EMD/EMD Exemption documents**"
+                },
+                {
+                    "placeholder": "Other Upload Required in ATC",
+                    "requirement": "**List of supporting documents** on company letterhead (as per Annexure-S) including contact details (postal address, email, phone) of the issuing authority for verification."
+                }
+            ],
+            "exemption_documents": [
+                {
+                    "category": "Proof for Exemption (MSEs)",
+                    "required_document": "**Udyam Registration Certificate (URC)**",
+                    "is_explicit": true
+                },
+                {
+                    "category": "Proof for Exemption (Start-ups)",
+                    "required_document": "**DPIIT Startup Recognition Certificate**",
+                    "is_explicit": false
+                }
+            ],
+            "physical_submissions": [
+                {
+                    "item": "Shortfall/Confirmatory Documents",
+                    "description": "If requested by SAIL-RSP, documents may be submitted via courier/registered post/speed post.",
+                    "deadline": "As specified in the written communication from SAIL-RSP.",
+                    "in_favor_of": "Steel Authority of India Limited (SAIL)",
+                    "payable_at": "As specified in the tender/communication.",
+                    "delivery_address": "As specified in the written communication from SAIL-RSP."
+                }
+            ],
+            "commercial_terms": [
+                {
+                    "topic": "Eligibility",
+                    "rule": "Only **RSP-SAIL registered vendors** specifically invited against this Limited Tender Enquiry (LTE) are eligible."
+                },
+                {
+                    "topic": "Pricing",
+                    "rule": "Bidders must quote the **overall lot value**. Item-wise rates will be derived based on the specified weightage percentages."
+                },
+                {
+                    "topic": "Abnormally Low Bids",
+                    "rule": "Bids quoting below 25% of the estimated value may be required to submit a **Performance Guarantee (PGB)**."
+                },
+                {
+                    "topic": "GST Compliance",
+                    "rule": "Bidders must ensure their accounting/IT systems are GST compliant to ensure timely availability of **Input Tax Credit (ITC)** to SAIL."
+                },
+                {
+                    "topic": "Safety Compliance",
+                    "rule": "Contractor must obtain **written safety clearance** from the Safety Engineering Department before starting work."
+                },
+                {
+                    "topic": "Penalty",
+                    "rule": "Penalty for safety violations will be assessed by the Head of Safety Engineering and the Head of the executing department; amounts are recoverable from bills or Security Deposit."
+                },
+                {
+                    "topic": "Statutory Compliance",
+                    "rule": "Contractor must obtain a **Labour License** within 15 days of contract award."
+                },
+                {
+                    "topic": "Verification",
+                    "rule": "SAIL reserves the right to verify any submitted document from the issuing authority; submission of fake/forged documents leads to punitive action and contract termination."
+                }
+            ]
+        },
+        "error": null
+    },
+    "telemetry": {
+        "ocr": {
+            "pages_processed": 5,
+            "input_tokens": 0,
+            "output_tokens": 3341,
+            "latency_seconds": 3.946,
+            "estimated_cost_usd": 0.005,
+            "estimated_cost_inr": 0.4325,
+            "details": {
+                "pdf_path": "C:\\Projects\\GeM\\Scrapper & RAG Pipeline\\downloads\\GEM_2026_B_8103442\\GEM_2026_B_8103442_core.pdf",
+                "total_doc_pages": 5,
+                "price_model_used": "mistral-ocr-3-0",
+                "usd_to_inr_rate": 86.5
+            },
+            "total_pdf_pages": 11,
+            "pages_for_ocr": 5,
+            "pages_saved_by_slicing": 6,
+            "estimated_savings_usd": 0.006,
+            "estimated_savings_inr": 0.519
+        }
+    },
+    "full_pdf_text": "# बिड दस्तावेज / Bid Document\n\n<table><tr><th colspan=\"2\">बिड विवरण / Bid Details</th></tr><tr><td>बिड बंद होने की तारीख / समय / Bid End Date / Time</td><td>07-10-2026 16:00:00</td></tr><tr><td>बिड खुलने की तारीख / समय / Bid Opening Date / Time</td><td>08-10-2026 16:00:00</td></tr><tr><td>बिड पेशक्ष वैधता (बंद होने की तारीख से) / Bid Offer Validity (From End Date)</td><td>120 (Days)</td></tr><tr><td>मंत्रालय / राज्य का नाम / Ministry / State Name</td><td>Ministry Of Steel</td></tr><tr><td>विभाग का नाम / Department Name</td><td>Steel Authority Of India Limited</td></tr><tr><td>संगठन का नाम / Organisation Name</td><td>Rourkela Steel Plant</td></tr><tr><td>कार्यालय का नाम / Office Name</td><td>Contract Cell Works Office</td></tr><tr><td>शिक्षित निवारण के संपर्क विवरण / Contact details of Grievance redressal</td><td>HOD Email id : alokkumar.behera@sail.in<br/>Buyer Email id: patra.sourav@mjunction.in</td></tr><tr><td>वस्तु श्रेणी / Item Category</td><td>Repair, Maintenance, and Installation of Plant/ Systems/Equipments (Version 2) - Construction of Parking Shed with CC flooring as per ATC and Spl Terms &amp; Conditions in Rourkela Steel Township; Construction of Parking Shed with CC flooring as per ATC ..</td></tr><tr><td>अनुबंध अवधि / Contract Period</td><td>3 Month(s)</td></tr><tr><td>एमएसएमई के लिए अनुभव के वर्ष और टर्नओवर से छूट प्रदान की गई है / MSE Relaxation for Years of Experience and Turnover</td><td>No</td></tr><tr><td>स्टार्टअप के लिए अनुभव के वर्ष और टर्नओवर से छूट प्रदान की गई है / Startup Relaxation for Years of Experience and Turnover</td><td>No</td></tr><tr><td>विक्रेता से मांगे गए दस्तावेज / Document required from seller</td><td>Certificate (Requested in ATC), Additional Doc 1 (Requested in ATC)<br/>*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer</td></tr><tr><td>क्या आप निविदाकारों द्वारा अपलोड किए गए दस्तावेजों को निविदा में भाग लेने वाले सभी निविदाकारों को दिखाना चाहते हैं? संदर्भ मेनू है / Do you want to show documents uploaded by bidders to all bidders participated in bid?</td><td>Yes (Documents submitted as part of a clarification or representation during the tender/bid process will also be displayed to other participated bidders after log in)</td></tr></table>\n\n---\n\n<table><tr><th colspan=\"2\">बिड विवरण/Bid Details</th></tr><tr><td>बिड लगाने की समय सीमा स्वत: नहीं बढ़ाने के लिए आवश्यक बिड की संख्या। / Minimum number of bids required to disable automatic bid extension</td><td>3</td></tr><tr><td>दिनों की संख्या, जिनके लिए बिड लगाने की समय-सीमा बढ़ाई जाएगी। / Number of days for which Bid would be auto-extended</td><td>3</td></tr><tr><td>ओटो एक्सटेंशन अधिकतम कितनी बार किया जाना है। / Number of Auto Extension count</td><td>1</td></tr><tr><td>बिड से रिवर्स नीलामी सक्रिय किया/Bid to RA enabled</td><td>Yes</td></tr><tr><td>रिवर्स नीलामी योग्यता नियम/RA Qualification Rule</td><td>H1-Highest Priced Bid Elimination</td></tr><tr><td>बिड का प्रकार/Type of Bid</td><td>Two Packet Bid</td></tr><tr><td>तकनीकी मूल्यांकन के दौरान तकनीकी स्पष्टीकरण हेतु अनुमत समय /Time allowed for Technical Clarifications during technical evaluation</td><td>2 Days</td></tr><tr><td>अनुमानित निविदा मूल्य (सभी करों सहित) भारतीय रुपये में / Estimated Bid Value in INR (Inclusive of all taxes)</td><td>2116258.89</td></tr><tr><td>Payment Timelines</td><td>Payments shall be made to the Seller within 30 days of issue of service delivery acceptance certificate (SDAC) and on-line submission of bills (This is in supersession of 10 days time as provided in clause 12 of GeM GTC)</td></tr><tr><td>मूल्यांकन पद्धति/Evaluation Method</td><td>Total value wise evaluation</td></tr><tr><td>मध्यस्थता खंड/Arbitration Clause</td><td>No</td></tr><tr><td>सुलह खंड/Mediation Clause</td><td>No</td></tr><tr><td colspan=\"2\">ईएमडी विवरण/EMD Detail</td></tr><tr><td>आवश्यकता/Required</td><td>No</td></tr><tr><td colspan=\"2\">ईपीबीजी विवरण /ePBG Detail</td></tr><tr><td>आवश्यकता/Required</td><td>No</td></tr><tr><td colspan=\"2\">बोली विभाजन लागू नहीं किया गया/ Bid splitting not applied.</td></tr><tr><td colspan=\"2\">एमआईआई अनुपालन/MII Compliance</td></tr><tr><td>एमआईआई अनुपालन/MII Compliance</td><td>Yes</td></tr></table>\n\n---\n\n<table><tr><th>एमएसई खरीद वरीयता/MSE Purchase Preference</th><th>Yes</th></tr><tr><td>सूक्ष्म और लघु उद्यम मूल उपकरण निर्माताओं/सेवा प्रदाताओं को खरीद में प्राथमिकता, यदि उनका मूल्य L1+X% / Purchase Preference to MSE OEMs/ Service Provider available upto price within L1+X%</td><td>15</td></tr></table>\n\n## ट्रेडिंग भुगतान संबंधी विवरण/TReDS Payment Details\n\nThis Bid provides for Trade Receivables Discounting System (TReDS) as Preferred mode of payment. For MSME sellers, payments may be processed through a TReDS exchange in which the Buyer is registered, subject to applicable policy and regulatory guidelines. Accordingly, sellers intending to avail payment through TReDS are required to be registered with at least one TReDS exchange in which the buyer is registered.\n\n## Limited Tender\n\n<table><tr><th>Limited Tender Applicable</th><th>Yes</th></tr><tr><td>Reason</td><td>It will not be in public interest to procure the goods through advertised tender enquiry. Sufficient reasons for the same have been recorded in writing by the competent authority.</td></tr><tr><td>List of Seller Organization for participation</td><td>*** (illegible), *** (illegible), *** (illegible)</td></tr></table>\n\n1. Purchase preference to Micro and Small Enterprises (MSEs): Purchase preference will be given to MSEs having valid Udyam Certificate and whose credentials are validated online through Udyam Registration portal as defined in Public Procurement Policy for Micro and Small Enterprises (MSEs) Order, 2012 dated 23.03.2012 issued by Ministry of Micro, Small and Medium Enterprises and its subsequent Orders/Notifications issued by concerned Ministry. If the bidder wants to avail themselves of the Purchase preference, the bidder must be the manufacturer / OEM of the offered product on GeM. In respect of bid for Services, the bidder must be the Service provider of the offered Service. Traders are excluded from the purview of Public Procurement Policy for Micro and Small Enterprises and hence resellers offering products manufactured by some other OEM are not eligible for any purchase preference. Relevant documentary evidence in this regard shall be uploaded along with the bid in respect of the offered product or service, and Buyer will decide eligibility for purchase preference based on documentary evidence submitted in case of product bids, whereas in case of services the eligibility is automatically validated. If L-1 is not an MSE and MSE Seller (s) has / have quoted price within L-1+ 15% (Selected by Buyer) of margin of purchase preference /price band defined in relevant policy, such MSE Seller shall be given opportunity to match L-1 price and contract will be awarded for % (selected by Buyer) percentage of total quantity. The buyers are advised to refer the OM No.1 4 2021 PPD dated 18.05.2023 for compliance of Concurrent application of Public Procurement Policy for Micro and Small Enterprises Order, 2012 and Public Procurement (Preference to Make in India) Order, 2017. Benefits of MSE will be allowed only if seller is validated on-line in GeM profile as well as validated and approved by Buyer after evaluation of documents submitted.\n2. If L-1 is not an MSE and MSE Service Provider (s) has/have quoted price within L-1+ 15% of margin of purchase preference /price band as defined in the relevant policy, then 100% order quantity will be awarded to such MSE bidder subject to acceptance of L1 bid price.\n3. Estimated Bid Value indicated above is being declared solely for the purpose of guidance on EMD amount and for determining the Eligibility Criteria related to Turn Over, Past Performance and Project / Past Experience etc. This has no relevance or bearing on the price to be quoted by the bidders and is also not going to have any impact on bid participation. Also this is not going to be used as a criteria in determining reasonableness of quoted prices which would be determined by the buyer based on its own assessment of reasonableness and based on competitive prices received in Bid / RA process.\n4. Short Duration Bid has been published by the Buyer with the approval of the Competent authority due to Emergency procurement of critical products/services.\n\n3 / 11\n\n---\n\n5. Reverse Auction would be conducted amongst all the technically qualified bidders except the Highest quoting bidder. The technically qualified Highest Quoting bidder will not be allowed to participate in RA. However, H-1 will also be allowed to participate in RA in following cases:\n\ni. If number of technically qualified bidders are only 2 or 3.\nii. If Buyer has chosen to split the bid amongst N sellers, and H1 bid is coming within N.\niii. In case Primary product of only one OEM is left in contention for participation in RA on elimination of H-1.\niv. If L-1 is non-MSE and H-1 is eligible MSE and H-1 price is coming within price band of 15% of Non-MSE L-1\nv. If L-1 is non-MII and H-1 is eligible MII and H-1 price is coming within price band of 20% of Non-MII L-1\n\nअतिरिक्त योग्यता / आवश्यक डेटा / Additional Qualification / Data Required\n\nBuyer to mention scope of work: 1790763752.pdf\n\nTerms and Conditions / Deductions etc to be mentioned by Buyer as per their requirement: 1790763759.pdf\n\nRepair, Maintenance, And Installation Of Plant/ Systems/ Equipments (Version 2) - Construction Of Parking Shed With CC Flooring As Per ATC And Spl Terms &amp; Conditions In Rourkela Steel Township; Construction Of Parking Shed With CC Flooring As Per ATC .. ( 1 )\n\nतकनीकी विशिष्टियाँ / Technical Specifications\n\n<table><tr><th>विवरण / Specification</th><th>मूल्य / Values</th></tr><tr><td colspan=\"2\">कोर / Core</td></tr><tr><td>Type of Premise</td><td>Construction of Parking Shed with CC flooring as per ATC and Spl Terms &amp; Conditions in Rourkela Steel Township</td></tr><tr><td>Type of Item/Product/System to be repaired or Installed</td><td>Construction of Parking Shed with CC flooring as per ATC and Spl Terms &amp; Conditions in Rourkela Steel Township</td></tr><tr><td>Consumables to be provided by</td><td>Service Provider</td></tr><tr><td>Spare parts to be provided by</td><td>Service Provider</td></tr><tr><td colspan=\"2\">एडऑन / Add-on(s)</td></tr><tr><td colspan=\"2\">अतिरिक्त विवरण / Additional Details</td></tr><tr><td>Estimated number of visits as per last year records</td><td>0</td></tr></table>\n\nक्रेता द्वारा निर्धारित न्यूनतम मूल्य / Minimum Floor Price defined by Buyer\n\n<table><tr><td>क्रेता द्वारा निर्धारित न्यूनतम मूल्य / Minimum Floor Price defined by Buyer</td><td>No</td></tr></table>\n\nअतिरिक्त विशिष्ट दस्तावेज / Additional Specification Documents\n\nपरेशिती / रिपोर्टिंग अधिकारी / Consignees / Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>Quantity</th><th>अतिरिक्त आवश्यकता /Additional Requirement</th></tr><tr><td>1</td><td>PRADIPTA KUMAR MANDHATA</td><td>769011,Contract Cell (Works) Office of GM I/c, CC(W), Near administrative Building , SAIL, Rourkela Steel Plant , Rourkela-769011</td><td>Project / Lumpsum Based</td><td>• Estimated Cost of Spare/Consumable s/Items on Reimbursement basis in Rs (please input 0 if not applicable) : 0</td></tr></table>\n\nक्रेता द्वारा जोड़ी गई बिड की विशेष शर्तें /Buyer Added Bid Specific Terms and Conditions\n\n1. Buyer Added Bid Specific ATC\n\nBuyer Added text based ATC clauses\n\nINVITATION TO TENDER\n\nSUB: Const of Parking shed with CC flooring in front of Qtr No B/33 Sec-3.\n\nINSTRUCTIONS TO THE BIDDERS\n\nI. BIDS NOT CONFORMING TO THE SPECIFICATION AND/OR TERMS &amp; CONDITIONS OF THIS INVITATION TO TENDER ARE LIABLE FOR REJECTION.\n\nII. FIRMS TO CLEARLY INDICATE THEIR INCOME TAX PERMANENT ACCOUNT NUMBER (PAN) AND THE ISSUING AUTHORITY CITY.\n\nIII. BIDDERS ARE REQUESTED TO READ THE TENDER DOCUMENT CAREFULLY AND SUBMIT THEIR OFFER AS PER TERMS AND CONDITIONS GIVEN THEREIN. BIDDERS WHO SUBMIT THEIR OFFERS SHALL BE DEEMED TO HAVE READ, UNDERSTOOD AND ACCEPTED THE TERMS AND CONDITIONS OF THE DOCUMENT.\n\nIV. TENDERER SHALL SUBMIT THE TECHNO-COMMERCIAL BID AND PRICE BID THROUGH ONLINE GEM PORTAL.\n\nV. GENERAL CONDITIONS OF CONTRACT (HEREIN AFTER REFERRED AS GCC) FOR PROCUREMENT OF SERVICES (SAIL # S1) SHALL BE APPLICABLE FOR THE SUBJECT CONTRACT. THE GENERAL CONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) IS NOT ENCLOSED HEREWITH AND IS AVAILABLE IN THE STANDARD DOCUMENTS OF SAIL WEBSITE, WWW.SAILTENDERS.CO.IN FOR REFERENCE.\n\nVI. THE BIDDER NEED NOT SUBMIT COPY OF THE GENERAL CONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) ALONG WITH THE TENDER. HOWEVER, THE BIDDER BY SUBMITTING THE TENDER SHALL BE DEEMED TO HAVE READ AND UNDERSTOOD THE CONDITIONS OF THE GENERAL CONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) AND THE SAME SHALL, FOR ALL INTENTS AND PURPOSES, BE DEEMED TO BE FORMING INTEGRAL PART OF THE CONTRACT AND SHALL ALWAYS BE CONSTRUED ACCORDINGLY.\n\nVII. IN ADDITION TO GCC FOR PROCUREMENT OF SERVICES (SAIL # S1) THE INSTANT SPECIAL TERMS AND CONDITIONS AND STANDARD TERMS AND CONDITIONS SHALL ALSO APPLY FOR THE SUBJECT\n\n## Buyer Added Bid Specific Additional Terms and Conditions\n\n\n### 1. Buyer Added Bid Specific ATC\n\nBuyer Added text based ATC clauses\nINVITATION TO TENDER\nSUB: Const of Parking shed with CC flooring in front of Qtr No B/33 Sec-3.\nINSTRUCTIONS TO THE BIDDERS\n* I.     BIDS NOT CONFORMING TO THE SPECIFICATION AND/OR TERMS & CONDITIONS OF THIS\nINVITATION TO TENDER ARE LIABLE FOR REJECTION.\nII.   FIRMS TO CLEARLY INDICATE THEIR INCOME TAX PERMANENT ACCOUNT NUMBER (PAN) AND TH\nE ISSUING AUTHORITY CITY.\nIII.  BIDDERS ARE REQUESTED TO READ THE TENDER DOCUMENT CAREFULLY AND SUBMIT THEIR OFFE\nR AS PER TERMS AND CONDITIONS GIVEN THEREIN. BIDDERS WHO SUBMIT THEIR OFFERS SHALL BE D\nEEMED TO HAVE READ, UNDERSTOOD AND ACCEPTED THE TERMS AND CONDITIONS OF THE DOCUME\nNT.\nIV.   TENDERER SHALL SUBMIT THE TECHNO-COMMERCIAL BID AND PRICE BID THROUGH ONLINE G\nEM PORTAL.\n* V.     GENERAL CONDITIONS OF CONTRACT (HEREIN AFTER REFERRED AS GCC) FOR PROCUREMENT OF\nSERVICES (SAIL # S1) SHALL BE APPLICABLE FOR THE SUBJECT CONTRACT. THE GENERAL CONDITIONS\nOF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) IS NOT ENCLOSED HEREWITH AND IS AVA\nILABLE IN THE STANDARD DOCUMENTS OF SAIL WEBSITE, WWW.SAILTENDERS.CO.IN FOR REFERENCE.\nVI.   THE BIDDER NEED NOT SUBMIT COPY OF THE GENERAL CONDITIONS OF CONTRACT FOR PROCURE\nMENT OF SERVICES (SAIL # S1) ALONG WITH THE TENDER. HOWEVER, THE BIDDER BY SUBMITTING TH\nE TENDER SHALL BE DEEMED TO HAVE READ AND UNDERSTOOD THE CONDITIONS OF THE GENERAL C\nONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) AND THE SAME SHALL, FOR A\nLL INTENTS AND PURPOSES, BE DEEMED TO BE FORMING INTEGRAL PART OF THE CONTRACT AND SHA\nLL ALWAYS BE CONSTRUED ACCORDINGLY.\nVII.  IN ADDITION TO GCC FOR PROCUREMENT OF SERVICES (SAIL # S1) THE INSTANT SPECIAL TERM\nS AND CONDITIONS AND STANDARD TERMS AND CONDITIONS SHALL ALSO APPLY FOR THE SUBJECT\n5 / 11\nTENDER/CONTRACT.\nVIII.       WHEREVER SPECIAL TERMS & CONDITIONS DIFFER FROM STANDARD TERMS AND CONDITIONS /\n#GCC FOR PROCUREMENT OF SERVICES (SAIL # S1)#, SPECIAL TERMS & CONDITIONS SHALL\nOVER-RIDE STANDARD TERMS AND CONDITIONS / GCC. WHEREVER STANDARD TERMS AND CONDITIONS\nDIFFER FROM GCC FOR PROCUREMENT OF SERVICES (SAIL # S1), STANDARD TERMS AND CONDITIONS S\nHALL OVER-RIDE GCC.\nIX.   WHEREVER GCC FOR PROCUREMENT OF SERVICES (SAIL # S1) DIFFERS FROM GEM GENERAL TERM\nS AND CONDITIONS (GTC), GEM GTC SHALL OVER-RIDE SAIL-S1.\n* X.     IN CASE ANY SPECIFIC ADVERSE REPORT IS RECEIVED AGAINST A TENDERER, AS AN INFORMATIO\nN OR UPON ENQUIRY MADE BY SAIL, IN RESPECT OF CAPABILITIES AND PERFORMANCE OF THE TENDE\nRER, AFTER RECEIPT OF TENDER (EVEN AFTER OPENING OF PRICE BID), THE QUOTATION/ TENDER SUB\nMITTED BY SUCH TENDERER IS LIABLE TO BE REJECTED.\nXI.   SHORTFALL DOCUMENTS/ CONFIRMATORY DOCUMENTS:-\na)     SAIL RESERVES ITS RIGHT TO, BUT WITHOUT ANY OBLIGATION TO DO SO, SEEK ANY SHORTFALL\nINFORMATION/ DOCUMENTS ONLY IN CASE OF HISTORICAL DOCUMENTS THAT PRE-EXISTED AT THE TI\nME OF THE BID OPENING, AND WHICH HAVE NOT UNDERGONE CHANGE SINCE THEN.\nb)     NO POST-BID CLARIFICATION AT THE INITIATIVE OF THE BIDDER SHALL BE ENTERTAINED.\nc)      DURING EVALUATION AND COMPARISON OF BIDS, SAIL-RSP MAY, AT HIS DISCRETION, ASK THE B\nIDDER FOR SUBMISSION OF SHORTFALL DOCUMENTS/ CONFIRMATORY DOCUMENTS/ CLARIFICATION O\nN BID. THE REQUEST FOR SEEKING SHORTFALL DOCUMENTS/ CONFIRMATORY DOCUMENTS/ CLARIFIC\nATION AND THE RESPONSE SHALL BE IN WRITING. MODIFICATION OF THE BID AND ANY FORM OF\nCOMMUNICATION WITH SAIL-RSP FOR SUBMISSION OF ANY ADDITIONAL DOCUMENTS, NOT SPECIFICALLY\nASKED FOR BY SAIL-RSP WILL NOT BE ALLOWED. AND EVEN IF SUBMITTED, THEY WILL NOT BE CONSIDE\nRED.\nd)     IF REQUIRED, WRITTEN COMMUNICATION/S SHALL BE DONE THROUGH GEM PORTAL, FOR SUBMISSI\nON OF THE SHORT FALL DOCUMENTS/CONFIRMATORY DOCUMENTS/CLARIFICATION WITH A SPECIFIED D\nATE FOR SUBMISSION OF THE SAME. BIDDER SHALL BE REQUIRED TO SUBMIT SHORT FALL DOCUMENTS\n/CONFIRMATORY DOCUMENTS/CLARIFICATION TO THIS OFFICE BE DONE THROUGH GEM /\nE-PROCUREMENT PORTAL OR E-MAIL/ COURIER/ REGISTERED POST/SPEED POST WITH IN THE SPECIFIE\nD TIME MENTIONED IN THE COMMUNICATION/S. THE ALLOWABLE TIME PERIOD FOR SUBMISSION OF TH\nE SHORT FALL DOCUMENTS/CONFIRMATORY DOCUMENTS/CLARIFICATION WILL BE THE SOLE DISCRETI\nON OF SAIL-RSP AND AS PER THE COMMUNICATION FROM SAIL-RSP BY THE BIDDER. IF THE TENDERER\nDOES NOT COMPLY OR RESPOND BY THE SPECIFIED DATE, HIS TENDER WILL BE EVALUATED BASED O\nN AVAILABLE DOCUMENTS.\ne)     EVALUATION OF SIMILAR NATURE OF WORK OF RECEIVED OFFERS WILL BE DONE CONSIDERING T\nHE RELEVANT SCOPE OF THE JOB EXECUTED BY THE TENDERER. MERELY THE MENTION OF THE \"NAME\nOF WORK\" OF THE WORK ORDER SUBMITTED WILL NOT BE INTERPRETED AS SIMILAR WORK. DECISION\nOF RSP SHALL BE FINAL AND BINDING ON THE TENDERER.\n#BIDDERS ARE THEREFORE ADVISED THAT THEY SHOULD TAKE DUE CARE WHILE UPLOADING OFFER / C\nONFIRMATORY DOCUMENTS IN ORDER TO AVOID REJECTION OF THEIR BID.#\nXII.  MII & MSE PURCHASE PREFERENCE - PURCHASE PREFERENCE WILL BE GIVEN TO MAKE IN INDIA SU\nPPLIERS AND MSE SUPPLIERS,WHICH SHALL BE BASED ON THE EXTANT GUIDELINES OF GOVT. OF INDIA\nAND GUIDELINES OF SAIL PLANTS / UNITS.\nXIII.       BID OF THE BIDDERS QUOTING BELOW 25% OF THE ESTIMATED VALUE SHALL BE TREATED AS A\nBNORMALLY LOW BID AND SUCH BIDDER/BIDDERS MAY BE ASKED TO SUBMIT PGB AS PER CLAUSE NO.3\n8 OF STANDARD T&C. THIS IS NOT APPLICABLE FOR CASES WHERE MINIMUM FLOOR PRICE IS INDICATED\nIN THE TENDER.\n6 / 11\nONLY RSP-SAIL REGISTERED VENDORS WHO HAVE BEEN SPECIFICALLY INVITED AGAINST THIS LIMITED T\nENDER ENQUIRY (LTE) ARE ELIGIBLE TO PARTICIPATE IN THE TENDER. BIDS SUBMITTED BY THE SELLERS\nTO WHOM THE LTE INVITATION HAS BEEN ISSUED SHALL ONLY BE CONSIDERED FOR EVALUATION. ANY B\nID SUBMITTED BY A SELLER WHO HAS NOT BEEN INVITED SHALL BE TREATED AS UNSOLICITED AND SHA\nLL NOT BE CONSIDERED FOR EVALUATION.\nHOWEVER, BIDS SUBMITTED BY AUTHORIZED REPRESENTATIVES OF THE INVITED SERVICE PROVIDER\nS SHALL ALSO BE CONSIDERED, PROVIDED THEY SUBMIT A VALID AUTHORIZATION LETTER ISSUED B\nY THE RESPECTIVE INVITED FIRM. THE AUTHORIZATION LETTER MUST CLEARLY AUTHORIZE THE REPR\nESENTATIVE TO PARTICIPATE IN AND SUBMIT THE BID FOR THE SUBJECT TENDER ON BEHALF OF THE\nINVITED FIRM.\nFIRMS INTERESTED IN OBTAINING REGISTRATION WITH SAIL MAY SUBMIT THE VENDOR REGISTRATION\nFORM AVAILABLE ON THE SAIL TENDERS PORTAL AND COMPLETE THE PRESCRIBED REGISTRATION PRO\nCESS WITH THE CONCERNED SAIL PLANT/UNIT.\nTHE ABOVE INFORMATION REGARDING VENDOR REGISTRATION IS PROVIDED SOLELY TO FACILITATE\nEXPANSION OF THE VENDOR BASE, WHEREVER REQUIRED, AND SHALL NOT BE CONSTRUED AS A TE\nNDER INVITATION OR COMMITMENT FOR AWARD OF WORK. FUTURE TENDER ENQUIRIES MAY BE ISSU\nED TO SUCH FIRMS SUBJECT TO SUCCESSFUL REGISTRATION AND FULFILLMENT OF THE APPLICABLE\nELIGIBILITY REQUIREMENTS.\nDOCUMENTS TO BE SUBMITTED:-\n\n### 1.     COPY OF VALID \"GST\" REGISTRATION CERTIFICATE MENTIONING THE NEW GSTIN ALONG WIT\n\nH SAC/HSN CODES FOR THE ITEMS YOU ARE APPLYING IN THE ABOVE TENDER IN THE \"RFQ\".\n\n### 2.     DOCUMENTS IN SUPPORT OF TECHNICAL REQUIREMENTS. (AS PER ELIGIBILITY CRITERIA)\n\n\n### 3.     DOCUMENTS IN SUPPORT OF OWNERSHIP DETAILS (PROPRIETARY FIRM, PARTNERSHIP, PVT. LTD,\n\nPUBLIC LTD, ETC)\n\n### 4.     CERTIFICATE PERTAINING TO MSE, (IF REGISTERED AS MICRO OR SMALL ENTERPRISE UNDER M\n\nSMED ACT 2006).\n\n### 5.     VALID RSP VENDOR REGISTRATION CERTIFICATE (IF AVAILABLE)\n\n\n### 6.     UNDERTAKING AS PER ANNEXURE-A ON COMPANY LETTER HEAD\n\n\n### 7.     ACCEPTANCE OF ALL TERMS& CONDITIONS: ANNEXURE-1\n\n\n### 8.     DETAILS AS PER ANNEXURE-S (MANADATORY FOR CASE VALUE MORE THAN/EQUAL TO 1 CRORE).\n\n\n### 9.     CERTIFICATION FOR LOCAL CONTENT IN THE QUOTED ITEM (GOODS/WORKS/SERVICES), I.E.\n\nLOCAL CONTENT CERTIFICATE AS PER ANNEXURE -2A/2B.\n\n### 10.   INTEGRITY PACT SIGNED BY THE BIDDER WHEREEVER APPLICABLE.\n\n\n### 11.   EMD/EMD EXEMPTION DOCUMENTS AS A\n\nPPLICABLE NOTE:\nI)  NON-SUBMISSION OF THE ABOVE DOCUMENTS MAY RENDER THE BID LIABLE FOR REJECTION.\nII)  SAIL RESERVES THE RIGHT TO VERIFY ANY SUPPORTING DOCUMENT(S) SUBMITTED BY\nA PARTICIPATING TENDERER / BIDDER FROM ITS SOURCE (DOCUMENT ISSUING AUTHORITY\n).\nIII)  IN THE INTEREST OF EXPEDITIOUS COMPLETION OF VERIFICATION, A PARTICIPATING TENDERER\n/BIDDER SHALL PROVIDE A LIST OF EACH SUPPORTING DOCUMENT ON ITS LETTER-HEAD AS PER #AN\nNEXURE-S#, ALONG WITH THE CONTACT DETAILS (POSTAL ADDRESS, EMAIL ADDRESS, LANDLINE / M\nOBILE NUMBER) OF THE ISSUING AUTHORITY OF EACH SUPPORTING DOCUMENT FOR VERIFICATION.\nIV)  NON-VERIFICATION OF ANY SUPPORTING DOCUMENT OR INFORMATION, AT THE SOLE DISCRETIO\nN OF SAIL, DOES NOT ABSOLVE THE TENDERER / BIDDER OF ITS ABSOLUTE RESPONSIBILITY TO PROV\nIDE ONLY GENUINE DOCUMENT(S) IN SUPPORT OF ELIGIBILITY CONDITIONS.\n7 / 11\nV)  IN CASE A SUPPORTING DOCUMENT OR INFORMATION IS FOUND TO BE FAKE/FORGED/TAMPER\nED/ NON-GENUINE AT ANY STAGE DURING TENDERING PROCESS & EVEN AFTER PLACEMENT OF PU\nRCHASE ORDER / WORK ORDER, THE TENDERER/BIDDER IS LIABLE FOR PUNITIVE ACTIONS AS PER\nEXTANT GUIDELINES OF SAIL.\nEVALUATION CRITERIA:-\nTHE BIDDERS HAVE TO QUOTE OVERALL LOT VALUE FOR ENTIRE QUANTITY OF RFQ.\nPRICE EVALUATION WILL BE CARRIED OUT ON OVERALL LOT VALUE ON MATCHING PARTS BASIS.\nITEM\nNO\nSERVICE NO\nDESCRIPTION\nQTY.\nUOM\nWEIGHTAGE\n10\n4001031166\nSHUTTERING F/FDN,PL W/PRO\nPPING\n70.000\nM2\n0.66 %\n20\n4001031186\nERECT STEEL STRUCTURE,MS AN\nGLE/CHANNEL\n13,500.000\nKG\n63.85 %\n30\n4001080500\nPROVG&LAYG R.C.C 1:1-1/2:3 AGG\n20MM NOM\n20.000\nM3\n5.09 %\n40\n4001301880\nPRVDG&FIXG OF PVC PIPE,100 MM\nDIA\n10.000\nRM\n0.06 %\n50\n4001331345\nLAYG CC,1:2:4,<2ND FLOOR LVL\n20.250\nM3\n5.12 %\n60\n4001331350\nLAYG CC 1:4:8,AGGREGATE 40MM N\nMNL SIZE\n28.000\nM3\n5.06 %\n70\n4001331372\nPLCG STEEL REINF F/RCC & RB WRK\n2,400.000\nKG\n7.52 %\n80\n4001331536\nEARTH WRK IN OPEN EXCAV UPTO 2\nM\n80.000\nM3\n0.70 %\n90\n4001340515\nP/F PRECOATED PROFILE SHHETS\n300.000\nM2\n5.61 %\n100\n4001340516\nP/F PRECOATED PROFILE SHHET AC\nCESSORIES\n36.000\nM\n0.49 %\n110\n4001380141\nPREPARG & PLACG CEMENTITIOUS G\nROUT,214\n20.000\nL\n0.06 %\n120\n4001411038\nREFLG EXCAV EARTH,LEAD <50M &\nLIFT <1.5M\n30.000\nM3\n0.23 %\n130\n4001411203\nPRVDG&FIXG BOLT FE\n410WB,IS-2062&nut\n120.000\nKG\n1.15 %\n140\n4001422571\nFILG PL W/SAND UNDER FLOOR W/\nRAMMING\n29.000\nM3\n0.84 %\n150\n4009011802\nTRANSPT EARTH,MEC\nH MEANS,>2-5KM\n41.450\nM3\n0.42 %\n160\n4001051692\nAPPLYG PRIMING COAT ON\nM2\n8 / 11\nITEM\nNO\nSERVICE NO\nDESCRIPTION\nQTY.\nUOM\nWEIGHTAGE\nWOOD/STEEL\n500.000\n0.91 %\n170\n4001051751\nPAINTG 2CT,NEW/OLD WRK W/\nREADY MIX PAINT\n500.000\nM2\n2.23 %\nNOTE: -\n1)  WEIGHTAGE OF EACH ITEM AS MENTIONED ABOVE IN THE TENDER SCHEDULE IS THE VALUE OF TH\nAT ITEM AS PERCENTAGE (%) OF OVERALL LOT VALUE.\n2)  AFTER DISCOVERY OF L-1 VALUE, FURTHER PRICE BREAKUP SHALL NOT BE REQUIRED FROM L-1\nBIDDERS AS THE ITEM WISE RATE (INCLUSIVE OF ALL TAXES, DUTIES, LEVIES AND CESS EXCEPT GS\nT) OF THE TENDER SCHEDULE SHALL BE DERIVED AS FOLLOWS:\n(I)  ITEM-WISE TOTAL VALUE = L-1 OVERALL LOT VALUE X ITEM WISE WEIGHTAGE AS PER TENDER S\nCHEDULE / 100\n(II)  ITEM-WISE RATE = ITEM-WISE TOTAL VALUE AS ABOVE AT (I) / ITEM-WISE TOTAL QUANTITY AS P\nER TENDER SCHEDULE.\n.\n\n### 2. Buyer Added Bid Specific ATC\n\nBuyer uploaded ATC document Click here to view the file.\nअ'वीकरण/Disclaimer\nThe Additional Terms and Conditions (ATC) have been incorporated by the Buyer after approval of their\nCompetent Authority. The Buyer ,is solely responsible for the impact of these clauses on the bidding process, its\noutcome, and consequences thereof including any restriction arising in the bidding process due to these ATCs\nand including the modification of technical specifications and / or terms and conditions governing the bid.All\nrepresentations / grievances pertaining to the ATC clauses shall be raised with the buyer organization directly\nand not with GeM.If any of the clause(s) is/are incorporated by the Buyer regarding the following, the bid &\nresultant contract shall be treated as null & void. Further, GeM reserves the right, at its sole discretion, to cancel\nthe bid forthwith, without issuance of any prior notice or intimation :-\n\n### 1. Publishing Custom / BOQ bids for items for which regular GeM categories are available (unless such\n\nCustom / BOQ item is bunched with the major regular product Category Item).\n\n### 2. Mandating procurement of / from specific Brand / Make / Model / Manufacturer / Dealer except in case of\n\nSingle Bid / Proprietary Article Certificate (PAC) Buying.\n\n### 3. Inclusion of disqualification criteria related to suspension of seller / service provider, where such\n\nsuspension period has already expired.\n\n### 4. Mandating submission of documents (other than EMD and signed Integrity Pact - which can be submitted\n\nwithin 5 days of bid opening) in physical form as a pre-requisite to qualify bidders.\n\n### 5. Publishing bids on GeM for procurement of works.\n\n\n### 6. Procurement of Goods by creating a Service bid on GeM & vice-versa.\n\n\n### 7. Seeking sample with bid or approval of samples during bid evaluation process. However, trial / sample, as\n\nthe case may be, shall be permitted in cases where trial / sample are allowed as per approved and\npublished procurement policy of the Buyers’ controlling Ministry / Department / State / Public Sector\nEnterprises Headquarters. If there is any violation of trial / sample clause with regard to approved policy\nof the Buyers’ Ministry / Department / State / Public Sector Enterprises Headquarters, then this is to be\ndetermined and redressed by the concerned Buyer Organisation only.\n\n### 8. Seeking experience from specific organization / department / institute only or from foreign / export\n\nexperience.\n\n### 9. Creating bid for items from incorrect categories.\n\n9 / 11\n\n### 10. Reference of conditions published on any external site or reference to external documents/clauses.\n\n\n### 11. Asking for any Tender fee / Bid Participation fee, as the case may be.\n\n\n### 12. Buyer added ATC Clauses which are in contravention of clauses defined in bid detail section, including\n\nspecifications, EMD Detail, ePBG Detail and MII and MSE Purchase Preference sections of the bid, unless\notherwise allowed by the applicable GeM GTC.\n\n### 13. Any ATC clause in contravention with GeM GTC Clause 4 (xiii) (h) will be invalid. In case of multiple L1\n\nbidders against a service bid, the buyer shall place the Contract by selection of a bidder amongst the L-1\nbidders through a Random Algorithm executed by GeM system.\n\n### 14. In a category based bid, adding additional items, through buyer added, additional scope of work/\n\nadditional terms and conditions/or any other document. If buyer needs more items along with the main\nitem, the same must be added through bunching category based items or by bunching custom catalogues\nor bunching a BoQ with the main category based item, the same must not be done through ATC or Scope\nof Work.\nFurther, if any seller has any objection/grievance against these additional clauses or otherwise on any aspect of\nthis bid, they can raise their representation against the same by using the Representation window provided in\nthe bid details field in Seller dashboard after logging in as a seller. Buyer is duty bound to reply to all such\nrepresentations and would not be allowed to open bids if he fails to reply to such representations.\nAll GeM Sellers/Service Providers shall ensure full compliance with all applicable labour laws,\nincluding the provisions, rules, schemes and guidelines under the four Labour Codes i.e. the Code\non Wages, 2019; the Industrial Relations Code, 2020; the Occupational Safety, Health and Working\nConditions Code, 2020; and the Code on Social Security, 2020 as and when notified and brought into\nforce by the Government of India.\nFor all provisions of the Labour Codes that are pending operationalisation through rules, schemes or\nnotifications, the corresponding provisions of the pre-existing labour enactments (such as The\nMinimum Wages Act, 1948, The Payment of Wages Act, 1936, The Payment of Bonus Act, 1965, The\nEqual Remuneration Act, 1976, The Payment of Gratuity Act, 1972, etc. and relevant State Rules)\nshall continue to remain applicable.\nThe Seller/ Service Providers shall, therefore, be responsible for ensuring compliance under:\nAll notified and enforceable provisions of the new Labour Codes as mentioned hereinabove;\nand\nAll operative provisions of the erstwhile Labour Laws until their complete substitution.\nAll obligations relating to wages, social security, safety, working conditions, industrial relations etc.\nand any other statutory requirements shall be strictly met by the Seller/ Service Provider. Any non-\ncompliance shall constitute a breach of the contract and shall entitle the Buyer to take appropriate\naction in accordance with the contract and applicable law.\nThis Bid is governed by the General Terms and Conditions, conditions stipulated in Bid and Service\nLevel Agreement specific to the Service, as the case may be, as provided in the Marketplace.\nHowever, in case of Service, if any condition specified in General Terms and Conditions is\ncontradicted by the conditions stipulated in Service Level Agreement specific to said Service, then it\nwill over-ride the conditions in the General Terms and Conditions.\nThis Bid is governed by the सामाdय िनयम और शतh/General Terms and Conditions, conditions stipulated in Bid and\nService Level Agreement specific to this Service as provided in the Marketplace. However in case if any condition\nspecified in सामाdय िनयम और शतh/General Terms and Conditions is contradicted by the conditions stipulated in\nService Level Agreement, then it will over ride the conditions in the General Terms and Conditions.\nजेम क\u0010 सामाdय शत. के खंड 26 के संदभ% म< भारत के साथ भूिम सीमा साझा करने वाले देश के \u0001बडर से खर\u0013द पर 4ितबंध के संबंध म<\nभारत के साथ भूिम सीमा साझा करने वाले देश का कोई भी \u0001बडर इस िन\u0001वदा म< \u0001बड देने के िलए तभी पा  होगा जब वह \u0001बड देने वाला\nसkम 4ािधकार\u0013 के पास पंजीकृत हो।\u0001बड म< भाग लेते समय \u0001बडर को इसका अनुपालन करना होगा और कोई भी गलत घोषणा ;कए जाने\nव इसका अनुपालन न करने पर अनुबंध को तmकाल समाn करने और कानून के अनुसार आगे क\u0010 कानूनी कार%वाई का आधार होगा।/In terms\nof GeM GTC clause 26 regarding Restrictions on procurement from a bidder of a country which shares a land border with India, any bidder from a country which shares a\nland border with India will be eligible to bid in this tender only if the bidder is registered with the Competent Authority. While participating in bid, Bidder has to undertake\ncompliance of this and any false declaration and non-compliance of this would be a ground for immediate termination of the contract and further legal action in\naccordance with the laws.\n10 / 11\n---धdयवाद/Thank You---\n11 / 11\n\n\n## Hyperlinks\n\n- [OM_No.1_4_2021_PPD_dated_18.05.2023](https://bidplus.gem.gov.in/bidding/downloadOmppdfile/)  <!-- page 3 -->\n- [:1790763752.pdf](https://bidplus.gem.gov.in/resources/upload_nas/SepQ326/bidding/biddoc/bid-9969390/1790763752.pdf)  <!-- page 4 -->\n- [1790763759.pdf](https://bidplus.gem.gov.in/resources/upload_nas/SepQ326/bidding/biddoc/bid-9969390/1790763759.pdf)  <!-- page 4 -->\n- [S1) IS NOT ENCLOSED HERE WWW.SAILTENDERS.CO.IN](http://www.sailtenders.co.in/)  <!-- page 5 -->\n- **Buyer uploaded ATC document**: [Click here to view the file](https://fulfilment.gem.gov.in/contract/slafds?fileDownloadPath=SLA_UPLOAD_PATH/2026/Sep/GEM_2026_B_8103442/CLM0010/SAIL_5f47b1c0-24f1-46b8-b38b1790764090342_sourav.patra1.pdf)  <!-- page 9 -->\n- [सामा�य िनयम और शत�/General Terms and Conditions,](https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20260930)  <!-- page 10 -->\n- [Service Level Agreement](https://bidplus.gem.gov.in/bidding/bid/bidsla/99388736972100)  <!-- page 10 -->"
+}

@@ -1,0 +1,2427 @@
+=== [MAIN BID ATC CLAUSES] ===
+1. Buyer Added Bid Specific ATC
+Buyer Added text based ATC clauses
+1. Item/Service:-Supply, installation, testing & commissioning of Under Vehicle Survei
+llance System (UVSS) Qty.02 Nos at HEF each at main gate & Admin gate integrated 
+with driver face recognition, Automatic number plate recognition (ANPR) AI enabled c
+ameras with Enterprise-grade software and 3 years comprehensive warranty (Includi
+ng Civil Works and Electrical Works to be done by supplier) as per scope of work & te
+chnical specification No.6147/UVSS/SE/HEF dt.24.08.2026.
+2.Qty-2 Nos
+3.Technical Specification selected  as per GeM:-
+Specification Name
+Bid Requirement(Allowed Values)
+7 / 14
+
+Conformity to Technical Requ
+irements
+As per QR/speciﬁcation & TDs for ‘Under 
+Vehicle Scanning System(UVSS) with Im
+age & Automated License Plate Recogniti
+on System’, prepared and Approved by 
+MHA vide letter No.F/No.63013/09/2014-
+Ord/BSF/2008/MHA-Prov-I-1778 dated 09
+th September ,2015.
+Minimum Standard Warranty(
+in years)
+1
+RAM of processing Unit
+16 GB
+Display Monitor Diagonal Size
+(in inch)
+Between 24 and 26(*)
+(*)As per HEF specification & scope of work, the required display Monitor Diagonal Siz
+e(I inch) is 32. Hence, Display Monitor Diagonal Size (in inch) as per HEF requirement
+i.e.32” will supersede the Display Monitor Diagonal Size (in inch) displayed as per Ge
+M category specification.
+4.  Parameters  selected against the Comprehensive Maintenance in GeM:-As per HEF 
+specification & scope of work, three (3) years comprehensive onsite warranty (Spare
+s+Service) is required. Other terms and conditions are applicable as per GeM additio
+nal clause for CMC.
+Comprehensive Maintenance(Minimum Percenta
+ge)
+3%
+Comprehensive Maintenance(Maximum Percenta
+ge)
+25%
+Warranty of required product
+1 Year
+Comprehensive Maintenance Duration (Post War
+ranty)
+3 Year
+ITC available on GST
+100%
+5.Installation Commissioning and Testing (ICT) details for the tendered item  selected 
+in GeM:-
+% of Product cost payable on Product Delivery 
+70%
+Min Cost Allocation for ICT as a % of product cost
+1%
+Number of days allowed for ICT after site readine
+ss communication to seller
+30 days
+8 / 14
+
+ITC available on GST
+100%
+ITC available on GST Cess
+0%
+(*)100% payment will be made within 30 days after supply, installation, testing & co
+mmissioning of Under Vehicle Surveillance System (UVSS)-Qty-2 Nos as per HEF spec
+ification & scope of work and submission of required documents/bills. This clause will
+supersede the 70% of Product cost payable on Product Delivery in ICT details.
+6.BIDERS ARE ADVISED TO GO THOROUGHLY WITH SPECIFICATION NO.6147/UVSS/SE/HEF  DT. 24/08/202
+6(REFER SCOPE OF WORK & TECHNICAL SPECIFIC ATION FILE ATTACHED IN GEM BID AS "BUYER 'S SPECIFI
+CATION DOCUMENT" ) BEFORE PARTICIPATING IN THE BID.
+7.GST CESS NOT APPLICABLE. GST CESS IF QUOTED BY BIDDER WILL NOT BE PAYABLE.
+8.TERMS AND CONDITIONS/TECHNICAL SPECIFICATION IN TH E BUYER ADDED ATC SHALL PREVAIL OVER G
+EM TERMS AN D CONDITIONS/TECHNICAL SPECIFICATION.
+9.Other Terms and conditions
+         i.             
+Type of TE
+Open Tender Enquiry Through GeM (GeM
+Bid)
+       ii.             
+No. of Bids
+Two
+      iii.             
+Bid Validity
+180 days
+     iv.             
+Tender Fee
+Not-Applicable
+       v.             
+Tender Quantity
+2 Nos
+     vi.             
+Option Clause
+Not Applicable
+    vii.             
+EMD
+Rs.194962.00
+  viii.             
+Years of past experience re
+quired 
+for 
+same/similar
+service
+3 Years
+     ix.             
+Minimum Average Annual T
+urnover of the bidder(For 3 
+years)
+20 Lakhs
+       x.             
+MSE & Start-up Exemption f
+or years of experience and T
+urnover
+Yes
+(Being UVSS is a critical security item, no
+relaxation is granted on Technical and Q
+uality Speciﬁcation. All the MSE/Startup b
+idders must upload proof of having succe
+ssfully supplied and installed at least one
+(1) same/similar UVSS unit to any Central
+or State Government organization /PSU/P
+ublic Listed Companies)
+     xi.             
+Do your want to show the d
+ocuments uploaded by bidd
+ers to all bidders participate
+d in bid.
+Yes
+    xii.             
+Minimum Number of bids re
+quired to disable automatic 
+bid extension
+3 Nos
+9 / 14
+
+  xiii.             
+Number of days for which bi
+d would be auto-Extended
+3
+  xiv.             
+Number of Auto Extension C
+ount
+1
+   xv.             
+Bid to RA enabled
+YES
+  xvi.             
+RA Qualification Rule
+H1-Highest Priced Bid Elimination
+xvii.             
+Common IP Address
+Bidders may please note that GeM is cap
+turing and showing the IP address used b
+y the buyer and the bidder(s)/Seller(s).Th
+e received bids matching/common IP add
+ress with either Bidders(s)/Seller(s) or Bu
+yer, shall be outrightly rejected & shall n
+ot be considered for further evaluation.
+xviii.             
+Arbitration Clause
+No
+  xix.             
+Mediation Clause
+No
+   xx.             
+Pre-Bid Conference/visit
+Site survey at HEF is mandatory before bi
+d submission. Vendors/Sellers can visit t
+he site at HEF on working days before bid
+end date and time.
+  xxi.             
+Pre-Contract Integrity Pact
+Not Applicable
+xxii.             
+Inspection Authority
+CGM/HEF or his authorized representativ
+e
+xxiii.             
+Inspection type
+As per Scope of Work
+xxiv.             
+Inspection Place
+HEF Khadki Pune
+xxv.             
+Inspection Officer
+CGM/HEF authorized representative
+xxvi.             
+Price Variation Clause
+Not-Applicable (Firm & Fix & F.O.R HEF b
+asis)
+xxvii.             
+Liquidated Damage
+The standard liquidated damage percent
+age is 0.5% per week (or part thereof) of 
+the prices of any stores/ service which th
+e contractor has failed to deliver within t
+he delivery period. The ceiling of LD is 10
+%. Liquidated damages to be calculated 
+on the basic cost (excluding taxes & duti
+es).
+xxviii.             
+Distribution of Tender Quan
+tity
+Not Applicable
+xxix.             
+Delivery Mode
+F O R HEF basis
+xxx.             
+Delivery Period
+30 days for product delivery & 30 days fo
+r ICT.
+xxxi.             
+Delivery Schedule
+As per Scope of work attached
+xxxii.             
+PSD
+5% of total contract value.  
+10 / 14
+
+xxxiii.             
+Payment Terms
+100% payment will be made within 30 da
+ys after supply, installation, testing & co
+mmissioning of Under Vehicle Surveillanc
+e System (UVSS)-Qty-2 Nos as per HEF s
+peciﬁcation & scope of work and submiss
+ion of required documents/bills. This clau
+se will supersede the 70% of Product cos
+t payable on Product Delivery in ICT deta
+ils.
+xxxiv.             
+Public Procurement (Prefere
+nce to make in India) order 
+2017
+Applicable
+xxxv.             
+Public Procurement for MSE
+s, order 2012
+Applicable,Percentage of MSE Purchase P
+referance is kept as 50% being tender qu
+antity is 2 Nos.
+xxxvi.             
+Conflict of Interest clause
+Applicable
+xxxvii.             
+Pre-Qualification criteria
+Submission of following documents for pr
+e-qualiﬁcation/ eligibility criteria is mand
+atory, failing which oﬀer of the ﬁrm(s) wil
+l be rejected.
+(1).PAN copy, (2).GST regn. Certiﬁcate, (
+3). Balance sheet of last 3 years with ITR 
+Copy, (4).Profit and loss statement of last
+3 years, (5).EMD in Original (Copy to be 
+attached with Bid), (6).Proof of document
+s for EMD exemption if applicable, (7).Th
+e bidders must submit proof of having su
+ccessfully supplied and installed at least 
+one(1) same/similar UVSS unit to any Ce
+ntral or State Government organization /
+PSU/Public Listed Companies(Work Comp
+l
+e
+t
+i
+o
+n Certificate/Performance
+Certiﬁcate/CRAC/SDAC along with purcha
+se order). (8).Compliance statement duly
+ﬁlled, signed and stamped, (9).Scope of 
+work with compliance of all clauses with 
+sign and stamp on each page. (10).OEM 
+authorization certificate.
+xxxviii.             
+Other Terms & Condition
+As per MIL Store Purchase Manual 2023 a
+nd Rules/Instructions of GeM portal.
+.
+2. Buyer Added Bid Specific ATC
+.
+अ'वीकरण/
+
+=== [BUYER UPLOADED ATC DOCUMENT] ===
+--- [Page 1] ---
+# SCOPE OF WORK &amp; TECHNICAL SPECIFICATION OF UNDER VEHICLE SURVEILLANCE SYSTEM (UVSS)
+
+**Scope of Work** :- Supply, Installation, Testing &amp; Commissioning of Under Vehicle Surveillance System (UVSS) qty-02 at HEF each at Main Gate &amp; Admin Gate integrated with Driver Face Recognition, Automatic Number Plate Recognition (ANPR) AI enabled Cameras, with Enterprise-grade Software and 3 Years Comprehensive warranty (Including Civil Works and Electrical Fitting Works to be done by supplier).
+
+**Project Objective** :- The objective of this project is to scan the under belly of all vehicles moving through Security Gates at High Explosive Factory, Khadki by installing Under Vehicle Surveillance System (UVSS), at HEF Main Gate &amp; Admin Gate.
+
+## Technical Specifications of Under Vehicle Scanning System (3D)
+
+<table><tr><th>S No</th><th>Technical Specifications.</th><th>Compliance (Yes/No)</th></tr><tr><td>1.</td><td>The UVSS should be able to capture, 2 very high resolution (Left and Right Angle) Images of the complete composite area of the under body image of any vehicle passing over it using DUAL high resolution digital progressive COLOR Area-scan GigE cameras, without the vehicle being required to be stopped.</td><td></td></tr><tr><td>2.</td><td>The UVSS System should be easily able to scan and generate images of Cars, Trucks and Goods Vehicle up to a length of 20 Meters and Width of 3 Meters.</td><td></td></tr><tr><td>3.</td><td>The UVSS should be able to handle vehicles moving at different speeds ranging from 0 to 25 Km/hr, while the composite images so captured by the system should be automatically and dynamically adjusted according to the speed of the vehicle using multiple loop-based sensors.</td><td></td></tr><tr><td>4.</td><td>The Composite imaging cameras should be a high quality, COLOR AREA SCAN, GigE type, with minimum resolution of (1280 x 1024) or above and a suitable Lens of minimum Field of View 180 Degrees width. The minimum specification of this Area-scan camera to be: -<br/>(a) Camera Type: Gigabit Ethernet progressive Area-scan colour camera.<br/>(b) Sensor: 1/3" CCD/CMOS XGA resolution (1280 x 1024) or better.<br/>(c) Field of View: Minimum 180 Degrees to scan very wide Vehicles when needed.<br/>(d) Format: Gige Vision compliant specifications.<br/>(e) Composite Image resolution of the underside: 3 megapixel or higher.<br/>(f) External Enclosure of Under Vehicle Camera Casing and the under ground LED Light - Should have ingress protection rating: IP68 or better, duly tested, Reported &amp; certified by agency accredited to the NABL INDIA. A successful test report along with the certificate should be submitted separately for Enclosure of Area Scan Camera and for the under ground LED Light.<br/>(g) Under Vehicle Camera casing environment protection rating: -20 Degrees Celsius +70 Degrees Celsius; And Environment protection test certificate (From NABL Accredited LAB) of Humidity rating of at least 90%. Under vehicle camera casing environment rating shall provide IP 68.<br/>(h) Enterprises grade servers with RAID 5 redundancy.<br/>(i) Necessary good quality furniture (Modular work station with chair for CCR and all workstations at two gates).<br/>(k) The UVSS should provide morph creation i.e. merge left &amp; right view of the underside of the vehicle.<br/>(l) UVSS composite image without any distortion or fisheye effect.</td><td></td></tr></table>
+
+
+--- [Page 2] ---
+<table><tr><td>5.</td><td>The main UVSS camera must be enclosed in a housing which should be IP68 rated, a certificate to this effect, after duly tested issued by a competent certifying agency must be provided.</td><td></td></tr><tr><td>6.</td><td>OEM should be as Indian manufacturer.</td><td></td></tr><tr><td>7.</td><td>The UVSS should be capable of producing a clear and undistorted image of the vehicle underside, even when a vehicle has completely stopped / halted over the UVSS unit, i.e., it must still be able to create a seamless and perfect composite image of the underside irrespective of stoppage for 2-3 Seconds or non-uniform motion of the vehicle over the scanner.</td><td></td></tr><tr><td>8.</td><td>The UVSS must have feature to magnify (zoom) the composite images (current and past), up to 8 to 10x, in order to facilitate a closer view of any part of the composite image.</td><td></td></tr><tr><td>9.</td><td>The underside illumination must adequate and obtained through any state-of-the-art, long life, DUAL LED lighting modules, Which are tested and Certified for IP68 Protection from NABL LAB.</td><td></td></tr><tr><td>10.</td><td>The UVSS should also provide a feature to capture the image of the driver of all RHS driven vehicles, captured through a suitable driver view camera of minimum 2 Mega pixel Resolution.</td><td></td></tr><tr><td>11.</td><td>The system should also have an Automated Number Plate Reading System (ANPRS) tuned to the Indian license plates, i.e., it should be able to automatically read and record a wide range of RTA Approved vehicle registration number plates' alpha-numeric characters, written in English. Also, the frontal image view of the vehicle to be provided in the GUI, to facilitate manual viewing of the license plate image.</td><td></td></tr><tr><td>12.</td><td>The Number Plate Camera , Driver Image view camera, must have the following minimum specifications: Camera Specification:-<br/>(a) Effective Range: 10 to 15 meters for Frontal camera &amp; 2 to 4 meters for Driver Imaging.<br/>(b) Camera mentioned above.<br/>(c) Camera Resolution: Minimum 60 fps @ 2 megapixel or higher.<br/>(d) Camera gain and shutter: Adjustable 1/100 to 1/10000 sec.<br/>(e) Varifocal Lens: 5-60 mm- Field Of View – Minimum 130 Degrees at 5 Meters distance.<br/>(f) Power Supply: POE.<br/>(g) Operating Temperature: -5°C to +55°C.</td><td></td></tr><tr><td>13.</td><td>Software Specification :-<br/>(a) Supported OS: Licensed Windows 11 Pro 64 Bit (No Free Ware/ No Free source Operating System should be there). OEM Should Submit License Purchased for the Operating System Usage.<br/>(b) Type of Plates: Recognition for English fonts in All RTA Approved License Plates.<br/>(c) Image Input: Still Image or Live Video Input.<br/>(d) Data storage of ≥ 12 months (logs, images, videos).</td><td></td></tr><tr><td>14.</td><td>UPS Backup :-<br/>(a) Online UPS 230v, Sinewave).<br/>(b) ≥ hrs backup for each gate’s system.<br/>(c) Separate UPS per gate.</td><td></td></tr></table>
+
+
+--- [Page 3] ---
+<table><tr><td>15.</td><td>The UVSS should give output of all the data simultaneously i.e., the dual composite images of the Under Chassis, driver photos, vehicle's frontal image and its number display, all should be displayed on the monitor almost instantaneously after the vehicle cross the unit. Also, the system should have a facility to view the composite image and video images, off-line also, for all vehicles.</td><td></td></tr><tr><td>16.</td><td>The UVSS applications &amp; operating software should mandatorily be based on Licensed Windows platform Using only Licensed Applications Whenever/Wherever needed, Strictly No Freeware or Free source or Open Source Operating Systems or applications shall be used. It must have a user-friendly Graphical User Interface (GUI) with provision for multiple users logging of events and search facility. The Operating System and the Software used should be registered/Licensed in the name of the buyer and Support should be available from the Developer of the Operating System for the next 10 Years.</td><td></td></tr><tr><td>17.</td><td>The UVSS &amp; ANPR System shall have the option to be integrated with LED Based Traffic Signals. Signals shall be seamlessly connected with the UVSS Controller.</td><td></td></tr><tr><td>18.</td><td>The UVSS should have (as an additional Buying/ Upgrading option) to control all local UVSS operations to connect in a Network and Make possible total control from the secondary/supervisory central console on the high-speed LAN, without any distance constraint between the UVSS unit and the location of the control room where the secondary/supervisory console would be placed.</td><td></td></tr><tr><td>19.</td><td>Cabling &amp; Integration: All the Cables (Both Power &amp; Data) Should be MESH Armoured with HDPE Insulation. The UVSS should have an option for integration with other security systems like, Boom Barriers, Bollards/Blockers &amp; RFID Database.</td><td></td></tr><tr><td>20.</td><td>The UVSS must have a built-in software diagnostics capability, to facilitate any distant software support to be offered offline.</td><td></td></tr><tr><td>21.</td><td><strong>The Processing Unit should have:</strong><br/>(a) 16 GB RAM or better.<br/>(b) Minimum 2 TB HDD for Storage &amp; Minimum 256GB SSD For Installing Operating System &amp; Processing Applications.<br/>(c) Latest Generation of Intel Core i7 processor or better with additional NVIDIA 4 Gb Graphics Card.<br/>(d) Display Monitor Diagonal Minimum 32"Display, Keyboard, Mouse.<br/>(e) Data storage of ≥ 12 months logs, images &amp; videos).</td><td></td></tr><tr><td>22.</td><td>Reporting of ANPR - Entry/Exit Data : The Reporting of Data Should be Done in MS Excel Format and shall also be convertible in PDF formats when required. To produce such reports, a Compatible Microsoft Office Software of the latest version should be Licensed in the name of the Buyer and shall not be any Freeware or Unlicensed Application.</td><td></td></tr><tr><td>23.</td><td>The overall installed unit should be properly designed and Completely Flush to the surface, and its structure should be able to withstand a total vehicle load of 40-Tons at any point over the structure, more particularly at the Centre of the unit, so as not to suffer any accidental physical damage to the unit and the components under the pit cover.</td><td></td></tr><tr><td>24.</td><td>Poles For Mounting Cameras &amp; Accessories : Separate Poles Should be provided for mounting all the cameras - The poles should be Made of Stainless steel and should be Minimum 5mm Thickness of Steel and 3 Inch Diameter - The Poles should be minimum 8 feet High and should have integrated provisions to mount Cameras /LEDs/ Traffic Signals / And Other Necessary Equipment.</td><td></td></tr></table>
+
+
+--- [Page 4] ---
+<table><tr><td>25.</td><td><strong>Warranty &amp; Support :-</strong><br/>(a) Three years comprehensive onsite warranty (spares + service).<br/>(b) 24 x 7 remote technical support.<br/>(c) Onsite response within 48 hrs.<br/>(d) Spares support for minimum Seven years.<br/>(e) AMC support to be offered post-warranty.</td><td></td></tr><tr><td>26.</td><td><strong>Testing &amp; Commissioning :-</strong><br/>(a) Functional testing under day/night &amp; rainy season.<br/>(b) Performance validation in presence of HEF officials.</td><td></td></tr><tr><td>27.</td><td><strong>Training &amp; Documentation :-</strong><br/>(a) Training of HEF security staff.<br/>(b) Supply of user manuals, SOPs &amp; technical documentation.</td><td></td></tr><tr><td>28.</td><td>The overall UVSS should be CE Certified.</td><td></td></tr><tr><td>29.</td><td><strong>Following Certificate to be Provided with Bid Qualification :-</strong><br/>(a) Temperature test report, IP rating report.<br/>(b) Speed Limit 0-25km/hr.<br/>(c) Dule LED light to be provided.<br/>(d) Zoom facility atleast 8 to 10 X” for UVSS.</td><td></td></tr><tr><td>30.</td><td><strong>Pre-Bid Qualification :-</strong><br/>(a) Bidder must be an OEM or Authorised System Integrator of UVSS/ANPR/FR/Access Control solutions.<br/>(b) Must maintain service/support facility in Pune, Maharashtra.<br/>(c) Offered products must be STQC/CE/UL/ISO certified and compliant with Cyber guidelines.<br/>(d) OEM Authorization letter to be provided.<br/>(e) Mandatory site survey at HEF before bid submission.</td><td></td></tr><tr><td>31.</td><td><strong>Drawing &amp; Design</strong><br/>Firm should submit drawing &amp; design of UVSS for technical acceptance at the time of bidding.</td><td></td></tr><tr><td>32.</td><td><strong>Other Conditions</strong><br/>As per QR/specification &amp; TDs for ‘of Under Vehicle Surveillance System (UVSS)’ with image &amp; Automated License Plate Recognition System’, prepared &amp; approved by MHA vide letter No F/No 63013/09/2014-Ord/BSF/2008/MHA - Prov-I-1778 dt 09 Sep 2015.</td><td></td></tr></table>
+
+![img-0.jpeg](img-0.jpeg)
+
+![img-1.jpeg](img-1.jpeg)
+
+
+--- [Page 5] ---
+1 | P a g e 
+ 
+ अति तिस्फोटक तिर्माणी,      
+खडकी, पुणे-411003 
+(
+ईाति ेक डेतडमम तातर्टेड की म्यकमम्य
+)
+ 
+भमरि करकमर कम उद्यर्,  
+रक्षम र्ेत्रमाम 
+ 
+HIGH EXPLOSIVES FACTORY,  
+KHADKI, PUNE-411003 
+(A Unit of Munitions India LTD.) 
+A Govt. of India Enterprise 
+Ministry of Defence 
+Phone : (020) 25819566, 67                        Fax : (020) 25813204,                                         Email : hef@ord.gov.in 
+GEM BID IN TWO BID SYSTEM (OPEN TENDER ENQUIRY) FOR PROCUREMENT OF STORES 
+THROUGH GOVT. E-MARKETPLACE (GeM) PORTAL 
+ 
+ 
+1. The Bid Document (TE)/RFP is issued without any financial commitment. The Buyer reserves the right to amend or modify any 
+part of the TE at any stage. Such amendments/modifications to the TE, if any, shall be duly notified similarly as the TE. Buyer 
+reserves the right to withdraw the TE at any stage, should it so become necessary. 
+ 
+2. Effective Date of the Contract: Unless the consequent Contract specifically defines different effective date-of-the-contract, the 
+effective date-of-the-contract shall be the date on which the Parties to the Contract have affixed their respective signatures on the 
+Contractor the date of Supply Order. The Contract shall come into effect on the effective date and remain valid until the completion 
+of the obligations of the Parties under the Contract. The deliveries, supplies and performance of the services under the Contract 
+shall commence from the effective date-of-the-contract. 
+3. The TE is divided into the following six Parts: 
+a) Part I – Contains general information and instructions for the Bidders about the TE such as the date, time, place of submission 
+and opening of tenders, validity period of Tenders, etc. 
+b) Part II – Contains essential details of the stores/ items/services required, such as the Schedule of Requirements, Technical 
+Specifications, Delivery Period, Mode of Delivery and Consignee details, which will form part of the consequent Contract with 
+the successful Bidder. 
+c) Part III – Contains standard conditions of TE, which will form part of the consequent Contract with the successful Bidder. 
+d) Part IV – Contains special conditions applicable to this TE and which will also form part of the consequent Contract with the 
+successful Bidder. 
+e) Part V – Contains evaluation criteria.  
+f) Part VI -Compliance Statement. 
+ 
+4. Firms having the capacity to meet buyer’s requirement can participate in the bid created on GeM Portal. All 
+procurement related processes (Technical bid opening, Qualification, Clarification and any amendment) will only be 
+carried out through GeM Portal only. Firm’s regular visit to the bid page is requested for timely response against 
+clarification. Buyer will hold no responsibility in case firm fails to respond within given time against any clarification. 
+ 
+5. The GeM portal has a centralized Help Desk facility with toll free number 18004193436 (for GeM cases), online customer 
+complaint facilities and full-fledged operational manuals. The portal also contains the manual for registration of sellers on 
+GeM Portal. 
+ 
+6. The usage of the term ‘Bid’ in the TE, unless repugnant to the context, refers to the Bids (including the documents, financial 
+instruments, etc., required to be submitted) in the GeM. Also usage of expression ‘Tender Enquiry (TE)’ refers to the ‘GeM Bid’. 
+ 
+7. The usage of the term ‘Seller’ in the TE, unless repugnant to the context, refers to the successful Bidder (s) in the TE on whom 
+the consequent Supply Order/ Contract has been placed. 
+ 
+8. The usage of the term ‘Contract’ in the TE, unless repugnant to the context, refers to the consequent Supply Order/ Contract.
+ 
+ 
+Note:  
+1. Bidder must upload Required documents’ mentioned in Part-I clause no. 1.4 & 1.2. 
+2. Bidder must upload Compliance Statement & HEF specification copy duly filled, signed and stamped. 
+ 
+9. In cases where the drawings, specifications, etc., are priced, the same shall be so stated in the TE, which is applicable 
+for both systems of procurement. 
+ 
+ 
+10. All terms and conditions are bounded by MILSPM 2023 & GeM portal. 
+ 
+ 
+(A K DEWAN ROY) 
+DIVISIONAL OFFICER  
+                         FOR CHIEF GENERAL MANAGER 
+                                                                                                                      FOR & ON BEHALF OF PRESIDENT OF INDIA
+
+
+--- [Page 6] ---
+2 | P a g e 
+ 
+ 
+ 
+PART I – GENERAL INFORMATION AND INSTRUCTION FOR BIDDERS 
+ 
+Part I of the Bid Document contains general information and instructions about the Bid Document such as the date, 
+time, place of submission and opening of bids, validity period of tenders, etc. 
+ 
+1.1 The CGM/HEF (The Buyer), issued this Bid as open tender enquiry on GeM Portal Invites Bids, on Two 
+Bid basis, from all the vendors for “Supply, installation, testing & commissioning of Under Vehicle 
+Surveillance System (UVSS) Qty.02 Nos at HEF each at main gate & Admin gate integrated with driver 
+face recognition, Automatic number plate recognition (ANPR) AI enabled cameras with Enterprise-grade 
+software and 3 years comprehensive warranty (Including Civil Works and Electrical Works to be done by 
+supplier) as per scope of work & technical specification No.6147/UVSS/SE/HEF dt.24.08.2026.-Qty-2 
+Nos”. 
+ 
+1.2. The pre-qualification/ eligibility criteria, if any has been prescribed by the Buyer, shall be indicated under this 
+paragraph as sub-paragraphs (i), (ii), (xii), if none has been indicated under this paragraph, the TE shall be open to any 
+bidder desirous of participating in the tender. Submission of following documents for pre-qualification/ eligibility 
+criteria is mandatory, failing which offer will be rejected.  
+ 
+(1).PAN copy, 
+(2).GST regn. Certificate, 
+(3). Balance sheet of last 3 years with ITR Copy,  
+            (4).Profit and loss statement of last 3 years,  
+            (5).EMD in Original (Copy to be attached with Bid),  
+            (6).Proof of documents for EMD exemption if applicable,  
+            (7).The bidders must submit proof of having successfully supplied and installed at least one (1) 
+same/similar UVSS unit to any Central or State Government organization /PSU/Public Listed 
+Companies (Work Completion Certificate/Performance Certificate/CRAC/SDAC along with 
+purchase order).  
+(8).Compliance statement duly filled, signed and stamped. 
+(9).Scope of work with compliance of all clauses with sign and stamp on each page.  
+(10).OEM authorization certificate. 
+ 
+ 
+Bidders shall be solely responsible for ensuring timely submission of their sealed Bids (and their related final 
+instruments & documents) by the specified date & time, and in the manner prescribed in the TE. If due to any exigency, 
+the due date for Tender opening is declared as a closed holiday, the Tender opening will be held on the next working 
+day at the same time or on any other day/time, as intimated by the Buyer. Should it so become necessary for the Buyer 
+to extend the Tender opening date, such extended date shall be duly intimated/notified.  
+ 
+1.3 In the GeM (Custom Bid) various procurement activities are performed online. The contact details of Buyer are as 
+follows- 
+ 
+Name:  
+Chief General Manager, High Explosives Factory, Khadki, Pune. 
+Email:  
+hefpv@ord.gov.in 
+Address: 
+HIGH EXPLOSIVES FACTORY, KHADKI, PUNE, MAHARASHTRA (INDIA)-411003 
+Telephone: 
+020 2532 2412/2413/2414 
+Fax: 
+ 
+(020) 25813204 
+ 
+1.4 Submission of Earnest Money Deposit (EMD) - Applicable. Submission of Earnest Money Deposit (EMD)- 
+is an essential requirement to be fulfilled. Bids not accompanied by the EMD specified in the TE shall be treated as 
+invalid Bids. In the instant TE Bidders are required to submit along with their Bids, EMD for an amount equal to –
+Rs.194962.00/-in the prescribed form (refer to Part III of the TE). The EMD shall be in favour of Munitions 
+India Limited _High Explosives Factory, Payable at Khadki, Pune. 
+ 
+1.5 Earnest Money Deposit is to be obtained from the bidders except Micro and Small Enterprises (MSEs) as a 
+manufacturer having UAM number as defined in MSE Procurement Policy issued by Department of Micro, Small and 
+Medium Enterprises (MSME) or are registered with the Central Purchase Organization or the concerned Ministry or 
+Department (including OFs) or Startups as recognized by Department of Industrial Policy and Promotion
+
+
+--- [Page 7] ---
+3 | P a g e 
+ 
+ 
+ 
+ 
+(DIPP), irrespective of the store for which they are registered. EMD is also not required from Central PSUs. The 
+bidders should be asked to furnish EMD along with their bids.  
+The EMD may be accepted in the form of Account Payee Demand Draft, Fixed Deposit Receipt, Banker's Cheque or 
+Bank Guarantee from any of the commercial banks or payment online in an acceptable form. The EMD is normally 
+valid for a period of forty-five days beyond the final bid validity period.  
+ 
+EMDs of the unsuccessful bidders should be returned to them at the earliest after expiry of the final bid validity and 
+latest on or before the 30th day after the award of the contract. 
+ 
+Bidders requiring clarifications on the contents of the TE may request the Buyer through GeM Portal (so as to reach 
+the Buyer not later than fourteen days prior to the date of Tender opening) bringing out unambiguously the specific 
+clarifications needed.  
+ 
+1.6 The Bid is called for on Two Bids basis, the Bids shall comprise of two parts, namely (i) Technical Bid, and (ii) 
+Financial/ Commercial Bid.  
+ 
+1.7 Bids cannot be modified after the Bid submission deadline. Similarly, after the Bid submission deadline, Bids 
+cannot be withdrawn till expiry of the Bid validity. 
+ 
+1.8 In Two-bid system, only the Technical Bids will be opened on the specified Tender opening date and time. Financial 
+Bids of only those firms will be opened, whose Technical Bids are found technically compliant/ suitable on Technical 
+Evaluation by the Buyer. Date of opening of the Financial Bids shall be separately intimated after evaluation of the 
+Technical Bids. 
+ 
+1.9 During evaluation of Bids, the Buyer may, if so required, ask the Bidder (s) for clarification on the Bid submitted. 
+The request for such clarification shall be through GeM Portal. The clarification furnished by the Bidder should not 
+result in any change in prices or substance of the Bid nor will the same be permitted.  
+ 
+1.10 Canvassing in any form by the Bidder, unsolicited letter and post-bid amendment/modifications/ corrections shall 
+attract summary rejection of the Bid with forfeiture of EMD. 
+ 
+**1.11 Bidder should comply with all the Parts of this TE and confirm acceptance of all the clauses of 
+Part II, Part III, Part IV and Part V of the TE, which shall automatically be part of the consequent contract with the 
+successful Bidder (s) (i.e. Seller in the consequent contract). Failure to confirm acceptance to the clauses mentioned 
+under Part II, Part III, Part IV and Part V of the TE may result in rejection of the Bid submitted by the Bidder. 
+Conditional Bids shall be treated as invalid and rejected. In the manual system, the bidder should sign on each page of 
+the tender document. 
+ 
+**To this effect all bidders are requested to comply the conditions and comment ‘Yes’ or ‘No’ in the space 
+provided in Compliance Statement (Part VI). A duly signed and stamped copy of Compliance Statement to be 
+uploaded inter alia other documents as mentioned in Clause No. 1.2 above.  Non-submission of any of the 
+document(s) may results in disqualification of bidder at technical stage. 
+ 
+1.12 The Buyer reserves the right to reject/cancel/scrap the Bid Document or change the quantity of tendered item(s) 
+without notifying any reason whatsoever. 
+1.13 In case of any dispute, the decision of the Buyer shall be final and binding on all participants in the tender. 
+1.14 Bidders have to submit their bids through GeM portal only. Bids submitted by any other mode shall be treated as 
+invalid. 
+1.15. Validity of Bid: As per GeM bid document. (Mention in GeM bid document) 
+ 
+ 
+ 
+(A K DEWAN ROY) 
+DIVISIONAL OFFICER  
+                         FOR CHIEF GENERAL MANAGER 
+                                                                                                                      FOR & ON BEHALF OF PRESIDENT OF INDIA
+
+
+--- [Page 8] ---
+4 | P a g e 
+ 
+ 
+ 
+               PART II – ESSENTIAL DETAILS OF STORES REQUIRED BY THE BUYER 
+ 
+Part II of the GeM bid contains essential details of the Stores/ Services required, such as the Schedule of Requirements, Technical 
+Specifications, Delivery Period, Mode of Delivery, Consignee details, etc. 
+ 
+2.1. The Schedule of Requirements, duly indicating the Stores/ Services required, is given below: 
+ 
+Sl. No. 
+Nomenclature of the 
+Stores/ Service 
+Specification of the Store/Description of 
+the Service 
+Quantity 
+Required 
+1. 
+Under 
+Vehicle 
+Surveillance  
+System (UVSS) 
+Supply, installation, testing & commissioning of Under 
+Vehicle Surveillance System (UVSS) Qty.02 Nos at HEF 
+each at main gate & Admin gate integrated with driver 
+face recognition, Automatic number plate recognition 
+(ANPR) AI enabled cameras with Enterprise-grade 
+software and 3 years comprehensive warranty (Including 
+Civil Works and Electrical Works to be done by supplier) 
+as per scope of work & technical specification 
+No.6147/UVSS/SE/HEF dt.24.08.2026. 
+2 Nos 
+2.2 Option Clause: Not Applicable. 
+ 
+2.3. Technical details of the stores/ service required are given below. 
+Specifications/drawings details or Type of Service required: 
+Copy of specification should be obtained from: -QCP & QA&P/HEF  
+2.4. Distribution of bid qty.: Not Applicable. 100% Bid qty. will be loaded to L-1 firm. 
+ 
+2.5. The Bidders shall furnish along with their Technical Bid a clause-by-clause Compliance Statement bringing out the compliance 
+(without disclosing the price) of their offer to the TE specifications and duly indicating unambiguously the deviations, if any. The 
+detailed Compliance Statement shall be provided in the format attached herewith. 
+2.6. Delivery period for supply of the Stores/ Services shall be 30 days for product delivery & 30 days for ICT  or as per 
+HEF delivery schedule from the effective date of the consequent Contract placed on the successful Bidder. The mode/ terms of 
+delivery shall be F.O.R HEF. Reckoning the date of delivery on the basis of the mode/ terms of delivery shall be as given below. 
+ 
+2.7. Delivery Schedule: As per HEF requirement. staggered deliveries (where applicable) required in the TE is given below. In 
+TE with staggered deliveries, the Buyer shall clearly specify here under as to whether the consequent Contract will be an “Entire 
+Contract” or a “Severable Contract”. If nothing is specified, the consequent Contract shall be an “Entire Contract. 
+Sl. No 
+Quantity to be Delivered 
+Date of Delivery/ Delivery 
+period 
+Remarks/ Special Instructions for 
+Delivery 
+ 
+ 
+ 
+ 
+ 
+2.8. (a) Inspection Authority in the consequent Contract shall be CGM/HEF or Authorized Rep. The mode of Inspection 
+applicable in the consequent Contract shall be (Buyers Inspection). The Inspection applicable in the consequent Contract shall be 
+Buyer Receipt Inspection). CGM/HEF Shall be the Inspection Officer. The firm should furnish the test report of chemical and 
+physical parameters of raw materials used for manufacture of components, fabricated stores, tools and gauges along with chalan. 
+The instruments used for carrying out test as above shall have national traceability and evidence of the same will be furnished in 
+the certificate. 
+ 
+(b) Place of Inspection: - High Explosives Factory, Khadki, Pune-411003. 
+ 
+(c) Pre Dispatch Inspection: - Not Applicable. 
+2.9. The mode/ terms of delivery required in the bid enquiry is F.O.R. HEF to enable equitable comparison of Bids received 
+against the TE, it is necessary that the Bidders quote as per the mode/ terms of delivery specified in the TE. 
+2.10. The FAS, FOB & CIF terms of delivery are applicable only for Stores directly imported from foreign countries against the 
+consequent Contract and not for imports by the Seller under its own arrangement. The CIP terms of delivery are applicable both 
+for domestic as well as imported supplies. 
+ 
+2.11. Special instructions on consignee details & other special conditions pertaining to shipment, transportation, etc., if any 
+applicable under this TE, shall be as indicated hereunder. 
+a) Consignee details:  
+ 
+THE GENERAL MANAGER 
+ 
+ 
+ 
+ 
+HIGH EXPLOSIVES FACTORY KHADKI, PUNE 003 
+ 
+ 
+ 
+ 
+ 
+Phone No.  
+: 
+020-25819566/67 
+ 
+ 
+ 
+ 
+Fax No. : 
+020-25813204 
+ 
+ 
+ 
+ 
+Email 
+ 
+: 
+hef.ofb@nic.in / hefpv.ofb@nic.in 
+b) Packing instructions: ……………………………………………………. 
+c) Shipment/ Transportation instructions: ……………………………………………………. 
+d) Other Special instructions, if any: …………………………………………………….
+
+
+--- [Page 9] ---
+5 | P a g e 
+ 
+ 
+ 
+ 
+2.12. Liquidated Damages: - The Standard Liquidated Damages percentage is 0.5% per week (or part thereof) of the prices of 
+any stores/ service which the contractor has failed to deliver within the delivery period specified in the contract. There should also 
+be an appropriate maximum limit of such deduction, to be shown as a specific percentage of the contract value of delayed supplies/ 
+services and incorporated in the contract terms. The ceiling of LD is 10%. Liquidated Damages are to be calculated on the basic 
+cost (excluding taxes & duties) as per MoD O.M No. 8(8)/O2P/2018 dated 06.08.2018 or any revision thereof. 
+ 
+2.13. Price variation clause: NOT APPLICABLE, PRICE IS FIRM & FIXED. 
+ 
+2.14 Mode of Payment: 100% payment will be made within 30 days after supply, installation, testing & commissioning of 
+Under Vehicle Surveillance System (UVSS)-Qty-2 Nos as per HEF specification & scope of work and submission of 
+required documents/bills.  
+2.15. Extension of contracted delivery period due to reasons attributable to the Seller of the consequent Contract shall be at the 
+sole discretion of the Buyer, with applicability of Liquidated Damages (LD) clause as mentioned in Part III. 
+ 
+2.16 Tenderer should quote rates on F.O.R. HEF basis and also clearly indicate total basic rate (inclusive of all elements 
+such as transportation charges, Govt. Taxes such as GST etc.). Any separate display of Transportation / packing charges 
+etc will be ignored. 
+ 
+2.17. Price bids will be opened only for technically qualified firms. 
+ 
+2.18 Apportionment of qty.: Not Applicable.  
+ 
+2.19. Pre inspection report & Guarantee/warrantee report must be submitted by the supplier, along with bulk supply/ 
+tender sample. 
+2.20. Product quality supplied by the firm should meet all the requirement laid down in Specification/ drawing. If not meeting, 
+supplier has to replace the consignment. 
+2.21. Reverse Auction (RA): Applicable as per GeM Policy, (Elimination of H1 bidder) 
+ 
+2.22. Firm should submit quality plan of the item along with quotation. 
+ 
+2.23. Deviations if any must be mentioned in the technical bid itself. Any such mention in financial bid will lead to rejection of 
+bid without any communication. 
+ 
+2.24  In the event where re-testing / re-sampling at Firm’s premises is warranted on account of failure in the 1st (First)   time 
+inspection sampling, HEF will recover suitable amount towards TA/DA of the inspection team from the vendor 
+2.25 . Public Procurement (Preference to Make in India), Order 2017:  Applicable 
+2.26 Public Procurement for MSEs, Order 2012: Applicable 
+2.27 Performance Security Deposit(PSD): Applicable, 5% of the total SO value 
+2.28. In case conflict between Apportionment clause, Public Procurement (Preference to Make in India) Order 2017 
+clause & Public Procurement for MSEs Order 2012 clause, the order of preference will be,  
+1. 
+Public Procurement for MSEs Order 2012 clause. 
+2. 
+Public Procurement (Preference to Make in India) Order 2017 clause 
+3. 
+Apportionment clause 
+ 
+2.29 Quantity Tolerance: Normally no quantity variation in the supplies under the consequent Contract shall be 
+permitted. However, in justified cases, such excess/ short supplies may be accepted by the Buyer, subject to the value 
+of such excess/ short supplies not exceeding five percent of the original value of the contract, and the payment being 
+admitted only for the actually quantity supplied. 
+ 
+2.30 Common IP Address: - Bidders may please note that GeM is capturing and showing the IP address used by the 
+buyer and the bidder(s)/Seller(s).The received bids matching/common IP address with either Bidders(s)/Seller(s) or 
+Buyer, shall be outrightly rejected & shall not be considered for further evaluation. 
+ 
+2.31 Special Terms and conditions:  
+ 
+1. Firm has to submit pre-inspection report & guarantee/warranty cert. along with bulk supply. 
+2. Other term and conditions as per MIL Store Procurement Manual 2023 available at www.munitionsindia.in. 
+3.Inspection of the store will be carried out as per QMI of input materials. (If applicable). 
+4.Vendor must submit compliance w.r.t. MII class & upload MSE document to claim MSE firm benefit. 
+5. There should not be more than one bid per bidder (including closely related sister concern as defined in GeM GTC) 
+6. Firm has to submit full set of GST certificate along with proprietor/promoter/Director details. 
+7.Quality Monitoring Instruction for inspection procedure will be uploaded along with TE. (if applicable) 
+8.Firm must submit the duly filled signed and stamped compliance statement along with bid documents. 
+9.Firm has to submit the GSTR details along with contractor bill/invoices for release of payment.
+
+
+--- [Page 10] ---
+6 | P a g e 
+ 
+ 
+ 
+10. In the event where retesting/resampling at firm premises is warranted in account of failure, the expenditure for 
+retesting/resampling will be borne by seller. 
+11. In case conflict between Apportionment clause, Public Procurement (Preference to Make in India) Order 2017 clause & Public 
+Procurement for MSEs Order 2012 clause, the order of preference will be,  
+    1. Public Procurement for MSEs Order 2012 clause. 
+    2. Public Procurement (Preference to Make in India)     
+        Order 2017 clause. 
+    3. Apportionment clause 
+12.Common IP Address: - Bidders may please note that GeM is capturing and showing the IP address used by the buyer and the 
+bidder(s)/Seller(s). The received bids matching/common IP address with either Bidders(s)/Seller(s) or Buyer, shall be  
+outrightly rejected & shall not be considered for further evaluation. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+(A K DEWAN ROY) 
+DIVISIONAL OFFICER  
+                         FOR CHIEF GENERAL MANAGER 
+                                                                                                                      FOR & ON BEHALF OF PRESIDENT OF INDIA
+
+
+--- [Page 11] ---
+7 | P a g e 
+ 
+ 
+PART III – STANDARD CONDITIONS OF THE T.E 
+ 
+Part III of the TE contains the Standard Conditions of the TE. 
+ 
+3.1. Scope of Supply – Technical Description/Requirement/Quality requirement etc.: The stores supplied shall be 
+of the best quality and Workmanship, shall be in strict conformity with all the drawings and specifications furnished 
+with the Purchase Orders and shall address the Technical description in all respects. Where tenders are called for in 
+accordance with ‘particulars’, the seller’s tender to supply in accordance with such ‘particulars’ shall be deemed to be 
+an admission on his part that he has fully acquainted himself with the details thereof and no claim on his part which 
+may arise on account of non-examination or insufficient examination of the ‘particulars’ will in any circumstances be 
+considered. The items not specifically listed but required for completeness of stores / system deemed to be included. 
+All supplies should be accompanied by Sellers works inspections/ test certificates duly certifying, the Stores are in 
+strict conformity with the drawings/specifications. The final acceptance will be subject to inspection and approval at 
+Buyer’s premises. Once the material\are rejected and communicated to the Seller, no request shall be entertained for 
+reinsertion or acceptance of the stores. However, Buyer reserves the right to re-inspect the stores and consider 
+acceptance at his discretion. 
+ 
+3.2. Price: The rates offered shall be ‘Firm & Fixed’ with full and detailed breakup of various applicable cost elements 
+like Basic Price, packing charges, freight/ transport, forwarding charges, handling charges, landing & clearing charges, 
+installation & commissioning, training, technical assistance, etc.; and duly indicating all the applicable Taxes & Duties 
+along with the relevant taxation rate and value for each of the applicable Tax/ Duty, till the execution of the total 
+quantity on the order. To facilitate assessment of reasonability of price quoted, the Bidder shall indicate split-up details 
+of the cost elements of the Basic price. No increase shall be permissible on any account after finalization of the order 
+/ till delivery of total quantity of the order. Price quoted should on F.O.R. Destination basis, for delivery at Buyer 
+premises inclusive of all charges including transit insurance. Foreign sellers will quote the prices on the FOB/FCA 
+Port of dispatch basis, as applicable (INCOTERMS 2010). Seller should clearly mention whether the prices hold good 
+when the full quantity of enquiry is not ordered but only a part of it. Unless otherwise mentioned, it would be assumed 
+that the rates hold good even when lesser quantities than those enquired of are ordered. Any increase in prices at a later 
+date for ordering lesser quantities will not be agreed to. 
+ 
+3.3. Price Variation Clause: Invariably, Purchase Orders shall be placed on a firm price basis. In exceptional cases, 
+where the firm insists on escalation or on price ruling at the time of dispatch, the purchase order should contain a clause 
+to this effect for admissibility. The Purchase order should clearly specify the formula for determining the quantum of 
+escalation admissible with reference to a fixed base period and prices ruling at that period taken as a base for deciding 
+the escalations. The base period and prices should be mutually agreed based on necessary documentary evidence. The 
+claims shall be supported by necessary documentary evidence, as compared to the base prices for admitting the 
+escalation claims. Price Escalation Clause needs to clearly define applicability of Escalation up to point of ordering or 
+point of delivery. Whether the escalation to be calculated on year to year basis or point to point basis, same to be 
+specified. Methodology of calculation of escalation is to be specified. 
+ 
+PV formula may specify cut-off dates for material and labour, as these inputs taper off well before the 
+scheduled delivery dates. The Price Variation formula may also provide for a ceiling on the price variations as a 
+percentage per annum or an overall ceiling or both.  
+If advance or stage payments have been allowed, no price variations will be admissible on such portions of the 
+price, after the dates of such payment. No price variation will be admissible beyond the original scheduled delivery 
+date for defaults on the part of the supplier. Price variation may be allowed beyond the original scheduled delivery 
+date, by specific alteration of that date through an amendment to the contract in cases of Force Majeure or defaults by 
+the purchaser. 
+ 
+When deliveries are accepted beyond the scheduled delivery date subject to levy of liquidated damages as provided in 
+the contract, the liquidated damages (if a percentage of the price) will be applicable on the price as varied by the 
+operation of the Price Variation clause.
+
+
+--- [Page 12] ---
+8 | P a g e 
+ 
+ 
+ 
+Where contracts are for supply of goods, etc., imported (subject to customs duty and foreign exchange 
+fluctuations) and/ or locally manufactured (subject to excise duty and other duties and taxes), the percentage and 
+element of duties & taxes included in the price should be specifically stated, along with the selling rate of foreign 
+exchange element taken into account in the calculation of the price of the imported item. The mode of calculation of 
+variations in duties & taxes, foreign exchange rates, and the documents to be produced in support of claims for such 
+variations should also be stipulated in the contract. 
+ 
+Price Variation formula will vary from Contract to Contract. However, a suggested price variation formula could be 
+as follows: 
+ 
+P = Po {(A + B(L/Lo)+ C (M/Mo)} 
+P = Final price payable in the year of delivery 
+Po = The base price at _ (year) economic conditions 
+Lo = Average Labour Index of the base _ (year) 
+Mo = Average Material Index of the base _ (year) 
+L = Average Labour Index …….. Months prior to date of delivery (as applicable at Seller's country). 
+M = Average Material Index …….. Months prior to date of delivery (as applicable at Seller's country). 
+A, B & C = Percentages corresponding to fixed elements, labour and material respectively. 
+Escalation cap (+/-) applicable (percentage) with the above price variation formula to be indicated. 
+The indices incorporated in the escalation formula should be Govt. Published/ in public domain and capable of being 
+verified. 
+Escalation/Revision in price shall not be admitted for the delayed supplies. 
+ 
+ 
+3.4. Packing Conditions: The stores should be properly packed for tropical storage and for transport by rail, road, 
+sea or air so as to ensure and to protect them against loss, damage, corrosion in transit on arrival at their destination. 
+The packing and marking of packages shall be done by and at the expense of the seller. Each package shall contain a 
+Packing Note quoting Purchase Order number and date showing its contents in detail. Each package shall be properly 
+marked with Purchase Order No., Consignee’s name & address, gross weight, package-handling instructions etc. The 
+package shall have adequate provision for handling during transit and at destination. 
+ 
+The packing, shipping, storage and processing of the delivery must comply with the prevailing legislation and 
+regulations concerning safety, the environment and working conditions. In case of Imports, items packed with raw/ 
+solid wood packing material should be treated as per ISPM-15 (fumigation) and accompanied by Phytosanitory/ 
+Fumigation certificate. If safety information sheets exist for a delivery or the packaging, the seller must always supply 
+these sheets direct (at the same time). The packing shall allow for easy removal and checking of goods on receipt and 
+comply with carrier’s conditions of packing or established trade practices. If any consignment needs special handling 
+instruction, the same shall be clearly marked with standard symbols / instructions. Hazardous material should be 
+notified as such and their packing, transportation and other protection must conform to relevant regulations. 
+ 
+3.5. Inspection and Technical documents requirements: 
+(a) The supply made against respective orders will be subject to Buyer inspection at his premises. The Seller shall be 
+responsible for items supplied till the same have been inspected and accepted by Buyer. In case the goods / services 
+are rejected at the time of inspection at Buyer Place or the rejections are noticed at the time of further processing the 
+Seller will be informed of these rejections. On receipt of this information the Seller shall immediately arrange to collect 
+the rejected items at his cost and risk and arrange for the replacement of goods within the shortest possible time. Under 
+no circumstances the Seller shall compel the Buyer to rework the rejected goods. The rejected material will lie in Buyer 
+factory premises at the risk and cost of the Seller, pending receipt of disposal instruction from them. If so desired by 
+the Seller, the rejected materials, for which no payment made by Buyer may be packed and returned to the Seller for 
+arranging replacement /rectification on ‘freight to pay’ basis at his cost and risk and the dispatch documents will be 
+forwarded to the Seller directly by Buyer to enable him to arrange insurance and take delivery of the same. Wherever 
+payment is already made by Buyer to the Seller, the rejected material will be returned to the Seller against refund of 
+the amount already paid by Buyer / submission of BG for the value of rejected goods. The packing, freight Charges 
+etc., on replacement of returned materials shall be borne by the Seller irrespective of the terms in the purchase order, 
+since such charges were already incurred and borne by Buyer on the original consignment, which got rejected and 
+returned to the Seller. In case the rejected materials are not required to be replaced, freight, insurance charges etc., 
+incurred by Buyer on the original consignment shall be recovered from the Seller's bills.
+
+
+--- [Page 13] ---
+9 | P a g e 
+ 
+(b)Ground Rent: If the material supplied by the vendors is rejected at the factory premises, the vendor is required to 
+lift the rejected material within 30 days of issue of rejection I-Note. Factories have right to recover a charge for the 
+storage space at @1% of the cost of material un-cleared, per week or part thereof, with maximum ceiling of 10% of 
+value of the items. After lapse of 10 weeks, if it is found that firm has not taken any action for lifting of items, the 
+goods may be confiscated and disposed of as per disposal procedure in vogue after sending a notice and giving 30 
+working days’ time to the firm. Ground rent shall be calculated from the date of expiry of the period of removal of 
+item. No ground rent should be charged from Central/State Govt/Central PSUs. When the firm fails to pay the 
+applicable ground rent within the prescribed period, factory is entitled to recover the ground rent due and all incidental 
+expenses from EMD/PSD. 
+(c) Buyer or his authorized representative shall be entitled at all reasonable times during\execution to inspect, examine 
+and test at the Seller's premises the material and workmanship of all stores to be supplied under the Contract, and if 
+the part of the stores is being manufactured at other premises the Seller shall obtain Buyer's or his authorized 
+representative’s concurrence to inspect, examine and test as if the said stores are being manufactured at the Seller's 
+premises. Such inspection, examination and testing, if made shall not release the Seller from any obligation under the 
+Contract. If the defects are not remedied within a reasonable /stipulated time, the purchaser may proceed to rectify the 
+defects at the seller’s risk & cost but without prejudice to any other rights which the buyer may have against the Seller 
+in respect of their failure to remedy such defects. All costs related to inspections and re-inspections shall be borne by 
+the Seller. The cost of inspection staff/ third party specified by the Buyer shall be borne by Buyer, unless otherwise 
+specifically agreed. When the Contract provides for tests on the premises of the Seller or any of his Subcontractor/\ s, 
+Seller shall be responsible to provide assistance such as, labour, materials, electricity, fuels, stores, apparatus, 
+instruments as may be required and as may be reasonably demanded to carry out such tests efficiently. Cost of any 
+type test or such other special tests shall be borne by the Buyer only if specifically agreed. The Seller shall give the 
+authorized representative of the Buyer reasonable prior notice in writing of the date on and the place at which any 
+stores will be ready for inspection/ testing as provided in the 
+Contract. 
+ 
+3.6. Acceptance of Goods: Material on arrival at Buyer’s premises will be inspected by QA/Inspection Department 
+as per appropriate Quality Assurance Plan and their decision in the matter will be final. The test certificate and relevant 
+supporting documents should be sent along with the consignment. 
+ 
+3.7. Training & Technical Assistance: The successful tenderer shall arrange for the training of reasonable number of 
+the Buyer’s technical personnel in shops manufacturing the equipment and in plants where equipment similar to those 
+covered in the tender documents are in operation. The number of such personnel and the period of training will be 
+mutually agreed upon. The travelling and living expenses of the trainees will be borne by the Buyer. 
+Training and technical assistance clause may include: 
+i. Manufacturing processes of the stores wherever applicable, as well as quality assurance procedures, programming, 
+operation, mechanical maintenance and electronic/electronic maintenance at seller’s work and also during 
+commissioning. 
+ii. Duration of training, 
+iii. No. of personnel to be trained. 
+iv. Place of training. 
+v. Charge applicable / or FOC 
+vi. Documentation / training material. 
+vii. Boarding, lodging & travelling charges etc. 
+viii. Free Man days / Extra Man days for service engineering. 
+ix. Any other aspect related to training & technical assistance. 
+ 
+3.8Payment Terms: The standard payment terms shall be 100% payment against Seller’s bill by Account transfer 
+through NEFT/RTGS only for accepted materials within 30 days from the date of receipt of material or submission of 
+bills/documents, whichever is later. Normally no request for Advance Payment is entertained. However, where 
+Advance Payment is considered in select cases, the same may be allowed, subject to furnishing Bank Guarantee (in 
+prescribed format) from a scheduled commercial Bank (other than Cooperative Bank) for an amount equal to 110% of 
+the advance released.  
+Or  
+90% of the contract amount shall be paid against provisional receipt of the item at the consignee’s premises along with 
+inspection note and other relevant documents. Balance 10% shall be paid after the stores have been properly checked 
+and accounted for. Alternatively, where considered necessary (such as raw materials), 95% of the contract amount can 
+be paid against provisional receipt of the item at the consignee’s premises along with inspection note and other 
+documents. Balance 5% can be paid after the stores have been properly checked and accounted for.  
+Or
+
+
+--- [Page 14] ---
+10 | P a g e 
+ 
+ 
+ 
+Stage-wise payments (may be considered only in complex cases, provided the stage-wise payments admissible is 
+indicated above).  
+ 
+Or  
+Quarterly/ monthly payments for work completed on submission of User Clearance Certificate in respect of AMC/ 
+Service contract.  
+ 
+Or  
+Payment may also be made through TReDS (Trades Receivable Discounting System) on its implementation 
+ 
+3.9. Guarantee / Warranty: 
+(a) All the Stores supplied shall be warranted against any defect in material, Workmanship, defective design, materials 
+and non-conformance to intended performance, manufacturing defects, or dimension etc., for a period of __01 
+YEAR____ calendar months from the date they are actually put to use or _12 MONTHS_ calendar months from the 
+date of receipt and acceptance of supply in Buyer's place / buyer's designated place, whichever is earlier and the seller 
+shall remedy such defects at his/her own cost or replace free of charge such stores when called upon to do so. 
+(b) The seller cannot absolve their responsibility for warranty of material even though it is inspected & approved by 
+Inspection authority. 
+(c) In case of defective Stores which need to be re-exported for repairs to the manufacturer’s works, To & Fro freight, 
+insurance charges & custom duty for replacement have to be borne by the seller. 
+(d) During warrantee period any equipment or component thereof supplied by the seller, suffers due to defective 
+material and or due to improper design and or due to defective drawing or due to faulty workmanship the seller will 
+assume full responsibility of rectification of such defective equipment or component thereof including direct expenses 
+related to removal and re-positioning of the replacement/repaired equipment or component thereof and subsequent test 
+& trial, incurred thereon without any financial implication to Buyer. 
+(e) In the event Buyer desires to have extension of Warranty period beyond the stipulated period, as above, the seller 
+shall quote for the same (on monthly basis) for the period of such extension. 
+(f) If the defects intimated during the Warranty period are not remedied within a reasonable / stipulated time, the Buyer 
+may proceed to rectify the defects at the seller's risk and cost, but without prejudice to any other rights which the Buyer 
+may have against the Seller in respect of the failure of the Seller to remedy such defects. 
+(g) In the event of Seller’s failure to attend the Warranty defects within a reasonable period of time, the Performance 
+Bank Guarantee will be encased by the Buyer. The Buyer’s decision shall be final and binding on Seller in this regard. 
+(h) All packing, forwarding, insurance and delivery charges arising against this would be borne by the Seller. The 
+guarantee period would be extended by equivalent period for which the material is not available for the repaired parts, 
+which were repaired & replaced during the Warranty period. The Warranty is subject to proper preservation, 
+maintenance, storage, handling and usage of equipment by Buyer & Buyer's customer and does not covers repairs 
+carried out without the prior consent of the seller / seller rep. 
+(i) Warranty calls needs to be attended within ________ hrs. Warranty of the stores will be extended by residual period 
+ 
+3.10. Option Clause:   Not Applicable 
+(a) The Buyer reserves the right to place orders for additional quantity up to a maximum of 50% of the originally 
+contracted quantity at the same rate and terms of contract within the original Delivery Period (DP) as well as Re-
+fixed/Extended DP subject to : (i) there being a requirement for the item, (ii) incorporation of Option clause in the 
+contract, (iii) there being no downward trend in price (consent of supplier is not necessary) or if there is a downward 
+trend, the supplier agreeing to reduce the price for the enhanced quantity duly matching with the fall in prices, and (iv) 
+if no fruitful result will accrue by floating fresh TE or when the store is urgently required for meeting production 
+targets.  
+(b) The Option clause can be exercised (if necessary more than once) provided the cumulative of the Option clause 
+quantities exercised does not exceed the option clause quantity provided in the contract.  
+(c) In multi-vendor situation, to provide a level playing field to all the vendors, any bid received without compliance 
+to Option clause, may be considered as unresponsive by concerned TPC.  
+(d) Option clause may be operated at any time after placement of supply order.
+
+
+--- [Page 15] ---
+11 | P a g e 
+ 
+ 
+ 
+ 
+3.11. Product Support: The successful Seller should agree to provide product support for the equipment supplied, 
+assemblies/sub-assemblies, fitment items and consumables, Special Maintenance Tools (SMT) / Special Test 
+Equipment’s (STE) subcontracted from other agencies / manufacturer by the Seller, by making available spare parts, 
+components &toolset., accessories of equipment and services for a minimum period of ______ years from the date of 
+supply. 
+ 
+ 
+Seller should supply recommended spares for operator level servicing and should carry out necessary product support 
+activities. Seller should also recommend a list of test equipment /fixtures and special tools required for servicing at 
+______/its customer bases. Seller will extend need based technical assistance to the BUYER for maintenance of the 
+product/System during the warranty period. Seller shall provide an effective Product Support and maintenance services 
+on demand from the BUYER and at mutually agreed financial consideration, for mutually agreed period from the date 
+of supply of the product/System. Product Support covers the following areas: 
+ 
+-Spares Support 
+-Field Support 
+-Maintenance Support 
+ 
+SPARES SUPPORT: 
+1. SELLER shall advice on the requirement of spares and stock to be maintained as and when required by the BUYER. 
+2. Supply spares on demand. 
+3. Should any of the spares or equipment be earmarked for discontinuance of production give notification to BUYER 
+one year before the production is discontinued, to allow for a lifetime purchase? SELLER shall assist the BUYER in 
+establishing alternate source of supplies. 
+ 
+FIELD SUPPORT: 
+On the request of the BUYER, SELLER shall resolve all technical queries and problems on product/System in service 
+and provide the services of its service engineers at base of the BUYER on mutually agreed terms and conditions as 
+and when required to facilitate repair of the product/System or to carry out modifications within the framework of 
+system safety and for other field services. 
+ 
+MAINTENANCE SUPPORT: 
+SELLER shall carry out scheduled, periodic and unscheduled maintenance and snag rectification and for this purpose 
+maintenance personnel will be deputed at mutually agreed terms and conditions. 
+ 
+In case of prices for long-term supplies of spare parts or price catalogue are not available/applicable, provision 
+for entering into long term business agreements on supply, servicing and repairs like LTSA/LTRA should be provided 
+by Seller in the scope of the contract till establishment of Repair Overhaul Facility at ___________ or in India. Seller 
+should indicate lead time for supply of spares and should authorize _________ for direct purchase from OEMs/Primary 
+vendors. 
+ 
+The Seller agrees to undertake Maintenance Contract for a maximum period of ______ months, extendable till the 
+complete Engineering Support Package is provided by the Seller. In the event of any obsolescence during the above 
+mentioned period of product support in respect of any component or sub-system, mutual consultation between the 
+Seller and Buyer will be undertaken to arrive at an acceptable solution including additional cost, if any. Any 
+improvement / modification / up gradation by the Seller or their sub supplies on the stores /equipment being purchased 
+under the Contract will be communicated by the Seller to the Buyer and, if required by the Buyer, these will be carried 
+out by the Seller at Buyer’s cost. 
+The Seller agrees to provide an Engineering Support Package as modified after confirmatory Maintenance Evaluation 
+Trials (METs). The Seller agrees to undertake the repair and maintenance of the equipment, SMTs/STEs test set up, 
+assemblies / sub-assemblies and stores supplied under this contract for a period of ______ years as maintenance 
+contract as specified or provision of complete Engineering Support Package to the Buyer whichever is later, as per 
+terms and conditions mutually agreed between the Seller and the Buyer.
+
+
+--- [Page 16] ---
+12 | P a g e 
+ 
+ 
+3.12. Taxes & Duties: 
+ 
+a) GST: Rate of GST or any other Tax chargeable should be clearly indicated in the offer/ bid as inclusive in the price 
+quoted or extra. If not indicated, Buyer will assume that the rates quoted are inclusive of taxes. 
+b) Wherever Excise Duty is applicable and payable, the same shall be reimbursed at actual against production of 
+qualified Excise Duty gate pass in original as a proof for having paid the duty on the particular consignment. The Seller 
+should ensure that the Gate Pass accompanies each consignment that are sent to us. In addition a photocopy of Gate 
+Pass, in advance along with Invoice to be sent to Purchase  
+ 
+Department in case of payment through Bank. If the terms of payment is other than the above, the photo copy of the 
+Gate Pass with the bills etc., shall be sent to concern Accounts Department. The Excise Duty Gate Pass number and 
+date shall be incorporated in the Invoice, Delivery Challan and all other dispatch documents. 
+c) Seller is entitled for increase in statutory taxes, duties & levies within original DP and extended DP. However, there 
+is decrease in statutory taxes, duties & levies, the same must be passed on to the Buyer. 
+d) Foreign Bidders: All taxes, duties, levies and charges which are to be paid for the delivery of goods in their 
+respective countries, shall be paid by the foreign bidders. 
+(e)Customs Duty: 
+ 
+(i) In case of imported stores offered against forward delivery, the Bidders shall quote prices exclusive of customs 
+duty, duly specifying separately the CIF Price and the customs duty payable. The Bidder shall also indicate the rate of 
+customs duty applicable along with Indian Customs Tariff Number. Customs duty actually paid shall be reimbursed 
+on production of necessary documents i.e. (1) copy of Bill of Entry, (2) copy of Bill of Lading, (3) foreign Principals 
+invoice. However, if the Bidder imports the stores in question against his own commercial quota Import license, he 
+will also be required to submit in addition to the triplicate copy of bills of entry, etc., a certificate from his Internal 
+Auditor on the bill, to the effect that the following items/ quantity in the bill of entry are related to the stores imported 
+against the Buyers Contract Number …………………… dated …………. 
+(ii) Subsequent to the reimbursement of customs duty if the Seller obtains any refund of customs duty, such refund 
+shall immediately be remitted, in full, to the Buyer. In case of failure to do so, the Buyer shall be fully empowered to 
+deduct a sum equivalent to the amount of customs refunded, without any further reference to the Seller, from any of 
+their outstanding bills against the contract or any other pending Government contract and no disputes on this account 
+shall be raised by the Seller. 
+(iii) Subsequent to the reimbursement of customs duty, the Seller shall submit to the concerned Paying Authority a 
+certificate to the effect that he has not obtained any customs duty refund. In addition, Seller shall also submit to the 
+Paying Authority a certificate, immediately after lapse of the period specified in the Customs Act by which application 
+for refund are to be filed with the Customs Authorities, stating that he has not applied for refund of the customs duty. 
+ 
+3.13. Pre-contract Integrity Pact: 
+a) For purchases exceeding Rs. five (5) Cr, a Pre-Contract Integrity Pact shall be signed between the Buyer and the 
+Bidder. This is a binding agreement between the Buyer and Bidder in which both agree to enter into a pre-contract 
+agreement to avoid all forms of corruption by following a system that is fair, transparent and free from any influence 
+prior to, during and subsequent to the currency of the contract. 
+b) Bidder shall submit duly signed Pre-Contract Integrity Pact in original, strictly as per the format (without any 
+deviation) enclosed with the T.E/RFP. Bidders not complying with this are liable for rejection and their bids will not 
+be considered for evaluation. In case of two bid system, the Bidder is required to submit the signed pre-contract IP as 
+part of technical bid, failing which offers are liable for rejection. 
+c) The Pre-Contract Integrity Pact shall be valid, from the date of signing of the contract, for a period extending up to 
+5 years or completion of contractual obligations whichever is later. 
+d) The Pre-Contract Integrity Pact requires every Bidder to deposit along with his Bid the following amount as Security 
+Deposit. 
+ 
+i) Rs.1 Cr (Additional financial guarantee), if the estimated cost procurement is aboveRs100 Cr and up to Rs. 300 Cr. 
+ii) Rs 3 Cr (Additional financial guarantee), if the estimated cost procurement is above Rs300 Cr. 
+iii) All procurement cases above Rs. 5 Cr & up to Rs. 100 Cr, Integrity Pact is required to be executed without any 
+additional Financial Guarantee. The EMD/SD/PBG required to be submitted by the vendor as prescribed in MILPM 
+2018 shall only act as the financial guarantee for the IP.  
+iv) For procurement cases above Rs. 5 Cr & up to Rs. 100 Cr, in case EMD is exempted and/or PSD is waived, separate 
+Bank Guarantee of the PSD value required to be submitted by the vendor.
+
+
+--- [Page 17] ---
+13 | P a g e 
+ 
+ 
+v) Bidder shall furnish the said EMD/ Security Deposit through any of the following instruments: 
+1) Bank Draft or Pay Order in favour of the PCA (Fys.) Kolkata. 
+2) A Confirmed Guarantee by an Indian Nationalized Bank, promising payment of the guaranteed sum to the 
+Buyer, on demand, within three working days without any demur whatsoever and without seeking any reasons 
+whatsoever. The demand for payment by the Buyer shall be treated as conclusive proof for payment. 
+3) In case foreign suppliers, the Bidder may, if necessary, furnish the Bank Guarantee from a first class 
+International Bank provided the same is confirmed/verified by the State Bank of India. 
+vi) The EMD/ Security Deposit shall be valid up to a period of five years beyond the bid validity specified in the TE 
+(or subsequent request made by the Buyer for validity extension) or the complete conclusion of contractual obligations 
+to complete satisfaction of both the Bidder and the Buyer, whichever is later. 
+ 
+vii) In case there are more than one bidder, the Earnest Money/Security Deposit shall be refunded by the Buyer to 
+those bidder(s) whose bid does not qualify (do not qualify) after the stages of TEC/ TPC, as constituted by the Buyer, 
+immediately after recommendation is made by the TEC/ TPC on bid(s)after an evaluation. 
+viii) No interest shall be payable by the Buyer to the Bidder(s) on Earnest Money/Security Deposit for the period of 
+its currency. 
+ix) The Buyer has nominated ________________________ (Name & address to be given) as Independent Monitor 
+(IEM) for this Pact. 
+ 
+3.14. Liquidated Damages (LD): The time for and the date of delivery of the stores stipulated in the Purchase Order 
+shall be deemed to be the essence of the contract, and delivery must be completed not later than the dates specified 
+therein. Should the Seller fail to deliver the material to our premises or any consignment thereof within the period 
+prescribed for such delivery, Buyer shall be entitled to recover from the Seller agreed liquidated damages, and not by 
+way of penalty a sum of 0.5% per week of delay or part thereof, subject to maximum of 10% as our claim towards 
+liquidated damages on the undelivered part of the order. The LD will be charged on the basic cost excluding taxes and 
+duties. Imposition, recovery or settlement of this LD shall not affect Buyer’s right to performance, compensation and 
+termination of the agreement. Liquidated Damages in contracts with Price Variation formula shall be levied on the 
+price as varied by the operation of the Price Variation clause. 
+ 
+3.15. Earnest Money Deposit:  
+a) EMD for a value of Rs. 194962.00 to be submitted in the form of Account Payee Demand Draft / Fixed Deposit 
+Receipt /Banker’s Cheque / Bank Guarantee (in prescribed format) from any of the Commercial banks / payment online 
+(to be specified, on implementation). EMD should be valid for ____ days beyond the validity of the bid. Bank details 
+are as follows: ____________________.  
+b) Offers not accompanied with requisite amount of EMD or EMD not submitted in the specified form in original shall 
+be summarily rejected.  
+c) EMD will not carry any interest for the period it is retained with Buyer. EMD will be forfeited if a Seller withdraws, 
+amends, impairs and/or derogates within validity period.  
+d) EMD is to be submitted by the bidders except Micro and Small Enterprises (MSEs) having UAM number as defined 
+in MSE Procurement Policy 2012 issued by Department of Micro, Small and Medium Enterprises (MSME) or are 
+registered with the Central Purchase Organization or the concerned Ministry or Department (including OFs) or Start-
+ups as recognized by Department of Industrial Policy and Promotion (DIPP), irrespective of the store for which they 
+are registered. EMD is also not required from Central PSUs. Bidders/Sellers exempted from submission of EMD must 
+submit certified copy of Govt of India authority for such exemption in lieu of EMD.  
+e) EMD of the technically rejected bidder shall be returned immediately after technical evaluation. EMD of balance 
+unsuccessful bidders will be returned to them at the earliest after expiry of the final bid validity and latest on or before 
+the 30th day after award of contract/ finalization of the tender. The EMD of the successful bidder would be returned, 
+without any interest whatsoever, after the receipt of PSD from them as called for in the consequent Contract.  
+f) In case of two bid system EMD in original form should be enclosed along with the technical bid. Technical bid 
+without EMD in original will be rejected.  
+g) EMD remittance document, either in Indian currency or any other convertible currency of the specified amount, can 
+be arranged by the Indian subsidiary / branch office in India of a foreign Seller which shall be submitted along with a 
+certificate confirming the relationship of subsidiary / branch office in the Seller’s offer.  
+h) EMD shall be submitted in favour of Munitions India Limited_High Explosives Factory, Payable at 
+Khadki, Pune.
+
+
+--- [Page 18] ---
+14 | P a g e 
+ 
+ 
+ 
+3.16. Performance Security Deposit (PSD):  
+(a) The Seller (successful bidder awarded contract) shall deposit 5% of the total value of this order /contract value 
+(inclusive all i.e. including taxes & duties etc.) or as per latest guidelines by the Govt. Performance Security Deposit 
+which amounts to Rs. _______ to be submitted by way of Account Payee Demand Draft/ Banker Cheque, Fixed 
+Deposit Receipt from a Commercial Bank, Bank Guarantee from a Commercial Bank or online payment in an 
+acceptable form safeguarding the purchaser’s interest in all respects. It should be drawn in the favour of GM/CMD in 
+case of MILCO. A model format of Bank Guarantees for obtaining Performance Security Deposit is provided 
+Annexure-20. At the request of the supplier, PSD can be deducted from (i) EMD or (ii) pending bills of the contractor, 
+if any against other contracts. Under exceptional circumstances (for which reasons to be recorded and approved by 
+same CFA who has approved the contract), the PSD can be deducted from the first bill against the existing contract. 
+Any interest occurred in FDR submitted as PSD by the vendors shall remain in their account.  
+(b) The threshold value of contract for applicability of Performance Security Deposit will be as defined by GeM from 
+time to time.  
+(c) The PSD/Performance Bank Guarantee should be valid for additional period of 60 days beyond the delivery date 
+of completion of all contractual obligation including Warranty period (if any). In the event of the Contractual delivery 
+period being extended by the Buyer, the Seller shall be responsible to ensure that the validity of the Performance 
+Guarantee is also simultaneously extended/re-validated so that it is valid for additional period of 60 days beyond the 
+new delivery date of completion of all contractual obligation including warranty period (if any).  
+(d) In the event of non-performance of the item and if Seller fail to attend the defects within reasonable period of time, 
+the PSD will be forfeited /the Performance Bank Guarantee will be encashed. In case any claims or any other contract 
+obligations are outstanding, the Seller shall extend the Performance Bank Guarantee as requested by the Buyer till 
+such time as the Seller settles all claims and completes all contract obligations. The Performance Bank Guarantee shall 
+also be liable for encashment/forfeited if conditions regarding adherence to delivery schedule and other provisions of 
+the contract are not fulfilled by the Seller. The Buyer decision shall be final and binding in this regard.  
+(e) Performance Security Deposit is initially to be given by the supplier for original supply order quantity without 
+option clause quantity. PSD (without interest except FDR) for the original supply order quantity may be returned after 
+60 days of fulfillment of all contractual obligations of the original supply order quantity including warranty period (if 
+any). Regarding Option Clause, PSD amount may be worked out based on Option Clause quantity. PSD for Option 
+Clause quantity may be returned after 60 days of fulfillment of all contractual obligations of the Option Clause quantity 
+including warranty period (if any). (f) PSD will be submitted in favour of To The General Manager, High Explosives 
+Factory, Khadki, A Unit Of Munitions India Limited. The Seller should have sent original copy of PSD to Factory 
+/Unit concerned first with a copy to The General Manager, Munition India limited. After verification/confirmation of 
+genuineness by the relevant Bank, a copy of the same can be forwarded by Factory to The General Manager, Munition 
+India limited, High Explosives Factory, Khadki, Pune. 
+ 
+3.17. Spares Management: Seller should provide Product Support for full lifetime of the product. SELLER: 
+a) Shall advice on the requirement of spares and stock to be maintained as and when required by the BUYER. 
+b) Supply spares on demand. Should any of the spares or equipment be earmarked for discontinuance of production, 
+give notification to BUYER one year before the production is discontinued, to allow for a life time purchase. 
+c) Shall assist the BUYER in establishing alternate source of supplies. 
+ 
+3.18. Obsolescence: The Seller shall continue to support the equipment for a minimum period of___ years from the 
+date of supply by making available spare parts and assemblies of the equipment supplied. For any reason Seller wishes 
+/ decides to close / discontinue the line for manufacture of the products or procurement of certain components, sub-
+components, Seller undertakes to notify such a decision to  
+buyer by means of a prior __ years notice(before closure of the said production line) in writing so as to enable Buyer 
+to place buy order / a life time buy of all spares before closure of said production line. Seller will transfer tools, 
+drawings etc to Buyer after such notice period. Seller to indicate the source from where Buyer can procure these items. 
+The said aspect would also form an integral part of the contract. 
+ 
+3.19. Withholding tax: 
+ 
+(a) BUYER would be deducting at source applicable Income Tax as per Government of India Rules applicable at the 
+time of making payments in respect of services rendered in India. (Generally on the amounts towards services like 
+training, technical assistance offered by the Seller and license fees). As per the Rules, Income tax has to be borne by 
+the recipient of the Income and relevant certificate to this effect will be issued to the Seller on deduction of such 
+amounts, if applicable. 
+(b) Seller should bear the applicable withholding income tax in India. Tax would be deducted at source by Buyer as 
+per DTAA where the Seller could claim the benefit of double taxation in their country as per the bilateral agreement
+
+
+--- [Page 19] ---
+15 | P a g e 
+ 
+ 
+ 
+between the two countries. Certificate to this effect would be issued by Buyer to enable the Seller to claim the benefit 
+under DTAA. 
+(c) Seller is required to indicate the PAN/TAN No. issued by Indian Income Tax Authorities and Permanent 
+Establishment Certificate, If Applicable. 
+ 
+3.20. Product Liability: The Product Civil Liability on the product, for any loss arising in course of its utilization, 
+for which Buyer may be held legally responsible, is the responsibility of Seller. Seller will carry out Product Liability 
+Insurance to the extent set for herein in an amount not less than Rs. ___. Buyer will not be responsible for the payment 
+of any premium for this policy. 
+ 
+3.21. Risk Purchase: 
+(a) If the equipment / article / service or any portion thereof be not delivered / performed by the scheduled delivery 
+date / period, any stoppage or discontinuation of ordered supply / awarded contract without written consent by Buyer 
+or not meeting the required quality standards, the Buyer shall be at liberty, without prejudice to the right of the Buyer 
+to recover Liquidated Damages / penalty as provided for in these conditions or to any other remedy for breach of 
+contract, to terminate the contract either wholly or to the extent of such default. Amounts advanced or part thereof 
+corresponding to the undelivered supply shall be recoverable from the Seller at the prevailing bank rate of interest. 
+(b) The Buyer shall also be at liberty to purchase, manufacture or supply from stock as it deems fit, other articles of 
+the same or similar description to make good such default and or in the event of the contract being terminated, the 
+balance of the articles remaining to be delivered there under at the risk & cost of Seller. Any excess over the purchase 
+price, cost of manufacture or value of any articles supplied from the stock, as the case may be, over the contract price 
+shall be recoverable from the Seller. 
+ 
+3.22. Termination Clause: Buyer reserves the right to cancel the order with 15 days’ notice without any financial 
+liability in the event of any of the following: 
+a) When the item offered by the Seller repeatedly fails in the inspection and/or the Seller is not in position to either 
+rectify the defects or offer items conforming to the contracted quality standards. 
+b) When the Seller fails to honour any part of the contract including failure to deliver the contracted stores/ render 
+services in time. 
+c) Adulterated supplies as determined according to Prevention of Food Adulteration Act, 1954 and Rules, 1995 as 
+amended from time to time. 
+d) Supplies inferior to the specified quality. 
+e) Unbranded/deceptively branded / spurious supplies against branded items in the Purchase Order. 
+f) Time expired supplies. 
+g) When the Seller is found to have made any false or fraudulent declaration or statement to get the contract or he is 
+found to be indulging in unethical or unfair trade practices. 
+h) Based on the decision of Arbitration Tribunal. 
+i) The seller is declared bankrupt or become insolvent. 
+ 
+3.23. Insolvency: If the Seller enters into liquidation, whether compulsory or voluntary (otherwise than or 
+amalgamation or reconstruction with another party taking over all his rights as well as commitments) or becomes 
+insolvent or Suffers a receiver of the whole or part of this asset to be appointed, 
+i) Shall forthwith notify the same to Buyer and the Buyer shall have the right without prejudice to his other rights or 
+remedies to terminate the unexecuted part of this Contract. 
+ii) In such an event, the Buyer shall become entitled forthwith to get the refund within 30 days of all the advance 
+payments received by the Seller and expenditure incurred as a part of its obligations under this contract. 
+ 
+3.24. Appropriation: Whenever under this contract any sum of money is due or recoverable from Seller or payable 
+by the Seller, Buyer shall be entitled to recover such sum by appropriating in part or whole by deducting any sum then 
+due or which at any time thereafter may become due to the Seller in this or any other contract entered by Buyer as a 
+whole its Divisions and Branch Offices etc., held by him/her alone or in partnership with others. Should this sum be 
+not sufficient to cover the full amount recoverable, the Seller shall pay to Buyer on demand the remaining balance due 
+within 30 days of such written notice.The remaining balance due, if any, will be recovered through due process of law 
+in case seller becomes defaulter. 
+3.25. Applicable Laws/Jurisdiction: All questions, disputes or differences arising out of or in connection with the 
+contract, if concluded shall be subject to the exclusive jurisdiction of the Court within the local limits whose jurisdiction 
+the place from which the Acceptance of Tender is issued, is situated. This contract shall be governed by and subject to 
+and interpreted and construed in accordance with the Laws of the Republic of India, as may be in force from time to 
+time.
+
+
+--- [Page 20] ---
+16 | P a g e 
+ 
+ 
+ 
+ 
+3.26. Arbitration: 
+(i) Any dispute or difference whatsoever arising between the parties out of relating to the construction, meaning, scope, 
+operation or effect of this contract or the validity or the breach thereof shall be settled by bilateral discussions. (ii) Any 
+dispute or difference whatsoever arising between the parties out of or relating to the construction, meaning, scope, 
+operation or effect of this contract or the validity or the breach thereof, which cannot be settled amicably within sixty 
+(60) days or such longer period as may be mutually agreed upon, from the date on which either party informs the other 
+in writing by a notice that such dispute, disagreement or question exists, shall be settled by arbitration.  
+(iii) The Arbitration Proceedings shall be conducted in India under the Indian Arbitration and Conciliation Act, 1996 
+(amended time to time) and the award of such Arbitration shall be enforceable in Indian Court only. The law applicable 
+to an arbitration shall be Indian law. In case of Foreign Seller, Indian law of Foreign law to be decided by contracting 
+parties is applicable. 
+For Indigenous Seller: The arbitration tribunal shall be consisting of sole arbitrator. The sole arbitrator shall be 
+nominated by the parties within ninety (90) days of the receipt of the notice mentioned above through mutual 
+discussions and referred to CMD, Munitions India Ltd for appointment of the Sole Arbitrator with the mutual consent 
+of the parties. The Arbitrator so appointed (with mutual consent) who had not dealt with matters to which this 
+agreement relates and in course of his duties had not expressed views on all or any of the matter in disputes or 
+differences. Failing which the arbitrator shall be nominated under the provision of Indian Arbitration and Conciliation 
+Act, 1996 (amended time to time) at the request of either party or by dispute resolution institutions like Indian Council 
+of Arbitration or ICADR, but said nomination would after consultation with both the parties. The Award of arbitration 
+shall be final and binding on the parties to this contract. 
+For Foreign Seller: The arbitration tribunal shall be consisting of sole arbitrator. The arbitrator, who shall not be a 
+citizen or domicile of the country of either of the parties or of any other country unacceptable to any of the parties shall 
+be nominated by the parties within ninety (90) days of the receipt of the notice mentioned above, failing which the 
+arbitrator may be nominated under the provisions of Indian Arbitration and Conciliation Act, 1996 (amended time to 
+time) or by dispute resolution institutions like Indian Council of Arbitration and ICADR. In case, nomination of third 
+arbitrator under Indian Arbitration and Conciliation Act, 1996 (amended time to time) or by dispute resolution 
+institutions like ICA and ICADR are not acceptable to the SELLER, then the sole arbitrator may be nominated by the 
+President of International Chamber of Commerce, Paris, but the said nomination would be after consultation with both 
+the parties and shall preclude any citizen with domicile of any country as mentioned above.  
+The Arbitration Tribunal shall have its seat in ___________ in India or any suitable place in India as may be decided 
+by the arbitrator.  
+Each party shall bear its own cost of preparing and presenting its case. The cost of arbitration including the fees and 
+expenses of the arbitrator shall be shared equally by the SELLER and the BUYER, unless otherwise awarded by the 
+Arbitration Tribunal. In the event of a vacancy caused in the office of the arbitrator, the parties which nominated such 
+arbitrator shall be entitled to nominate another in his place and the arbitration proceedings shall continue from the stage 
+they were left by the retiring arbitrator.  
+In the event of both parties failing to nominate arbitrator within sixty (60) days of the place of arbitrator falling vacant, 
+then the other party shall be entitled after due notice of at least thirty (30) days to request dispute resolution institutions 
+in India like Indian Council of Arbitration or ICADR to nominate another arbitrator as above.  
+The parties shall continue to perform their respective obligations under this contract during the pendency of the 
+arbitration proceedings except in so far as such obligations are the subject matter of the said arbitrator proceedings.  
+The language(s) of the arbitration shall be English.  
+“Except as may be required by law, neither a party nor its representatives may disclose the existence, content, or results 
+of any arbitration hereunder without the prior written consent of (all /both) parties.”  
+In case of technical disputes involving confidential matters, the issue shall be referred to a high level technical authority 
+for each party, appointed for this purpose. 
+For CPSUs/DPSUs 
+In the event of any dispute or difference relating to the interpretation and application of the provisions of the contract, 
+such dispute or difference shall be referred by either party for Arbitration to the sole Arbitrator in the Department of 
+Public Enterprises to be nominated by the Secretary to the Government of India in-Charge of the Department of Public 
+Enterprises.  
+ 
+The Arbitration and Conciliation Act, 1996 (amended time to time) shall not be applicable to the disputes, provided, 
+however, any party aggrieved by such award may make a further reference for setting aside or revision of the award 
+to be Law Secretary, Department of Legal Affairs, Ministry of Law & Justice, Government of India. Upon such 
+reference the dispute shall be decided by the Law Secretary or the Special Secretary/ Additional Secretary, when so
+
+
+--- [Page 21] ---
+17 | P a g e 
+ 
+authorized by the Law Secretary, whose decision shall bind the Parties finally and conclusively. The Parties to the 
+dispute will share equally the cost of arbitration as intimated by the Arbitrator. If the Department of Public Enterprises 
+fails to settle the dispute, the same will be referred to the Committee constituted by the Cabinet Secretariat. 
+ 
+3.27. Indemnity against Patent rights: The Seller shall at all times protect, indemnify and save/ keep harmless 
+the Buyer, its successors, assigns, any claim made by a third party against all liability, including costs, expenses, 
+claims, suits or proceedings at law, in equity or otherwise, arising out of, or in connection with, any actual or alleged 
+patent infringement (including process patents, if any), or violation of any license with respect of the stores covered 
+by the order. 
+ 
+3.28. Bribes: The Seller undertakes that he has not given, offered or promised to give, directly or indirectly any gift, 
+consideration, reward, commission, fees brokerage or inducement to any person in service of the Buyer or otherwise 
+in procuring the Contracts or forbearing to do or for having done or for borne to do any act in relation to the obtaining 
+or execution of the Contract or any other Contract with the Government for showing or forbearing to show favour or 
+disfavor to any person in relation to the Contract or any other Contract with the Government. Any breach of the 
+aforesaid undertaking by the seller or any one employed by him or acting on his behalf (whether with or without the 
+knowledge of the seller) or the commission of any offers by the seller or anyone employed by him or acting on his 
+behalf, as defined in Chapter IX of the Indian Penal Code, 1860 or the Prevention of Corruption Act, 1988 or any other 
+Act enacted for the prevention of corruption shall entitle the Buyer to cancel the contract and all or any other contracts 
+with the seller and recover from the seller the amount of any loss arising from such cancellation. A decision of the 
+buyer or his nominee to the effect that a breach of the undertaking had been committed shall be final and binding on 
+the Seller. 
+ 
+Giving or offering of any gift, bribe or inducement or any attempt at any such act on behalf of the seller towards any 
+officer/employee of the buyer or to any other person in a position to influence any officer/employee of the Buyer for 
+showing any favour in relation to this or any other contract, shall render the Seller to such liability/ penalty as the 
+Buyer may deem proper, including but not limited to termination of the contract, imposition of penal damages, 
+forfeiture of the Bank Guarantee and refund of the amounts paid by the Buyer. 
+3.29. Sub-contracting/Sub-letting with the permission of the Buyer: Seller shall not be entitled without 
+buyer’s prior written consent to Sub-contract/Sublet to a third party all or part of the benefits or obligations of the 
+Contract (even by way of change of ownership or control), except as expressly permitted in this Contract if any, to 
+sub-contract any of its rights and interest under this Contract. 
+3.30. Works & Payments during Arbitration: Work under the Contract shall be continued by the Seller during 
+the arbitration proceeding, unless otherwise directed in writing by the Buyer or unless the matter is such that the work 
+cannot possibly be continued until the decision of the arbitrators is obtained, and save as those which are otherwise 
+expressly provided in the Contract, no payment due or payable by the Buyer shall be withheld on account of such 
+arbitration proceedings, unless it is the subject matter or one of the subject matters thereof. 
+3.31. Fall Clause: The firm has to submit a “fall clause” undertaking that it will not sell the same 
+material/equipment, with similar tender conditions, at prices lower than the supply order rate placed on it. In 
+case if the firm supplies or quotes a lower rate to other Governments, public sector organizations, it would 
+reimburse the excess amount. 
+3.32. Export License: Foreign Seller making proposals should ensure availability of export license as per their Govt. 
+regulations for export to India. Seller shall be required to obtain and maintain all Export/Import licenses and permits 
+etc., as the case may be, required for performing supplies against this tender. Obtaining export license shall be entire 
+responsibility of the Seller and he shall discharge this within a reasonable time. End User Certificate will be issued by 
+the Buyer. 
+3.33. Immunity to the Government of India: It is expressly understood and agreed by and between Seller & buyer 
+that buyer is entering into this contact solely on its own behalf and not on behalf any other person or entity. In particular, 
+it is expressly understood and agreed that Government of India is not a party to this contract and has no liabilities, 
+obligations or right hereunder. It is expressly understood and agreed that buyer is an independent legal entity with 
+power and authority to enter into contracts solely on its own behalf under the applicable laws of India and general 
+principles contract law. Seller expressly agreed acknowledges and understand that buyer is not an agent, representative 
+or delegate to the Government of India. It is further agreed and understood that Government of India is not and shall 
+not be liable for any acts, omissions, commissions, breaches or other wrongs arising out of the contract. Accordingly, 
+Seller hereby expressly waives releases and foregoes any and all actions, including counterclaims, impleader claims 
+or counter claims against the Government of India arising out of this contract and covenants as to any manner, claim 
+cause or action or this whatsoever arising out of or under this contract.
+
+
+--- [Page 22] ---
+18 | P a g e 
+ 
+ 
+ 
+3.34. Intellectual Property Rights: 
+(a) If any Patent design, trademark, copyright or any other intellectual property rights apply to the delivery or 
+accompanying documentation, Buyer shall be entitled to the legal use thereof free of charge by means of a non-
+exclusive, worldwide, perpetual license. All intellectual property rights that arise due to the execution of the delivery 
+by the Seller and by its employees or third parties involved by the Seller for performance of the agreement belong to 
+Buyer. 
+(b) The Seller shall be obligated to do everything necessary to obtain or establish the abovementioned rights. The Seller 
+guarantees that the delivery does not infringe on any of the intellectual property rights of third parties. The Seller shall 
+also be obligated to do everything necessary to obtain or establish the alternate acceptable arrangement pending 
+resolution of any (alleged) claims by third parties. The Seller shall indemnify the Buyer against any (alleged) claims 
+by third parties in this regard and shall reimburse Buyer for any damages suffered as a result thereof. 
+3.35. Amendment &Waiver: 
+Any amendment to Purchase Orders / Contracts would be enforceable only if made in writing and duly signed by 
+authorized representatives of the parties hereto. Failure of either Party at any time to enforce any of the provisions of 
+this Contract shall not per se constitute a waiver by that Party of any such provisions nor in any way affect the validity 
+of the Contract or any part hereof. 
+3.36. Classified/Confidentiality: The conditions are as follows:- 
+(a) This Contract and its annexure(s) shall be treated as confidential by the Parties and their officers and employees. 
+(b) Unless otherwise specified herein, neither Party or any of their affiliated companies shall make any news release, 
+public announcement, advertisement, denial or confirmation, disclose of some or any part of this Contract or 
+transactions contemplated under this Agreement to any third party without the prior consent of the other Party. 
+(c) The Party Disclosing information is termed as Disclosing Party and the Party receiving information is termed as 
+Receiving Party, Each Party undertakes: 
+i)To keep the other Party's Confidential Information confidential using the same degree of care as the receiving Party 
+uses to protect its own Proprietary Information against public disclosure but in no case any less degree than reasonable 
+care; and 
+ii)Not to make any disclosure of the other Party's Confidential Information to any third party and to use the same only 
+for the Purpose; and 
+iii)Not to make any copies of the other Party's Confidential Information, or translation or transfer of the same to other 
+documents or media nor to disseminate the same within its own organization save as is strictly necessary for the 
+Purpose; and 
+iv)Not to assign the rights and obligations of the Parties without their prior written consent thereto. 
+(d) Provided, however, that the foregoing restrictions and obligations shall not apply to any information which it can 
+be shown: 
+i)Is already or hereafter becomes published otherwise than through the fault or negligence of the receiving Party; or 
+ii)Is lawfully obtained by the recipient from a third party having rights to disclose to the receiving Party, without 
+restrictions as to use or disclosure, or 
+iii)Is already known to the receiving Party at the date of receipt of the information pursuant to this Agreement, or 
+iv)is independently developed by the receiving Party. 
+v) is required to be disclosed under any law, judicial order or Government order or regulation provided receiving Party 
+gives disclosing Party timely notice, where possible, of the contemplated disclosure so as to give the disclosing Party 
+an opportunity to intervene to preserve the confidentiality of the information. Or such disclosure is limited to those 
+persons to whom the Receiving Party is legally compelled to disclose the information to; and 
+(e) The technical information provided by SELLER under this Contract shall be treated as confidential by the BUYER 
+and shall be used by BUYER only for purpose intended and shall not be disclosed to any third party. 
+(f) The provisions of this clause shall survive and remain in force notwithstanding the termination or expiry of this 
+Contract. 
+(g) The BUYER shall limit access of technical documentation being provided under this Contract only to such of its 
+employees involved in relevant operations concerning the equipment on a need to know basis. 
+(h) Non-adherence to this Clause by the Seller shall be treated, amongst others, as a material breach of this Contract. 
+3.37. Agents / Agency Clause: The seller confirms and declares to the buyer that the seller is the original 
+manufacturer or authorized distributor / stockiest of original manufacturer or Govt. Sponsored / Designated Export 
+Agencies (applicable in case of countries where domestic laws do not permit direct export by OEMS) of the stores 
+referred to in this offer / contract / Purchase order and has not engaged any individual or firm, whether Indian or 
+Foreign whatsoever, to intercede, facilitate or in any way to recommend to Buyer or any of its functionaries, whether 
+officially or unofficially, to the award of the contract / purchase order to the Seller; nor has any amount been paid, 
+promised or intended to be paid to any such individual or firm in respect of any such intercession, facilitation or 
+recommendation. The Seller agrees that if it is established at any time to the satisfaction of the Buyer that the present
+
+
+--- [Page 23] ---
+19 | P a g e 
+ 
+ 
+ 
+declaration is in any way incorrect or if at a later stage it is discovered by the Buyer that the Seller has engaged any 
+such 
+individual / firm, and paid or intended to pay any amount, gift, reward, fees, commission or consideration to such 
+person, party, firm or institution, whether before or after the signing of this contract / purchase order, the Seller will be 
+liable to refund that amount to the Buyer. The Seller will also be debarred from participating in any RFQ / Tender for 
+new projects / program with Buyer for a minimum period of five years. The Buyer will also have a right to consider 
+cancellation of the Contract / Purchase order either wholly or in part, without any entitlement or compensation to the 
+Seller who shall in such event be liable to refund all payments made by the Buyer in terms of the Contract / Purchase 
+order along with interest at the rate of 2% per annum above LIBOR (London Inter-Bank Offer Rate) (for foreign 
+vendors) and Base Rate of SBI (State Bank of India) plus 2% (for Indian vendors). The Buyer will also have the right 
+to recover any such amount from any contracts / Purchase order concluded earlier with Buyer. 
+3.38. Force Majeure: 
+(a) If at any time during the execution of the supply order, the performance in whole or in part by either Buyer or and 
+by the Seller(s) is / are delayed by any reason of force majeure situations such as acts of civil war, civil commotion, 
+sabotage, hostilities, war, fires, explosions, epidemics, natural calamities like floods, earthquakes, volcanoes, storms, 
+acts of God & laws of respective governments or any other causes beyond the control of either parties, hereinafter 
+referred to as "events", provided notice of the occurrence of such event/s is / are communicated by either party, to the 
+other party within 21 days from the date of occurrence thereof, neither party shall by reason such events be entitled to 
+terminate the contract nor shall either party have any claim for damages against the other in respect of such 
+nonperformance and or delay in performance of the contract / order. 
+Executions on either side shall be resumed as soon as practicable after such event has come to an end or ceased to exist 
+and the decision of Buyer as to whether activities can resume or not, shall be conclusive and final. Occurrence of the 
+events to be certified by Chamber of Commerce / Indian High Commission or Embassies / Government in that Country. 
+(b) The performance in whole or in part under the captioned tender / contract is prevented or delayed by reason of any 
+such event for a period exceeding sixty days either party may at its option terminate the contract / further processing 
+of the tender. The relative obligations of both the parties remain suspended during the actual period of force majeure. 
+(c) The Buyer may extend the delivery schedule as mutually agreed, on receipt of written communication from the 
+Seller regarding occurrence of 'Force Majeure' conditions, but not exceeding six months from the scheduled delivery 
+date. If the 'Force Majeure' conditions extend beyond this period, the Buyer shall have the right to cancel the order 
+without any financial implication to the Buyer or on terms mutually agreed to. 
+3.39. Exit Criteria: The contract/order may be terminated under the following circumstances: 
+(a) In the event of unsatisfactory performance by the Seller during the contract period, or any of the information 
+provided by the Seller is found to be untrue, or Seller is found to have attempted to influence any person involved with 
+the contract through unethical means, the contract shall be terminated with _____ month’s advance notice without any 
+financial implication to Buyer. Notwithstanding, the foregoing, in cases where it is found that a Seller is engaged in 
+unethical practices, the same shall be barred from participating in the future contracts for a period of ………… years. 
+ 
+(b) If there is change in Buyer requirement, contract shall be terminated with _____ months advance notice. The 
+liability of Buyer in this case will be agreed mutually. In the event of termination of contract by either party the Seller 
+shall ensure following:- 
+i) IPR’s are transferred to Buyer to enable Buyer to proceed on the work with other Seller. Seller also will render all 
+assistance till the other Seller fully take over the balance work. 
+ii) Transfer title and deliver all or any part thereof of the supplies, materials, work-in progress, finished Products, 
+Tooling, drawings and data produced or acquired by Seller specifically for the Product being terminated. 
+iii) Supply of products and its components / spares at least for a period of ___ years from the date of such termination. 
+(c) The Seller is declared bankrupt or becomes insolvent. 
+(d) The delivery of material is delayed due to causes of Force Majeure by more than (________ months). 
+(e) Based on the decision of the Arbitration Tribunal.
+
+
+--- [Page 24] ---
+20 | P a g e 
+ 
+3.40. Cartel Formation: 
+a) Cartel formation or quoting of pool rates or quoting in collusion is against the basic principle of competitive bidding 
+and shall attract penal and punitive measures; including suspension/banning of such Bidders for a specific period as 
+per Procedure for Penal Action in OFs/Units of OFB under the Guidelines of the Ministry of Defence for Penalties in 
+Business Dealings with Entities in vogue, apart from reporting to the Competition Commission of India, other 
+Regulatory Authorities, Chambers / Association of Commerce, etc. 
+b) Firms are expected to quote for full quantity or part thereof but not less than 50% of tendered quantity. Offers for 
+quantity less than 50% of tendered quantity will be considered unresponsive and liable to be rejected if CARTEL 
+Formation is suspected. The management (CFA), reserves the right to order any quantity on one or more firms. 
+c) Whenever all or most of the approved firms quote equal rates in CARTEL, the purchaser reserves the right to place 
+order on any one or more firms with exclusion of the rest. The selection of firms for placement of order would be based 
+on a pre-determined ranking of the firms. 
+d) The purchaser reserves the right to place order on two or three firms: in such cases tender quantity will be distributed 
+between Rank 1(R1) and Rank 2 (R2) firms in the ratio of 60:40 or among R1, R2 and Rank 3(R3) firms in the ratios 
+50:30:20 respectively. 
+e) The purchaser reserves the right to delete the registered firms who quote in CARTEL from list of approved/registered 
+sources or to debar them for competing for a period to be decided by the purchaser. 
+f) The name of the newly registered firm which enters into CARTEL on getting registered will be summarily deleted 
+from the list of registered suppliers. 
+g) New firms will have to submit an undertaking that they will not be part of a cartel with other vendors and will quote 
+competitive rates in the tenders; otherwise would face expulsion from the list of vendor. 
+3.41. Access to Books of Accounts: In case it is found to the satisfaction of the Buyer that the Bidder has engaged 
+an Agent or paid commission or influenced any person to obtain the contract as described in clauses relating to 
+Agents/Agency Commission and penalty for use of undue influence, the Bidder, on a specific request of the Buyer, 
+shall provide necessary information / inspection of the relevant financial documents / information. 
+3.42. Non-disclosure: Except with the written consent of the Buyer/Bidder, the other Party shall not disclose the TE 
+or consequent Contract or any provision, specification, plan, design, pattern, sample or information thereof to any third 
+party. 
+3.43. OEM Certificate: In case the Bidder is not the OEM, the agreement certificate with the OEM for sourcing the 
+spares shall be mandatory. However, where OEMs do not exist, minor aggregates and spares can be sourced from 
+authorized vendors subject to quality certification. 
+3.44. Raw Material Inspection Instructions (if applicable): 
+ 
+It must be ensured that only specified accepted materials are used for manufacture. Raw materials will be procured 
+from manufacturers/approved suppliers. 
+ 
+The materials will be tested at NABL accredited/Govt. approved laboratory for all the parameters of relevant 
+specifications. 
+Representative of HEF/Sister factories will draw sample and get it inspected after receipt of call letter along with pre-
+inspection report for raw materials offered by the firm. 
+ 
+Raw material clearance should be obtained from HEF before commencement of production. 
+ 
+A record of the materials procured by the firm and accepted to be maintained. Record should also indicate quantity 
+procured and utilised during manufacture. 
+ 
+3.45 Pre inspection report from must be submitted by the supplier, along with bulk supply/ tender sample. 
+ 
+3.46. Firm should submit quality plan of the item along with quotation. 
+ 
+ 
+ 
+ 
+                                           (A K DEWAN ROY) 
+DIVISIONAL OFFICER  
+                         FOR CHIEF GENERAL MANAGER 
+                                                                                                                      FOR & ON BEHALF OF PRESIDENT OF INDIA
+
+
+--- [Page 25] ---
+21 | P a g e 
+ 
+ 
+ 
+PART IV – SPECIAL CONDITIONS OF TE 
+ 
+Part IV of the TE contains the Special Conditions of the TE that will form part of the contract with the successful 
+Bidder 
+ 
+4.1 Pre-bid Conference: In certain procurements of specialized or complex nature, turn-key contract, etc., the Buyer 
+may consider it necessary to hold a Pre-bid Conference with prospective Bidders for clarifying the requirement, 
+specification or other allied technical/evaluation/ commercial details of the procurement and also clearing doubts, if 
+any, the Bidders may have on the TE. All eligible Bidders are requested to participate in the Pre-bid Conference. In 
+procurements necessitating Pre-bid Conference, the notice for the Pre-bid Conference shall be given in the TE. 
+ 
+4.2 Notices: Any notice required or permitted by the consequent Contract shall be written in English language and 
+may be delivered personally or sent by FAX or registered /speed post/e-mail, addressed to the last known address of 
+the Party to whom it is sent. 
+ 
+**4.3 Special conditions for Source Development Open Tenders: 
+(a) Established sources for an item will not be eligible to participate in the SDOTE for that item. The status whether a 
+firm is established or not shall be reckoned as on the last date of the previous month in which vendor selection TPC is 
+held. 
+(b) Freak Rates: Any quote that is less than 70% of simple average of the basic rate (LTE and successfully executed 
+SDOTE/OTE) at which orders (excluding import orders) have been placed over the preceding three years (reckoned 
+from the date of tender opening) shall be deemed as freak rate and rejected. Offers with freak rates may not be accepted 
+and reasons for rejection should be specifically recorded, however relevant TPC may take decision to place order after 
+due deliberation in TPC. The standard tender documents should contain these provisions. 
+(c) To have more firms developing an item and thereby improve the probability of developing new sources, in SDOTE 
+the L-2 firm may be given 40% of the tendered quantity on accepting theL-1 rates, provided this was indicated in the 
+tender. 
+(d) Vendors become established source for a particular item after securing order by participation in a SDOTE for the 
+item and successfully delivering at least 60% of ordered quantity against the supply order, and the same being accepted 
+on conformity to the qualitative requirements. 
+However, supplies against subsequent LTE orders shall be accepted subject to completion of the supplies under the 
+SDOTE. Established vendors for aggregates, assemblies and sub-assemblies shall be considered as established vendors 
+for components and sub-assemblies that go into making of the aggregate, assembly and sub-assembly. 
+(e) The firm having one SDOTE supply order is also not allowed to participate in other SDOTE for same item, floated 
+by same or any other Factory. An Undertaking in this regard may be obtained from firms. 
+(f) If a firm on which source development order has been placed, is unable to develop the item within the specified 
+time frame, existing provision of OFB DFP should be followed for DP extension/re-fixation. 
+(g) In the retender, the firm that was unable to develop the particular item even with the extended timeframe that 
+resulted in the retender shall not be allowed to participate. 
+(h) System Integrators may also be considered for participation having facility/capabilities of integration with testing 
+facilities. These firms may not have manufacturing facilities but have agreement (self-declared by vendors) for 
+supplying of components/assemblies/sub-assemblies. The warranty of the integrated product shall be given by the 
+integrator. 
+ 
+4.4 Applicable Currency: Domestic Bidders shall quote and be paid only in Indian Rupees (INR).Foreign Bidders 
+may quote in US Dollars or Euros and may be paid in the same currency. If the offer of foreign Bidders includes some 
+portion of the allied work/ services to be undertaken by Indian purchaser (e.g. installation, commissioning, etc.) such 
+portion shall be quoted and paid only in INR. Authorized Indian dealers of foreign OEMs participating in the TE shall 
+quote and be paid only in INR. The foreign exchange rates applied for conversion from one currency to another shall 
+be the exchange rate (BC Selling Rate) notified by the Parliament Street Branch of SBI, New Delhi / RBI on the last 
+date of submission of Bids. 
+ 
+4.5 Stage Payments: Stage payments are admissible, as well as relevant, only in rare cases involving very high value 
+and where the throughput time for manufacture of the stores under procurement is very long. The Buyer, if satisfied 
+that the throughput time and the value of procurement are very high, may then allow stage payment only against 
+satisfactory completion of clearly identifiable physical milestones with the quantum of the stage payment being 
+commensurate with the quantum of work completed up to the milestone, subject to the Seller submitting a Bank 
+Guarantee in the prescribed format (enclosed) from
+
+
+--- [Page 26] ---
+22 | P a g e 
+ 
+ 
+ 
+a Commercial Bank of India (for Indigenous Sellers)/ Bank of International repute for which counter guarantee is given 
+by Indian Bank (for Foreign Sellers), with validity up to additional period of 60 days beyond the delivery date of the 
+completion of all contractual obligations, for an amount equivalent to the stage payment to be released. The physical 
+milestones/ stages and the admissible stage payment as percentage of the total contract value are given in the table 
+below. When stage payments are made in contracts with Price Variation formula, no price variations shall be admissible 
+on such portions of the price, after the dates of such stage payments.  
+Stage Number 
+Physical Activity to be completed for claiming 
+the stage payment 
+Stage 
+payment 
+as 
+% 
+of 
+the 
+total 
+contract value 
+ 
+ 
+ 
+ 
+4.6 Mode of Payment: 
+ 
+Indigenous Bidders: It will be mandatory for the Bidders to indicate their bank account numbers and other relevant 
+e-payment details to enable payments through ECS/ NEFT mechanism instead of payment through cheques, wherever 
+feasible. A copy of the model mandate form prescribed by RBI to be submitted by Bidders for receiving payments 
+through ECS is enclosed as annexure. 
+Foreign Bidders: 
+a) If the value of the contract is up to US $ 100,000, payments shall be made by Direct Bank Transfer. DBT payment 
+will be made within 30 days of receipt of clean Bill of Lading/ AWB/ Proof of shipment and such other documents as 
+are provided for in the consequent Contract, but such payments will be subject to the deductions of such amounts as 
+the Seller may be liable to pay under the agreed terms of the Contract. 
+OR 
+b) The payment shall be through Letter of Credit from State Bank of India/ any other Indian 
+Public Sector Bank, as decided by the Buyer, to the Bank of the Foreign Seller. The Seller shall give a notification 
+within a specified period of ………… days about the readiness of goods. Letter of Credit shall be opened by the Buyer 
+within …………….. days on receipt of notification of readiness from the firm. The Letter of Credit shall be valid for 
+ninety days from the date of its opening, on extendable basis by mutual consent of both the Seller and the Buyer. All 
+expenses related to Letters of Credit outside India shall be borne by the foreign vendor. In case of extension of delivery 
+period the LC extension charges shall be borne by the Seller, if the extension is due to reasons attributable to the Seller. 
+ 
+4.7 Paying Authority: The CGM of the Unit or Finance Division of the Unit. 
+ 
+4.8 Document to be submitted for Effecting Payments: The Seller submit the requisite documents to the Paying 
+Authority to enable effecting the payment. 
+(a)Indigenous Sellers: Payment of bills will be made on submission of the following documents by the Seller to the 
+Paying Authority along with the bill: 
+i) Ink-signed copy of Sellers Bill/ Commercial Invoice/ Contingent Bill.  
+ii) Inspection Note (and User Acceptance, if applicable)  
+iii) Copies of supply order/contract along with all amendment(s) to the supply order/contract.  
+iv) If DP was extended, copy of the amendment (s) to the Supply Order/ Contract duly indicating whether the extension 
+was granted with or without LD.  
+v) Claim for statutory and other levies to be supported with requisite documents/ proof of payment, like GST Invoice, 
+Excise Duty Challan (wherever applicable), Customs Duty Clearance Certificate, proof of payment for EPF/ ESIC 
+contribution with nominal roll of beneficiaries, etc., as applicable.  
+vi) Exemption Certificate, if applicable.  
+vii) UAM number of MSEs for availing benefits of procurement policies for MSEs order 2012.  
+viii) Bank Guarantee for advance, if any, paid  
+ix) Performance Bank Guarantee, as applicable  
+x) Guarantee / Warranty certificate  
+xi) Name and address, Account type, Account number, IFSC code, MICR code (if these details are not incorporated in 
+supply order/contract)  
+xii) In case of labour contracts, for effecting payment, contractor shall furnish the bank statement / transaction receipt 
+showing amount paid for the month to the manpower deployed.  
+xiii) Any other document/certificate that may be provided in the consequent supply order/contract.  
+ 
+(Note – From the above indicative list, the documents relevant to the procurement undertaken shall be included in the 
+TE.)
+
+
+--- [Page 27] ---
+23 | P a g e 
+ 
+ 
+(b)Foreign Sellers: Paid Shipping documents shall be provided to the Bank, by the Seller, as proof of dispatch of 
+goods as per consequential Contractual terms to enable the Seller to get payment from the LC. The Bank will forward 
+these documents to the Buyer for getting the Stores released from the Port/ Airport. Documents shall include: 
+i) Clean on Board Airway Bill/ Bill of Lading 
+ii) Original Invoice 
+iii) Packing List 
+iv) Certificate of Quality and current manufacture from OEM 
+v) Performance Bond/ Warranty Certificate 
+vi) Dangerous Cargo certificate, if applicable 
+vii) Insurance policy for 110% of the CIF/ CIP contract 
+viii) Certificate of Conformity & Acceptance Test at PDI, if applicable 
+ix) Fumigation Certificate, if any 
+x) Any other document/ certificate provided for in the Supply Order/ Contract 
+ 
+(Note – From the above indicative list, the documents relevant to the procurement undertaken shall be included in the 
+TE). 
+ 
+4.9 Quantity Tolerance: Normally no quantity variation in the supplies under the consequent Contract shall be 
+permitted. However, in justified cases, such excess/ short supplies may be accepted by the Buyer, subject to the value 
+of such excess/ short supplies not exceeding five percent of the original value of the contract, and the payment being 
+admitted only for the actually quantity supplied. 
+ 
+4.10 Capacity Constraints of L1: Firms are expected to quote for full quantity or part thereof but not less than 50% 
+of tendered quantity. The management (CFA), reserves the right to order any quantity on one or more firms. If the L1 
+Bidder has not quoted for the entire tendered quantity, then the supply order shall be placed for the balance quantity 
+on L2 provided the L2 accepts the L1 rates. If the L2 is not agreeable to the L1 rate or if the L1 and L2 Bidders together 
+cannot meet the tendered requirement, then the order for the balance quantity shall be placed on the next ranking 
+supplier (L3) at the L1 rates provided L3 accepts the L1 rates. If the situation so warrants, this process shall be repeated 
+in the order of the ranking (i.e. L1, L2, L3... so on) till the entire tendered quantity is covered or no Bidder is left. 
+ 
+4.11 Distribution of Quantity for Strategic Reasons: As a strategic requirement the Buyer may need multiple 
+sources; in such cases the Buyer may conclude orders on more than one firm in the order of ranking on financial 
+evaluation (in the distribution ratio clearly specified in the TE). The ratios of splitting may be either (a) 60:40 if two 
+sources are necessary (provided at least three sources were issued tenders and at least two have quoted). However, in 
+exceptional cases for which reasons have to be recorded, if there are only two established sources, qty. may be 
+distributed between L1 & L2 in 60:40 ratios (price reasonability to be established) after approval of GM/Sr.GM Or (b) 
+50:30:20 if three sources are necessary (provided at least four sources were issued tenders and at least three have 
+quoted).  
+ 
+Against a tender, the tendered quantity may be distributed in the ratio 60:40 between L1 & L2 or 50:30:20 among L1, 
+L2 & L3 firms at finally arrived/negotiated L1 rate.  
+ 
+(a) In case of 60:40 between L1 & L2, on denial of L1 rate by L2 firm, the quantity of L2 will be offered to L3, L4, 
+L5, …... firms sequentially. In case of denial by L2, L3, L4…., the fully quantity shall be loaded on L1 firm subject to 
+L1 firm has quoted for the full qty.  
+ 
+(b) In case of 50:30:20 among L1, L2 & L3 firms, L1 rate will be offered to L2 firm. If L2 firm accepts L1 rate, then 
+30% quantity to be loaded on L2 firm. In case of denial by L2 firm, the same will be offered to L3, L4, L5, firms as 
+per ranking. If L3/L4/L5…. firms accept L1 rate, then 30% quantity to be loaded on L3/L4/L5. firm. In case of denial 
+by L3 firm, the 30:20 quantities shall be distributed among L4/L5/L6…. firms in their ranking order. In case of denial 
+by L4/L5/L6…. firms, the quantity shall be loaded on L1 firm after exhausting opportunities to all the firms in ranking 
+orders 
+ 
+4.12 Acceptable Year of Manufacture: Unless stated other-wise in the TE, the goods supplied shall be of current 
+manufacture. Quality/ Life certificate will need to be enclosed by the Seller along with the Bill.
+
+
+--- [Page 28] ---
+24 | P a g e 
+ 
+ 
+ 
+4.13 Transportation: Standard transportation instructions are as follows: 
+ 
+a) CIF/CIP (Port of Destination): Seller will bear the costs and freight charges necessary to bring the goods to the 
+port of destination. The Seller shall also procure Marine Insurance against the Buyers risk for loss or damage during 
+the carriage. In this regard the Seller shall contract for the insurance and pay the insurance premium. Seller shall obtain 
+the necessary clearances for export of the goods. The date of issue of the Bill of Lading shall be considered as the date 
+of delivery. No part shipment of goods would be permitted. Trans-shipment of goods would not be permitted. In case 
+it becomes inevitable to do so, the Seller shall not arrange part-shipments and/or transshipment without the 
+express/prior written consent of the Buyer. The goods may be shipped through Indian vessels. Seller will be required 
+to convey the following information well in advance before the Ship sails the port of loading: 
+ 
+i) Name of the Ship: 
+ii) Port of Loading and name of Country: 
+iii) ETA at Port of Discharge: 
+iv) Number of Packages and Weight: 
+v) Nomenclature and details of major equipment: 
+vi) Special instructions, if any, to be provided by the Buyer: 
+ 
+OR 
+ 
+b) FOB/ FAS (Port of Shipment): The stores may be shipped through Indian Ships in case of FOB/ FAS contracts. 
+Notice about the readiness of Cargo for shipment shall be given by the supplier from time to time at least eight weeks 
+in advance for finalizing the shipping arrangement, through Fax and courier, to Factory concerned. Within 3 (three) 
+weeks of receipt of the advance notice, as above, the Factory Concerned will advise the supplier, through Fax and 
+courier when, and on board what vessels, these goods, or such part thereof, are to be delivered. If the advice for shipping 
+arrangement is not furnished to the Seller within 3 (three) weeks as aforesaid or if the vessel arranged is scheduled to 
+arrive at the specified port of loading later than 15 (fifteen) days of the date of readiness of cargo, as aforesaid, the 
+Seller may arrange for such transport on alternative carriers with the prior written consent of the Buyer. Where the 
+Seller is required under the contract to deliver the goods on FOB/ FAS basis, and to arrange on behalf and at the 
+expense of the Buyer, for ocean transportation on Indian flag vessels or vessels of conference lines in which India is a 
+member country, the Seller may arrange for such transportation on alternate carriers if the specified Indian flag vessels 
+or conference vessels are not available to transport the goods within the time period(s) specified in the contract, with 
+the prior written consent of the Buyer. Should the goods or any part thereof be not delivered on the nominated vessel 
+(except in case where prior written consent of the Buyer was obtained), the Seller will be liable for all payments and 
+expenses that the Buyer may incur, or be put to, by reason of such non-delivery including dead and extra freight, 
+demurrage of vessels and any other charges, whatsoever incurred by the Buyer. The date of issue of the Bill of Lading 
+shall be considered as the date of delivery. No part shipment or Trans-shipment of goods would be permitted. In case 
+it becomes inevitable to do so, the Seller shall not arrange part-shipments/ trans-shipment without the express/prior 
+written consent of the Buyer. The Seller may contact Factory concerned. 
+OR 
+c) FCA (Airport): The dispatch of goods shall be made by air to the port of the consignee. The Buyer shall advise full 
+details of its freight forwarder to the Seller no later than 60 days prior to the delivery of the first consignment otherwise 
+the Seller may nominate the freight forwarder at the Buyers expense. Delays in advising or delays by the Buyers freight 
+forwarders shall not be the responsibility of the Seller. The date of issue of the Air Way Bill shall be the considered as 
+the date of delivery. 
+ 
+4.14 Air lift: Should the Buyer intend to airlift all or some of the stores, the Seller shall pack the Stores accordingly 
+on receipt of an intimation to that effect from the Buyer. Such deliveries will be agreed upon well in advance and paid 
+for as may be mutually agreed. 
+ 
+4.15 Quality: The quality of the stores offered shall strictly comply with the technical parameters contained in the 
+Technical Specifications & its related standards and shall be new & of current manufacture. The mode of Inspection 
+may be Buyers Inspection/ Joint Inspection/ Self certification. 
+The inspection of the stores may be Pre-Dispatch Inspection (and/ or) Joint Receipt Inspection/Buyers Receipt 
+Inspection to check their compliance with the Technical Specification.
+
+
+--- [Page 29] ---
+25 | P a g e 
+ 
+ 
+4.16 Pre-Dispatch Inspection (PDI): The Buyer will send his authorized representative(s) to attend the PDI. The 
+Seller shall intimate the Buyer at least 45 days before the scheduled date of PDI. The time required for completing visa 
+formalities by the Seller should not be included in this notice. The list of Buyers Representatives along with  
+ 
+their details like, Name, title, date & place of birth, passport number (including date of issue & expiry), address, etc., 
+shall be communicated to the Seller, by the Buyer, reasonably in advance of the PDI date.  
+ 
+Upon successful completion of such PDI, the Seller and Buyer will issue a Certificate of Conformity in the specified 
+format enclosed in annexure. 
+ 
+The Buyer reserves the right not to attend the PDI or to request for postponement of the beginning of the PDI in order 
+to allow his representative(s) to attend such tests, in which cases he shall inform in writing the Seller within 15 days 
+before the date of the beginning of the PDI. Should the Buyer request for such postponement, liquidated damages, if 
+any, shall not apply for such period of postponement. In case the Buyer informs the Seller within the period mentioned 
+hereinabove that he cannot attend the PDI or in case the Buyer does not come at the postponed date requested by him 
+for performance of the PDI as mentioned above, the Seller shall be entitled to carry out said tests alone as scheduled. 
+The Certificate of Conformity and the Acceptance Test Report shall be signed by the Sellers Quality Assurance 
+Representative alone, which will have the same value as if they were signed by both the Parties. In case Buyer does 
+not elect to attend the PDI, the same shall be intimated to the Seller in writing.  
+ 
+The Seller shall provide all reasonable facilities, access and assistance to the Buyers Representatives for safety and 
+convenience in performance of their duties in the Sellers country. 
+All costs associated with the stay of the Buyers PDI Representative (s) in the country of PDI, including travel expenses, 
+boarding & lodging, accommodation, daily expenses shall be borne by the Buyer. 
+ 
+4.17 Joint Receipt Inspection (JRI): The Joint Receipt Inspection (JRI) of delivered goods shall be conducted jointly 
+by the Buyers Representative (s) and the Sellers Representative (s), on arrival in India, at the location to be nominated 
+by the Buyer. JRI shall be completed within …………….. days of arrival of good at the Consignee Port. The JRI shall 
+consist of: 
+a) Quantitative checking to verify that the quantities of the delivered goods correspond to the quantities defined in this 
+contract and the invoices. 
+b) Complete functional checking of the stores as per specifications in the contract and as per procedures and tests laid 
+down by Buyer. 
+c) Check proof and firing, if required. 
+d) Any other checks (to be specified) 
+ 
+The Buyer shall give the Seller a prior notice of at least fifteen (15) days for attending the JRI. 
+The bio-data of the Sellers Representatives shall be communicated at least fifteen (15) days prior to the dispatch of 
+goods to the Buyer for obtaining necessary security clearance, etc. 
+Upon completion of each JRI, the JRI proceedings and Acceptance Certificate shall be jointly signed by the Buyers 
+Representative (s) and the Sellers Representative (s). In case the Seller does not depute his Representative for JRI on 
+the scheduled date, then the Buyer Representative (s) shall carryout the Inspection alone and the same shall have the 
+effect of the regular JRI and shall be fully binding on the Seller. 
+ 
+Copy of the JRI proceedings and Acceptance Certificate shall be dispatched to the Seller within 30 days of completion 
+of the JRI. In case of deficiencies in quantity and (or) quality or defects, details of these shall be recorded in the JRI 
+proceedings, however, Acceptance Certificate shall not be issued. Further, necessary claims shall be raised by the 
+Buyer as per the Article on Claims in the contract. 
+ 
+4.18 Claims: Claims may be presented either on (a) quantity of the stores, where the quantity does not correspond to 
+the quantity shown in the Packing List/Insufficiency in packing, or (b) quality of the stores, where quality does not 
+correspond to the quality mentioned in the contract. The time frame for raising claims shall be as follows: 
+a) Quantitative Discrepancy: Within ninety days from the date of delivery of the consignment in case of delivery by 
+Air or road and within one hundred and twenty days from date of delivery in case of delivery by Sea. 
+b) Qualitative Discrepancy: The warranty should remain valid for twelve months after the goods or any portion 
+thereof, as the case may be, have been delivered to and accepted at the final destination indicated in the contract, or 
+for eighteen months after the date of shipment from the place of loading, whichever period concludes earlier.
+
+
+--- [Page 30] ---
+26 | P a g e 
+ 
+ 
+ 
+c) Quality Claims on account of Defects or Deficiencies in JRI: The quality claims for defects or deficiencies in 
+quality noticed during the JRI/PDI shall be presented within forty-five days of completion of JRI/PDI and acceptance 
+of goods. Quality claims shall be presented for defects or deficiencies in quality noticed during warranty period earliest 
+but not later than forty-five days after expiry of the guarantee period. 
+ 
+The quantity and quality claims should be submitted to the seller in the prescribed format enclosed in annexures. 
+ 
+ 
+The Seller shall settle the claims within 45 days from the date of receipt of the claim at the Sellers Office, subject to 
+acceptance of the claim by the Seller. In case no response is received during this period the claim will be deemed to 
+have been accepted. 
+The Seller shall collect the defective or rejected goods from the location nominated by the Buyer and deliver the 
+repaired or replacement goods at the same location under the Sellers arrangement. 
+Claims may also be settled by reduction of cost of goods under claim from bonds submitted by the Seller or payment 
+of claim amount by Seller through demand draft drawn on an Indian Bank, in favour of Paying Authority. 
+ 
+4.19 Market Exploration: If the Buyer intents to explore the Market prior to finalization of the requirement, then the 
+Buyer may through a separate Expression of Interest explore the Market for the current availability and trends. 
+ 
+4.20 Buy-Back Offer: 
+In case the Buyer desires to trade the existing old goods while purchasing new ones, the details of the old goods to be 
+traded and other relevant details in this regard shall be indicated hereunder, whereupon the Bidders may formulate and 
+submit their tenders accordingly. 
+Bidders can also inspect the old goods to be traded through this TE. Buyer, however, reserves the right to trade or not 
+to trade the old goods while purchasing the new ones, therefore, Bidders are required to frame their bids covering both 
+the options, i.e. with buy-back and without buy-back. Handling charges and transportation expenses to take out the old 
+items will be on account of the successful Bidder. Factory may fix reserve price for the items to be offered for the 
+buyback well before the TE opening. In case, the firm quoted the buyback price below than the reserve price then 
+buyback offer of the firm may not be considered. In the rankings the buyback price may not be considered. Details for 
+the buy-back are: 
+a) Details of Items for buy-back: (make/model, specifications, year of production/ purchase, period of warranty/ AMC, 
+etc) 
+b) Place for inspection of old items: (address, telephone, fax, e-mail, contact personnel, etc) 
+c) Handing over details: (date & time, place, mode of handing-over, etc.) 
+d) Timings for Inspection: All weekdays between …….. hours to …….. hours 
+e) Last date for inspection: 1 day before the last date of submission of bids 
+ 
+4.21 Exchange Rate Variation (ERV) : 
+ 
+ERV is applicable only in contracts involving substantial import content(s) and having a long delivery period 
+(exceeding one year from the date of contract). The bidder should indicate the import content(s) and the currency 
+(currencies) used for calculating the value of import content(s) in their total quoted price, which (i.e. the total quoted 
+price) will be in Indian Rupees. The bidder should also indicate the Base Exchange Rate for each such foreign currency 
+used for converting the FE content into Indian Rupees and the extent of foreign exchange rate variation risk they are 
+willing to bear. To work out the variation due to changes (if any) in the exchange rate(s), the base date for this purpose 
+will be the last date of submission of commercial bid. The variation may be allowed between the above base date and 
+the date of remittance to the foreign principal/ mid-point of manufacture of the foreign component/….. (Purchaser shall 
+decide an appropriate date). The applicable exchange rates as above will be according to the TT selling rates of 
+exchange of SBI, Parliament Street Branch, New Delhi/RBI on the dates in question. No variation in price in this 
+regard will be allowed if the variation in the rate of exchange remains within the limit of plus/minus 2.5 percent. Any 
+increase or decrease in the customs duty by reason of the variation in the rate of exchange in terms of the contract will 
+be to the buyer’s account. In case delivery period is extended due to default of the vendor, any increase in exchange 
+rate will not be admissible and exchange rate on the last date of original DP shall be considered. In case there is 
+decrease in exchange rate during extended DP, lower exchange rate will be considered. The following documents 
+would need to be submitted by Seller in support of the claim on account of ERV:
+
+
+--- [Page 31] ---
+27 | P a g e 
+ 
+ 
+ 
+ 
+(i) A bill of ERV claim enclosing working sheet 
+(ii) Banker’s Certificate/ debit advice detailing FE paid, date of remittance and exchange rate 
+(iii) Copies of import order placed on supplier 
+(iv) Invoice of supplier for the relevant import order. 
+ 
+4.22 Public Procurement (Preference to Make in India) Policy: Provisions contained in Public Procurement 
+(Preference to Make in India), Order 2017 issued by DIPP, Ministry of Commerce & Industries vide letter No. P-
+45021/2/2017-B. E-II dated 15-06- 2017 along with MoD I.D No. 59011/8/2015-D(HAL-II) dated 19-07-2017 and 
+subsequent amendment issued by DIPP dated 28.05.2018 shall be followed. No such restrictive clauses should be 
+mentioned in terms and conditions of tender enquiries including matter like turnover, production capability and 
+financial strength for the bidders that would be advantageous to the foreign manufactured goods at the cost of 
+domestically manufactured goods. The minimum local content shall ordinarily be 50%. The Requirement of Purchase 
+Preference under PPP-MII, Order 2017 is as follows: -  
+ 
+(a) If the estimated value of procurement is Rs. 50 lakhs or less for which sufficient local capacity and local competition 
+available, only local suppliers shall be eligible to participate.  
+ 
+(b) In the procurement of goods more than Rs. 50 lakhs and which are divisible in nature, following procedure shall 
+be followed:- 
+i. Among all qualified bids, the lowest bid will be termed as L1. If L1 is from a local supplier, the contract for full 
+quantity will be awarded to L1.  
+ii. If L1 bid is not from a local supplier, 50% of the order quantity shall be awarded to L1. Thereafter, the lowest bidder 
+among the local suppliers, will be invited to match the L1 price for the remaining 50% quantity subject to the local 
+suppliers quoted price falling within the margin (20%) of purchase preference, and contract for that quantity shall be 
+awarded to such local supplier subject to matching the L1 price. In case such lowest eligible local supplier fails to 
+match the L1 price or accepts less than the offered quantity, the next higher local supplier within the margin of purchase 
+preference shall be invited to match the L1 price for the remaining quantity and so on, and contract shall be awarded 
+accordingly. In case some quantity is still uncovered on local suppliers, then such balance quantity may also be ordered 
+on the L1 bidder.  
+ 
+(c) In the procurement of goods more than Rs. 50 lakhs and which not divisible in nature, following procedure shall 
+be followed: -  
+ 
+i.  
+Among all qualified bids, the lowest bid will be termed as L1. If L1 is from a local supplier, the contract will 
+be awarded to L1.  
+ii.  
+If L1 is not from a local supplier, the lowest bidder among the local suppliers, will be invited to match the L1 
+price subject to local suppliers quoted price falling within the margin (20%) of purchase preference and the contract 
+shall be awarded to such local supplier subject to matching the L1 price.  
+iii.  
+In case such lowest eligible local supplier fails to match the L1 price, the local supplier with the next higher 
+bid within the margin of preference shall be invited to match the L1 price and so on and contract shall be awarded 
+accordingly. In case none of the local suppliers within the margin of purchase preference matches the L1 price, then 
+the contract may be awarded to the L1 bidder. 
+ 
+4.23 Public Procurement Policy for MSEs Order, 2012:  
+ 
+Any order issued by Central Government in relation to Micro, Small or other sections of Industries relevant to 
+procurement shall be followed by Factories / Units. One such Public Procurement Policy for Micro and Small 
+Enterprises (MSEs) Order, 2012 is in force w.e.f 01.04.2012 and should be strictly adhered to. The Public Procurement 
+Policy shall apply to Micro and Small Enterprises (MSEs) registered with District Industries Centres or Khadi and 
+Village Industries Commission or Khadi and Village Industries Board or Coir Board or National Small Industries 
+Corporation or Directorate of Handicrafts and Handloom or any other body specified by Ministry of Micro, Small and 
+Medium Enterprises (MSME). Declaration of Udyog Aadhaar Memorandum (UAM) number by the MSME vendors 
+on CPPP/OFB e-procurement portal should be made. The MSE bidders who fail to submit UAM number will not be 
+able to avail the benefits available to MSEs as contained in Public Procurement Policy for MSEs Order, 2012 for 
+tenders invited electronically through CPPP/OFB e-procurement portal as follows:- 
+(a) Tender set free of cost 
+(b) Exemption from the payment of Earnest Money (EMD)
+
+
+--- [Page 32] ---
+28 | P a g e 
+ 
+ 
+ 
+(c) In tender, participating MSEs quoting price within price band of L1+15% shall also be allowed to supply a portion 
+of requirement by bringing down their price to L1 price in a situation where L1 price is from someone other than a 
+MSE and such MSE(s) shall be allowed to supply up to 25% of the total tendered value. 
+(d) 358 items are also reserved for exclusive procurement from MSEs. 
+ 
+4.24 Safeguard while Taking Support from Private Companies in RFP Cases – Conflict of Interest Clause: 
+Any company and or their group/associate company who are participating in the < Details of the RFP Proposal issued 
+by the Service HQrs>* will not be eligible to participate in this Tender Enquiry. An undertaking to the effect that the 
+firm or its group associate is not participating in < Details of the RFP Proposal issued by the Service HQrs> * is to be 
+provided by the firm. At any stage during the period of the contract, if the aforesaid undertaking is found to be false 
+the BUYER (OFs/OFB) to take all or any one or more of the following actions, wherever required:- 
+(i) To immediately call off the pre-contract negotiations without assigning any reason or giving any compensation to 
+the Bidder. However, the proceedings with the other Bidder(s) would continue 
+(ii) The Earnest Money Deposit/Performance Security Deposit/Performance Bond shall stand forfeited either fully or 
+partially, as decided by the Buyer and the Buyer shall not be required to assign any reason therefore. 
+(iii) To immediately cancel the contract, if already signed, without giving any compensation to the Bidder. 
+(iv) To recover all sums already paid by the Buyer (OFs/OFB), and in case of an Indian Bidder with interest thereon 
+at 2% higher than the prevailing Prime Lending Rate of State Bank of India (or Base Rate of State Bank of India in the 
+absence of Prime Lending Rate), while in case of a Bidder from a country  
+other than India with interest thereon at 2% higher than the LIBOR. If any outstanding payment is due to the Bidder 
+from the Buyer (OFs/OFB) in connection with any other contract for any other defence stores, such outstanding 
+payment could also be utilized to recover the aforesaid sum of interest. 
+(v) To encase the advance bank guarantee and performance-bank-warranty bond, if furnished by the Bidder, in order 
+to recover the payments, already made to by the Buyer (OFs/OFB), along with interest. 
+(vi) To cancel all or any other Contracts with the Bidder. 
+(vii) To ban the Bidder from entering into any bid from the OFB organization and/or MoD and/or other 
+Ministries/Departments of Government of India for a minimum period of five years and not more than ten years at the 
+discretion of the Buyer (OFs/OFB) as per Procedure for Penal Action in OFs/Units of OFB under the Guidelines of 
+the Ministry of Defence for Penalties in Business Dealings with Entities in vogue (or amended time to time). 
+ 
+[*Details of such RFP/TE No & Date; Details of item/service being procured’ Details of the procurement agency of 
+Service HQrs] 
+ 
+4.25. Repeat Order:  
+a) Repeat Order clause should not be included in the TE and Contract as it has an impact on the price quoted by the 
+supplier. However, when further requirement of the stores under procurement exist against quantities of outstanding 
+contracts/agreements, then it may be advantageous to have a Repeat Order to meet the unforeseen/sudden or urgent or 
+emergent requirement. Therefore, a repeat order may be placed with prior approval of Sr. GM/GM on file justifying 
+unforeseen/sudden or urgent or emergent requirement, before initiating Repeat Order.  
+b) After approval of Sr GM/GM, repeat order against a previous order may be placed with the recommendation of 
+relevant TPC and approved by the CFA. The Repeat Order may be placed subject to the following:  
+i) Items ordered against the previous order were delivered successfully.  
+ii) It may be exercised within six months from the date of completion of supply against the previous order. iii) Original 
+order was not placed to cover urgent/emergent demand.  
+iv) Repeat Order is not placed to split the requirement to avoid obtaining the sanction of the next higher CFA.  
+v) The original order was placed on the basis of lowest reasonable and justified price and accepted by TPC, and not on 
+the basis of delivery or any other preference.  
+vi) The requirement is there for the stores as seen in the calculation of the net deficiency.  
+vii) A fresh T.E will be issued to the vendor for getting the commercial offer for the quantity not exceeding 100% of 
+the previous order.  
+viii) It should not be construed as single vendor case &CFA for Repeat Order TPC will remain the same as CFA of 
+Original SO TPC.  
+ix) In contracts with PV formula, the PV formula being the terms & conditions of the contract, shall apply during the 
+RO also.  
+x) RO can be exercised in case of PAC/ Single vendor/OEM also.
+
+
+--- [Page 33] ---
+29 | P a g e 
+ 
+ 
+ 
+4.26. Qualification Criteria/ Parameters & Documents required for Q/T bid: - 
+ 
+1. EMD of requisite amount. Scanned copies of the same to be submitted. Otherwise firms have to submit copy of 
+relevant certificates of registration for getting exemption. 
+2. V.R.R Forms with relevant documents & Capacity Assessment Fee. Otherwise firms have to submit copy of relevant 
+certificates of registration for getting exemption. 
+3. The firm should be registered with. Copy of PAN and GST registration certificate with each department to be 
+submitted. 
+4. The firm should have required financial capability. Copy of latest IT return, Bank Solvency, OEM certificate and 
+turn over in the last three years to be submitted. 
+5. Proof of satisfactory suppliers of similar products in previous years (List of valuable customers along with order 
+copies, bill/ invoice copies, performance certificate etc from customers). (Applicable for past/established suppliers 
+only)   
+ 
+ 
+ 
+(A K DEWAN ROY) 
+DIVISIONAL OFFICER  
+                         FOR CHIEF GENERAL MANAGER 
+                                                                                                                      FOR & ON BEHALF OF PRESIDENT OF INDIA 
+ 
+PART V – EVALUATION CRITERIA  
+ 
+5.1. Evaluation Criteria: The broad guidelines for evaluation of Bids will be as follows: 
+ 
+a) Only Bids that fulfill all the eligibility & qualifying requirements of the TE, both technically and commercially, 
+shall be considered for evaluation. 
+b) In Two-Bid system, the Technical Bids shall be evaluated with reference to the technical requirements of the stores/ 
+service prescribed in the TE. The Buyer may obtain technical clarifications during the evaluation of the Technical Bids. 
+Further, if considered necessary during the course of Technical evaluation, the Buyer may invite the vendors who meet 
+the essential parameters for technical presentation/ clarification. 
+c) The Price Bids of only the technically complaint Bidders shall be opened. 
+d) The Lowest Bid (L1) will be decided, from out of the Technically & Commercially compliant Bids, based on the 
+lowest price quoted. Consideration of Taxes & Duties in evaluation process shall be as follows: 
+i) When competition is only among Indian Suppliers, the F.O.R Prices at destination (Consignee’s premises) shall be 
+the basis for ranking of the quotations. 
+ii) If the competition is amongst foreign suppliers, the basis for comparison shall only be the landed price at the 
+destination (designated port). 
+iii) When the competition is amongst indigenous and foreign suppliers, the basic cost (CIF) quoted by the foreign 
+suppliers shall be the basis for comparison with the basic cost offered by the indigenous suppliers, after offloading the 
+GST & Excise Duty (if applicable). Therefore, to enable evaluation of the Bid, it is important for foreign Bidders to 
+ensure that they duly quote, both on, CIF as well as FOB basis. Similarly, it is important for the Indian Bidders to duly 
+indicate the GST & Excise Duty (if applicable) in their quote as separate elements. 
+e) The quotes of foreign suppliers in foreign currency shall be brought to a common denomination in Indian Rupees 
+by adopting the exchange rate as BC Selling Rate of the Parliament Street Branch of State Bank of India, New 
+Delhi/RBI on the date of the closing of Bids. 
+f) If there is any discrepancy between the unit price and the total price that is obtained by multiplying the unit price 
+and quantity, the unit price will prevail and the total price will be corrected accordingly. If there is a discrepancy 
+between words and figures, the amount in words will prevail for calculation of price. 
+g) The Buyer reserves the right to evaluate the offers received by using Discounted Cash Flow (DCF) method. If this 
+method is applied the discounting rate shall be the lending rate of the Government of India on loans given to the State 
+Government as notified annually by the Budget Division of Ministry of Finance. The DCF may be applied for 
+converting differing Payment Terms of Bidders to a common basis and thereby determine L1 status. 
+h) The Lowest Acceptable Bid will be considered for placement of contract/ Supply Order, after complete clarifications 
+and price negotiations, if so necessary. The Buyer also reserves the right to award contracts to different Bidders for 
+being lowest in particular items. The Buyer further reserves the right to apportion the quantity, if it is convinced that 
+Lowest Bidder will not be able to supply the full tendered quantity in stipulated time. 
+i) Any other criteria as applicable to suit a particular case. 
+ 
+5.2. Price Bid Format: Bidders are required to quote online as per the format of GeM duly providing complete details
+
+
+--- [Page 34] ---
+30 | P a g e 
+ 
+ 
+COMPLIANCE STATEMENT (PART VI) 
+ 
+Clause no. 
+Commercial and General Terms 
+ 
+Compliance to TE 
+specification (Y/N) 
+If not complied, 
+specify deviations 
+1 
+Qty. offered as per subject bid 
+ 
+ 
+2 
+Price quoted Firm and Fixed 
+ 
+ 
+3 
+Submission of  EMD /EMD Exemption cert. 
+ 
+ 
+4 
+Delivery & Prices on F.O.R destination basis. 
+ 
+ 
+5 
+Whether the offered store is as per Specifications mentioned in bid. 
+ 
+ 
+6 
+Final Inspection at Buyer’s premises acceptable. 
+ 
+ 
+7 
+Delivery as per Delivery Period & schedule mentioned In TE acceptable. 
+ 
+ 
+8 
+Payment Terms of the bid acceptable. 
+ 
+ 
+9 
+Agreed for 50% Option Clause  
+NA 
+ 
+10 
+Agreed for Submission of Security Deposit/ Performance Security Deposit   
+ 
+ 
+11 
+Liquidated Damages Clause accepted. 
+ 
+ 
+12 
+Arbitration Clause accepted. 
+ 
+ 
+13 
+Jurisdiction Clause accepted. 
+ 
+ 
+14 
+Access to Books of Accounts Clause accepted 
+ 
+ 
+15 
+Cartel Formation Clause accepted. 
+ 
+ 
+16 
+Agents / Agency Commission Clause Accepted. 
+ 
+ 
+17 
+Agreed for condition of Non-disclosure of Contract documents 
+ 
+ 
+18 
+Agreed for condition of Evaluation Criteria 
+ 
+ 
+19 
+Validity of offer-as per GeM bid. 
+ 
+ 
+20 
+Guarantee/ Warranty Clause accepted 
+ 
+ 
+21  
+Pre-Integrity Pact Clause accepted 
+ 
+ 
+22 
+Risk Purchase Clause accepted 
+ 
+ 
+23 
+Bribes Clause accepted 
+ 
+ 
+24 
+Classified /Confidentiality Clause accepted 
+ 
+ 
+25 
+Distribution/Apportionment of qty. accepted 
+ 
+ 
+26 
+Force Majeure Clause accepted 
+ 
+ 
+27 
+Immunity to Govt. of India Clause accepted 
+ 
+ 
+28 
+Termination Clause accepted 
+ 
+ 
+29 
+Appropriation Clause accepted 
+ 
+ 
+30 
+Obsolescence Clause accepted 
+ 
+ 
+31 
+Product Liability Clause accepted 
+ 
+ 
+32 
+Indemnity against Patent rights accepted 
+ 
+ 
+33 
+Export License Clause accepted 
+ 
+ 
+34 
+Amendment & Waiver Clause accepted 
+ 
+ 
+35 
+Exit Criteria Clause accepted 
+ 
+ 
+36 
+Insolvency Clause accepted 
+ 
+ 
+37 
+Product support Clause accepted 
+ 
+ 
+38 
+Packing conditions Clause accepted 
+ 
+ 
+39 
+Price Variation Clause accepted (if any). 
+NA 
+ 
+40 
+Conflict of Interest Clause accepted 
+ 
+ 
+41 
+Copies of valid registrations with Ordnance Factories attached. In case of 
+MSEs, UAM no and relevant documents 
+ 
+ 
+42 
+GSTIN No. and relevant documents attached 
+ 
+ 
+43 
+Repeat Order Clause accepted 
+ 
+ 
+44 
+Public Procurement (Preference to Make in India), Order 2017 
+ 
+ 
+45 
+Public Procurement for MSEs, Order 2012 
+ 
+ 
+46 
+Submission of PAN, GST, B.S, P&L, ITR, SO COPY etc. 
+ 
+ 
+47 
+Fall Clause 
+ 
+ 
+48  
+Submission of MSE, MII certificate. 
+ 
+ 
+49 
+Final material inspection as per Clause no. 2.8 (a) part-II 
+ 
+ 
+51 
+OEM certificate  
+ 
+ 
+52 
+Reverse Auction (RA) 
+ 
+ 
+53 
+Quantity Tolerance 
+ 
+ 
+54 
+Clause No. 2.30, common IP Address

@@ -1,0 +1,137 @@
+{
+  "pages": [
+    {
+      "index": 0,
+      "markdown": "# बिड दस्तावेज / Bid Document\n\n[tbl-0.html](tbl-0.html)",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-0.html",
+          "content": "<table><tr><th colspan=\"2\">बिड विवरण / Bid Details</th></tr><tr><td>बिड बंद होने की तारीख / समय / Bid End Date / Time</td><td>07-10-2026 16:00:00</td></tr><tr><td>बिड खुलने की तारीख / समय / Bid Opening Date / Time</td><td>08-10-2026 16:00:00</td></tr><tr><td>बिड पेशक्ष वैधता (बंद होने की तारीख से) / Bid Offer Validity (From End Date)</td><td>120 (Days)</td></tr><tr><td>मंत्रालय / राज्य का नाम / Ministry / State Name</td><td>Ministry Of Steel</td></tr><tr><td>विभाग का नाम / Department Name</td><td>Steel Authority Of India Limited</td></tr><tr><td>संगठन का नाम / Organisation Name</td><td>Rourkela Steel Plant</td></tr><tr><td>कार्यालय का नाम / Office Name</td><td>Contract Cell Works Office</td></tr><tr><td>शिक्षित निवारण के संपर्क विवरण / Contact details of Grievance redressal</td><td>HOD Email id : alokkumar.behera@sail.in<br/>Buyer Email id: patra.sourav@mjunction.in</td></tr><tr><td>वस्तु श्रेणी / Item Category</td><td>Repair, Maintenance, and Installation of Plant/ Systems/Equipments (Version 2) - Construction of Parking Shed with CC flooring as per ATC and Spl Terms &amp; Conditions in Rourkela Steel Township; Construction of Parking Shed with CC flooring as per ATC ..</td></tr><tr><td>अनुबंध अवधि / Contract Period</td><td>3 Month(s)</td></tr><tr><td>एमएसएमई के लिए अनुभव के वर्ष और टर्नओवर से छूट प्रदान की गई है / MSE Relaxation for Years of Experience and Turnover</td><td>No</td></tr><tr><td>स्टार्टअप के लिए अनुभव के वर्ष और टर्नओवर से छूट प्रदान की गई है / Startup Relaxation for Years of Experience and Turnover</td><td>No</td></tr><tr><td>विक्रेता से मांगे गए दस्तावेज / Document required from seller</td><td>Certificate (Requested in ATC), Additional Doc 1 (Requested in ATC)<br/>*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer</td></tr><tr><td>क्या आप निविदाकारों द्वारा अपलोड किए गए दस्तावेजों को निविदा में भाग लेने वाले सभी निविदाकारों को दिखाना चाहते हैं? संदर्भ मेनू है / Do you want to show documents uploaded by bidders to all bidders participated in bid?</td><td>Yes (Documents submitted as part of a clarification or representation during the tender/bid process will also be displayed to other participated bidders after log in)</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "1 / 11\n\nGeM\n\nGovernment\n\ne Marketplace\n\n75 Azadi Ka\n\nAmrit Mahotsav\n\nबिड संख्या / Bid Number: GEM/2026/B/8103442",
+      "footer": "दिनांक / Dated: 30-09-2026",
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 1,
+      "markdown": "[tbl-1.html](tbl-1.html)",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-1.html",
+          "content": "<table><tr><th colspan=\"2\">बिड विवरण/Bid Details</th></tr><tr><td>बिड लगाने की समय सीमा स्वत: नहीं बढ़ाने के लिए आवश्यक बिड की संख्या। / Minimum number of bids required to disable automatic bid extension</td><td>3</td></tr><tr><td>दिनों की संख्या, जिनके लिए बिड लगाने की समय-सीमा बढ़ाई जाएगी। / Number of days for which Bid would be auto-extended</td><td>3</td></tr><tr><td>ओटो एक्सटेंशन अधिकतम कितनी बार किया जाना है। / Number of Auto Extension count</td><td>1</td></tr><tr><td>बिड से रिवर्स नीलामी सक्रिय किया/Bid to RA enabled</td><td>Yes</td></tr><tr><td>रिवर्स नीलामी योग्यता नियम/RA Qualification Rule</td><td>H1-Highest Priced Bid Elimination</td></tr><tr><td>बिड का प्रकार/Type of Bid</td><td>Two Packet Bid</td></tr><tr><td>तकनीकी मूल्यांकन के दौरान तकनीकी स्पष्टीकरण हेतु अनुमत समय /Time allowed for Technical Clarifications during technical evaluation</td><td>2 Days</td></tr><tr><td>अनुमानित निविदा मूल्य (सभी करों सहित) भारतीय रुपये में / Estimated Bid Value in INR (Inclusive of all taxes)</td><td>2116258.89</td></tr><tr><td>Payment Timelines</td><td>Payments shall be made to the Seller within 30 days of issue of service delivery acceptance certificate (SDAC) and on-line submission of bills (This is in supersession of 10 days time as provided in clause 12 of GeM GTC)</td></tr><tr><td>मूल्यांकन पद्धति/Evaluation Method</td><td>Total value wise evaluation</td></tr><tr><td>मध्यस्थता खंड/Arbitration Clause</td><td>No</td></tr><tr><td>सुलह खंड/Mediation Clause</td><td>No</td></tr><tr><td colspan=\"2\">ईएमडी विवरण/EMD Detail</td></tr><tr><td>आवश्यकता/Required</td><td>No</td></tr><tr><td colspan=\"2\">ईपीबीजी विवरण /ePBG Detail</td></tr><tr><td>आवश्यकता/Required</td><td>No</td></tr><tr><td colspan=\"2\">बोली विभाजन लागू नहीं किया गया/ Bid splitting not applied.</td></tr><tr><td colspan=\"2\">एमआईआई अनुपालन/MII Compliance</td></tr><tr><td>एमआईआई अनुपालन/MII Compliance</td><td>Yes</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "2 / 11",
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 2,
+      "markdown": "[tbl-2.html](tbl-2.html)\n\n## ट्रेडिंग भुगतान संबंधी विवरण/TReDS Payment Details\n\nThis Bid provides for Trade Receivables Discounting System (TReDS) as Preferred mode of payment. For MSME sellers, payments may be processed through a TReDS exchange in which the Buyer is registered, subject to applicable policy and regulatory guidelines. Accordingly, sellers intending to avail payment through TReDS are required to be registered with at least one TReDS exchange in which the buyer is registered.\n\n## Limited Tender\n\n[tbl-3.html](tbl-3.html)\n\n1. Purchase preference to Micro and Small Enterprises (MSEs): Purchase preference will be given to MSEs having valid Udyam Certificate and whose credentials are validated online through Udyam Registration portal as defined in Public Procurement Policy for Micro and Small Enterprises (MSEs) Order, 2012 dated 23.03.2012 issued by Ministry of Micro, Small and Medium Enterprises and its subsequent Orders/Notifications issued by concerned Ministry. If the bidder wants to avail themselves of the Purchase preference, the bidder must be the manufacturer / OEM of the offered product on GeM. In respect of bid for Services, the bidder must be the Service provider of the offered Service. Traders are excluded from the purview of Public Procurement Policy for Micro and Small Enterprises and hence resellers offering products manufactured by some other OEM are not eligible for any purchase preference. Relevant documentary evidence in this regard shall be uploaded along with the bid in respect of the offered product or service, and Buyer will decide eligibility for purchase preference based on documentary evidence submitted in case of product bids, whereas in case of services the eligibility is automatically validated. If L-1 is not an MSE and MSE Seller (s) has / have quoted price within L-1+ 15% (Selected by Buyer) of margin of purchase preference /price band defined in relevant policy, such MSE Seller shall be given opportunity to match L-1 price and contract will be awarded for % (selected by Buyer) percentage of total quantity. The buyers are advised to refer the OM No.1 4 2021 PPD dated 18.05.2023 for compliance of Concurrent application of Public Procurement Policy for Micro and Small Enterprises Order, 2012 and Public Procurement (Preference to Make in India) Order, 2017. Benefits of MSE will be allowed only if seller is validated on-line in GeM profile as well as validated and approved by Buyer after evaluation of documents submitted.\n2. If L-1 is not an MSE and MSE Service Provider (s) has/have quoted price within L-1+ 15% of margin of purchase preference /price band as defined in the relevant policy, then 100% order quantity will be awarded to such MSE bidder subject to acceptance of L1 bid price.\n3. Estimated Bid Value indicated above is being declared solely for the purpose of guidance on EMD amount and for determining the Eligibility Criteria related to Turn Over, Past Performance and Project / Past Experience etc. This has no relevance or bearing on the price to be quoted by the bidders and is also not going to have any impact on bid participation. Also this is not going to be used as a criteria in determining reasonableness of quoted prices which would be determined by the buyer based on its own assessment of reasonableness and based on competitive prices received in Bid / RA process.\n4. Short Duration Bid has been published by the Buyer with the approval of the Competent authority due to Emergency procurement of critical products/services.\n\n3 / 11",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-2.html",
+          "content": "<table><tr><th>एमएसई खरीद वरीयता/MSE Purchase Preference</th><th>Yes</th></tr><tr><td>सूक्ष्म और लघु उद्यम मूल उपकरण निर्माताओं/सेवा प्रदाताओं को खरीद में प्राथमिकता, यदि उनका मूल्य L1+X% / Purchase Preference to MSE OEMs/ Service Provider available upto price within L1+X%</td><td>15</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        },
+        {
+          "id": "tbl-3.html",
+          "content": "<table><tr><th>Limited Tender Applicable</th><th>Yes</th></tr><tr><td>Reason</td><td>It will not be in public interest to procure the goods through advertised tender enquiry. Sufficient reasons for the same have been recorded in writing by the competent authority.</td></tr><tr><td>List of Seller Organization for participation</td><td>*** (illegible), *** (illegible), *** (illegible)</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "एमएसई खरीद वरीयता/MSE Purchase Preference",
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 3,
+      "markdown": "5. Reverse Auction would be conducted amongst all the technically qualified bidders except the Highest quoting bidder. The technically qualified Highest Quoting bidder will not be allowed to participate in RA. However, H-1 will also be allowed to participate in RA in following cases:\n\ni. If number of technically qualified bidders are only 2 or 3.\nii. If Buyer has chosen to split the bid amongst N sellers, and H1 bid is coming within N.\niii. In case Primary product of only one OEM is left in contention for participation in RA on elimination of H-1.\niv. If L-1 is non-MSE and H-1 is eligible MSE and H-1 price is coming within price band of 15% of Non-MSE L-1\nv. If L-1 is non-MII and H-1 is eligible MII and H-1 price is coming within price band of 20% of Non-MII L-1\n\nअतिरिक्त योग्यता / आवश्यक डेटा / Additional Qualification / Data Required\n\nBuyer to mention scope of work: 1790763752.pdf\n\nTerms and Conditions / Deductions etc to be mentioned by Buyer as per their requirement: 1790763759.pdf\n\nRepair, Maintenance, And Installation Of Plant/ Systems/ Equipments (Version 2) - Construction Of Parking Shed With CC Flooring As Per ATC And Spl Terms &amp; Conditions In Rourkela Steel Township; Construction Of Parking Shed With CC Flooring As Per ATC .. ( 1 )\n\nतकनीकी विशिष्टियाँ / Technical Specifications\n\n[tbl-4.html](tbl-4.html)\n\nक्रेता द्वारा निर्धारित न्यूनतम मूल्य / Minimum Floor Price defined by Buyer\n\n[tbl-5.html](tbl-5.html)\n\nअतिरिक्त विशिष्ट दस्तावेज / Additional Specification Documents\n\nपरेशिती / रिपोर्टिंग अधिकारी / Consignees / Reporting Officer and Quantity\n\n",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-4.html",
+          "content": "<table><tr><th>विवरण / Specification</th><th>मूल्य / Values</th></tr><tr><td colspan=\"2\">कोर / Core</td></tr><tr><td>Type of Premise</td><td>Construction of Parking Shed with CC flooring as per ATC and Spl Terms &amp; Conditions in Rourkela Steel Township</td></tr><tr><td>Type of Item/Product/System to be repaired or Installed</td><td>Construction of Parking Shed with CC flooring as per ATC and Spl Terms &amp; Conditions in Rourkela Steel Township</td></tr><tr><td>Consumables to be provided by</td><td>Service Provider</td></tr><tr><td>Spare parts to be provided by</td><td>Service Provider</td></tr><tr><td colspan=\"2\">एडऑन / Add-on(s)</td></tr><tr><td colspan=\"2\">अतिरिक्त विवरण / Additional Details</td></tr><tr><td>Estimated number of visits as per last year records</td><td>0</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        },
+        {
+          "id": "tbl-5.html",
+          "content": "<table><tr><td>क्रेता द्वारा निर्धारित न्यूनतम मूल्य / Minimum Floor Price defined by Buyer</td><td>No</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": null,
+      "footer": "4 / 11",
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 4,
+      "markdown": "[tbl-6.html](tbl-6.html)\n\nक्रेता द्वारा जोड़ी गई बिड की विशेष शर्तें /Buyer Added Bid Specific Terms and Conditions\n\n1. Buyer Added Bid Specific ATC\n\nBuyer Added text based ATC clauses\n\nINVITATION TO TENDER\n\nSUB: Const of Parking shed with CC flooring in front of Qtr No B/33 Sec-3.\n\nINSTRUCTIONS TO THE BIDDERS\n\nI. BIDS NOT CONFORMING TO THE SPECIFICATION AND/OR TERMS &amp; CONDITIONS OF THIS INVITATION TO TENDER ARE LIABLE FOR REJECTION.\n\nII. FIRMS TO CLEARLY INDICATE THEIR INCOME TAX PERMANENT ACCOUNT NUMBER (PAN) AND THE ISSUING AUTHORITY CITY.\n\nIII. BIDDERS ARE REQUESTED TO READ THE TENDER DOCUMENT CAREFULLY AND SUBMIT THEIR OFFER AS PER TERMS AND CONDITIONS GIVEN THEREIN. BIDDERS WHO SUBMIT THEIR OFFERS SHALL BE DEEMED TO HAVE READ, UNDERSTOOD AND ACCEPTED THE TERMS AND CONDITIONS OF THE DOCUMENT.\n\nIV. TENDERER SHALL SUBMIT THE TECHNO-COMMERCIAL BID AND PRICE BID THROUGH ONLINE GEM PORTAL.\n\nV. GENERAL CONDITIONS OF CONTRACT (HEREIN AFTER REFERRED AS GCC) FOR PROCUREMENT OF SERVICES (SAIL # S1) SHALL BE APPLICABLE FOR THE SUBJECT CONTRACT. THE GENERAL CONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) IS NOT ENCLOSED HEREWITH AND IS AVAILABLE IN THE STANDARD DOCUMENTS OF SAIL WEBSITE, WWW.SAILTENDERS.CO.IN FOR REFERENCE.\n\nVI. THE BIDDER NEED NOT SUBMIT COPY OF THE GENERAL CONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) ALONG WITH THE TENDER. HOWEVER, THE BIDDER BY SUBMITTING THE TENDER SHALL BE DEEMED TO HAVE READ AND UNDERSTOOD THE CONDITIONS OF THE GENERAL CONDITIONS OF CONTRACT FOR PROCUREMENT OF SERVICES (SAIL # S1) AND THE SAME SHALL, FOR ALL INTENTS AND PURPOSES, BE DEEMED TO BE FORMING INTEGRAL PART OF THE CONTRACT AND SHALL ALWAYS BE CONSTRUED ACCORDINGLY.\n\nVII. IN ADDITION TO GCC FOR PROCUREMENT OF SERVICES (SAIL # S1) THE INSTANT SPECIAL TERMS AND CONDITIONS AND STANDARD TERMS AND CONDITIONS SHALL ALSO APPLY FOR THE SUBJECT\n\n",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-6.html",
+          "content": "<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>Quantity</th><th>अतिरिक्त आवश्यकता /Additional Requirement</th></tr><tr><td>1</td><td>PRADIPTA KUMAR MANDHATA</td><td>769011,Contract Cell (Works) Office of GM I/c, CC(W), Near administrative Building , SAIL, Rourkela Steel Plant , Rourkela-769011</td><td>Project / Lumpsum Based</td><td>• Estimated Cost of Spare/Consumable s/Items on Reimbursement basis in Rs (please input 0 if not applicable) : 0</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": null,
+      "footer": "5 / 11",
+      "confidence_scores": null,
+      "blocks": []
+    }
+  ],
+  "model": "mistral-ocr-3-0",
+  "usage_info": {
+    "pages_processed": 5,
+    "doc_size_bytes": 85783
+  },
+  "document_annotation": null
+}

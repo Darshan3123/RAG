@@ -1,0 +1,52 @@
+{
+  "1. Standard Documents Required": [
+    "Experience Criteria",
+    "Past Performance",
+    "Bidder Turnover",
+    "OEM Authorization Certificate",
+    "OEM Annual Turnover",
+    "Compliance of BoQ specification and supporting document"
+  ],
+  "2. Clarified ATC Documents & Mandatory Uploads": [
+    "Certificate (Requested in ATC): Malicious Code Certificate",
+    "Additional Doc 1 (Requested in ATC): Data Sheet of the product(s) offered",
+    "Other Upload Required in ATC: Audited Balance Sheets or Chartered Accountant certificate for Bidder Turnover",
+    "Other Upload Required in ATC: Audited Balance Sheets or Chartered Accountant certificate for OEM Turnover",
+    "Other Upload Required in ATC: Registered office in India certificate for imported products",
+    "Other Upload Required in ATC: Details of Service Centres near consignee destinations",
+    "Other Upload Required in ATC: Escalation Matrix for Service Support",
+    "Other Upload Required in ATC: ISO 9001 Certification",
+    "Other Upload Required in ATC: Satisfactory Performance certificate for past project experience",
+    "Other Upload Required in ATC: Technical Compliance and MAF on OEM letterhead with original ink signature"
+  ],
+  "3. Exemption Documents Required": [
+    "Proof for Exemption (MSEs): Udyam Registration Certificate",
+    "Proof for Exemption (Start-ups): DPIIT Startup Recognition Certificate"
+  ],
+  "4. Physical Submissions (Offline)": [
+    {
+      "Item": "Original Manufacturer Authorization Form (MAF)",
+      "Deadline": "During Technical Evaluation",
+      "In Favor Of": "Not specified",
+      "Payable At": "Not specified",
+      "Delivery Address": "Not specified"
+    },
+    {
+      "Item": "EMD (Demand Draft or PBG)",
+      "Deadline": "As per GeM portal timelines",
+      "In Favor Of": "Not specified",
+      "Payable At": "Not specified",
+      "Delivery Address": "Not specified"
+    }
+  ],
+  "5. Key Commercial Terms & Conditions to Follow": [
+    "Option Clause: Purchaser reserves the right to increase or decrease quantity by 25% at contract rates",
+    "Delivery Location: Actual delivery and installation to be done at Haryana/Tri City Chandigarh/NCR",
+    "Installation Requirement: Must be carried out by OEM, OEM certified resource, or OEM authorized reseller",
+    "Service Support: Bidder/OEM must have a dedicated/toll-free telephone number for service support",
+    "Inspection: Pre-dispatch inspection at seller premises to be conducted by Buyer/Consignee or Nominated Agency; 7 days notice required",
+    "Warranty: OEM Warranty certificates must be submitted at the time of delivery",
+    "MSE Exemption: EMD exemption only for Haryana-based manufacturing MSEs participating directly without intermediaries",
+    "Technical Compliance: MAF and Technical Compliance must be on OEM letterhead, duly stamped and signed with e-bid number, mobile number, and email ID"
+  ]
+}

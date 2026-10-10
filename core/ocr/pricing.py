@@ -66,13 +66,6 @@ PRICING_CATALOG: Dict[str, Dict[str, Dict[str, float]]] = {
             "output_per_million": 10.00,
         },
     },
-    "mineru": {
-        "local-vlm": {
-            "per_page": 0.0,
-            "input_per_million": 0.0,
-            "output_per_million": 0.0,
-        }
-    }
 }
 
 

@@ -143,7 +143,7 @@ OLLAMA_MODEL    = _str("OLLAMA_MODEL",    "llama3")
 
 # ---------------------------------------------------------
 # OCR / DOCUMENT INTELLIGENCE CONFIG
-# Options: mistral | gemini | openai | mineru
+# Options: mistral | gemini | openai
 # ---------------------------------------------------------
 OCR_PROVIDER       = _str("OCR_PROVIDER", "mistral").lower()
 MISTRAL_API_KEY    = _str("MISTRAL_API_KEY", "")
@@ -155,11 +155,14 @@ ENABLE_PDF_ATC_SPLIT = _str("ENABLE_PDF_ATC_SPLIT", "true").lower() in ("1", "tr
 
 # ---------------------------------------------------------
 # ATC EXTRACTOR CONFIG
+# Options: gemini | openai
 # ---------------------------------------------------------
 ENABLE_ATC_ANALYSIS = _str("ENABLE_ATC_ANALYSIS", "true").lower() in ("1", "true", "yes", "on")
 ATC_LLM_PROVIDER    = _str("ATC_LLM_PROVIDER", "gemini").lower()
 GEMINI_API_KEY      = _str("GEMINI_API_KEY", "")
 GEMINI_MODEL        = _str("GEMINI_MODEL", "gemini-3.1-flash-lite")
+OPENAI_API_KEY      = _str("OPENAI_API_KEY", "")
+OPENAI_MODEL        = _str("OPENAI_MODEL", "gpt-4o-mini")
 
 os.makedirs(CHROMA_DIR, exist_ok=True)
 

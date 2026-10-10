@@ -1,0 +1,185 @@
+{
+  "pages": [
+    {
+      "index": 0,
+      "markdown": "# बिड दस्तावेज / Bid Document\n\n[tbl-0.html](tbl-0.html)",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-0.html",
+          "content": "<table><tr><th colspan=\"2\">बिड विवरण / Bid Details</th></tr><tr><td>बिड बंद होने की तारीख / समय / Bid End Date / Time</td><td>11-08-2026 11:00:00</td></tr><tr><td>बिड खुलने की तारीख / समय / Bid Opening Date / Time</td><td>11-08-2026 11:30:00</td></tr><tr><td>बिड पेशक्ष वैधता (बंद होने की तारीख से) / Bid Offer Validity (From End Date)</td><td>180 (Days)</td></tr><tr><td>मंत्रालय / राज्य का नाम / Ministry / State Name</td><td>Ministry Of Defence</td></tr><tr><td>विभाग का नाम / Department Name</td><td>Department Of Defence Production</td></tr><tr><td>संगठन का नाम / Organisation Name</td><td>Yantra India Limited</td></tr><tr><td>कार्यालय का नाम / Office Name</td><td>***</td></tr><tr><td>शिक्षित निवारण के संपर्क विवरण / Contact details of Grievance redressal</td><td>HOD Email id : dksingh@ord.gov.in<br/>Buyer Email id: anunaypramanik.ord@ord.gov.in</td></tr><tr><td>वस्तु श्रेणी / Item Category</td><td>Custom Bid for Services - Comprehensive Annual Maintenance Contract of Server and SAN Storage at MSF data center as per scope of work</td></tr><tr><td>समान श्रेणी / Similar Category</td><td>• Software Support Services 2.0</td></tr><tr><td>अनुबंध अवधि / Contract Period</td><td>1 Year(s)</td></tr><tr><td>बिडर का न्यूनतम औसत वार्षिक टर्नओवर (3 वर्षों का) / Minimum Average Annual Turnover of the bidder (For 3 Years)</td><td>1 Lakh (s)</td></tr><tr><td>टर्नओवर पात्रता मानदंड / Turnover eligibility criteria</td><td>To be verified by the buyer at the time of technical evaluation</td></tr><tr><td>टर्नओवर के लिए एमएसई को छूट प्राप्त है / MSE Relaxation for Turnover</td><td>Yes | Complete</td></tr><tr><td>टर्नओवर के लिए स्टार्टअप को छूट प्राप्त है / Startup Relaxation for Turnover</td><td>Yes | Complete</td></tr><tr><td>विक्रेता से मांगे गए दस्तावेज / Document required from seller</td><td>Experience Criteria, Bidder Turnover, Certificate (Requested in ATC), Additional Doc 1 (Requested in ATC), Additional Doc 2 (Requested in ATC)<br/>*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "1 / 8\n\nGeM\n\nGovernment\n\ne Marketplace\n\nAzadi Ka\n\nAmrit Mahotsav\n\nबिड संख्या / Bid Number: GEM/2026/B/7812714",
+      "footer": "दिनांक / Dated: 21-07-2026",
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 1,
+      "markdown": "[tbl-1.html](tbl-1.html)",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-1.html",
+          "content": "<table><tr><th colspan=\"2\">बिड विवरण/Bid Details</th></tr><tr><td>क्या आप निविदाकारों द्वारा अपलोड किए गए दस्तावेजों को निविदा में भाग लेने वाले सभी निविदाकारों को दिखाना चाहते हैं? संदर्भ मेनू है/Do you want to show documents uploaded by bidders to all bidders participated in bid?</td><td>No</td></tr><tr><td>बिड लगाने की समय सीमा स्वत: नहीं बढ़ने के लिए आवश्यक बिड की संख्या। / Minimum number of bids required to disable automatic bid extension</td><td>3</td></tr><tr><td>दिनों की संख्या, जिनके लिए बिड लगाने की समय-सीमा बढ़ाई जाएगी। / Number of days for which Bid would be auto-extended</td><td>7</td></tr><tr><td>ओटो एक्सटेंशन अधिकतम कितनी बार किया जाना है। / Number of Auto Extension count</td><td>1</td></tr><tr><td>बिड से रिवर्स नीलामी सक्रिय किया/Bid to RA enabled</td><td>Yes</td></tr><tr><td>रिवर्स नीलामी योग्यता नियम/RA Qualification Rule</td><td>H1-Highest Priced Bid Elimination</td></tr><tr><td>बिड का प्रकार/Type of Bid</td><td>Two Packet Bid</td></tr><tr><td>तकनीकी मूल्यांकन के दौरान तकनीकी स्पष्टीकरण हेतु अनुमत समय /Time allowed for Technical Clarifications during technical evaluation</td><td>2 Days</td></tr><tr><td>अनुमानित निविदा मूल्य (सभी करों सहित) भारतीय रुपये में / Estimated Bid Value in INR (Inclusive of all taxes)</td><td>124000</td></tr><tr><td>Payment Timelines</td><td>Payments shall be made to the Seller within 30 days of issue of service delivery acceptance certificate (SDAC) and on-line submission of bills (This is in supersession of 10 days time as provided in clause 12 of GeM GTC)</td></tr><tr><td>मूल्यांकन पद्धति/Evaluation Method</td><td>Total value wise evaluation</td></tr><tr><td>मध्यस्थता खंड/Arbitration Clause</td><td>No</td></tr><tr><td>सुलह खंड/Mediation Clause</td><td>No</td></tr><tr><td colspan=\"2\">ईएमडी विवरण/EMD Detail</td></tr><tr><td>आवश्यकता/Required</td><td>No</td></tr><tr><td colspan=\"2\">ईपीबीजी विवरण /ePBG Detail</td></tr><tr><td>आवश्यकता/Required</td><td>No</td></tr><tr><td colspan=\"2\">बोली विभाजन लागू नहीं किया गया/ Bid splitting not applied.</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "2/8",
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 2,
+      "markdown": "# एमआईआई अनुपालन/MII Compliance\n\n[tbl-2.html](tbl-2.html)\n\n# एमएसई खरीद वरीयता/MSE Purchase Preference\n\n[tbl-3.html](tbl-3.html)\n\n# ट्रेडिंग भुगतान संबंधी विवरण/TReDS Payment Details\n\nThis Bid provides for Trade Receivables Discounting System (TReDS) as Preferred mode of payment. For MSME sellers, payments may be processed through a TReDS exchange in which the Buyer is registered, subject to applicable policy and regulatory guidelines. Accordingly, sellers intending to avail payment through TReDS are required to be registered with at least one TReDS exchange in which the buyer is registered.\n\n1. If the bidder is a Micro or Small Enterprise (MSE) as per latest orders issued by Ministry of MSME, the bidder shall be relaxed from the eligibility criteria of \"Bidder Turnover\" as defined above subject to meeting of quality and technical specifications. If the bidder itself is MSE OEM of the offered products, it would be relaxed from the \"OEM Average Turnover\" criteria also subject to meeting of quality and technical specifications. The bidder seeking Relaxation from Turnover, shall upload the supporting documents to prove his eligibility for Relaxation.\n2. If the bidder is a DPIIT registered Startup, the bidder shall be relaxed from the eligibility criteria of \"Bidder Turnover\" as defined above subject to their meeting of quality and technical specifications. If the bidder is DPIIT Registered OEM of the offered products, it would be relaxed from the \"OEM Average Turnover\" criteria also subject to meeting of quality and technical specifications. The bidder seeking Relaxation from Turnover shall upload the supporting documents to prove his eligibility for Relaxation.\n3. The minimum average annual financial turnover of the bidder during the last three years, ending on 31st March of the previous financial year, should be as indicated above in the bid document. Documentary evidence in the form of certified Audited Balance Sheets of relevant periods or a certificate from the Chartered Accountant / Cost Accountant indicating the turnover details for the relevant period shall be uploaded with the bid. In case the date of constitution / incorporation of the bidder is less than 3-year-old, the average turnover in respect of the completed financial years after the date of constitution shall be taken into account for this criteria.\n4. Purchase preference to Micro and Small Enterprises (MSEs): Purchase preference will be given to MSEs having valid Udyam Certificate and whose credentials are validated online through Udyam Registration portal as defined in Public Procurement Policy for Micro and Small Enterprises (MSEs) Order, 2012 dated 23.03.2012 issued by Ministry of Micro, Small and Medium Enterprises and its subsequent Orders/Notifications issued by concerned Ministry. If the bidder wants to avail themselves of the Purchase preference, the bidder must be the manufacturer / OEM of the offered product on GeM. In respect of bid for Services, the bidder must be the Service provider of the offered Service. Traders are excluded from the purview of Public Procurement Policy for Micro and Small Enterprises and hence resellers offering products manufactured by some other OEM are not eligible for any purchase preference. Relevant documentary evidence in this regard shall be uploaded along with the bid in respect of the offered product or service, and Buyer will decide eligibility for purchase preference based on documentary evidence submitted in case of product bids, whereas in case of services the eligibility is automatically validated. If L-1 is not an MSE and MSE Seller (s) has / have quoted price within L-1+ 15% (Selected by Buyer) of margin of purchase preference /price band defined in relevant policy, such MSE Seller shall be given opportunity to match L-1 price and contract will be awarded for % (selected by Buyer) percentage of total quantity. The buyers are advised to refer the OM No.1_4_2021_PPD dated 18.05.2023 for compliance of Concurrent application of Public Procurement Policy for Micro and Small Enterprises Order, 2012 and Public Procurement (Preference to Make in India) Order, 2017. Benefits of MSE will be allowed only if seller is validated on-line in GeM profile as well as validated and approved by Buyer after evaluation of documents submitted.\n5. If L-1 is not an MSE and MSE Service Provider (s) has/have quoted price within L-1+ 15% of margin of purchase preference /price band as defined in the relevant policy, then 100% order quantity will be awarded to such MSE",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-2.html",
+          "content": "<table><tr><td>एमआईआई अनुपालन/MII Compliance</td><td>Yes</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        },
+        {
+          "id": "tbl-3.html",
+          "content": "<table><tr><td>एमएसई खरीद वरीयता/MSE Purchase Preference</td><td>Yes</td></tr><tr><td>सूक्ष्म और लघु उद्यम मूल उपकरण निर्माताओं/सेवा प्रदाता को खरीद में प्राथमिकता, यदि उनका मूल्य L1+X% / Purchase Preference to MSE OEMs/ Service Provider available upto price within L1+X%</td><td>15</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "3 / 8",
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 3,
+      "markdown": "bider subject to acceptance of L1 bid price.\n\n6. Estimated Bid Value indicated above is being declared solely for the purpose of guidance on EMD amount and for determining the Eligibility Criteria related to Turn Over, Past Performance and Project / Past Experience etc. This has no relevance or bearing on the price to be quoted by the bidders and is also not going to have any impact on bid participation. Also this is not going to be used as a criteria in determining reasonableness of quoted prices which would be determined by the buyer based on its own assessment of reasonableness and based on competitive prices received in Bid / RA process.\n\n7. Reverse Auction would be conducted amongst all the technically qualified bidders except the Highest quoting bidder. The technically qualified Highest Quoting bidder will not be allowed to participate in RA. However, H-1 will also be allowed to participate in RA in following cases:\n\ni. If number of technically qualified bidders are only 2 or 3.\nii. If Buyer has chosen to split the bid amongst N sellers, and H1 bid is coming within N.\niii. In case Primary product of only one OEM is left in contention for participation in RA on elimination of H-1.\niv. If L-1 is non-MSE and H-1 is eligible MSE and H-1 price is coming within price band of 15% of Non-MSE L-1\nv. If L-1 is non-MII and H-1 is eligible MII and H-1 price is coming within price band of 20% of Non-MII L-1\n\nअतिरिक्त योग्यता / आवश्यक डेटा / Additional Qualification / Data Required\n\nScope of Work: 1784608573.pdf\n\nPayment Terms: 1784608651.pdf\n\nPenalties: 1784608675.pdf\n\nGEM Availability Report (GAR): 1784608723.pdf\n\nInstruction To Bidder: 1784608740.pdf\n\nUndertaking of Competent Authority is mandatory to create Custom Bid for Services. Please download standard format document and upload: 1784608761.pdf\n\nCustom Bid For Services - Comprehensive Annual Maintenance Contract Of Server And SAN Storage At MSF Data Center As Per Scope Of Work ( 1 )\n\nतकनीकी विशिष्टियाँ / Technical Specifications\n\n[tbl-4.html](tbl-4.html)\n\nक्रेता द्वारा निर्धारित न्यूनतम मूल्य / Minimum Floor Price defined by Buyer\n\n[tbl-5.html](tbl-5.html)\n\nअतिरिक्त विशिष्ट दस्तावेज / Additional Specification Documents",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-4.html",
+          "content": "<table><tr><th>विवरण / Specification</th><th>मूल्य / Values</th></tr><tr><td colspan=\"2\">कोर / Core</td></tr><tr><td>Description / Nomenclature of Service Proposed for procurement using custom bid functionality</td><td>Comprehensive Annual Maintenance Contract of Server and SAN Storage at MSF data center as per scope of work</td></tr><tr><td>Regulatory / Statutory Compliance of Service</td><td>YES</td></tr><tr><td>Compliance of Service to SOW, STC, SLA etc</td><td>YES</td></tr><tr><td colspan=\"2\">एडऑन / Addon(s)</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        },
+        {
+          "id": "tbl-5.html",
+          "content": "<table><tr><td>क्रेता द्वारा निर्धारित न्यूनतम मूल्य / Minimum Floor Price defined by Buyer</td><td>No</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": null,
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 4,
+      "markdown": "[tbl-6.html](tbl-6.html)\n\nक्रेता द्वारा जोड़ी गई विड की विशेष शर्तें /Buyer Added Bid Specific Terms and Conditions\n\n1. Buyer Added Bid Specific ATC\n\nBuyer Added text based ATC clauses\n\nBuyer Added Bid Specific Terms and Conditions:\n\n1. Technical Qualification: As mentioned in the scope of work Sl. No. 21 (Technical Qualification)\n2. Experience: As mentioned Scop of work Sl. No. 7 &amp; 8\n3. Payment Terms: Payment Terms: Quarterly payment at the rate of the total supply order value will be paid at the end of each quarter subject to issue of successful job completion certificate.\n3. Penalty: As mentioned scope of work\n4. Buyer Added Terms and Condition i.e. ATC will supersede the clauses of GEM GTC.\n5. Firm will submit acceptance of Scope of Work and Terms and Condition of the bid in company's letter head with stamaped and signature.\n6. Option Clause: The work completion period will be one year from the date of placement of Supply Order if requirement is exist it may be extend up to three(03) months i.e 25% of the Supply Order value with same rate and same terms and condition of the Supply Order.\n7. Safety &amp; Security: The persons engaged by the contractor will observe norms of safety and security laid down respective safety and security office MSF. The contractor shall arrange for PVR in respect of his workmen apart from injury/accidents during the contract period. In this regard firm shall have full responsibility for their workmen and MSF shall have no any responsibility.\n8. The personnel deputed shall be below 60 years old, good health and physically fit to work.\n9. Firm will submit workman insurance certificate for all the workers engaged in the job.\n10. The personnel deputed shall wear PPEs such as Helment, Safety shoes, gloves, goggles for welding and grinding safety belt and hardness for working at height mask etc. Firm's offer will be inclusive of all safety equipment. MSF will not provide any safety equipment.\n11. To enhance safety measures, it is recommended to avoid using bamboo structures and replace them with adjustable steel structures or scrap holdings whenever applicable, particularly for tasks performed at he\n\n5/8",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [
+        {
+          "id": "tbl-6.html",
+          "content": "<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>Quantity</th><th>अतिरिक्त आवश्यकता /Additional Requirement</th></tr><tr><td>1</td><td>***</td><td>***NORTH 24 PARAGANAS</td><td>Project / Lumpsum Based</td><td>N/A</td></tr></table>",
+          "format": "html",
+          "word_confidence_scores": null
+        }
+      ],
+      "hyperlinks": [],
+      "header": "परेषिती/रिपोर्टिंग अधिकारी /Consignees/Reporting Officer and Quantity",
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 5,
+      "markdown": "ights exceeding 3 meters. Steel structure offer greater stability and strength, reducing the risk of accidents caused by structural failure.\n\n12. work Completion period : one year from the date of supply order placement.\n\n13. The firm has to provide all tools and tackles for the execution of work.\n\n14. The purchaser will not take any responsibility whatsoever, in the event of any accident met by contractor's men while on their duty. The contractor should submit the proper workmen compensation policy (insurance) at the time of requesting for entry permission.\n\n15. Firm will submit workman insurance certificate for all the workers engaged in the job.\n\n16. OPTIONAL SITE VISIT:\n\nThe Bidder is advised to visit and examine to obtain for itself on its own responsibility all information that may be necessary for preparing the Bid. The costs of visiting the site shall be borne by the Bidder.\n\nThe Bidder representative shall be allowed entry upon consignee premises for such visits. Only upon the express conditions that the Bidder will release and indemnity the Buyer and Consignee against all liabilities arising out of such visit including death or injury, loss or damage to property, and any other loss, damage, costs, and expenses incurred as a result of such visit.\n\nThe Bidder shall not be entitled to hold any claim against Buyer for noncompliance due to lack of any kind of pre-requisite information as it is the sole responsibility of the Bidder to obtain all the necessary information with regard to site, surrounding. Working condition weather etc. On its own before.\n\n17. Safety:\n\nFirm's offer will be inclusive of all safety equipment.MSF will not provide any safety equipment.\n\n18. Certificates\n\nBidder's offer is liable to be rejected if they don't upload any of the certificates/documents sought in the Bid document. ATC and Corrigendum if any.\n\n19. Buyer Added Bid Specific ATC\n\nBidder shall carefully read the clauses mentioned in ATC &amp; shall attach the compliance of the same duly signed and stamped. Mandate form to be submitted in prescribed format.\n\n20. Delivery terms: FOR MSF\n\n21. BIDDER SHOULD COMPLY WITH SCOPE OF WORK. AND ANNEXURE-A, ANNEXURE B AND ANNEXURE C.\n\n22. INSPECTION TYPE - FINAL INSPECTION AT MSF\n\n23. INSPECTION AUTHORITY - ED/MSF\n\n24. INSPECTION OFFICER- AUTHORIZED REPRESENTATIVE OF ED/MSF",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [],
+      "hyperlinks": [],
+      "header": null,
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 6,
+      "markdown": "## 2. Buyer Added Bid Specific ATC\n\nBuyer uploaded ATC document Click here to view the file.\n\n## अस्वीकरण/Disclaimer\n\nThe Additional Terms and Conditions (ATC) have been incorporated by the Buyer after approval of their Competent Authority. The Buyer, is solely responsible for the impact of these clauses on the bidding process, its outcome, and consequences thereof including any restriction arising in the bidding process due to these ATCs and including the modification of technical specifications and / or terms and conditions governing the bid. All representations / grievances pertaining to the ATC clauses shall be raised with the buyer organization directly and not with GeM. If any of the clause(s) is/are incorporated by the Buyer regarding the following, the bid &amp; resultant contract shall be treated as null &amp; void. Further, GeM reserves the right, at its sole discretion, to cancel the bid forthwith, without issuance of any prior notice or intimation :-\n\n1. Publishing Custom / BOQ bids for items for which regular GeM categories are available (unless such Custom / BOQ item is bunched with the major regular product Category Item).\n2. Mandating procurement of / from specific Brand / Make / Model / Manufacturer / Dealer except in case of Single Bid / Proprietary Article Certificate (PAC) Buying.\n3. Inclusion of disqualification criteria related to suspension of seller / service provider, where such suspension period has already expired.\n4. Mandating submission of documents in physical form as a pre-requisite to qualify bidders.\n5. Publishing bids on GeM for procurement of works.\n6. Procurement of Goods by creating a Service bid on GeM &amp; vice-versa.\n7. Seeking sample with bid or approval of samples during bid evaluation process. However, trial / sample, as the case may be, shall be permitted in cases where trial / sample are allowed as per approved and published procurement policy of the Buyers' controlling Ministry / Department / State / Public Sector Enterprises Headquarters. If there is any violation of trial / sample clause with regard to approved policy of the Buyers' Ministry / Department / State / Public Sector Enterprises Headquarters, then this is to be determined and redressed by the concerned Buyer Organisation only.\n8. Seeking experience from specific organization / department / institute only or from foreign / export experience.\n9. Creating bid for items from incorrect categories.\n10. Reference of conditions published on any external site or reference to external documents/clauses.\n11. Asking for any Tender fee / Bid Participation fee, as the case may be.\n12. Buyer added ATC Clauses which are in contravention of clauses defined in bid detail section, including specifications, EMD Detail, ePBG Detail and MII and MSE Purchase Preference sections of the bid, unless otherwise allowed by the applicable GeM GTC.\n13. Any ATC clause in contravention with GeM GTC Clause 4 (xiii) (h) will be invalid. In case of multiple L1 bidders against a service bid, the buyer shall place the Contract by selection of a bidder amongst the L-1 bidders through a Random Algorithm executed by GeM system.\n14. In a category based bid, adding additional items, through buyer added, additional scope of work/ additional terms and conditions/or any other document. If buyer needs more items along with the main item, the same must be added through bunching category based items or by bunching custom catalogues or bunching a BoQ with the main category based item, the same must not be done through ATC or Scope of Work.\n\nFurther, if any seller has any objection/grievance against these additional clauses or otherwise on any aspect of this bid, they can raise their representation against the same by using the Representation window provided in the bid details field in Seller dashboard after logging in as a seller. Buyer is duty bound to reply to all such representations and would not be allowed to open bids if he fails to reply to such representations.\n\nAll GeM Sellers/Service Providers shall ensure full compliance with all applicable labour laws, including the provisions, rules, schemes and guidelines under the four Labour Codes i.e. the Code\n\n7 / 8",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [],
+      "hyperlinks": [],
+      "header": "25. DELIVERY - F.O.R. MSF, ISHAPORE",
+      "footer": null,
+      "confidence_scores": null,
+      "blocks": []
+    },
+    {
+      "index": 7,
+      "markdown": "on Wages, 2019; the Industrial Relations Code, 2020; the Occupational Safety, Health and Working Conditions Code, 2020; and the Code on Social Security, 2020 as and when notified and brought into force by the Government of India.\n\nFor all provisions of the Labour Codes that are pending operationalisation through rules, schemes or notifications, the corresponding provisions of the pre-existing labour enactments (such as The Minimum Wages Act, 1948, The Payment of Wages Act, 1936, The Payment of Bonus Act, 1965, The Equal Remuneration Act, 1976, The Payment of Gratuity Act, 1972, etc. and relevant State Rules) shall continue to remain applicable.\n\nThe Seller/ Service Providers shall, therefore, be responsible for ensuring compliance under:\n\n- All notified and enforceable provisions of the new Labour Codes as mentioned hereinabove; and\n- All operative provisions of the erstwhile Labour Laws until their complete substitution.\n\nAll obligations relating to wages, social security, safety, working conditions, industrial relations etc. and any other statutory requirements shall be strictly met by the Seller/ Service Provider. Any non-compliance shall constitute a breach of the contract and shall entitle the Buyer to take appropriate action in accordance with the contract and applicable law.\n\nThis Bid is governed by the General Terms and Conditions, conditions stipulated in Bid and Service Level Agreement specific to the Service, as the case may be, as provided in the Marketplace.\n\nHowever, in case of Service, if any condition specified in General Terms and Conditions is contradicted by the conditions stipulated in Service Level Agreement specific to said Service, then it will over-ride the conditions in the General Terms and Conditions.\n\nThis Bid is governed by the सामान्य नियम और शर्तें/General Terms and Conditions, conditions stipulated in Bid and Service Level Agreement specific to this Service as provided in the Marketplace. However in case if any condition specified in सामान्य नियम और शर्तें/General Terms and Conditions is contradicted by the conditions stipulated in Service Level Agreement, then it will over ride the conditions in the General Terms and Conditions.\n\nजेम की सामान्य शर्तों के खंड 26 के संदर्भ में भारत के साथ भूमि सीमा साझा करने वाले देश के बिडर से खरीद पर प्रतिबंध के संबंध में भारत के साथ भूमि सीमा साझा करने वाले देश का कोई भी बिडर इस निविदा में बिड देने के लिए तभी पात्र होगा जब वह बिड देने वाला सक्षम प्राधिकारी के पास पंजीकृत हो। बिड में भाग लेते समय बिडर को इसका अनुपालन करना होगा और कोई भी गलत घोषणा किए जाने व इसका अनुपालन न करने पर अनुबंध को तत्काल समाप्त करने और कानून के अनुसार आगे की कानूनी कार्रवाई का आधार होगा। In terms of GeM GTC clause 26 regarding Restrictions on procurement from a bidder of a country which shares a land border with India, any bidder from a country which shares a land border with India will be eligible to bid in this tender only if the bidder is registered with the Competent Authority. While participating in bid, Bidder has to undertake compliance of this and any false declaration and non-compliance of this would be a ground for immediate termination of the contract and further legal action in accordance with the laws.\n\n---धन्यवाद/Thank You---\n\n",
+      "images": [],
+      "dimensions": {
+        "dpi": 93,
+        "height": 1017,
+        "width": 719
+      },
+      "tables": [],
+      "hyperlinks": [],
+      "header": null,
+      "footer": "8 / 8",
+      "confidence_scores": null,
+      "blocks": []
+    }
+  ],
+  "model": "mistral-ocr-3-0",
+  "usage_info": {
+    "pages_processed": 8,
+    "doc_size_bytes": 104164
+  },
+  "document_annotation": null
+}

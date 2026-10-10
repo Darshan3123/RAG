@@ -10,7 +10,6 @@ from core.ocr.base import BaseOCRProvider
 from core.ocr.mistral_provider import MistralOCRProvider
 from core.ocr.gemini_provider import GeminiOCRProvider
 from core.ocr.openai_provider import OpenAIOCRProvider
-from core.ocr.mineru_provider import MineruVLMProvider
 
 logger = logging.getLogger(__name__)
 
@@ -18,14 +17,13 @@ logger = logging.getLogger(__name__)
 class DocumentOCRFactory:
     """
     Factory class that returns the active OCR provider based on configuration.
-    Allows effortless switching between Mistral, Gemini, OpenAI, and Mineru.
+    Allows effortless switching between Mistral, Gemini, and OpenAI.
     """
 
     _REGISTRY: Dict[str, Type[BaseOCRProvider]] = {
         "mistral": MistralOCRProvider,
         "gemini": GeminiOCRProvider,
         "openai": OpenAIOCRProvider,
-        "mineru": MineruVLMProvider,
     }
 
     @classmethod

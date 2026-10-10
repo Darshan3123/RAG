@@ -1,0 +1,269 @@
+{
+    "_id": "GEM_2026_B_8016959",
+    "bid": {
+        "bid_no": "GEM/2026/B/8016959",
+        "ra_no": "GEM/2026/R/745898",
+        "bid_type": "Service Bid/RAs",
+        "product_type": "Service",
+        "base_type": "",
+        "process_kind": ""
+    },
+    "card": {
+        "items": [
+            {
+                "name": "Monthly Basis Cab & Taxi Hiring Services - SUV; 2500 km x 320 hours; Local 24*7",
+                "quantity": 6
+            }
+        ],
+        "departments": [
+            {
+                "ministry_state_name": "",
+                "department_name": "",
+                "organisation_name": "",
+                "office_name": ""
+            }
+        ],
+        "start_datetime": "04-10-2026 16:00:00",
+        "end_datetime": "05-10-2026 17:10:00",
+        "bid_pdf_url": "https://bidplus.gem.gov.in/showbidDocument/9870335",
+        "ra_pdf_url": "https://bidplus.gem.gov.in/showradocumentPdf/9981068"
+    },
+    "pdf": {},
+    "hyperlinks": [
+        {
+            "page": 4,
+            "name": "OM_No.1_4_2021_PPD_dated_18.05.2023",
+            "text": "OM_No.1_4_2021_PPD_dated_18.05.2023",
+            "url": "https://bidplus.gem.gov.in/bidding/downloadOmppdfile/",
+            "source": "bid"
+        },
+        {
+            "page": 5,
+            "name": ":1788948761.pdf",
+            "text": ":1788948761.pdf",
+            "url": "https://bidplus.gem.gov.in/resources/upload_nas/SepQ326/bidding/biddoc/bid-9870335/1788948761.pdf",
+            "source": "bid"
+        },
+        {
+            "page": 6,
+            "name": "Buyer uploaded ATC document",
+            "text": "Click here to view the file",
+            "url": "https://fulfilment.gem.gov.in/contract/slafds?fileDownloadPath=SLA_UPLOAD_PATH/2026/Sep/GEM_2026_B_8016959/CLM0010/Terms_2bfc86dd-4c9c-4eb4-80fc1788949117688_Cdhonar@123.docx",
+            "source": "bid"
+        },
+        {
+            "page": 8,
+            "name": "सामा�य िनयम और शत�/General Terms and Conditions,",
+            "text": "सामा�य िनयम और शत�/General Terms and Conditions,",
+            "url": "https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20260909",
+            "source": "bid"
+        },
+        {
+            "page": 8,
+            "name": "Service Level Agreement",
+            "text": "Service Level Agreement",
+            "url": "https://bidplus.gem.gov.in/bidding/bid/bidsla/97423513012225",
+            "source": "bid"
+        },
+        {
+            "page": 2,
+            "name": "GEM/2026/B/8016959",
+            "text": "GEM/2026/B/8016959",
+            "url": "https://bidplus.gem.gov.in/showbidDocument/9870335",
+            "source": "ra"
+        },
+        {
+            "page": 2,
+            "name": "This Bid is also governed by the General Terms and Conditions",
+            "text": "This Bid is also governed by the General Terms and Conditions",
+            "url": "https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20261003",
+            "source": "ra"
+        },
+        {
+            "page": 2,
+            "name": "Powered by TCPDF (www.tcpdf.org)",
+            "text": "Powered by TCPDF (www.tcpdf.org)",
+            "url": "http://www.tcpdf.org",
+            "source": "ra"
+        }
+    ],
+    "normalized": {
+        "financials": {
+            "estimated_value_inr": null,
+            "estimated_value_formatted": "₹0",
+            "high_value_tender": false,
+            "emd": {
+                "required": false,
+                "amount_inr": null,
+                "amount_formatted": "₹0",
+                "advisory_bank": ""
+            },
+            "epbg": {
+                "required": false,
+                "percentage": null,
+                "advisory_bank": "",
+                "duration_months": null
+            }
+        },
+        "dates": {
+            "start_date_iso": "2026-10-04T16:00:00+05:30",
+            "end_date_iso": "2026-10-05T17:10:00+05:30",
+            "bid_duration_days": 1.05,
+            "days_remaining": 0.0,
+            "is_expired": false
+        },
+        "items": {
+            "total_items_count": 1,
+            "total_quantity": 6,
+            "items_breakdown": [
+                {
+                    "name": "Monthly Basis Cab & Taxi Hiring Services - SUV; 2500 km x 320 hours; Local 24*7",
+                    "quantity": 6
+                }
+            ]
+        },
+        "preferences": {
+            "mse_relaxation": false,
+            "startup_relaxation": false,
+            "mii_preference": false,
+            "mse_preference": false
+        }
+    },
+    "validation": {
+        "is_valid": true,
+        "error_count": 0,
+        "warning_count": 1,
+        "issues": [
+            {
+                "field": "department",
+                "severity": "warning",
+                "message": "Department hierarchy details are empty."
+            }
+        ]
+    },
+    "atc_analysis": {
+        "status": "success",
+        "bid_no": "GEM_2026_B_8016959",
+        "has_atc": true,
+        "elapsed_seconds": 8.36,
+        "raw_markdown": "### 1. Standard Documents Required\n* None specified in the provided text.\n\n### 2. Clarified ATC Documents & Mandatory Uploads\n* **GST Registration Certificate**: Copy of GST registration certificate\n* **GST Returns**: Copy of last three months' GST 3B returns\n* **PAN Card**: Copy of PAN card of the individual/owner of the company/party/agency\n* **Non-Blacklisting Declaration**: Notarized affidavit on Rs. 300/- stamp paper declaring no blacklisting by any government organization or on GeM portal\n* **Turnover Certificate**: CA-certified bidder turnover for the last three financial years\n* **Experience Certificate**: Certificate of at least one year of experience in a government department\n* **ATC Acceptance Declaration**: Signed declaration accepting all terms and conditions of the ATC\n* **Vehicle Ownership Proof**: RC books for at least 2 vehicles (out of 6) registered in the name of the tour agency/firm\n* **Power of Attorney**: Required if providing vehicles owned by third parties\n* **Vehicle Documents**: Insurance policy, PUC certificate, and valid driving license for the driver (to be provided/maintained with the vehicle)\n\n### 3. Exemption Documents Required\n* **Proof for Exemption (MSEs)**: Udyam/MSE Registration Certificate (Inferred)\n* **Proof for Exemption (Start-ups)**: DPIIT Startup Recognition Certificate (Inferred)\n\n### 4. Physical Submissions (Offline)\n* **Earnest Money Deposit (EMD)**: Demand Draft of Rs. 64,800/-\n  * Deadline: Within the specified time limit as per tender notice\n  * In Favor Of: District Health Society Other Fund Narmada\n  * Payable At: Nationalized Bank\n  * Delivery Address: Mission Director and Chief District Health Officer, District Health Society, District Panchayat Bhavan, 2nd Floor, Vadiya-Rajpipla-393145, District Narmada\n\n### 5. Key Commercial Terms & Conditions to Follow\n* **Vehicle Specifications**: Vehicles must be model 2022 or later, with valid Taxi passing, and maintained in good condition.\n* **Operational Requirements**: Vehicles must be available within 10-15 minutes of request; daily logbooks must be maintained and signed by the concerned official.\n* **Financial Responsibility**: Contractor is responsible for all maintenance, driver salary, fuel, insurance, toll taxes, and legal compliance; no separate charges will be paid.\n* **Insurance**: Full insurance policy copy must be submitted upon tender award.\n* **Driver Conduct**: Drivers must wear RTO-approved uniforms and be able to read/write Gujarati.\n* **Safety**: Vehicles must be equipped with a well-stocked First Aid Box.\n* **Payment Terms**: Payments will be processed via GeM-generated bills submitted in duplicate with an advance stamp receipt.\n* **Penalty Clause**: A penalty of up to Rs. 5,000/- per instance may be imposed for breach of contract terms.\n* **Contract Duration**: 1 year from the date of order or until the budget is exhausted, whichever is earlier.\n* **Prohibitions**: Sub-contracting or transferring the tender to another entity is strictly prohibited.\n* **Envelope Superscription**: The physical EMD cover must be superscribed with \"Tender for 'Vehicle on Rent with Driver Service'\" and \"EMD\".",
+        "checklist": {
+            "standard_documents": [],
+            "clarified_atc_documents": [
+                {
+                    "placeholder": "GST Registration Certificate",
+                    "requirement": "Copy of GST registration certificate"
+                },
+                {
+                    "placeholder": "GST Returns",
+                    "requirement": "Copy of last three months' GST 3B returns"
+                },
+                {
+                    "placeholder": "PAN Card",
+                    "requirement": "Copy of PAN card of the individual/owner of the company/party/agency"
+                },
+                {
+                    "placeholder": "Non-Blacklisting Declaration",
+                    "requirement": "Notarized affidavit on Rs. 300/- stamp paper declaring no blacklisting by any government organization or on GeM portal"
+                },
+                {
+                    "placeholder": "Turnover Certificate",
+                    "requirement": "CA-certified bidder turnover for the last three financial years"
+                },
+                {
+                    "placeholder": "Experience Certificate",
+                    "requirement": "Certificate of at least one year of experience in a government department"
+                },
+                {
+                    "placeholder": "ATC Acceptance Declaration",
+                    "requirement": "Signed declaration accepting all terms and conditions of the ATC"
+                },
+                {
+                    "placeholder": "Vehicle Ownership Proof",
+                    "requirement": "RC books for at least 2 vehicles (out of 6) registered in the name of the tour agency/firm"
+                },
+                {
+                    "placeholder": "Power of Attorney",
+                    "requirement": "Required if providing vehicles owned by third parties"
+                },
+                {
+                    "placeholder": "Vehicle Documents",
+                    "requirement": "Insurance policy, PUC certificate, and valid driving license for the driver (to be provided/maintained with the vehicle)"
+                }
+            ],
+            "exemption_documents": [
+                {
+                    "category": "Proof for Exemption (MSEs)",
+                    "required_document": "Udyam/MSE Registration Certificate",
+                    "is_explicit": false
+                },
+                {
+                    "category": "Proof for Exemption (Start-ups)",
+                    "required_document": "DPIIT Startup Recognition Certificate",
+                    "is_explicit": false
+                }
+            ],
+            "physical_submissions": [
+                {
+                    "item": "Earnest Money Deposit (EMD)",
+                    "description": "Demand Draft of Rs. 64,800/-",
+                    "deadline": "Within the specified time limit as per tender notice",
+                    "in_favor_of": "District Health Society Other Fund Narmada",
+                    "payable_at": "Nationalized Bank",
+                    "delivery_address": "Mission Director and Chief District Health Officer, District Health Society, District Panchayat Bhavan, 2nd Floor, Vadiya-Rajpipla-393145, District Narmada"
+                }
+            ],
+            "commercial_terms": [
+                {
+                    "topic": "Vehicle Specifications",
+                    "rule": "Vehicles must be model 2022 or later, with valid Taxi passing, and maintained in good condition."
+                },
+                {
+                    "topic": "Operational Requirements",
+                    "rule": "Vehicles must be available within 10-15 minutes of request; daily logbooks must be maintained and signed by the concerned official."
+                },
+                {
+                    "topic": "Financial Responsibility",
+                    "rule": "Contractor is responsible for all maintenance, driver salary, fuel, insurance, toll taxes, and legal compliance; no separate charges will be paid."
+                },
+                {
+                    "topic": "Insurance",
+                    "rule": "Full insurance policy copy must be submitted upon tender award."
+                },
+                {
+                    "topic": "Driver Conduct",
+                    "rule": "Drivers must wear RTO-approved uniforms and be able to read/write Gujarati."
+                },
+                {
+                    "topic": "Safety",
+                    "rule": "Vehicles must be equipped with a well-stocked First Aid Box."
+                },
+                {
+                    "topic": "Payment Terms",
+                    "rule": "Payments will be processed via GeM-generated bills submitted in duplicate with an advance stamp receipt."
+                },
+                {
+                    "topic": "Penalty Clause",
+                    "rule": "A penalty of up to Rs. 5,000/- per instance may be imposed for breach of contract terms."
+                },
+                {
+                    "topic": "Contract Duration",
+                    "rule": "1 year from the date of order or until the budget is exhausted, whichever is earlier."
+                },
+                {
+                    "topic": "Prohibitions",
+                    "rule": "Sub-contracting or transferring the tender to another entity is strictly prohibited."
+                },
+                {
+                    "topic": "Envelope Superscription",
+                    "rule": "The physical EMD cover must be superscribed with \"Tender for 'Vehicle on Rent with Driver Service'\" and \"EMD\"."
+                }
+            ]
+        },
+        "error": null
+    },
+    "telemetry": {
+        "ocr": {}
+    },
+    "full_pdf_text": ""
+}

@@ -23,23 +23,6 @@ import multiprocessing
 from pathlib import Path
 from contextlib import contextmanager
 from typing import Optional, Dict, Any, List, Sequence
-
-# Suppress noisy lower-level library logging output
-os.environ["MINERU_LOG_LEVEL"] = "WARNING"
-os.environ["VLLM_LOGGING_LEVEL"] = "WARNING"
-
-try:
-    from Mineru_Document_To_Markdown import (
-        async_convert_document,
-        set_vlm_config,
-        async_start_vllm_server,
-        close_vllm_server,
-    )
-except ImportError:
-    async_convert_document = None
-    set_vlm_config = None
-    async_start_vllm_server = None
-    close_vllm_server = None
 from config.settings import (
     BID_TYPES, TARGET_PER_TYPE, MAX_EMPTY_PAGES, DOWNLOAD_DIR,
     MAX_RETRIES_PER_BID, RETRY_DELAY_SECONDS, ENABLE_ATC_ANALYSIS,
@@ -336,42 +319,27 @@ def process_card_item(
     conv_timer = ProgressTimer(f"Converting PDF ({safe_bid_no}) via [{OCR_PROVIDER.upper()}] OCR")
     conv_timer.start()
     try:
-        if OCR_PROVIDER == "mineru":
-            with suppress_stdout_stderr():
-                if worker:
-                    conv_result = worker.run(
-                        async_convert_document(
-                            input_path=target_ocr_pdf,
-                            output_dir=None,
-                            backend="vlm-engine",
-                            formula_enable=True,
-                            table_enable=True,
-                        )
-                    )
-                    if isinstance(conv_result, dict):
-                        pdf_text = conv_result.get("markdown", "")
-        else:
-            ocr_provider = DocumentOCRFactory.get_provider(OCR_PROVIDER)
-            ocr_result = ocr_provider.convert_pdf_to_markdown(
-                pdf_path=target_ocr_pdf,
-                save_json=True,
-                output_dir=bid_dir
-            )
-            pdf_text = ocr_result.markdown
-            ocr_usage_data = ocr_result.usage.to_dict()
+        ocr_provider = DocumentOCRFactory.get_provider(OCR_PROVIDER)
+        ocr_result = ocr_provider.convert_pdf_to_markdown(
+            pdf_path=target_ocr_pdf,
+            save_json=True,
+            output_dir=bid_dir
+        )
+        pdf_text = ocr_result.markdown
+        ocr_usage_data = ocr_result.usage.to_dict()
 
-            # Record slicing savings telemetry if slicing was applied
-            if split_info and split_info.pages_saved > 0:
-                savings = calculate_saved_cost(
-                    provider=ocr_result.provider,
-                    model=ocr_result.model,
-                    pages_saved=split_info.pages_saved
-                )
-                ocr_usage_data["total_pdf_pages"] = split_info.total_pages
-                ocr_usage_data["pages_for_ocr"] = split_info.pages_for_ocr
-                ocr_usage_data["pages_saved_by_slicing"] = split_info.pages_saved
-                ocr_usage_data["estimated_savings_usd"] = savings["saved_usd"]
-                ocr_usage_data["estimated_savings_inr"] = savings["saved_inr"]
+        # Record slicing savings telemetry if slicing was applied
+        if split_info and split_info.pages_saved > 0:
+            savings = calculate_saved_cost(
+                provider=ocr_result.provider,
+                model=ocr_result.model,
+                pages_saved=split_info.pages_saved
+            )
+            ocr_usage_data["total_pdf_pages"] = split_info.total_pages
+            ocr_usage_data["pages_for_ocr"] = split_info.pages_for_ocr
+            ocr_usage_data["pages_saved_by_slicing"] = split_info.pages_saved
+            ocr_usage_data["estimated_savings_usd"] = savings["saved_usd"]
+            ocr_usage_data["estimated_savings_inr"] = savings["saved_inr"]
 
             savings_str = (
                 f" [Saved: ${ocr_usage_data.get('estimated_savings_usd', 0):.4f} (₹{ocr_usage_data.get('estimated_savings_inr', 0):.2f})]"
@@ -464,13 +432,14 @@ def process_card_item(
 
     # 10. Run ATC (Additional Terms and Conditions) Compliance Analysis
     atc_result = {}
-    if ENABLE_ATC_ANALYSIS and (os.getenv("GEMINI_API_KEY") or os.getenv("ATC_LLM_PROVIDER") == "local_qwen"):
+    if ENABLE_ATC_ANALYSIS and (os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY")):
         try:
             atc_result = analyze_bid_atc(
                 bid_no=safe_bid_no,
                 markdown_text=pdf_text,
                 hyperlinks=bid_hyperlinks,
-                save_dir=bid_dir
+                save_dir=bid_dir,
+                parsed_pdf_data=parsed_pdf_data
             )
         except Exception as e:
             log.warning(f"ATC analysis encountered an error for {safe_bid_no}: {e}")
@@ -705,20 +674,7 @@ def scrape_specific_bid(db: BidDatabase, bid_no: str) -> dict:
         dict: Result status dictionary returned by `process_card_item`.
     """
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-
-    is_mineru = (OCR_PROVIDER == "mineru")
     worker = None
-
-    if is_mineru:
-        worker = AsyncWorker()
-        set_vlm_config(batch_size=16, max_gpu_util=0.78, model_len=4096)
-        server_timer = ProgressTimer("Starting Mineru vLLM server")
-        server_timer.start()
-        try:
-            with suppress_stdout_stderr():
-                worker.run(async_start_vllm_server())
-        finally:
-            server_timer.stop()
 
     try:
         log.info(f"Starting browser for specific bid search: {bid_no}")
@@ -762,23 +718,13 @@ def scrape_specific_bid(db: BidDatabase, bid_no: str) -> dict:
                         time.sleep(backoff)
             return res or {"status": "error", "error": str(last_err)}
     finally:
-        if is_mineru and worker:
-            close_timer = ProgressTimer("Closing Mineru vLLM server")
-            close_timer.start()
-            try:
-                with suppress_stdout_stderr():
-                    worker.run_sync(close_vllm_server)
-            except Exception:
-                pass
-            finally:
-                close_timer.stop()
-            worker.stop()
+        pass
 
 
 def run_full_scrape(db: BidDatabase) -> dict:
     """
     Full automated scraping run entrypoint:
-    Pre-warms Mineru vLLM server, launches stealth Playwright browser context,
+    Launches stealth Playwright browser context,
     scrapes all target bid types, saves raw artifacts and updates database and JSON export.
     
     Args:
@@ -799,22 +745,10 @@ def run_full_scrape(db: BidDatabase) -> dict:
 
     log.info("")
     log.info("=" * 60)
-    log.info("FULL SCRAPE RUN STARTED (MINERU VLM PARSER)")
+    log.info("FULL SCRAPE RUN STARTED")
     log.info("=" * 60)
 
-    is_mineru = (OCR_PROVIDER == "mineru")
     worker = None
-
-    if is_mineru:
-        worker = AsyncWorker()
-        set_vlm_config(batch_size=16, max_gpu_util=0.78, model_len=4096)
-        server_timer = ProgressTimer("Starting Mineru vLLM server")
-        server_timer.start()
-        try:
-            with suppress_stdout_stderr():
-                worker.run(async_start_vllm_server())
-        finally:
-            server_timer.stop()
 
     try:
         with GemBrowser() as browser:
@@ -837,17 +771,7 @@ def run_full_scrape(db: BidDatabase) -> dict:
     except Exception as e:
         log.critical(f"Browser session failed: {e}")
     finally:
-        if is_mineru and worker:
-            close_timer = ProgressTimer("Closing Mineru vLLM server")
-            close_timer.start()
-            try:
-                with suppress_stdout_stderr():
-                    worker.run_sync(close_vllm_server)
-            except Exception:
-                pass
-            finally:
-                close_timer.stop()
-            worker.stop()
+        pass
 
     db.export_json()
     db_stats = db.stats()

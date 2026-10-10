@@ -1,0 +1,342 @@
+{
+    "_id": "GEM_2025_B_6955275",
+    "bid": {
+        "bid_no": "GEM/2025/B/6955275",
+        "ra_no": "GEM/2026/R/744780",
+        "bid_type": "Bid To RAs",
+        "product_type": "Bid To RA",
+        "base_type": "BID TO RA",
+        "process_kind": "CATALOGUE"
+    },
+    "card": {
+        "items": [
+            {
+                "name": "Multifunction Machine MFM (V2) (Q2)",
+                "quantity": 915
+            }
+        ],
+        "departments": [
+            {
+                "ministry_state_name": "Haryana",
+                "department_name": "Electronics And Information Technology Department Haryana",
+                "organisation_name": "Haryana State Electronics Development Corporation Ltd. (hartron)",
+                "office_name": "Chandigarh"
+            }
+        ],
+        "start_datetime": "02-10-2026 13:00:00",
+        "end_datetime": "07-10-2026 14:59:00",
+        "bid_pdf_url": "https://bidplus.gem.gov.in/showbidDocument/8661758",
+        "ra_pdf_url": "https://bidplus.gem.gov.in/showradocumentPdf/9973200"
+    },
+    "pdf": {
+        "timing": {
+            "bid_end_datetime": "01-01-2026 13:00:00",
+            "bid_opening_datetime": "01-01-2026 13:30:00",
+            "bid_offer_validity_days": 180
+        },
+        "departments": {
+            "ministry_state_name": "Haryana",
+            "department_name": "Electronics And Information Technology Department Haryana",
+            "organisation_name": "Haryana State Electronics Development Corporation Ltd. (hartron)",
+            "office_name": "Chandigarh"
+        },
+        "items": {
+            "total_quantity_extracted": 915,
+            "quantity_match_flag": "Yes",
+            "item 1": {
+                "item_category": "Multifunction Machine MFM (V2) (Q2)",
+                "quantity": 915
+            }
+        },
+        "evaluation": {
+            "evaluation_method": "Total value wise evaluation",
+            "schedules": {}
+        },
+        "documents": {
+            "required_from_seller": [
+                "Experience Criteria",
+                "Past Performance",
+                "Bidder Turnover",
+                "Certificate (Requested in ATC)",
+                "OEM Authorization Certificate",
+                "OEM Annual Turnover",
+                "Additional Doc 1 (Requested in ATC)",
+                "Compliance of BoQ specification and supporting document*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer"
+            ],
+            "show_uploaded_docs_to_all_bidders": "Yes",
+            "attachments": []
+        },
+        "consignees": [
+            {
+                "consignee_reporting_officer": "Surender",
+                "consignee_address": "134109, Hartron Bhawan Bays No. 73-76, Sector - 2 Panchkula",
+                "quantity": "915",
+                "delivery_days": "56"
+            }
+        ],
+        "relaxations": {
+            "mse_relaxation_experience_turnover": "No",
+            "startup_relaxation_experience_turnover": "No"
+        },
+        "auto_extension": {
+            "min_bids_to_disable_extension": 3,
+            "auto_extend_days": 3,
+            "auto_extension_count": 1
+        },
+        "ra": {
+            "bid_to_ra_enabled": "Yes",
+            "ra_qualification_rule": "50% Lowest Priced Technically Qualified Bidders"
+        },
+        "bid_type": {
+            "type_of_bid": "Two Packet Bid",
+            "technical_clarification_window_days": 2
+        },
+        "inspection": {
+            "inspection_required": "No",
+            "inspection_agency_type": null
+        },
+        "clauses": {
+            "arbitration_clause": "No",
+            "mediation_clause": "No"
+        },
+        "mii": {
+            "mii_purchase_preference": "No",
+            "mii_price_band_percent": null,
+            "mii_max_quantity_percent": null,
+            "allow_only_class_1_2_local_suppliers": null
+        },
+        "mse": {
+            "mse_purchase_preference": "Yes",
+            "mse_price_band_percent": 15,
+            "mse_max_quantity_percent": 50
+        },
+        "financials": {
+            "estimated_value": null,
+            "emd": {
+                "required": true,
+                "advisory_bank": "HDFC Bank",
+                "amount_total": 200000,
+                "schedule_breakup": []
+            },
+            "epbg": {
+                "required": true,
+                "advisory_bank": "HDFC Bank",
+                "percent": 3.0,
+                "duration_months": 13
+            },
+            "emd_exemption_text": "The bidder seeking EMD exemption, must submit the valid supporting document for the relevant category as per GeM GTC with the bid. Under MSE category, only manufacturers for goods and Service Providers for Services are eligible for exemption from EMD. Traders are excluded from the purview of this Policy."
+        },
+        "terms": {
+            "special_terms_version": "",
+            "special_terms_text": "",
+            "buyer_atc": {
+                "generic": "Buyer Added Bid Specific Terms and Conditions ## 1. Generic OPTION CLAUSE: The Purchaser reserves the right to increase or decrease the quantity to be ordered up to 25 percent of bid quantity at the time of placement of contract. The purchaser also reserves the right to increase the ordered quantity up to 25% of the contracted quantity during the currency of the contract at the contracted rates. The delivery period of quantity shall commence from the last date of original delivery order and in cases where option clause is exercised during the extended delivery period the additional time shall commence from the last date of extended delivery period. The additional delivery time shall be (Increased quantity ÷ Original quantity) × Original delivery period (in days), subject to minimum of 30 days. If the original delivery period is less than 30 days, the additional time equals the original delivery period. The Purchaser may extend this calculated delivery duration up to the original ## Buyer Added Bid Specific Additional Terms and Conditions ### 1. Generic OPTION CLAUSE: The Purchaser reserves the right to increase or decrease the quantity to be ordered up to 25 percent of bid quantity at the time of placement of contract. The purchaser also reserves the right to increase the ordered quantity up to 25% of the contracted quantity during the currency of the contract at the contracted rates. The delivery period of quantity shall commence from the last date of original delivery order and in cases where option clause is exercised during the extended delivery period the additional time shall commence from the last date of extended delivery period. The additional delivery time shall be (Increased quantity ÷ Original quantity) × Original delivery period (in days), subject to minimum of 30 days. If the original delivery period is less than 30 days, the additional time equals the original delivery period. The Purchaser may extend this calculated delivery duration up to the original 6 / 8 delivery period while exercising the option clause. Bidders must comply with these terms. ### 2. Buyer Added Bid Specific ATC Buyer uploaded ATC document Click here to view the file.",
+                "items": [],
+                "hard_requirements": [],
+                "info_clauses": []
+            },
+            "disclaimer": "The additional terms and conditions have been incorporated by the Buyer after approval of the Competent Authority in Buyer Organization, whereby Buyer organization is solely responsible for the impact of these clauses on the bidding process, its outcome, and consequences thereof including any eccentricity / restriction arising in the bidding process due to these ATCs and due to modification of technical specifications and / or terms and conditions governing the bid. If any clause(s) is / are incorporated by the Buyer regarding following, the bid and resultant contracts shall be treated as null and void and such bids may be cancelled by GeM at any stage of bidding process without any notice:- ### 1. Definition of Class I and Class II suppliers in the bid not in line with the extant Order / Office Memorandum issued by DPIIT in this regard. ### 2. Seeking EMD submission from bidder(s), including via Additional Terms & Conditions, in contravention to exemption provided to such sellers under GeM GTC. ### 3. Publishing Custom / BOQ bids for items for which regular GeM categories are available without any Category item bunched with it. ### 4. Creating BoQ bid for single item. ### 5. Mentioning specific Brand or Make or Model or Manufacturer or Dealer name. ### 6. Mandating submission of documents in physical form as a pre-requisite to qualify bidders. ### 7. Floating / creation of work contracts as Custom Bids in Services. ### 8. Seeking sample with bid or approval of samples during bid evaluation process. (However, in bids for attached categories, trials are allowed as per approved procurement policy of the buyer nodal Ministries) ### 9. Mandating foreign / international certifications even in case of existence of Indian Standards without specifying equivalent Indian Certification / standards. ### 10. Seeking experience from specific organization / department / institute only or from foreign / export experience. ### 11. Creating bid for items from irrelevant categories. ### 12. Incorporating any clause against the MSME policy and Preference to Make in India Policy. ### 13. Reference of conditions published on any external site or reference to external documents/clauses. ### 14. Asking for any Tender fee / Bid Participation fee / Auction fee in case of Bids / Forward Auction, as the case may be. ### 15. Buyer added ATC Clauses which are in contravention of clauses defined by buyer in system generated bid template as indicated above in the Bid Details section, EMD Detail, ePBG Detail and MII and MSE Purchase Preference sections of the bid, unless otherwise allowed by GeM GTC. ### 16. In a category based bid, adding additional items, through buyer added additional scope of work/ additional terms and conditions/or any other document. If buyer needs more items along with the main item, the same must be added through bunching category based items or by bunching custom catalogs or bunching a BoQ with the main category based item, the same must not be done through ATC or Scope of Work. Further, if any seller has any objection/grievance against these additional clauses or otherwise on any aspect of this bid, they can raise their representation against the same by using the Representation window provided in the bid details field in Seller dashboard after logging in as a seller within 4 days of bid publication on GeM. Buyer is duty bound to reply to all such representations and would not be allowed to open bids if he fails to reply to such representations. All GeM Sellers/Service Providers shall ensure full compliance with all applicable labour laws, including the provisions, rules, schemes and guidelines under the four Labour Codes i.e. the Code on Wages, 2019; the Industrial Relations Code, 2020; the Occupational Safety, Health and Working Conditions Code, 2020; and the Code on Social Security, 2020 as and when notified and brought into 7 / 8 force by the Government of India. For all provisions of the Labour Codes that are pending operationalisation through rules, schemes or notifications, the corresponding provisions of the pre-existing labour enactments (such as The Minimum Wages Act, 1948, The Payment of Wages Act, 1936, The Payment of Bonus Act, 1965, The Equal Remuneration Act, 1976, The Payment of Gratuity Act, 1972, etc. and relevant State Rules) shall continue to remain applicable. The Seller/ Service Providers shall, therefore, be responsible for ensuring compliance under: All notified and enforceable provisions of the new Labour Codes as mentioned hereinabove; and All operative provisions of the erstwhile Labour Laws until their complete substitution. All obligations relating to wages, social security, safety, working conditions, industrial relations etc. and any other statutory requirements shall be strictly met by the Seller/ Service Provider. Any non- compliance shall constitute a breach of the contract and shall entitle the Buyer to take appropriate action in accordance with the contract and applicable law. यह \u0001बड सामा)य शत0 के अंतग%त भी शािसत है /This Bid is also governed by the General Terms and Conditions जेम क\u0010 सामा)य शत0 के खंड 26 के संदभ% मH भारत के साथ भूिम सीमा साझा करने वाले देश के \u0001बडर से खर\u0013द पर 9ितबंध के संबंध मH भारत के साथ भूिम सीमा साझा करने वाले देश का कोई भी \u0001बडर इस िन\u0001वदा मH \u0001बड देने के िलए तभी पा होगा जब वह \u0001बड देने वाला स6म 9ािधकार\u0013 के पास पंजीकृत हो।\u0001बड मH भाग लेते समय \u0001बडर को इसका अनुपालन करना होगा और कोई भी गलत घोषणा =कए जाने व इसका अनुपालन न करने पर अनुबंध को तlकाल समाm करने और कानून के अनुसार आगे क\u0010 कानूनी कार%वाई का आधार होगा।/In terms of GeM GTC clause 26 regarding Restrictions on procurement from a bidder of a country which shares a land border with India, any bidder from a country which shares a land border with India will be eligible to bid in this tender only if the bidder is registered with the Competent Authority. While participating in bid, Bidder has to undertake compliance of this and any false declaration and non-compliance of this would be a ground for immediate termination of the contract and further legal action in accordance with the laws."
+        }
+    },
+    "hyperlinks": [
+        {
+            "page": 4,
+            "name": "* जेम केटेगर� �विश�� के अनुसार / As per GeM Category Specification",
+            "text": "* जेम केटेगर� �विश�� के अनुसार / As per GeM Category Specification",
+            "url": "https://bidplus.gem.gov.in/bidding/bid/showCatalogue/IJJfkynz7QEKKe1WXCz1DLLaTfPcY3uhej2Hyunxc0w",
+            "source": "bid"
+        },
+        {
+            "page": 7,
+            "name": "Buyer uploaded ATC document",
+            "text": "Click here to view the file",
+            "url": "https://fulfilment.gem.gov.in/contract/slafds?fileDownloadPath=SLA_UPLOAD_PATH/2025/Dec/GEM_2025_B_6955275/CLM0010/ATC_a8b5950b-3512-488d-a6471764659949576_nirmal.hartron-hry@gov.in.docx",
+            "source": "bid"
+        },
+        {
+            "page": 7,
+            "name": "attached categories",
+            "text": "attached categories",
+            "url": "https://assets-bg.gem.gov.in/resources/upload/shared_doc/list-of-categories-where-trials-are-allowed_1712126171.pdf",
+            "source": "bid"
+        },
+        {
+            "page": 8,
+            "name": "यह �बड सामा�य शत� के अंतग�त भी शािसत है /This Bid is also governed by the General Terms and Conditions",
+            "text": "यह �बड सामा�य शत� के अंतग�त भी शािसत है /This Bid is also governed by the General Terms and Conditions",
+            "url": "https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20251202",
+            "source": "bid"
+        },
+        {
+            "page": 1,
+            "name": "GEM/2025/B/6955275",
+            "text": "GEM/2025/B/6955275",
+            "url": "https://bidplus.gem.gov.in/showbidDocument/8661758",
+            "source": "ra"
+        },
+        {
+            "page": 1,
+            "name": "This Bid is also governed by the General Terms and Conditions",
+            "text": "This Bid is also governed by the General Terms and Conditions",
+            "url": "https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20261001",
+            "source": "ra"
+        },
+        {
+            "page": 2,
+            "name": "Powered by TCPDF (www.tcpdf.org)",
+            "text": "Powered by TCPDF (www.tcpdf.org)",
+            "url": "http://www.tcpdf.org",
+            "source": "ra"
+        }
+    ],
+    "normalized": {
+        "financials": {
+            "estimated_value_inr": null,
+            "estimated_value_formatted": "₹0",
+            "high_value_tender": false,
+            "emd": {
+                "required": true,
+                "amount_inr": 200000.0,
+                "amount_formatted": "₹2.00 Lakh",
+                "advisory_bank": "HDFC Bank"
+            },
+            "epbg": {
+                "required": true,
+                "percentage": 3.0,
+                "advisory_bank": "HDFC Bank",
+                "duration_months": 13
+            }
+        },
+        "dates": {
+            "start_date_iso": "2026-10-02T13:00:00+05:30",
+            "end_date_iso": "2026-10-07T14:59:00+05:30",
+            "bid_duration_days": 5.08,
+            "days_remaining": 0.0,
+            "is_expired": false
+        },
+        "items": {
+            "total_items_count": 1,
+            "total_quantity": 915,
+            "items_breakdown": [
+                {
+                    "name": "Multifunction Machine MFM (V2) (Q2)",
+                    "quantity": 915
+                }
+            ]
+        },
+        "preferences": {
+            "mse_relaxation": false,
+            "startup_relaxation": false,
+            "mii_preference": false,
+            "mse_preference": false
+        }
+    },
+    "validation": {
+        "is_valid": true,
+        "error_count": 0,
+        "warning_count": 0,
+        "issues": []
+    },
+    "atc_analysis": {
+        "status": "success",
+        "bid_no": "GEM_2025_B_6955275",
+        "has_atc": true,
+        "elapsed_seconds": 28.7,
+        "raw_markdown": "### 1. Standard Documents Required\n* **Experience Criteria**\n* **Past Performance**\n* **Bidder Turnover**\n* **OEM Authorization Certificate**\n* **OEM Annual Turnover**\n* **Compliance of BoQ specification and supporting document**\n\n### 2. Clarified ATC Documents & Mandatory Uploads\n* **Certificate**: **Malicious Code Certificate** (as per clause 5), **ISO 9001 Certification** (as per clause 17), **Registered Office in India Certificate** (for imported products, as per clause 11)\n* **Additional Doc 1**: **Data Sheet of the product(s)** (as per clause 2), **Technical Compliance on OEM letterhead** (as per clause 10), **Manufacturer Authorisation Form (MAF)** (as per clause 7 and 10), **Escalation Matrix for Service Support** (as per clause 14), **Details of Service Centres** (as per clause 18)\n* **Other Upload Required in ATC**: **Audited Balance Sheets or CA/Cost Accountant Certificate** for Bidder and OEM turnover (last 3 years), **Satisfactory Performance Certificates** for past projects, **Relevant contracts/Purchase Orders/Invoices** for experience criteria, **OEM Warranty certificates** (at time of delivery)\n\n### 3. Exemption Documents Required\n* **Proof for Exemption (MSEs)**: **Udyam Registration Certificate / Entrepreneur Memorandum (Haryana)** (Explicit)\n* **Proof for Exemption (Start-ups)**: **DPIIT Startup Recognition Certificate** (Inferred)\n\n### 4. Physical Submissions (Offline)\n* **Manufacturer Authorisation Form (MAF)**: Original copy required for Technical Evaluation\n  * Deadline: During Technical Evaluation\n  * In Favor Of: Not applicable\n  * Payable At: Not applicable\n  * Delivery Address: As specified by the Buyer for technical evaluation\n\n### 5. Key Commercial Terms & Conditions to Follow\n* **Option Clause**: Purchaser reserves the right to increase or decrease quantity by up to 25% at contract rates during the contract currency.\n* **Service Support**: Bidder/OEM must have a functional service centre in the state of each consignee's location or establish one within 30 days of contract award.\n* **Pre-dispatch Inspection**: Goods subject to inspection at seller premises; seller must notify buyer via email regarding readiness.\n* **Technical Compliance**: Must be submitted on OEM letterhead, duly stamped and signed with e-bid number, mobile number, and email ID of the signatory.\n* **Delivery/Installation**: Actual delivery and installation to be done at Haryana/Tri City Chandigarh/NCR; exact locations provided at the time of supply order.\n* **Payment**: Bill to be raised in favour of the consignee; payment released only after submission of documentary evidence of functional service centre.",
+        "checklist": {
+            "standard_documents": [
+                "**Experience Criteria**",
+                "**Past Performance**",
+                "**Bidder Turnover**",
+                "**OEM Authorization Certificate**",
+                "**OEM Annual Turnover**",
+                "**Compliance of BoQ specification and supporting document**"
+            ],
+            "clarified_atc_documents": [
+                {
+                    "placeholder": "Certificate",
+                    "requirement": "**Malicious Code Certificate** (as per clause 5), **ISO 9001 Certification** (as per clause 17), **Registered Office in India Certificate** (for imported products, as per clause 11)"
+                },
+                {
+                    "placeholder": "Additional Doc 1",
+                    "requirement": "**Data Sheet of the product(s)** (as per clause 2), **Technical Compliance on OEM letterhead** (as per clause 10), **Manufacturer Authorisation Form (MAF)** (as per clause 7 and 10), **Escalation Matrix for Service Support** (as per clause 14), **Details of Service Centres** (as per clause 18)"
+                },
+                {
+                    "placeholder": "Other Upload Required in ATC",
+                    "requirement": "**Audited Balance Sheets or CA/Cost Accountant Certificate** for Bidder and OEM turnover (last 3 years), **Satisfactory Performance Certificates** for past projects, **Relevant contracts/Purchase Orders/Invoices** for experience criteria, **OEM Warranty certificates** (at time of delivery)"
+                }
+            ],
+            "exemption_documents": [
+                {
+                    "category": "Proof for Exemption (MSEs)",
+                    "required_document": "**Udyam Registration Certificate / Entrepreneur Memorandum (Haryana)**",
+                    "is_explicit": true
+                },
+                {
+                    "category": "Proof for Exemption (Start-ups)",
+                    "required_document": "**DPIIT Startup Recognition Certificate**",
+                    "is_explicit": false
+                }
+            ],
+            "physical_submissions": [
+                {
+                    "item": "Manufacturer Authorisation Form (MAF)",
+                    "description": "Original copy required for Technical Evaluation",
+                    "deadline": "During Technical Evaluation",
+                    "in_favor_of": "Not applicable",
+                    "payable_at": "Not applicable",
+                    "delivery_address": "As specified by the Buyer for technical evaluation"
+                }
+            ],
+            "commercial_terms": [
+                {
+                    "topic": "Option Clause",
+                    "rule": "Purchaser reserves the right to increase or decrease quantity by up to 25% at contract rates during the contract currency."
+                },
+                {
+                    "topic": "Service Support",
+                    "rule": "Bidder/OEM must have a functional service centre in the state of each consignee's location or establish one within 30 days of contract award."
+                },
+                {
+                    "topic": "Pre-dispatch Inspection",
+                    "rule": "Goods subject to inspection at seller premises; seller must notify buyer via email regarding readiness."
+                },
+                {
+                    "topic": "Technical Compliance",
+                    "rule": "Must be submitted on OEM letterhead, duly stamped and signed with e-bid number, mobile number, and email ID of the signatory."
+                },
+                {
+                    "topic": "Delivery/Installation",
+                    "rule": "Actual delivery and installation to be done at Haryana/Tri City Chandigarh/NCR; exact locations provided at the time of supply order."
+                },
+                {
+                    "topic": "Payment",
+                    "rule": "Bill to be raised in favour of the consignee; payment released only after submission of documentary evidence of functional service centre."
+                }
+            ]
+        },
+        "error": null
+    },
+    "telemetry": {
+        "ocr": {
+            "pages_processed": 6,
+            "input_tokens": 0,
+            "output_tokens": 4923,
+            "latency_seconds": 5.443,
+            "estimated_cost_usd": 0.006,
+            "estimated_cost_inr": 0.519,
+            "details": {
+                "pdf_path": "C:\\Projects\\GeM\\Scrapper & RAG Pipeline\\downloads\\GEM_2025_B_6955275\\GEM_2025_B_6955275_core.pdf",
+                "total_doc_pages": 6,
+                "price_model_used": "mistral-ocr-3-0",
+                "usd_to_inr_rate": 86.5
+            },
+            "total_pdf_pages": 8,
+            "pages_for_ocr": 6,
+            "pages_saved_by_slicing": 2,
+            "estimated_savings_usd": 0.002,
+            "estimated_savings_inr": 0.173
+        }
+    },
+    "full_pdf_text": "# बिड दस्तावेज / Bid Document\n\n<table><tr><th colspan=\"2\">बिड विवरण / Bid Details</th></tr><tr><td>बिड बंद होने की तारीख / समय / Bid End Date / Time</td><td>01-01-2026 13:00:00</td></tr><tr><td>बिड खुलने की तारीख / समय / Bid Opening Date / Time</td><td>01-01-2026 13:30:00</td></tr><tr><td>बिड पेशक्ष वैधता (बंद होने की तारीख से) / Bid Offer Validity (From End Date)</td><td>180 (Days)</td></tr><tr><td>मंत्रालय / राज्य का नाम / Ministry / State Name</td><td>Haryana</td></tr><tr><td>विभाग का नाम / Department Name</td><td>Electronics And Information Technology Department Haryana</td></tr><tr><td>संगठन का नाम / Organisation Name</td><td>Haryana State Electronics Development Corporation Ltd. (hartron)</td></tr><tr><td>कार्यालय का नाम / Office Name</td><td>Chandigarh</td></tr><tr><td>कुल मात्रा / Total Quantity</td><td>915</td></tr><tr><td>वस्तु श्रेणी / Item Category</td><td>Multifunction Machine MFM (V2) (Q2)</td></tr><tr><td>बिडर का न्यूनतम औसत वार्षिक टर्नओवर (3 वर्षों का) / Minimum Average Annual Turnover of the bidder (For 3 Years)</td><td>91 Lakh (s)</td></tr><tr><td>मूल उपकरण निर्माता का औसत टर्नओवर (गत 3 वर्षों का) / OEM Average Turnover (Last 3 Years)</td><td>732 Lakh (s)</td></tr><tr><td>उन्हीं / समान सेवा के लिए अपेक्षित विगत अनुभव के वर्ष / Years of Past Experience Required for same / similar service</td><td>3 Year (s)</td></tr><tr><td>एमएसएमई के लिए अनुभव के वर्ष और टर्नओवर से छूट प्रदान की गई है / MSE Exemption for Years of Experience and Turnover</td><td>No</td></tr><tr><td>स्टार्टअप के लिए अनुभव के वर्ष और टर्नओवर से छूट प्रदान की गई है / Startup Exemption for Years of Experience and Turnover</td><td>No</td></tr><tr><td>विक्रेता से मांगे गए दस्तावेज / Document required from seller</td><td>Experience Criteria, Past Performance, Bidder Turnover, Certificate (Requested in ATC), OEM Authorization Certificate, OEM Annual Turnover, Additional Doc 1 (Requested in ATC), Compliance of BoQ specification and supporting document<br/>*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer</td></tr></table>\n\n---\n\n<table><tr><th colspan=\"2\">बिड विवरण/Bid Details</th></tr><tr><td>क्या आप निविदाकारों द्वारा अपलोड किए गए दस्तावेजों को निविदा में भाग लेने वाले सभी निविदाकारों को दिखाना चाहते हैं? संदर्भ मेनू है/Do you want to show documents uploaded by bidders to all bidders participated in bid?</td><td>Yes (Documents submitted as part of a clarification or representation during the tender/bid process will also be displayed to other participated bidders after log in)</td></tr><tr><td>बिड लगाने की समय सीमा स्वत: नहीं बढ़ने के लिए आवश्यक बिड की संख्या। / Minimum number of bids required to disable automatic bid extension</td><td>3</td></tr><tr><td>दिनों की संख्या, जिनके लिए बिड लगाने की समय-सीमा बढ़ाई जाएगी। / Number of days for which Bid would be auto-extended</td><td>3</td></tr><tr><td>ऑटो एक्सटेंशन अधिकतम कितनी बार किया जाना है। / Number of Auto Extension count</td><td>1</td></tr><tr><td>विगत प्रदर्शन /Past Performance</td><td>80 %</td></tr><tr><td>बिड से रिवर्स नीलामी सक्रिय किया/Bid to RA enabled</td><td>Yes</td></tr><tr><td>रिवर्स नीलामी योग्यता नियम/RA Qualification Rule</td><td>50% Lowest Priced Technically Qualified Bidders</td></tr><tr><td>बिड का प्रकार/Type of Bid</td><td>Two Packet Bid</td></tr><tr><td>तकनीकी मूल्यांकन के दौरान तकनीकी स्पष्टीकरण हेतु अनुमत समय /Time allowed for Technical Clarifications during technical evaluation</td><td>2 Days</td></tr><tr><td>निरीक्षण आवश्यक (सूचीबद्ध निरीक्षण प्राधिकरण /जेम के साथ पूर्व पंजीकृत एजेंसियों द्वारा)/Inspection Required (By Empanelled Inspection Authority / Agencies pre-registered with GeM)</td><td>No</td></tr><tr><td>Payment Timelines</td><td>Payments shall be made to the Seller within 45 days of issue of consignee receipt-cum-acceptance certificate (CRAC) and on-line submission of bills (This is in supersession of 10 days time as provided in clause 12 of GeM GTC)</td></tr><tr><td>मूल्यांकन पद्धति/Evaluation Method</td><td>Total value wise evaluation</td></tr><tr><td>मध्यस्थता खंड/Arbitration Clause</td><td>No</td></tr><tr><td>सुलह खंड/Mediation Clause</td><td>No</td></tr></table>\n\nईएमडी विवरण/EMD Detail\n\n<table><tr><td>एडवाईजरी बैंक/Advisory Bank</td><td>HDFC Bank</td></tr><tr><td>ईएमडी राशि/EMD Amount</td><td>200000</td></tr></table>\n\nईपीबीजी विवरण /ePBG Detail\n\n---\n\n<table><tr><td>एडवाइजरी बैंक/Advisory Bank</td><td>HDFC Bank</td></tr><tr><td>ईपीबीजी प्रतिशत (%)/ePBG Percentage(%)</td><td>3.00</td></tr><tr><td>ईपीबीजी की आवश्यक अवधि (माह) /Duration of ePBG required (Months).</td><td>13</td></tr></table>\n\n(a). जेम की शर्तों के अनुसार ईएमडी छूट के इच्छुक बिडर को संबंधित केटेगरी के लिए बिड के साथ वैध समर्थित दस्तावेज प्रस्तुत करने है। एमएसई केटेगरी के अंतर्गत केवल वस्तुओं के लिए विनिर्माता तथा सेवाओं के लिए सेवा प्रदाता ईएमडी से छूट के पात्र हैं। व्यापारियों को इस नीति के दायरे से बाहर रखा गया है।/EMD EXEMPTION: The bidder seeking EMD exemption, must submit the valid supporting document for the relevant category as per GeM GTC with the bid. Under MSE category, only manufacturers for goods and Service Providers for Services are eligible for exemption from EMD. Traders are excluded from the purview of this Policy.\n\n(b). ईएमडी और संपादन जमानत राशि, जहां यह लागू होती है, लाभार्थी के पक्ष में होनी चाहिए। / EMD &amp; Performance security should be in favour of Beneficiary, wherever it is applicable.\n\n**लाभार्थी /Beneficiary :**\n\nCo Procurement\nHaryana State Electronics Development Corporation Ltd. (HARTRON), Panchkula\n(Nirmal Parkash)\n\nबोली विभाजन लागू नहीं किया गया / Bid splitting not applied.\n\n**एमआईआई खरीद वरीयता /MII Purchase Preference**\n\n<table><tr><td>एमआईआई खरीद वरीयता /MII Purchase Preference</td><td>No</td></tr></table>\n\n**एमएसई खरीद वरीयता /MSE Purchase Preference**\n\n<table><tr><td>एमएसई खरीद वरीयता /MSE Purchase Preference</td><td>Yes</td></tr><tr><td>सूक्ष्म और लघु उद्यम मूल उपकरण निर्माताओं को खरीद में प्राथमिकता, यदि उनका मूल्य L1+X% तक की सीमा में हो / Purchase Preference to MSE OEMs available upto price within L1+X%</td><td>15</td></tr><tr><td>सूक्ष्म और लघु उद्यम को खरीद में प्राथमिकता के लिए बिड की मात्रा का अधिकतम प्रतिशत / Maximum Percentage of Bid quantity for MSE purchase preference</td><td>50</td></tr></table>\n\n1. The minimum average annual financial turnover of the bidder during the last three years, ending on 31st March of the previous financial year, should be as indicated above in the bid document. Documentary evidence in the form of certified Audited Balance Sheets of relevant periods or a certificate from the Chartered Accountant / Cost Accountant indicating the turnover details for the relevant period shall be uploaded with the bid. In case the date of constitution / incorporation of the bidder is less than 3-year-old, the average turnover in respect of the completed financial years after the date of constitution shall be taken into account for this criteria.\n\n2. Experience Criteria: In respect of the filter applied for experience criteria, the Bidder or its OEM of the product offered in the bid {themselves or through reseller(s)} should have regularly, manufactured and supplied same or similar Category Products to any Central / State Govt Organization / PSU for number of Financial years as indicated above in the bid document before the bid opening date. Copies of relevant contracts and delivery acceptance certificates like CRAC to be submitted along with bid in support of having supplied some quantity\n\n---\n\nduring each of the Financial year. In case of bunch bids, the category of primary product having highest value should meet this criterion.\n\n3. OEM Turn Over Criteria: The minimum average annual financial turnover of the OEM of the offered product during the last three years, ending on 31st March of the previous financial year, should be as indicated in the bid document. Documentary evidence in the form of certified Audited Balance Sheets of relevant periods or a certificate from the Chartered Accountant / Cost Accountant indicating the turnover details for the relevant period shall be uploaded with the bid. In case the date of constitution / incorporation of the OEM is less than 3 year old, the average turnover in respect of the completed financial years after the date of constitution shall be taken into account for this criteria.\n\n4. Purchase preference to Micro and Small Enterprises (MSEs) from the State of Bid Inviting Authority: Purchase preference will be given to MSEs as Micro and Small Enterprises from the State of Bid inviting Authority. If the bidder wants to avail the Purchase preference, the bidder must be the manufacturer of the offered product in case of bid for supply of goods. Traders are excluded from the purview of Public Procurement Policy for Micro and Small Enterprises. In respect of bid for Services, the bidder must be the Service provider of the offered Service. Relevant documentary evidence in this regard shall be uploaded along with the bid in respect of the offered product or service. If L-1 is not an MSE and MSE Seller (s) has/have quoted price within L-1+ 15% of margin of purchase preference /price band defined in relevant policy, such Seller shall be given opportunity to match L-1 price and contract will be awarded for percentage of 50% of total quantity as defined/decided in relevant policy.\n\n5. Estimated Bid Value indicated above is being declared solely for the purpose of guidance on EMD amount and for determining the Eligibility Criteria related to Turn Over, Past Performance and Project / Past Experience etc. This has no relevance or bearing on the price to be quoted by the bidders and is also not going to have any impact on bid participation. Also this is not going to be used as a criteria in determining reasonableness of quoted prices which would be determined by the buyer based on its own assessment of reasonableness and based on competitive prices received in Bid / RA process.\n\n6. Past Performance: The Bidder or its OEM {themselves or through re-seller(s)} should have supplied same or similar Category Products for 80% of bid quantity, in at least one of the last three Financial years before the bid opening date to any Central / State Govt Organization / PSU. Copies of relevant contracts (proving supply of cumulative order quantity in any one financial year) to be submitted along with bid in support of quantity supplied in the relevant Financial year. In case of bunch bids, the category related to primary product having highest bid value should meet this criterion.\n\n7. Reverse Auction would be conducted amongst first 50% of the technically qualified bidders arranged in the order of prices from lowest to highest. Number of sellers eligible for participating in RA would be rounded off to next higher integer value if number of technically qualified bidders is odd (e.g. if 7 bids are technically qualified, then RA will be conducted amongst L-1 to L-4). In case number of technically qualified bidders are 2 or 3, RA will be between all without any elimination. If Buyer has chosen to split the bid amongst N sellers, then minimum N sellers would be taken to RA round. In case Primary products of only one OEM are left in contention for participation in RA based on lowest 50% bidders qualifying for RA, the number of sellers qualifying for RA would be increased to get at least products of one more OEM (directly participated or through its reseller) if available. Further, if bid(s) of any seller(s) eligible for MSE preference is / are coming within price band of 15% of Non MSE L-1 or if bid of any seller(s) eligible for Make in India preference is / are coming within price band of 20% of non MII L-1, then such MSE / Make in India seller shall also be allowed to participate in the RA process.\n\n## Multifunction Machine MFM (V2) (915 pieces)\n\nतकनीकी विशिष्टियाँ / Technical Specifications\n\n* जेम केटेगरी विशिष्टि के अनुसार / As per GeM Category Specification\n\n<table><tr><th>विवरण/Specification</th><th>विशिष्टि का नाम / Specification Name</th><th>बिड के लिए आवश्यक अनुमत मूल्य / Bid Requirement (Allowed Values)</th></tr><tr><td rowspan=\"3\">Generic</td><td>Description of Stores</td><td>Multifunction Machine Printer with Minimum 1 Year On Site Warranty, including Cartridge and Power Cord/Adapter</td></tr><tr><td>Print Technology</td><td>Laser</td></tr><tr><td>Type of Printing</td><td>Monochrome (Black), Colour Or higher</td></tr><tr><td>Printing</td><td>Print Paper Size</td><td>A4 and Legal</td></tr></table>\n\n---\n\n<table><tr><th>विवरण/Specification</th><th>विशिष्ट का नाम /Specification Name</th><th>बिड के लिए आवश्यक अनुमत मूल्य /Bid Requirement (Allowed Values)</th></tr><tr><td rowspan=\"5\"></td><td>Minimum Print Speed per Minute as per ISO/IEC 24734 in A4 Size-Monochrome (Black) (in PPM)</td><td>11 to 15, 16 to 20, 21 to 25, 26 to 30, 31 to 35, 36 to 40, 41 to 45, 46 to 50, 51 to 55, 56 to 60, 61 to 65, 66 to 70, 71 to 80, 81 to 90, 91 to 100, 101 to 120, 121 to 140, 141 to 160, 161 to 180, 6 to 11 Or higher</td></tr><tr><td>Minimum Print Speed per Minute as per ISO/IEC 24734 in A4 Size-Colour (in PPM)</td><td>Not Applicable, 1 to 5, 6 to 10, 11 to 15, 16 to 20, 21 to 25, 26 to 30, 31 to 35, 36 to 40, 41 to 45, 46 to 50, 51 to 55, 56 to 60, 61 to 65, 66 to 70, 71 to 80, 81 to 90, 91 to 100, 101 to 120, 121 to 140, 141 to 160, 161 to 180 Or higher</td></tr><tr><td>Minimum Speed per Minute as per ISO/IEC 24734 in A3 Size-Mono (in PPM)</td><td>Not Applicable Or higher</td></tr><tr><td>Minimum Speed per Minute as per ISO/IEC 24734 in A3 Size-Color (in PPM)</td><td>Not Applicable Or higher</td></tr><tr><td>Auto Duplexing Printing/Coping (2-sided Feature)</td><td>No, Yes Or higher</td></tr><tr><td rowspan=\"2\">PAPER HANDLING</td><td>Original Document Feeder Type (For Scanning and Copying)</td><td>Platen, Automatic Document Feeders (ADF), Reverse/Duplex Automatic Document Feeders (RADF/DADF), Single-Pass Document Feeders (SPDF) Or higher</td></tr><tr><td>Number of Main Paper Tray</td><td>1, 2, 3, 4</td></tr><tr><td>Connectivity</td><td>Connectivity</td><td>USB Port, Ethernet Port, Wi-Fi</td></tr></table>\n\nAdditional Specification Parameters - Multifunction Machine MFM (V2) ( 915 pieces )\n\n<table><tr><th>Specification Parameter Name</th><th>Bid Requirement (Allowed Values)</th></tr><tr><td>Additional specifications parameters</td><td>The Additional specifications parameters mentioned in the ATC document mandatory to comply by Bidder and its OEM. Otherwise the bidder is liable for rejection without any notice. The Bidder is mandatory to submit the technical compliance of technical specifications from OEM with acceptance of each parameter.</td></tr></table>\n\n* Bidders offering must also comply with the additional specification parameters mentioned above.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>Surender</td><td>134109, Hartron Bhawan Bays No. 73-76, Sector - 2 Panchkula</td><td>915</td><td>56</td></tr></table>\n\n---\n\n# Special terms and conditions-Version:4 effective from 31-01-2025 for category Multifunction Machine MFM (V2)\n\n1.\n\n<table><tr><th colspan=\"3\">For Buyers</th></tr><tr><td>1</td><td>Product Verification</td><td>The buyer/consignee shall verify the complete product details, including configuration, through the OEM website. The buyer/consignee should be able to perform these verifications without needing to create an account on the OEM website.</td></tr><tr><td>2</td><td>Warranty</td><td>\n1. The buyer may ensure that as soon as supplies are received, a request for a warranty certificate is made, along with logging into the OEM website/call centre to verify the certificate.<br/>\n2. The product in GeM marketplace (Direct Purchase &amp; L1 purchase) comes with a minimum standard on site warranty of one year. In case the seller has standard warranty more than one year, the same may be mentioned in the catalogue (including in the model name) and in such case higher warranty offered shall prevail/supersede the minimum one year warranty.<br/>\n3. Buyer shall verify the actual number of prints completed by the Multifunction Machine Printer at the time of delivery (to ensure that the product has not been in use prior to delivery to the buyer) and may be verified using the Multifunction printer's built-in print counter or an equivalent tracking system as available with OEMs.<br/>\n4. Buyer may please note that warranty does not cover any consumables i.e. Cartridges/Toner/Ink/Developer and such consumables.\n</td></tr><tr><th colspan=\"3\">For Sellers</th></tr><tr><td>3</td><td>OEM Website Link/Part No for product verification</td><td>The OEM shall provide the OEM website link to the buyer at the time of delivery. The offered model details/configuration should be available on the OEM's website. A device serial number must also be provided at the time of supply, which must also be mentioned on the product supplied. The buyer/consignee must be able to verify the complete product details, including configuration, through the provided OEM website link.</td></tr><tr><td>4</td><td>Warranty</td><td>\n1. The seller shall furnish a valid warranty Certificate/Tag in physical or digital format from the OEM to the purchaser, guaranteeing the product's coverage under the specified warranty terms. The warranty certificate should be verifiable through the OEM website/customer care centre.<br/>\n2. The warranty period will be valid for the specified number of years or until the printer reaches the OEM-defined Minimum Number of Prints within the Warranty Period, whichever is earlier, i.e. once the printer meets either the Minimum Number of Prints within the Warranty Period or the time duration specified, the warranty coverage will end.<br/>\n3. The actual number of prints completed by the printer during the warranty period may be verified using the printer's built-in print counter or an equivalent tracking system.\n</td></tr><tr><td>5</td><td>Compliance of extended producer's responsibility</td><td>With effect from 1st April 2023, as per the E-waste rules 2022, EPR registration is mandatory for manufacturing entities. Therefore, all OEMs shall hold valid EPR registration, and the registration number should be reflected in the catalogue parameter. OEMs shall ensure compliance with all responsibilities as per EPR registration applicable from time to time.</td></tr></table>\n\n# कैला द्वारा जोड़ी गई बिड की विशेष शर्तें /Buyer Added Bid Specific Terms and Conditions\n\n## 1. Generic\n\nOPTION CLAUSE: The Purchaser reserves the right to increase or decrease the quantity to be ordered up to 25 percent of bid quantity at the time of placement of contract. The purchaser also reserves the right to increase the ordered quantity up to 25% of the contracted quantity during the currency of the contract at the contracted rates. The delivery period of quantity shall commence from the last date of original delivery order and in cases where option clause is exercised during the extended delivery period the additional time shall commence from the last date of extended delivery period. The additional delivery time shall be (Increased quantity ÷ Original quantity) × Original delivery period (in days), subject to minimum of 30 days. If the original delivery period is less than 30 days, the additional time equals the original delivery period. The Purchaser may extend this calculated delivery duration up to the original\n\n## Buyer Added Bid Specific Additional Terms and Conditions\n\n\n### 1. Generic\n\nOPTION CLAUSE: The Purchaser reserves the right to increase or decrease the quantity to be ordered up\nto 25 percent of bid quantity at the time of placement of contract. The purchaser also reserves the right to\nincrease the ordered quantity up to 25% of the contracted quantity during the currency of the contract at\nthe contracted rates. The delivery period of quantity shall commence from the last date of original\ndelivery order and in cases where option clause is exercised during the extended delivery period the\nadditional time shall commence from the last date of extended delivery period. The additional delivery\ntime shall be (Increased quantity ÷ Original quantity) × Original delivery period (in days), subject to\nminimum of 30 days. If the original delivery period is less than 30 days, the additional time equals the\noriginal delivery period. The Purchaser may extend this calculated delivery duration up to the original\n6 / 8\ndelivery period while exercising the option clause. Bidders must comply with these terms.\n\n### 2. Buyer Added Bid Specific ATC\n\nBuyer uploaded ATC document Click here to view the file.\nअ&वीकरण/Disclaimer\nThe additional terms and conditions have been incorporated by the Buyer after approval of the Competent\nAuthority in Buyer Organization, whereby Buyer organization is solely responsible for the impact of these clauses\non the bidding process, its outcome, and consequences thereof including any eccentricity / restriction arising in\nthe bidding process due to these ATCs and due to modification of technical specifications and / or terms and\nconditions governing the bid. If any clause(s) is / are incorporated by the Buyer regarding following, the bid and\nresultant contracts shall be treated as null and void and such bids may be cancelled by GeM at any stage of\nbidding process without any notice:-\n\n### 1. Definition of Class I and Class II suppliers in the bid not in line with the extant Order / Office Memorandum\n\nissued by DPIIT in this regard.\n\n### 2. Seeking EMD submission from bidder(s), including via Additional Terms & Conditions, in contravention to\n\nexemption provided to such sellers under GeM GTC.\n\n### 3. Publishing Custom / BOQ bids for items for which regular GeM categories are available without any\n\nCategory item bunched with it.\n\n### 4. Creating BoQ bid for single item.\n\n\n### 5. Mentioning specific Brand or Make or Model or Manufacturer or Dealer name.\n\n\n### 6. Mandating submission of documents in physical form as a pre-requisite to qualify bidders.\n\n\n### 7. Floating / creation of work contracts as Custom Bids in Services.\n\n\n### 8. Seeking sample with bid or approval of samples during bid evaluation process. (However, in bids for\n\nattached categories, trials are allowed as per approved procurement policy of the buyer nodal Ministries)\n\n### 9. Mandating foreign / international certifications even in case of existence of Indian Standards without\n\nspecifying equivalent Indian Certification / standards.\n\n### 10. Seeking experience from specific organization / department / institute only or from foreign / export\n\nexperience.\n\n### 11. Creating bid for items from irrelevant categories.\n\n\n### 12. Incorporating any clause against the MSME policy and Preference to Make in India Policy.\n\n\n### 13. Reference of conditions published on any external site or reference to external documents/clauses.\n\n\n### 14. Asking for any Tender fee / Bid Participation fee / Auction fee in case of Bids / Forward Auction, as the\n\ncase may be.\n\n### 15. Buyer added ATC Clauses which are in contravention of clauses defined by buyer in system generated bid\n\ntemplate as indicated above in the Bid Details section, EMD Detail, ePBG Detail and MII and MSE Purchase\nPreference sections of the bid, unless otherwise allowed by GeM GTC.\n\n### 16. In a category based bid, adding additional items, through buyer added additional scope of work/ additional\n\nterms and conditions/or any other document. If buyer needs more items along with the main item, the\nsame must be added through bunching category based items or by bunching custom catalogs or\nbunching a BoQ with the main category based item, the same must not be done through ATC or Scope of\nWork.\nFurther, if any seller has any objection/grievance against these additional clauses or otherwise on any aspect of\nthis bid, they can raise their representation against the same by using the Representation window provided in\nthe bid details field in Seller dashboard after logging in as a seller within 4 days of bid publication on GeM. Buyer\nis duty bound to reply to all such representations and would not be allowed to open bids if he fails to reply to\nsuch representations.\nAll GeM Sellers/Service Providers shall ensure full compliance with all applicable labour laws,\nincluding the provisions, rules, schemes and guidelines under the four Labour Codes i.e. the Code\non Wages, 2019; the Industrial Relations Code, 2020; the Occupational Safety, Health and Working\nConditions Code, 2020; and the Code on Social Security, 2020 as and when notified and brought into\n7 / 8\nforce by the Government of India.\nFor all provisions of the Labour Codes that are pending operationalisation through rules, schemes or\nnotifications, the corresponding provisions of the pre-existing labour enactments (such as The\nMinimum Wages Act, 1948, The Payment of Wages Act, 1936, The Payment of Bonus Act, 1965, The\nEqual Remuneration Act, 1976, The Payment of Gratuity Act, 1972, etc. and relevant State Rules)\nshall continue to remain applicable.\nThe Seller/ Service Providers shall, therefore, be responsible for ensuring compliance under:\nAll notified and enforceable provisions of the new Labour Codes as mentioned hereinabove;\nand\nAll operative provisions of the erstwhile Labour Laws until their complete substitution.\nAll obligations relating to wages, social security, safety, working conditions, industrial relations etc.\nand any other statutory requirements shall be strictly met by the Seller/ Service Provider. Any non-\ncompliance shall constitute a breach of the contract and shall entitle the Buyer to take appropriate\naction in accordance with the contract and applicable law.\nयह \u0001बड सामा)य शत0 के अंतग%त भी शािसत है /This Bid is also governed by the General Terms and Conditions\nजेम क\u0010 सामा)य शत0 के खंड 26 के संदभ% मH भारत के साथ भूिम सीमा साझा करने वाले देश के \u0001बडर से खर\u0013द पर 9ितबंध के संबंध मH\nभारत के साथ भूिम सीमा साझा करने वाले देश का कोई भी \u0001बडर इस िन\u0001वदा मH \u0001बड देने के िलए तभी पा  होगा जब वह \u0001बड देने वाला\nस6म 9ािधकार\u0013 के पास पंजीकृत हो।\u0001बड मH भाग लेते समय \u0001बडर को इसका अनुपालन करना होगा और कोई भी गलत घोषणा =कए जाने\nव इसका अनुपालन न करने पर अनुबंध को तlकाल समाm करने और कानून के अनुसार आगे क\u0010 कानूनी कार%वाई का आधार होगा।/In terms\nof GeM GTC clause 26 regarding Restrictions on procurement from a bidder of a country which shares a land border with India, any bidder from a country which shares a\nland border with India will be eligible to bid in this tender only if the bidder is registered with the Competent Authority. While participating in bid, Bidder has to undertake\ncompliance of this and any false declaration and non-compliance of this would be a ground for immediate termination of the contract and further legal action in\naccordance with the laws.\n---ध)यवाद/Thank You---\n8 / 8\n\n\n## Hyperlinks\n\n- [* जेम केटेगर� �विश�� के अनुसार / As per GeM Category Specification](https://bidplus.gem.gov.in/bidding/bid/showCatalogue/IJJfkynz7QEKKe1WXCz1DLLaTfPcY3uhej2Hyunxc0w)  <!-- page 4 -->\n- **Buyer uploaded ATC document**: [Click here to view the file](https://fulfilment.gem.gov.in/contract/slafds?fileDownloadPath=SLA_UPLOAD_PATH/2025/Dec/GEM_2025_B_6955275/CLM0010/ATC_a8b5950b-3512-488d-a6471764659949576_nirmal.hartron-hry@gov.in.docx)  <!-- page 7 -->\n- [attached categories](https://assets-bg.gem.gov.in/resources/upload/shared_doc/list-of-categories-where-trials-are-allowed_1712126171.pdf)  <!-- page 7 -->\n- [यह �बड सामा�य शत� के अंतग�त भी शािसत है /This Bid is also governed by the General Terms and Conditions](https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20251202)  <!-- page 8 -->\n- [GEM/2025/B/6955275](https://bidplus.gem.gov.in/showbidDocument/8661758)  <!-- page 1 -->\n- [This Bid is also governed by the General Terms and Conditions](https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20261001)  <!-- page 1 -->\n- [Powered by TCPDF (www.tcpdf.org)](http://www.tcpdf.org)  <!-- page 2 -->"
+}

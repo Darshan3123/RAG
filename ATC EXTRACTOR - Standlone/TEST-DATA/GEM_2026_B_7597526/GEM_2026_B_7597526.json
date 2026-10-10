@@ -1,0 +1,1082 @@
+{
+    "_id": "GEM_2026_B_7597526",
+    "bid": {
+        "bid_no": "GEM/2026/B/7597526",
+        "ra_no": "GEM/2026/R/748699",
+        "bid_type": "Product Bid/RAs",
+        "product_type": "Product",
+        "base_type": "BOQ",
+        "process_kind": "BOQ"
+    },
+    "card": {
+        "items": [
+            {
+                "name": "TEA PDR1",
+                "quantity": 8755
+            },
+            {
+                "name": "TEA PDR2",
+                "quantity": 2364
+            },
+            {
+                "name": "COFFEE1",
+                "quantity": 1347
+            },
+            {
+                "name": "COFFEE2",
+                "quantity": 503
+            },
+            {
+                "name": "VINEGAR",
+                "quantity": 2366
+            },
+            {
+                "name": "PICKLE",
+                "quantity": 264
+            },
+            {
+                "name": "PAPAD",
+                "quantity": 300
+            },
+            {
+                "name": "SAGO",
+                "quantity": 1413
+            },
+            {
+                "name": "GROUNDNUT",
+                "quantity": 6680
+            },
+            {
+                "name": "DALIA",
+                "quantity": 913
+            },
+            {
+                "name": "LIME SQUASH",
+                "quantity": 1022
+            },
+            {
+                "name": "MANGO SQUASH",
+                "quantity": 941
+            },
+            {
+                "name": "ORANGE SQUASH",
+                "quantity": 1019
+            },
+            {
+                "name": "FRUIT JUICE MIXED",
+                "quantity": 610
+            },
+            {
+                "name": "FRUIT JUICE APPLE",
+                "quantity": 705
+            },
+            {
+                "name": "FRUIT JUICE GRAPES",
+                "quantity": 630
+            },
+            {
+                "name": "FRUIT JUICE LITCHI",
+                "quantity": 650
+            },
+            {
+                "name": "FRUIT JUICE MANGO",
+                "quantity": 670
+            },
+            {
+                "name": "FRUIT JUICE PINEAPPLE",
+                "quantity": 580
+            },
+            {
+                "name": "MINERAL WATER",
+                "quantity": 18031
+            },
+            {
+                "name": "CREAM BISCUIT",
+                "quantity": 6907
+            },
+            {
+                "name": "SALT BISCUIT",
+                "quantity": 5579
+            },
+            {
+                "name": "GLUCOSE BISCUIT",
+                "quantity": 5578
+            },
+            {
+                "name": "CORNFLAKES",
+                "quantity": 3305
+            },
+            {
+                "name": "NOODLES1",
+                "quantity": 7961
+            },
+            {
+                "name": "NOODLES2",
+                "quantity": 3228
+            },
+            {
+                "name": "SEMOLINA1",
+                "quantity": 1561
+            },
+            {
+                "name": "SEMOLINA2",
+                "quantity": 966
+            },
+            {
+                "name": "CORNFLOUR1",
+                "quantity": 2606
+            },
+            {
+                "name": "CORNFLOUR2",
+                "quantity": 828
+            },
+            {
+                "name": "CUSTARD PDR1",
+                "quantity": 2268
+            },
+            {
+                "name": "CUSTARD PDR2",
+                "quantity": 1059
+            },
+            {
+                "name": "TOMATO SAUCE",
+                "quantity": 664
+            },
+            {
+                "name": "CHOCOLATE EATING",
+                "quantity": 8520
+            },
+            {
+                "name": "JELLY",
+                "quantity": 64
+            },
+            {
+                "name": "CASHEW NUT",
+                "quantity": 1475
+            },
+            {
+                "name": "ALMOND",
+                "quantity": 1475
+            },
+            {
+                "name": "RAISING BROWN",
+                "quantity": 1415
+            },
+            {
+                "name": "APRICOTS",
+                "quantity": 678
+            },
+            {
+                "name": "DRY DATES",
+                "quantity": 471
+            }
+        ],
+        "departments": [
+            {
+                "ministry_state_name": "Ministry Of Defence",
+                "department_name": "Department Of Military Affairs",
+                "organisation_name": "Indian Navy",
+                "office_name": "***"
+            }
+        ],
+        "start_datetime": "09-10-2026 13:00:00",
+        "end_datetime": "10-10-2026 14:36:00",
+        "bid_pdf_url": "https://bidplus.gem.gov.in/showbidDocument/9393492",
+        "ra_pdf_url": ""
+    },
+    "pdf": {
+        "timing": {
+            "bid_end_datetime": "16-07-2026 10:00:00",
+            "bid_opening_datetime": "16-07-2026 10:30:00",
+            "bid_offer_validity_days": 180
+        },
+        "departments": {
+            "ministry_state_name": "Ministry Of Defence",
+            "department_name": "Department Of Military Affairs",
+            "organisation_name": "Indian Navy",
+            "office_name": "***"
+        },
+        "items": {
+            "total_quantity_extracted": 106371,
+            "quantity_match_flag": "Yes",
+            "item 1": {
+                "item_category": "TEA PDR1",
+                "quantity": 8755
+            },
+            "item 2": {
+                "item_category": "TEA PDR2",
+                "quantity": 2364
+            },
+            "item 3": {
+                "item_category": "COFFEE1",
+                "quantity": 1347
+            },
+            "item 4": {
+                "item_category": "COFFEE2",
+                "quantity": 503
+            },
+            "item 5": {
+                "item_category": "VINEGAR",
+                "quantity": 2366
+            },
+            "item 6": {
+                "item_category": "PICKLE",
+                "quantity": 264
+            },
+            "item 7": {
+                "item_category": "PAPAD",
+                "quantity": 300
+            },
+            "item 8": {
+                "item_category": "SAGO",
+                "quantity": 1413
+            },
+            "item 9": {
+                "item_category": "GROUNDNUT",
+                "quantity": 6680
+            },
+            "item 10": {
+                "item_category": "DALIA",
+                "quantity": 913
+            },
+            "item 11": {
+                "item_category": "LIME SQUASH",
+                "quantity": 1022
+            },
+            "item 12": {
+                "item_category": "MANGO SQUASH",
+                "quantity": 941
+            },
+            "item 13": {
+                "item_category": "ORANGE SQUASH",
+                "quantity": 1019
+            },
+            "item 14": {
+                "item_category": "FRUIT JUICE MIXED",
+                "quantity": 610
+            },
+            "item 15": {
+                "item_category": "FRUIT JUICE APPLE",
+                "quantity": 705
+            },
+            "item 16": {
+                "item_category": "FRUIT JUICE GRAPES",
+                "quantity": 630
+            },
+            "item 17": {
+                "item_category": "FRUIT JUICE LITCHI",
+                "quantity": 650
+            },
+            "item 18": {
+                "item_category": "FRUIT JUICE MANGO",
+                "quantity": 670
+            },
+            "item 19": {
+                "item_category": "FRUIT JUICE PINEAPPLE",
+                "quantity": 580
+            },
+            "item 20": {
+                "item_category": "MINERAL WATER",
+                "quantity": 18031
+            },
+            "item 21": {
+                "item_category": "CREAM BISCUIT",
+                "quantity": 6907
+            },
+            "item 22": {
+                "item_category": "SALT BISCUIT",
+                "quantity": 5579
+            },
+            "item 23": {
+                "item_category": "GLUCOSE BISCUIT",
+                "quantity": 5578
+            },
+            "item 24": {
+                "item_category": "CORNFLAKES",
+                "quantity": 3305
+            },
+            "item 25": {
+                "item_category": "NOODLES1",
+                "quantity": 7961
+            },
+            "item 26": {
+                "item_category": "NOODLES2",
+                "quantity": 3228
+            },
+            "item 27": {
+                "item_category": "SEMOLINA1",
+                "quantity": 1561
+            },
+            "item 28": {
+                "item_category": "SEMOLINA2",
+                "quantity": 966
+            },
+            "item 29": {
+                "item_category": "CORNFLOUR1",
+                "quantity": 2606
+            },
+            "item 30": {
+                "item_category": "CORNFLOUR2",
+                "quantity": 828
+            },
+            "item 31": {
+                "item_category": "CUSTARD PDR1",
+                "quantity": 2268
+            },
+            "item 32": {
+                "item_category": "CUSTARD PDR2",
+                "quantity": 1059
+            },
+            "item 33": {
+                "item_category": "TOMATO SAUCE",
+                "quantity": 664
+            },
+            "item 34": {
+                "item_category": "CHOCOLATE EATING",
+                "quantity": 8520
+            },
+            "item 35": {
+                "item_category": "JELLY",
+                "quantity": 64
+            },
+            "item 36": {
+                "item_category": "CASHEW NUT",
+                "quantity": 1475
+            },
+            "item 37": {
+                "item_category": "ALMOND",
+                "quantity": 1475
+            },
+            "item 38": {
+                "item_category": "RAISING BROWN",
+                "quantity": 1415
+            },
+            "item 39": {
+                "item_category": "APRICOTS",
+                "quantity": 678
+            },
+            "item 40": {
+                "item_category": "DRY DATES",
+                "quantity": 471
+            }
+        },
+        "evaluation": {
+            "evaluation_method": "Group wise evaluation",
+            "schedules": {
+                "GROUP A": {
+                    "Item_1": {
+                        "Item/Category": "Tea Pdr1",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "8755"
+                    },
+                    "Item_2": {
+                        "Item/Category": "Tea Pdr2",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "2364"
+                    },
+                    "Item_3": {
+                        "Item/Category": "Coffee1",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "1347"
+                    },
+                    "Item_4": {
+                        "Item/Category": "Coffee2",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "503"
+                    }
+                },
+                "GROUP B": {
+                    "Item_1": {
+                        "Item/Category": "Vinegar",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "2366"
+                    },
+                    "Item_2": {
+                        "Item/Category": "Pickle",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "264"
+                    },
+                    "Item_3": {
+                        "Item/Category": "Papad",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "300"
+                    },
+                    "Item_4": {
+                        "Item/Category": "Sago",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "1413"
+                    },
+                    "Item_5": {
+                        "Item/Category": "Groundnut",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "6680"
+                    },
+                    "Item_6": {
+                        "Item/Category": "Dalia",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "913"
+                    },
+                    "Item_7": {
+                        "Item/Category": "Lime Squash",
+                        "Consignee/Reporting Officer": "Aniket Kumar",
+                        "Consignee Address": "cso lap division flag officer goa naval area vasco da gama 403802",
+                        "Quantity": "1022"
+                    }
+                }
+            }
+        },
+        "documents": {
+            "required_from_seller": [
+                "Experience Criteria",
+                "Past Performance",
+                "Bidder Turnover",
+                "Certificate (Requested in ATC)",
+                "OEM Annual Turnover",
+                "Additional Doc 1 (Requested in ATC)*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer"
+            ],
+            "show_uploaded_docs_to_all_bidders": "Yes",
+            "attachments": []
+        },
+        "consignees": [
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "8755",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "2364",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "1347",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "503",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "2366",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "264",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "300",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "1413",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "6680",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "913",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "1022",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "941",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "1019",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "610",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "705",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "630",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "650",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "670",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "580",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "18031",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "6907",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "5579",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "5578",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "3305",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "7961",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "3228",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "1561",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "966",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "2606",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "828",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "2268",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "1059",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "664",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "8520",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "64",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "1475",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "1415",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "678",
+                "delivery_days": "365"
+            },
+            {
+                "consignee_reporting_officer": "***",
+                "consignee_address": "***SOUTH GOA",
+                "quantity": "471",
+                "delivery_days": "365"
+            }
+        ],
+        "relaxations": {
+            "mse_relaxation_experience_turnover": "Yes",
+            "startup_relaxation_experience_turnover": "Yes"
+        },
+        "auto_extension": {
+            "min_bids_to_disable_extension": 3,
+            "auto_extend_days": 7,
+            "auto_extension_count": 1
+        },
+        "ra": {
+            "bid_to_ra_enabled": "Yes",
+            "ra_qualification_rule": "H1-Highest Priced Bid Elimination"
+        },
+        "bid_type": {
+            "type_of_bid": "Two Packet Bid",
+            "technical_clarification_window_days": 2
+        },
+        "inspection": {
+            "inspection_required": "No",
+            "inspection_agency_type": null
+        },
+        "clauses": {
+            "arbitration_clause": "No",
+            "mediation_clause": "No"
+        },
+        "mii": {
+            "mii_purchase_preference": "Yes",
+            "mii_price_band_percent": 20,
+            "mii_max_quantity_percent": 50,
+            "allow_only_class_1_2_local_suppliers": "Yes"
+        },
+        "mse": {
+            "mse_purchase_preference": "Yes",
+            "mse_price_band_percent": 15,
+            "mse_max_quantity_percent": 25
+        },
+        "financials": {
+            "estimated_value": null,
+            "emd": {
+                "required": true,
+                "advisory_bank": "State Bank of India",
+                "amount_total": 632008,
+                "schedule_breakup": []
+            },
+            "epbg": {
+                "required": true,
+                "advisory_bank": "State Bank of India",
+                "percent": 5.0,
+                "duration_months": 14
+            },
+            "emd_exemption_text": "The bidder seeking EMD exemption, must submit the valid supporting document for the relevant category as per GeM GTC with the bid. Under MSE category, only manufacturers for goods and Service Providers for Services are eligible for exemption from EMD. Traders are excluded from the purview of this Policy."
+        },
+        "terms": {
+            "special_terms_version": "",
+            "special_terms_text": "",
+            "buyer_atc": {
+                "generic": "Buyer Added Bid Specific Terms and Conditions 1. Generic OPTION CLAUSE: The Purchaser reserves the right to increase or decrease the quantity to be ordered up to 25 percent of bid quantity at the time of placement of contract. The purchaser also reserves the right to increase the ordered quantity up to 25% of the contracted quantity during the currency of the contract at the contracted rates. The delivery period of quantity shall commence from the last date of original delivery order and in cases where option clause is exercised during the extended delivery period the additional time shall commence from the last date of extended delivery period. The additional delivery time shall be (Increased quantity ÷ Original quantity) × Original delivery period (in days), subject to minimum of 30 days. If the original delivery period is less than 30 days, the additional time equals the original delivery period. The Purchaser may extend this calculated delivery duration up to the original delivery period while exercising the option clause. Bidders must comply with these terms. 2. Generic Bidder shall submit the following documents along with their bid for Vendor Code Creation: a. Copy of PAN Card. b. Copy of GSTIN. c. Copy of Cancelled Cheque. d. Copy of EFT Mandate duly certified by Bank. 3. Generic Actual delivery (and Installation &amp; Commissioning (if covered in scope of supply)) is to be done at following address INS HANSA INS GOMANTAK INHS JEEVANTI INS MANDOVI 4. Generic Bidder financial standing: The bidder should not be under liquidation, court receivership or similar proceedings, should not be bankrupt. Bidder to upload undertaking to this effect with bid. 5. Generic Experience Criteria: The Bidder or its OEM {themselves or through reseller(s)} should have regularly, manufactured and supplied same or similar Category Products to any Central / State Govt Organization / PSU for 3 years before the bid opening date. Copies of relevant contracts to be submitted along with bid in support of having supplied some quantity during each of the year. In case of bunch bids, the primary product having highest value should meet this criterion. 6. Turnover ## Buyer Added Bid Specific Additional Terms and Conditions ### 1. Generic OPTION CLAUSE: The Purchaser reserves the right to increase or decrease the quantity to be ordered up to 25 percent of bid quantity at the time of placement of contract. The purchaser also reserves the right to increase the ordered quantity up to 25% of the contracted quantity during the currency of the contract at the contracted rates. The delivery period of quantity shall commence from the last date of original delivery order and in cases where option clause is exercised during the extended delivery period the additional time shall commence from the last date of extended delivery period. The additional delivery time shall be (Increased quantity ÷ Original quantity) × Original delivery period (in days), subject to minimum of 30 days. If the original delivery period is less than 30 days, the additional time equals the original delivery period. The Purchaser may extend this calculated delivery duration up to the original delivery period while exercising the option clause. Bidders must comply with these terms. ### 2. Generic Bidder shall submit the following documents along with their bid for Vendor Code Creation: * a. Copy of PAN Card. * b. Copy of GSTIN. * c. Copy of Cancelled Cheque. * d. Copy of EFT Mandate duly certified by Bank. ### 3. Generic Actual delivery (and Installation & Commissioning (if covered in scope of supply)) is to be done at following address INS HANSA INS GOMANTAK INHS JEEVANTI INS MANDOVI . . ### 4. Generic Bidder financial standing: The bidder should not be under liquidation, court receivership or similar proceedings, should not be bankrupt. Bidder to upload undertaking to this effect with bid. ### 5. Generic Experience Criteria: The Bidder or its OEM {themselves or through reseller(s)} should have regularly, manufactured and supplied same or similar Category Products to any Central / State Govt Organization / PSU for 3 years before the bid opening date. Copies of relevant contracts to be submitted along with bid in support of having supplied some quantity during each of the year. In case of bunch bids, the primary product having highest value should meet this criterion. ### 6. Turnover 28 / 31 Bidder Turn Over Criteria: The minimum average annual financial turnover of the bidder during the last three years, ending on 31st March of the previous financial year, should be as indicated in the bid document. Documentary evidence in the form of certified Audited Balance Sheets of relevant periods or a certificate from the Chartered Accountant / Cost Accountant indicating the turnover details for the relevant period shall be uploaded with the bid. In case the date of constitution / incorporation of the bidder is less than 3 year old, the average turnover in respect of the completed financial years after the date of constitution shall be taken into account for this criteria. ### 7. Purchase Preference (Centre) Purchase preference to Micro and Small Enterprises (MSEs): Purchase preference will be given to MSEs as defined in Public Procurement Policy for Micro and Small Enterprises (MSEs) Order, 2012 dated 23.03.2012 issued by Ministry of Micro, Small and Medium Enterprises and its subsequent Orders/Notifications issued by concerned Ministry. If the bidder wants to avail the Purchase preference, the bidder must be the manufacturer of the offered product in case of bid for supply of goods. Traders are excluded from the purview of Public Procurement Policy for Micro and Small Enterprises. In respect of bid for Services, the bidder must be the Service provider of the offered Service. Relevant documentary evidence in this regard shall be uploaded along with the bid in respect of the offered product or service. If L-1 is not an MSE and MSE Seller (s) has/have quoted price within L-1+ 15% of margin of purchase preference /price band defined in relevant policy, such Seller shall be given opportunity to match L-1 price and contract will be awarded for percentage of 15% of total value. ### 8. Inspection Nominated Inspection Agency: On behalf of the Buyer organization, any one of the following Inspection Agency would be conducting inspection of stores before acceptance: Pre-dispatch Inspection at Seller Premises (applicable only if pre-dispatch inspection clause has been selected in ATC): DIRECT DEMANDING OFFICERS Post Receipt Inspection at consignee site before acceptance of stores: DIRECT DEMANDING OFFICERS ### 9. Inspection Testing of Sample: The testing of advance sample and bulk sample during PDI will be carried at the designated AHSP labs.When testing facilities are not available, the facilities of Govt labs/NABL/Accredited labs will be utilized. The testing charges outside the designated AHSP labs to be borne by seller's. ### 10. Certificates Bidder's offer is liable to be rejected if they don't upload any of the certificates / documents sought in the Bid document, ATC and Corrigendum if any. ### 11. Certificates Material Test Certificate Should Be Sent Along with The Supply. The Material Will Be Checked by Buyer’s Lab & the Results of the Lab will be the Sole Criteria for Acceptance of the Item. ### 12. Forms of EMD and PBG Bidders can also submit the EMD with Account Payee Demand Draft in favour of ACCOUNT OFFICE NAVY payable at VASCO-DA-GAMA, GOA . Bidder has to upload scanned copy / proof of the DD along with bid and has to ensure delivery of hardcopy to the Buyer within 5 days of Bid End date / Bid Opening date. ### 13. Ration Item ATCs 29 / 31 Packing Material The items will be supplied by the successful bidder in its original packing material and the packing material will not be returned. Weight of packing material will not be included in quantity supplied and only net weight of the items will be counted. The packing should be of standardized weights of appropriate size. Item will not be accepted in non-standardized weights.Packing Material. The items will be supplied by the successful bidder in its original packing material and the packing material will not be returned. Weight of packing material will not be included in quantity supplied and only net weight of the items will be counted. The packing should be of standardized weights of appropriate size. Item will not be accepted in non-standardized weights. ### 14. Ration Item ATCs Shelf Life The supplier shall declare the shelf life/best before use for a minimum period equal to the warranty period as given in the DFS for the item. The item should be of the latest manufacture, conforming to the current production standard and having 100% defined life at the time of delivery. ### 15. Rate Contract Bidders are advised to check applicable GST on their own before quoting. Buyer will not take any responsibility in this regards. GST reimbursement will be as per actuals or as per applicable rates (whichever is lower), subject to the maximum of quoted GST %. ### 16. Buyer Added Bid Specific ATC Buyer uploaded ATC document Click here to view the file.",
+                "items": [],
+                "hard_requirements": [],
+                "info_clauses": []
+            },
+            "disclaimer": "The Additional Terms and Conditions (ATC) have been incorporated by the Buyer after approval of their Competent Authority. The Buyer ,is solely responsible for the impact of these clauses on the bidding process, its outcome, and consequences thereof including any restriction arising in the bidding process due to these ATCs and including the modification of technical specifications and / or terms and conditions governing the bid.All representations / grievances pertaining to the ATC clauses shall be raised with the buyer organization directly and not with GeM.If any of the clause(s) is/are incorporated by the Buyer regarding the following, the bid & resultant contract shall be treated as null & void. Further, GeM reserves the right, at its sole discretion, to cancel the bid forthwith, without issuance of any prior notice or intimation :- ### 1. Publishing Custom / BOQ bids for items for which regular GeM categories are available (unless such Custom / BOQ item is bunched with the major regular product Category Item). ### 2. Mandating procurement of / from specific Brand / Make / Model / Manufacturer / Dealer except in case of Single Bid / Proprietary Article Certificate (PAC) Buying. ### 3. Inclusion of disqualification criteria related to suspension of seller / service provider, where such suspension period has already expired. ### 4. Mandating submission of documents in physical form as a pre-requisite to qualify bidders. ### 5. Publishing bids on GeM for procurement of works. ### 6. Procurement of Goods by creating a Service bid on GeM & vice-versa. ### 7. Seeking sample with bid or approval of samples during bid evaluation process. However, trial / sample, as the case may be, shall be permitted in cases where trial / sample are allowed as per approved and published procurement policy of the Buyers’ controlling Ministry / Department / State / Public Sector Enterprises Headquarters. If there is any violation of trial / sample clause with regard to approved policy of the Buyers’ Ministry / Department / State / Public Sector Enterprises Headquarters, then this is to be determined and redressed by the concerned Buyer Organisation only. ### 8. Seeking experience from specific organization / department / institute only or from foreign / export experience. ### 9. Creating bid for items from incorrect categories. ### 10. Reference of conditions published on any external site or reference to external documents/clauses. ### 11. Asking for any Tender fee / Bid Participation fee, as the case may be. ### 12. Buyer added ATC Clauses which are in contravention of clauses defined in bid detail section, including specifications, EMD Detail, ePBG Detail and MII and MSE Purchase Preference sections of the bid, unless otherwise allowed by the applicable GeM GTC. 30 / 31 ### 13. Any ATC clause in contravention with GeM GTC Clause 4 (xiii) (h) will be invalid. In case of multiple L1 bidders against a service bid, the buyer shall place the Contract by selection of a bidder amongst the L-1 bidders through a Random Algorithm executed by GeM system. ### 14. In a category based bid, adding additional items, through buyer added, additional scope of work/ additional terms and conditions/or any other document. If buyer needs more items along with the main item, the same must be added through bunching category based items or by bunching custom catalogues or bunching a BoQ with the main category based item, the same must not be done through ATC or Scope of Work. Further, if any seller has any objection/grievance against these additional clauses or otherwise on any aspect of this bid, they can raise their representation against the same by using the Representation window provided in the bid details field in Seller dashboard after logging in as a seller. Buyer is duty bound to reply to all such representations and would not be allowed to open bids if he fails to reply to such representations. All GeM Sellers/Service Providers shall ensure full compliance with all applicable labour laws, including the provisions, rules, schemes and guidelines under the four Labour Codes i.e. the Code on Wages, 2019; the Industrial Relations Code, 2020; the Occupational Safety, Health and Working Conditions Code, 2020; and the Code on Social Security, 2020 as and when notified and brought into force by the Government of India. For all provisions of the Labour Codes that are pending operationalisation through rules, schemes or notifications, the corresponding provisions of the pre-existing labour enactments (such as The Minimum Wages Act, 1948, The Payment of Wages Act, 1936, The Payment of Bonus Act, 1965, The Equal Remuneration Act, 1976, The Payment of Gratuity Act, 1972, etc. and relevant State Rules) shall continue to remain applicable. The Seller/ Service Providers shall, therefore, be responsible for ensuring compliance under: All notified and enforceable provisions of the new Labour Codes as mentioned hereinabove; and All operative provisions of the erstwhile Labour Laws until their complete substitution. All obligations relating to wages, social security, safety, working conditions, industrial relations etc. and any other statutory requirements shall be strictly met by the Seller/ Service Provider. Any non- compliance shall constitute a breach of the contract and shall entitle the Buyer to take appropriate action in accordance with the contract and applicable law. This Bid is governed by the General Terms and Conditions, conditions stipulated in Bid and Service Level Agreement specific to the Service, as the case may be, as provided in the Marketplace. However, in case of Service, if any condition specified in General Terms and Conditions is contradicted by the conditions stipulated in Service Level Agreement specific to said Service, then it will over-ride the conditions in the General Terms and Conditions. यह \u0001बड सामाEय शतH के अंतग%त भी शािसत है /This Bid is also governed by the General Terms and Conditions जेम क\u0010 सामाEय शतH के खंड 26 के संदभ% म* भारत के साथ भूिम सीमा साझा करने वाले देश के \u0001बडर से खर\u0013द पर 5ितबंध के संबंध म* भारत के साथ भूिम सीमा साझा करने वाले देश का कोई भी \u0001बडर इस िन\u0001वदा म* \u0001बड देने के िलए तभी पा होगा जब वह \u0001बड देने वाला सJम 5ािधकार\u0013 के पास पंजीकृत हो।\u0001बड म* भाग लेते समय \u0001बडर को इसका अनुपालन करना होगा और कोई भी गलत घोषणा :कए जाने व इसका अनुपालन न करने पर अनुबंध को तZकाल समाL करने और कानून के अनुसार आगे क\u0010 कानूनी कार%वाई का आधार होगा।/In terms of GeM GTC clause 26 regarding Restrictions on procurement from a bidder of a country which shares a land border with India, any bidder from a country which shares a land border with India will be eligible to bid in this tender only if the bidder is registered with the Competent Authority. While participating in bid, Bidder has to undertake compliance of this and any false declaration and non-compliance of this would be a ground for immediate termination of the contract and further legal action in accordance with the laws."
+        }
+    },
+    "hyperlinks": [
+        {
+            "page": 5,
+            "name": "OM_No.1_4_2021_PPD_dated_18.05.2023",
+            "text": "OM_No.1_4_2021_PPD_dated_18.05.2023",
+            "url": "https://bidplus.gem.gov.in/bidding/downloadOmppdfile/",
+            "source": "bid"
+        },
+        {
+            "page": 8,
+            "name": "Specification Document",
+            "text": "View File",
+            "url": "https://mkp.gem.gov.in/uploaded_documents/51/16/877/OrderItem/BoqDocument/2026/5/29/scope_of_work_ngi_2026-05-29-11-31-43_d1605fda825ec344409fea2e9966c2cf.pdf",
+            "source": "bid"
+        },
+        {
+            "page": 8,
+            "name": "BOQ Detail Document",
+            "text": "View File",
+            "url": "https://mkp.gem.gov.in/uploaded_documents/51/16/877/OrderItem/BoqLineItemsDocument/2026/5/29/boqngi_2026-05-29-11-31-43_fa283e94f09ace8a89dca22a17990ba3.csv",
+            "source": "bid"
+        },
+        {
+            "page": 30,
+            "name": "Buyer uploaded ATC document",
+            "text": "Click here to view the file",
+            "url": "https://fulfilment.gem.gov.in/contract/slafds?fileDownloadPath=SLA_UPLOAD_PATH/2026/Jun/GEM_2026_B_7597526/CLM0010/NGIATC_96637922-e499-4a34-9b551782374022929_hqgna.lap.socontract.pdf",
+            "source": "bid"
+        },
+        {
+            "page": 31,
+            "name": "यह �बड सामा�य शत� के अंतग�त भी शािसत है /This Bid is also governed by the General Terms and Conditions",
+            "text": "यह �बड सामा�य शत� के अंतग�त भी शािसत है /This Bid is also governed by the General Terms and Conditions",
+            "url": "https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20260625",
+            "source": "bid"
+        }
+    ],
+    "normalized": {
+        "financials": {
+            "estimated_value_inr": null,
+            "estimated_value_formatted": "₹0",
+            "high_value_tender": false,
+            "emd": {
+                "required": true,
+                "amount_inr": 632008.0,
+                "amount_formatted": "₹6.32 Lakh",
+                "advisory_bank": "State Bank of India"
+            },
+            "epbg": {
+                "required": true,
+                "percentage": 5.0,
+                "advisory_bank": "State Bank of India",
+                "duration_months": 14
+            }
+        },
+        "dates": {
+            "start_date_iso": "2026-10-09T13:00:00+05:30",
+            "end_date_iso": "2026-10-10T14:36:00+05:30",
+            "bid_duration_days": 1.07,
+            "days_remaining": 0.01,
+            "is_expired": false
+        },
+        "items": {
+            "total_items_count": 40,
+            "total_quantity": 106371,
+            "items_breakdown": [
+                {
+                    "name": "TEA PDR1",
+                    "quantity": 8755
+                },
+                {
+                    "name": "TEA PDR2",
+                    "quantity": 2364
+                },
+                {
+                    "name": "COFFEE1",
+                    "quantity": 1347
+                },
+                {
+                    "name": "COFFEE2",
+                    "quantity": 503
+                },
+                {
+                    "name": "VINEGAR",
+                    "quantity": 2366
+                },
+                {
+                    "name": "PICKLE",
+                    "quantity": 264
+                },
+                {
+                    "name": "PAPAD",
+                    "quantity": 300
+                },
+                {
+                    "name": "SAGO",
+                    "quantity": 1413
+                },
+                {
+                    "name": "GROUNDNUT",
+                    "quantity": 6680
+                },
+                {
+                    "name": "DALIA",
+                    "quantity": 913
+                },
+                {
+                    "name": "LIME SQUASH",
+                    "quantity": 1022
+                },
+                {
+                    "name": "MANGO SQUASH",
+                    "quantity": 941
+                },
+                {
+                    "name": "ORANGE SQUASH",
+                    "quantity": 1019
+                },
+                {
+                    "name": "FRUIT JUICE MIXED",
+                    "quantity": 610
+                },
+                {
+                    "name": "FRUIT JUICE APPLE",
+                    "quantity": 705
+                },
+                {
+                    "name": "FRUIT JUICE GRAPES",
+                    "quantity": 630
+                },
+                {
+                    "name": "FRUIT JUICE LITCHI",
+                    "quantity": 650
+                },
+                {
+                    "name": "FRUIT JUICE MANGO",
+                    "quantity": 670
+                },
+                {
+                    "name": "FRUIT JUICE PINEAPPLE",
+                    "quantity": 580
+                },
+                {
+                    "name": "MINERAL WATER",
+                    "quantity": 18031
+                },
+                {
+                    "name": "CREAM BISCUIT",
+                    "quantity": 6907
+                },
+                {
+                    "name": "SALT BISCUIT",
+                    "quantity": 5579
+                },
+                {
+                    "name": "GLUCOSE BISCUIT",
+                    "quantity": 5578
+                },
+                {
+                    "name": "CORNFLAKES",
+                    "quantity": 3305
+                },
+                {
+                    "name": "NOODLES1",
+                    "quantity": 7961
+                },
+                {
+                    "name": "NOODLES2",
+                    "quantity": 3228
+                },
+                {
+                    "name": "SEMOLINA1",
+                    "quantity": 1561
+                },
+                {
+                    "name": "SEMOLINA2",
+                    "quantity": 966
+                },
+                {
+                    "name": "CORNFLOUR1",
+                    "quantity": 2606
+                },
+                {
+                    "name": "CORNFLOUR2",
+                    "quantity": 828
+                },
+                {
+                    "name": "CUSTARD PDR1",
+                    "quantity": 2268
+                },
+                {
+                    "name": "CUSTARD PDR2",
+                    "quantity": 1059
+                },
+                {
+                    "name": "TOMATO SAUCE",
+                    "quantity": 664
+                },
+                {
+                    "name": "CHOCOLATE EATING",
+                    "quantity": 8520
+                },
+                {
+                    "name": "JELLY",
+                    "quantity": 64
+                },
+                {
+                    "name": "CASHEW NUT",
+                    "quantity": 1475
+                },
+                {
+                    "name": "ALMOND",
+                    "quantity": 1475
+                },
+                {
+                    "name": "RAISING BROWN",
+                    "quantity": 1415
+                },
+                {
+                    "name": "APRICOTS",
+                    "quantity": 678
+                },
+                {
+                    "name": "DRY DATES",
+                    "quantity": 471
+                }
+            ]
+        },
+        "preferences": {
+            "mse_relaxation": true,
+            "startup_relaxation": true,
+            "mii_preference": false,
+            "mse_preference": false
+        }
+    },
+    "validation": {
+        "is_valid": true,
+        "error_count": 0,
+        "warning_count": 0,
+        "issues": []
+    },
+    "atc_analysis": {
+        "status": "success",
+        "bid_no": "GEM_2026_B_7597526",
+        "has_atc": true,
+        "elapsed_seconds": 24.04,
+        "cost_usd": 0.001606,
+        "cost_inr": 0.1389,
+        "tokens": {
+            "input": 39256,
+            "output": 894
+        },
+        "raw_markdown": "### 1. Standard Documents Required\n* **Experience Criteria**\n* **Past Performance**\n* **Bidder Turnover**\n* **OEM Annual Turnover**\n\n### 2. Clarified ATC Documents & Mandatory Uploads\n* **Certificate (Requested in ATC)**: FSSAI Registration Certificate\n* **Additional Doc 1 (Requested in ATC)**: NABL Accredited Lab Test Report\n* **Other Upload Required in ATC**: Copy of PAN Card\n* **Other Upload Required in ATC**: Copy of GSTIN\n* **Other Upload Required in ATC**: Copy of Cancelled Cheque\n* **Other Upload Required in ATC**: Copy of EFT Mandate duly certified by Bank\n* **Other Upload Required in ATC**: Undertaking regarding financial standing (not under liquidation/bankruptcy)\n* **Other Upload Required in ATC**: Copies of relevant contracts for Experience Criteria\n* **Other Upload Required in ATC**: Audited Balance Sheets or CA Certificate for Turnover\n* **Other Upload Required in ATC**: Colour Photos of all items quoted (with Brand name, FSSAI no, list of contents, manufacturer)\n* **Other Upload Required in ATC**: Signed ATC (including Appendix A, B, C, and D)\n* **Other Upload Required in ATC**: Technical Evaluation Matrix (Appendix C)\n* **Other Upload Required in ATC**: Bid Security Declaration (Appendix E)\n\n### 3. Exemption Documents Required\n* **Proof for Exemption (MSEs)**: Udyam Registration Certificate\n* **Proof for Exemption (Start-ups)**: DPIIT Startup Recognition Certificate\n\n### 4. Physical Submissions (Offline)\n* **EMD Demand Draft / Bid Security Declaration**\n  * Deadline: Within 5 days of Bid End date / Bid Opening date\n  * In Favor Of: ACCOUNT OFFICE NAVY\n  * Payable At: VASCO-DA-GAMA, GOA\n  * Delivery Address: The Flag Officer Commanding, {for Chief Staff Officer (LA&P)}, Headquarters, Goa Naval Area, Vasco-da-Gama, Goa – 403802\n* **Samples of Necessary Group Items (Branded: 02 packets each; Non-branded: 03 packets of 500g each)**\n  * Deadline: Prior to opening of technical bid\n  * In Favor Of: N/A\n  * Payable At: N/A\n  * Delivery Address: The Flag Officer Commanding, {for Chief Staff Officer (LA&P)}, Headquarters, Goa Naval Area, Vasco-da-Gama, Goa – 403802\n\n### 5. Key Commercial Terms & Conditions to Follow\n* **Option Clause**: Buyer reserves the right to increase or decrease quantity by 25% at contract placement and during contract currency.\n* **Repeat Order Clause**: Buyer can order up to 50% additional quantity within six months of contract completion.\n* **Delivery Timeline**: Items must be delivered within 15 days of supply order; emergency requirements may require delivery within 24 hours.\n* **Packing Standards**: Date of packing must be within 30 days from the date of supply; items must be in original packing with standardized weights.\n* **Liquidated Damages**: 0.5% per week of delay, capped at 10% of the supply order value.\n* **Payment Terms**: 100% payment released monthly by ACDA(N), Goa after post-audit; no advance payments.\n* **Performance Bank Guarantee**: Must be submitted within 30 days of contract; failure results in payment stoppage and risk-purchase action.\n* **Police Verification**: Contractor must submit police verification for all workers within 30 days of contract conclusion.\n* **Sample Testing**: Testing charges for samples at NABL labs are to be borne by the seller.\n* **Evaluation Criteria**: L1 determined group-wise based on basic price excluding taxes and duties.",
+        "checklist": {
+            "1. Standard Documents Required": [
+                "Experience Criteria",
+                "Past Performance",
+                "Bidder Turnover",
+                "OEM Annual Turnover"
+            ],
+            "2. Clarified ATC Documents & Mandatory Uploads": [
+                "Certificate (Requested in ATC): FSSAI Registration Certificate",
+                "Additional Doc 1 (Requested in ATC): NABL Accredited Lab Test Report",
+                "Other Upload Required in ATC: Copy of PAN Card",
+                "Other Upload Required in ATC: Copy of GSTIN",
+                "Other Upload Required in ATC: Copy of Cancelled Cheque",
+                "Other Upload Required in ATC: Copy of EFT Mandate duly certified by Bank",
+                "Other Upload Required in ATC: Undertaking regarding financial standing (not under liquidation/bankruptcy)",
+                "Other Upload Required in ATC: Copies of relevant contracts for Experience Criteria",
+                "Other Upload Required in ATC: Audited Balance Sheets or CA Certificate for Turnover",
+                "Other Upload Required in ATC: Colour Photos of all items quoted (with Brand name, FSSAI no, list of contents, manufacturer)",
+                "Other Upload Required in ATC: Signed ATC (including Appendix A, B, C, and D)",
+                "Other Upload Required in ATC: Technical Evaluation Matrix (Appendix C)",
+                "Other Upload Required in ATC: Bid Security Declaration (Appendix E)"
+            ],
+            "3. Exemption Documents Required": [
+                "Proof for Exemption (MSEs): Udyam Registration Certificate",
+                "Proof for Exemption (Start-ups): DPIIT Startup Recognition Certificate"
+            ],
+            "4. Physical Submissions (Offline)": [
+                {
+                    "Item": "EMD Demand Draft / Bid Security Declaration",
+                    "Deadline": "Within 5 days of Bid End date / Bid Opening date",
+                    "In Favor Of": "ACCOUNT OFFICE NAVY",
+                    "Payable At": "VASCO-DA-GAMA, GOA",
+                    "Delivery Address": "The Flag Officer Commanding, {for Chief Staff Officer (LA&P)}, Headquarters, Goa Naval Area, Vasco-da-Gama, Goa – 403802"
+                },
+                {
+                    "Item": "Samples of Necessary Group Items (Branded: 02 packets each; Non-branded: 03 packets of 500g each)",
+                    "Deadline": "Prior to opening of technical bid",
+                    "In Favor Of": "N/A",
+                    "Payable At": "N/A",
+                    "Delivery Address": "The Flag Officer Commanding, {for Chief Staff Officer (LA&P)}, Headquarters, Goa Naval Area, Vasco-da-Gama, Goa – 403802"
+                }
+            ],
+            "5. Key Commercial Terms & Conditions to Follow": [
+                "Option Clause: Buyer reserves the right to increase or decrease quantity by 25% at contract placement and during contract currency.",
+                "Repeat Order Clause: Buyer can order up to 50% additional quantity within six months of contract completion.",
+                "Delivery Timeline: Items must be delivered within 15 days of supply order; emergency requirements may require delivery within 24 hours.",
+                "Packing Standards: Date of packing must be within 30 days from the date of supply; items must be in original packing with standardized weights.",
+                "Liquidated Damages: 0.5% per week of delay, capped at 10% of the supply order value.",
+                "Payment Terms: 100% payment released monthly by ACDA(N), Goa after post-audit; no advance payments.",
+                "Performance Bank Guarantee: Must be submitted within 30 days of contract; failure results in payment stoppage and risk-purchase action.",
+                "Police Verification: Contractor must submit police verification for all workers within 30 days of contract conclusion.",
+                "Sample Testing: Testing charges for samples at NABL labs are to be borne by the seller.",
+                "Evaluation Criteria: L1 determined group-wise based on basic price excluding taxes and duties."
+            ]
+        },
+        "error": null
+    },
+    "telemetry": {
+        "ocr": {
+            "pages_processed": 28,
+            "input_tokens": 0,
+            "output_tokens": 15188,
+            "latency_seconds": 7.249,
+            "estimated_cost_usd": 0.028,
+            "estimated_cost_inr": 2.422,
+            "details": {
+                "pdf_path": "D:\\PROJECTS\\GEM RAG Development\\downloads\\GEM_2026_B_7597526\\GEM_2026_B_7597526_core.pdf",
+                "total_doc_pages": 28,
+                "price_model_used": "mistral-ocr-3-0",
+                "usd_to_inr_rate": 86.5
+            },
+            "total_pdf_pages": 31,
+            "pages_for_ocr": 28,
+            "pages_saved_by_slicing": 3,
+            "estimated_savings_usd": 0.003,
+            "estimated_savings_inr": 0.2595
+        }
+    },
+    "full_pdf_text": "# बिड दस्तावेज / Bid Document\n\n<table><tr><th colspan=\"2\">बिड विवरण / Bid Details</th></tr><tr><td>बिड बंद होने की तारीख / समय / Bid End Date / Time</td><td>16-07-2026 10:00:00</td></tr><tr><td>बिड खुलने की तारीख / समय / Bid Opening Date / Time</td><td>16-07-2026 10:30:00</td></tr><tr><td>बिड पेशक्ष वैधता (बंद होने की तारीख से) / Bid Offer Validity (From End Date)</td><td>180 (Days)</td></tr><tr><td>मंत्रालय / राज्य का नाम / Ministry / State Name</td><td>Ministry Of Defence</td></tr><tr><td>विभाग का नाम / Department Name</td><td>Department Of Military Affairs</td></tr><tr><td>संगठन का नाम / Organisation Name</td><td>Indian Navy</td></tr><tr><td>कार्यालय का नाम / Office Name</td><td>***</td></tr><tr><td>शिक्षित निवारण के संपर्क विवरण / Contact details of Grievance redressal</td><td>HOD Email id : Buyer Email id: sobud-hqgna@navy.gov.in</td></tr><tr><td>कुल मात्रा / Total Quantity</td><td>106371</td></tr><tr><td>वस्तु श्रेणी / Item Category</td><td>TEA PDR1, TEA PDR2, COFFEE1, COFFEE2, VINEGAR, PICKLE, PAPAD, SAGO, GROUNDNUT, DALIA, LIME SQUASH, MANGO SQUASH, ORANGE SQUASH, FRUIT JUICE MIXED, FRUIT JUICE APPLE, FRUIT JUICE GRAPES, FRUIT JUICE LITCHI, FRUIT JUICE MANGO, FRUIT JUICE PINEAPPLE, MINERAL WATER, CREAM BISCUIT, SALT BISCUIT, GLUCOSE BISCUIT, CORNFLAKES, NOODLES1, NOODLES2, SEMOLINA1, SEMOLINA2, CORNFLOUR1, CORNFLOUR2, CUSTARD PDR1, CUSTARD PDR2, TOMATO SAUCE, CHOCOLATE EATING, JELLY, CASHEW NUT, ALMOND, RAISING BROWN, APRICOTS, DRY DATES</td></tr><tr><td>GeMARPTS में खोजी गई स्ट्रिंग / Searched Strings used in GeMARPTS</td><td>Necessary Group Items</td></tr><tr><td>GeMARPTS में खोजा गया परिणाम / Searched Result generated in GeMARPTS</td><td>Handicraft Items from Kutch - ODOP, Desk and Bench Set for Classroom / Training Area, Divyangjan-Curios, Souvenirs And Gift Items, Fingerprint Powders, Desk and Chair Set for Classroom / Training Area, Fingerprint Brushes and Dusters, Moderate Heat Duty Fireclay Refractories, Group A as per IS 6, Desk Only for Classroom / Training Area, TLM Kit for Multiple Disabilities - Age Group 13 Years and Above, Kit for Special School Students (Intellectual Disability) - Kit 1 Age Group 0 to 3 Years</td></tr><tr><td>अधिसूचना के लिए चयनित प्रासंगिक श्रेणियाँ / Relevant Categories selected for notification</td><td>• Instant tea<br/>• Biscuits<br/>• Chocolate (चॉकलेट)</td></tr></table>\n\n---\n\n<table><tr><th colspan=\"2\">बिड विवरण/Bid Details</th></tr><tr><td>बीओक्यू शीर्षक /BOQ Title</td><td>Necessary Group Items</td></tr><tr><td>बिडर का न्यूनतम औसत वार्षिक टर्नओवर (3 वर्ष का) /Minimum Average Annual Turnover of the bidder (For 3 Years)</td><td>64 Lakh (s)</td></tr><tr><td>मूल उपकरण निर्माता का औसत टर्नओवर (गत 3 वर्ष का)/OEM Average Turnover (Last 3 Years)</td><td>64 Lakh (s)</td></tr><tr><td>उन्हीं/समान सेवा के लिए अपेक्षित विगत अनुभव के वर्ष/Years of Past Experience Required for same/similar service</td><td>3 Year (s)</td></tr><tr><td>वर्ष के अनुभव एवं टर्नओवर से एमएसई को छूट प्राप्त है / MSE Relaxation for Years Of Experience and Turnover</td><td>Yes | Partial | Experience - 3 year (s) | Turn over value - 64 (in lakhs)</td></tr><tr><td>वर्ष के अनुभव के लिए स्टार्टअप को छूट प्राप्त है / Startup Relaxation for Years Of Experience</td><td>Yes | Partial | Experience - 3 year (s)</td></tr><tr><td>विक्रेता से मांगे गए दस्तावेज़/Document required from seller</td><td>Experience Criteria, Past Performance, Bidder Turnover, Certificate (Requested in ATC), OEM Annual Turnover, Additional Doc 1 (Requested in ATC)<br/>*In case any bidder is seeking exemption from Experience / Turnover Criteria, the supporting documents to prove his eligibility for exemption must be uploaded for evaluation by the buyer</td></tr><tr><td>क्या आप निविदाकारों द्वारा अपलोड किए गए दस्तावेजों को निविदा में भाग लेने वाले सभी निविदाकारों को दिखाना चाहते हैं? संदर्भ मेनू है/Do you want to show documents uploaded by bidders to all bidders participated in bid?</td><td>Yes (Documents submitted as part of a clarification or representation during the tender/bid process will also be displayed to other participated bidders after log in)</td></tr><tr><td>बिड लगाने की समय सीमा स्वत: नहीं बढ़ाने के लिए आवश्यक बिड की संख्या। / Minimum number of bids required to disable automatic bid extension</td><td>3</td></tr><tr><td>दिनों की संख्या, जिनके लिए बिड लगाने की समय-सीमा बढ़ाई जाएगी। / Number of days for which Bid would be auto-extended</td><td>7</td></tr><tr><td>ऑटो एक्सटेंशन अधिकतम कितनी बार किया जाना है। / Number of Auto Extension count</td><td>1</td></tr><tr><td>विगत प्रदर्शन /Past Performance</td><td>30 %</td></tr><tr><td>बिड से रिवर्स नीलामी सक्रिय किया/Bid to RA enabled</td><td>Yes</td></tr><tr><td>रिवर्स नीलामी योग्यता नियम/RA Qualification Rule</td><td>H1-Highest Priced Bid Elimination</td></tr><tr><td>बिड का प्रकार/Type of Bid</td><td>Two Packet Bid</td></tr><tr><td>प्राथमिक उत्पाद श्रेणी/Primary product category</td><td>TEA PDR1</td></tr></table>\n\n---\n\n<table><tr><th colspan=\"2\">बिड विवरण/Bid Details</th></tr><tr><td>तकनीकी मूल्यांकन के दौरान तकनीकी स्पष्टीकरण हेतु अनुमत समय /Time allowed for Technical Clarifications during technical evaluation</td><td>2 Days</td></tr><tr><td>निरीक्षण आवश्यक (सूचीबद्ध निरीक्षण प्राधिकरण /जेम के साथ पूर्व पंजीकृत एजेंसियों द्वारा)/Inspection Required (By Empanelled Inspection Authority / Agencies pre-registered with GeM)</td><td>No</td></tr><tr><td>मूल्यांकन पद्धति/Evaluation Method</td><td>Group wise evaluation</td></tr><tr><td>वित्तीय दस्तावेज की आवश्यकता है / Financial Document Required</td><td>Yes</td></tr><tr><td>मध्यस्थता खंड/Arbitration Clause</td><td>No</td></tr><tr><td>सुलह खंड/Mediation Clause</td><td>No</td></tr></table>\n\n## ईएमडी विवरण/EMD Detail\n\n<table><tr><td>एडवाइजरी बैंक/Advisory Bank</td><td>State Bank of India</td></tr><tr><td>GROUP A ईएमडी राशि/EMD Amount (In INR)</td><td>125981</td></tr><tr><td>GROUP B ईएमडी राशि/EMD Amount (In INR)</td><td>40400</td></tr><tr><td>GROUP C ईएमडी राशि/EMD Amount (In INR)</td><td>31690</td></tr><tr><td>GROUP D ईएमडी राशि/EMD Amount (In INR)</td><td>326839</td></tr><tr><td>GROUP E ईएमडी राशि/EMD Amount (In INR)</td><td>107098</td></tr></table>\n\n## ईपीबीजी विवरण /ePBG Detail\n\n<table><tr><td>एडवाइजरी बैंक/Advisory Bank</td><td>State Bank of India</td></tr><tr><td>ईपीबीजी प्रतिशत (x)/ePBG Percentage(%)</td><td>5.00</td></tr><tr><td>ईपीबीजी की आवश्यक अवधि (माह) /Duration of ePBG required (Months).</td><td>14</td></tr></table>\n\n(a). जेम की शर्तों के अनुसार ईएमडी छूट के इच्छुक बिडर को संबंधित केटेगरी के लिए बिड के साथ वैध समर्थित दस्तावेज प्रस्तुत करने है। एमएसई केटेगरी के अंतर्गत केवल वस्तुओं के लिए विनिर्माता तथा सेवाओं के लिए सेवा प्रदाता ईएमडी से छूट के पात्र हैं। व्यापारियों को इस नीति के दायरे से बाहर रखा गया है।/EMD EXEMPTION: The bidder seeking EMD exemption, must submit the valid supporting document for the relevant category as per GeM GTC with the bid. Under MSE category, only manufacturers for goods and Service Providers for Services are eligible for exemption from EMD. Traders are excluded from the purview of this Policy.\n\n(b). The EMD Amount will be applicable for each schedule/group selected during Bid creation.\n\n(c). ईएमडी और संपादन जमानत राशि, जहां यह लागू होती है, लाभार्थी के पक्ष में होनी चाहिए। / EMD &amp; Performance security should be\n\n---\n\nin favour of Beneficiary, wherever it is applicable.\n\n(d). ईएमडी और संपादन जमानत राशि लाभार्थी के पक्ष में होनी चाहिए। / Earnest Money Deposit (EMD) shall also be accepted by the buyer in the form of a surety bond.\n\n**लाभार्थी / Beneficiary :**\nCONTROLLER OF DEFENCE ACCOUNT\nWODE HOUSE ROAD COLABA MUMBAI A/C NO 10136575108 IFSC SBIN0000572\n(Pcda Navy)\n\nबोली विभाजन लागू नहीं किया गया / Bid splitting not applied.\n\n**एमआईआई खरीद वरीयता / MII Purchase Preference**\n\n<table><tr><th>एमआईआई खरीद वरीयता / MII Purchase Preference</th><th>Yes</th></tr><tr><td>मेक इन इंडिया विक्रेताओं को खरीद में प्राथमिकता, यदि उनका मूल्य L1+Xx तक की सीमा में है / Purchase Preference to MII sellers availablee upto price within L1+X%</td><td>20</td></tr><tr><td>मेक इन इंडिया खरीद में प्राथमिकता के लिए बिड की मात्रा का अधिकतम प्रतिशत / Maximum Percentage of Bid quantity for MII purchase preference</td><td>50</td></tr><tr><td>सार्वजनिक खरीद (मेक-इन-इंडिया को प्राथमिकता) आदेश 2017 के अनुसार केवल क्लास 1/क्लास 2 के स्थानीय आपूर्तिकर्ताओं को ही भागीदारी की अनुमति है दिनांक 16.09.2020 (समय-समय पर संशोधित एवं लागू) / Allow participation only from Class 1/Class 2 local suppliers as per the Public procurement(Preference to Make-in-india) order 2017 date 16.09.2020(as amended and applicable time to time)</td><td>Yes, in compliance with the MII ORDER : DPIIT Order(as amended and applicable time to time)</td></tr></table>\n\n**एमएसई खरीद वरीयता / MSE Purchase Preference**\n\n<table><tr><th>एमएसई खरीद वरीयता / MSE Purchase Preference</th><th>Yes</th></tr><tr><td>सूक्ष्म और लघु उद्यम मूल उपकरण निर्माताओं/सेवा प्रदाता को खरीद में प्राथमिकता, यदि उनका मूल्य L1+Xx / Purchase Preference to MSE OEMs/ Service Provider available upto price within L1+X%</td><td>15</td></tr><tr><td>सूक्ष्म और लघु उद्यम मूल उपकरण निर्माता/सेवा प्रदाता को खरीद में प्राथमिकता के लिए बिड की मात्रा का अधिकतम प्रतिशत / Percentage of Bid quantity/amount for MSE OEMs/ Service Provider Purchase preference</td><td>25</td></tr></table>\n\n1. If the bidder is a Micro or Small Enterprise as per latest orders issued by Ministry of MSME, the bidder shall be relaxed from the eligibility criteria of \"Experience Criteria\" as defined above subject to meeting of quality and technical specifications. The bidder seeking Relaxation from Experience Criteria, shall upload the supporting documents to prove his eligibility for Relaxation.\n\n---\n\n2. If the bidder is a Micro or Small Enterprise (MSE) as per latest orders issued by Ministry of MSME, the bidder shall be relaxed from the eligibility criteria of \"Bidder Turnover\" as defined above subject to meeting of quality and technical specifications. If the bidder itself is MSE OEM of the offered products, it would be relaxed from the \"OEM Average Turnover\" criteria also subject to meeting of quality and technical specifications. The bidder seeking Relaxation from Turnover, shall upload the supporting documents to prove his eligibility for Relaxation.\n\n3. If the bidder is a DPIIT registered Startup, the bidder shall be relaxed from the eligibility criteria of \"Experience Criteria\" as defined above subject to their meeting of quality and technical specifications. The bidder seeking Relaxation from Experience Criteria, shall upload the supporting documents to prove his eligibility for Relaxation.\n\n4. The minimum average annual financial turnover of the bidder during the last three years, ending on 31st March of the previous financial year, should be as indicated above in the bid document. Documentary evidence in the form of certified Audited Balance Sheets of relevant periods or a certificate from the Chartered Accountant / Cost Accountant indicating the turnover details for the relevant period shall be uploaded with the bid. In case the date of constitution / incorporation of the bidder is less than 3-year-old, the average turnover in respect of the completed financial years after the date of constitution shall be taken into account for this criteria.\n\n5. Experience Criteria: In respect of the filter applied for experience criteria, the Bidder or its OEM of the product offered in the bid {themselves or through reseller(s)} should have regularly, manufactured and supplied same or similar Category Products to any Central / State Govt Organization / PSU for number of Financial years as indicated above in the bid document before the bid opening date. Copies of relevant contracts and delivery acceptance certificates like CRAC to be submitted along with bid in support of having supplied some quantity during each of the Financial year. In case of bunch bids, the category of primary product having highest value should meet this criterion.\n\n6. OEM Turn Over Criteria: The minimum average annual financial turnover of the OEM of the offered product during the last three years, ending on 31st March of the previous financial year, should be as indicated in the bid document. Documentary evidence in the form of certified Audited Balance Sheets of relevant periods or a certificate from the Chartered Accountant / Cost Accountant indicating the turnover details for the relevant period shall be uploaded with the bid. In case the date of constitution / incorporation of the OEM is less than 3 year old, the average turnover in respect of the completed financial years after the date of constitution shall be taken into account for this criteria.\n\n7. Preference to Make In India products (For bids &lt; 200 Crore): Preference shall be given to Class 1 local supplier as defined in public procurement (Preference to Make in India), Order 2017 as amended from time to time and its subsequent Orders/Notifications issued by concerned Nodal Ministry for specific Goods/Products. The minimum local content to qualify as a Class 1 local supplier is denoted in the bid document. If the bidder wants to avail the Purchase preference, the bidder must upload a certificate from the OEM regarding the percentage of the local content and the details of locations at which the local value addition is made along with their bid, failing which no purchase preference shall be granted. In case the bid value is more than Rs 10 Crore, the declaration relating to percentage of local content shall be certified by the statutory auditor or cost auditor, if the OEM is a company and by a practicing cost accountant or a chartered accountant for OEMs other than companies as per the Public Procurement (preference to Make-in -India) order 2017 dated 04.06.2020. Only Class-I and Class-II Local suppliers as per MII order dated 4.6.2020 will be eligible to bid. Non - Local suppliers as per MII order dated 04.06.2020 are not eligible to participate. However, eligible micro and small enterprises will be allowed to participate. The buyers are advised to refer the OM No.F.1/4/2021-PPD dated 18.05.2023.\n\nOM No.1 4 2021 PPD dated 18.05.2023 for compliance of Concurrent application of Public Procurement Policy for Micro and Small Enterprises Order, 2012 and Public Procurement (Preference to Make in India) Order, 2017 and its subsequent Orders/Notifications issued by concerned Ministry. Benefits of MSE will be allowed only if seller/service provider is validated on-line in GeM profile as well as validated and approved by Buyer after evaluation of documents submitted.\n\n8. Purchase preference to Micro and Small Enterprises (MSEs): Purchase preference will be given to MSEs having valid Udyam Certificate and whose credentials are validated online through Udyam Registration portal as defined in Public Procurement Policy for Micro and Small Enterprises (MSEs) Order, 2012 dated 23.03.2012 issued by Ministry of Micro, Small and Medium Enterprises and its subsequent Orders/Notifications issued by concerned Ministry. If the bidder wants to avail themselves of the Purchase preference, the bidder must be the manufacturer / OEM of the offered product on GeM. In respect of bid for Services, the bidder must be the Service provider of the offered Service. Traders are excluded from the purview of Public Procurement Policy for Micro and Small Enterprises and hence resellers offering products manufactured by some other OEM are not eligible for any purchase preference. Relevant documentary evidence in this regard shall be uploaded along with the bid in respect of the offered product or service, and Buyer will decide eligibility for purchase preference based on documentary evidence submitted in case of product bids, whereas in case of services the eligibility is automatically validated. If L-1 is not an MSE and MSE Seller (s) has / have quoted price within L-1+ 15% (Selected by Buyer) of margin of purchase preference /price band defined in relevant policy, such MSE Seller shall be given opportunity to match L-1 price and contract will be awarded for 25% (selected by Buyer) percentage of total quantity. The buyers are advised to refer the OM No.1 4 2021 PPD dated 18.05.2023 for compliance of Concurrent application of Public Procurement Policy for Micro and Small Enterprises Order, 2012 and Public\n\n---\n\nProcurement (Preference to Make in India) Order, 2017. Benefits of MSE will be allowed only if seller is validated on-line in GeM profile as well as validated and approved by Buyer after evaluation of documents submitted.\n\n9. Estimated Bid Value indicated above is being declared solely for the purpose of guidance on EMD amount and for determining the Eligibility Criteria related to Turn Over, Past Performance and Project / Past Experience etc. This has no relevance or bearing on the price to be quoted by the bidders and is also not going to have any impact on bid participation. Also this is not going to be used as a criteria in determining reasonableness of quoted prices which would be determined by the buyer based on its own assessment of reasonableness and based on competitive prices received in Bid / RA process.\n\n10. Past Performance: The Bidder or its OEM {themselves or through re-seller(s)} should have supplied same or similar Category Products for 30% of bid quantity, in at least one of the last three Financial years before the bid opening date to any Central / State Govt Organization / PSU. Copies of relevant contracts (proving supply of cumulative order quantity in any one financial year) to be submitted along with bid in support of quantity supplied in the relevant Financial year. In case of bunch bids, the category related to primary product having highest bid value should meet this criterion.\n\n11. Reverse Auction would be conducted amongst all the technically qualified bidders except the Highest quoting bidder. The technically qualified Highest Quoting bidder will not be allowed to participate in RA. However, H-1 will also be allowed to participate in RA in following cases:\n\ni. If number of technically qualified bidders are only 2 or 3.\nii. If Buyer has chosen to split the bid amongst N sellers, and H1 bid is coming within N.\niii. In case Primary product of only one OEM is left in contention for participation in RA on elimination of H-1.\niv. If L-1 is non-MSE and H-1 is eligible MSE and H-1 price is coming within price band of 15% of Non-MSE L-1\nv. If L-1 is non-MII and H-1 is eligible MII and H-1 price is coming within price band of 20% of Non-MII L-1\n\n## Evaluation Method ( Group Wise Evaluation Method )\n\nContract will be awarded schedulewise and the determination of L1 will be done separately for each schedule. The details of item-consignee combination covered under each schedule are as under:\n\n<table><tr><th>Evaluation Schedules</th><th>Item/Category</th><th>Consignee/Reporting Officer</th><th>Consignee Address</th><th>Quantity</th></tr><tr><td rowspan=\"4\">GROUP A</td><td>Tea Pdr1</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>8755</td></tr><tr><td>Tea Pdr2</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>2364</td></tr><tr><td>Coffee1</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>1347</td></tr><tr><td>Coffee2</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>503</td></tr><tr><td rowspan=\"6\">GROUP B</td><td>Vinegar</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>2366</td></tr><tr><td>Pickle</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>264</td></tr><tr><td>Papad</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>300</td></tr><tr><td>Sago</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>1413</td></tr><tr><td>Groundnut</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>6680</td></tr><tr><td>Dalia</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>913</td></tr><tr><td></td><td>Lime Squash</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>1022</td></tr></table>\n\n---\n\n<table><tr><td rowspan=\"9\">GROUP C</td><td>Mango<br/>Squash</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>941</td></tr><tr><td>Orange<br/>Squash</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>1019</td></tr><tr><td>Fruit Juice<br/>Mixed</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>610</td></tr><tr><td>Fruit Juice<br/>Apple</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>705</td></tr><tr><td>Fruit Juice<br/>Grapes</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>630</td></tr><tr><td>Fruit Juice<br/>Litchi</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>650</td></tr><tr><td>Fruit Juice<br/>Mango</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>670</td></tr><tr><td>Fruit Juice<br/>Pineapple</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>580</td></tr><tr><td>Mineral<br/>Water</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>18031</td></tr><tr><td rowspan=\"14\">GROUP D</td><td>Cream<br/>Biscuit</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>6907</td></tr><tr><td>Salt Biscuit</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>5579</td></tr><tr><td>Glucose<br/>Biscuit</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>5578</td></tr><tr><td>Cornflakes</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>3305</td></tr><tr><td>Noodles1</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>7961</td></tr><tr><td>Noodles2</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>3228</td></tr><tr><td>Semolina1</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>1561</td></tr><tr><td>Semolina2</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>966</td></tr><tr><td>Cornflour1</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>2606</td></tr><tr><td>Cornflour2</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>828</td></tr><tr><td>Custard Pdr1</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>2268</td></tr><tr><td>Custard Pdr2</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>1059</td></tr><tr><td>Tomato<br/>Sauce</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>664</td></tr><tr><td>Chocolate<br/>Eating</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area<br/>vasco da gama 403802</td><td>8520</td></tr></table>\n\n---\n\n<table><tr><td></td><td>Jelly</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>64</td></tr><tr><td rowspan=\"5\">GROUP E</td><td>Cashew Nut</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>1475</td></tr><tr><td>Almond</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>1475</td></tr><tr><td>Raising Brown</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>1415</td></tr><tr><td>Apricots</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>678</td></tr><tr><td>Dry Dates</td><td>Aniket Kumar</td><td>cso lap division flag officer goa naval area vasco da gama 403802</td><td>471</td></tr></table>\n\n## TEA PDR1\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अर्हता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><td>Specification Document</td><td>View File</td></tr><tr><td>BOQ Detail Document</td><td>View File</td></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><td>क्र.सं./S.N o.</td><td>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</td><td>पता/Address</td><td>मात्रा /Quantity</td><td>डिलीवरी के दिन/Delivery Days</td></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>8755</td><td>365</td></tr></table>\n\n## TEA PDR2\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अर्हता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><td>Specification Document</td><td>View File</td></tr><tr><td>BOQ Detail Document</td><td>View File</td></tr></table>\n\n---\n\nपरेशिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेशिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>2364</td><td>365</td></tr></table>\n\n# COFFEE1\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहर्ता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेशिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेशिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>1347</td><td>365</td></tr></table>\n\n# COFFEE2\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहर्ता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\n---\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>503</td><td>365</td></tr></table>\n\n# VINEGAR\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>2366</td><td>365</td></tr></table>\n\n# PICKLE\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\n---\n\nपरेशिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेशिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>264</td><td>365</td></tr></table>\n\n# PAPAD\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेशिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेशिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>300</td><td>365</td></tr></table>\n\n# SAGO\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\n---\n\nपरेशिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेशिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>1413</td><td>365</td></tr></table>\n\n# GROUNDNUT\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेशिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेशिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>6680</td><td>365</td></tr></table>\n\n# DALIA\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेशिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>913</td><td>365</td></tr></table>\n\n## LIME SQUASH\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>1022</td><td>365</td></tr></table>\n\n## MANGO SQUASH\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>941</td><td>365</td></tr></table>\n\n# ORANGE SQUASH\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>1019</td><td>365</td></tr></table>\n\n# FRUIT JUICE MIXED\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>610</td><td>365</td></tr></table>\n\n# FRUIT JUICE APPLE\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>705</td><td>365</td></tr></table>\n\n# FRUIT JUICE GRAPES\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>630</td><td>365</td></tr></table>\n\n# FRUIT JUICE LITCHI\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>650</td><td>365</td></tr></table>\n\n# FRUIT JUICE MANGO\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>670</td><td>365</td></tr></table>\n\n# FRUIT JUICE PINEAPPLE\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>580</td><td>365</td></tr></table>\n\n# MINERAL WATER\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>18031</td><td>365</td></tr></table>\n\n## CREAM BISCUIT\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>6907</td><td>365</td></tr></table>\n\n## SALT BISCUIT\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>5579</td><td>365</td></tr></table>\n\n## GLUCOSE BISCUIT\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>5578</td><td>365</td></tr></table>\n\n## CORNFLAKES\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>3305</td><td>365</td></tr></table>\n\n# NOODLES1\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>7961</td><td>365</td></tr></table>\n\n# NOODLES2\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>3228</td><td>365</td></tr></table>\n\n# SEMOLINA1\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>1561</td><td>365</td></tr></table>\n\n# SEMOLINA2\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>966</td><td>365</td></tr></table>\n\n# CORNFLOUR1\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>2606</td><td>365</td></tr></table>\n\n# CORNFLOUR2\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>828</td><td>365</td></tr></table>\n\n# CUSTARD PDR1\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>2268</td><td>365</td></tr></table>\n\n# CUSTARD PDR2\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>1059</td><td>365</td></tr></table>\n\n# TOMATO SAUCE\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>664</td><td>365</td></tr></table>\n\n# CHOCOLATE EATING\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>8520</td><td>365</td></tr></table>\n\n# JELLY\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>64</td><td>365</td></tr></table>\n\n# CASHEW NUT\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>1475</td><td>365</td></tr></table>\n\n# ALMOND\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>1475</td><td>365</td></tr></table>\n\n# RAISING BROWN\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>1415</td><td>365</td></tr></table>\n\n# APRICOTS\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेषिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>678</td><td>365</td></tr></table>\n\n# DRY DATES\n\n(क्रमश: श्रेणी 1 और श्रेणी 2 के स्थानीय आपूर्तिकर्ता के रूप में अहंता प्राप्त करने के लिए आवश्यक/Minimum 50% and 20% Local Content required for qualifying as Class 1 and Class 2 Local Supplier respectively)\n\nतकनीकी विशिष्टियाँ /Technical Specifications\n\n<table><tr><th>Specification Document</th><th>View File</th></tr><tr><th>BOQ Detail Document</th><th>View File</th></tr></table>\n\nAdvisory-Please refer attached BOQ document for detailed consignee list and delivery period.\n\nपरेषिती/रिपोर्टिंग अधिकारी तथा मात्रा/Consignees/Reporting Officer and Quantity\n\n---\n\n<table><tr><th>क्र.सं./S.N o.</th><th>परेशिती/रिपोर्टिंग अधिकारी /Consignee Reporting/Officer</th><th>पता/Address</th><th>मात्रा /Quantity</th><th>डिलीवरी के दिन/Delivery Days</th></tr><tr><td>1</td><td>***</td><td>***SOUTH GOA</td><td>471</td><td>365</td></tr></table>\n\nक्रेता द्वारा जोड़ी गई बिड की विशेष शर्तें /Buyer Added Bid Specific Terms and Conditions\n\n1. Generic\n\nOPTION CLAUSE: The Purchaser reserves the right to increase or decrease the quantity to be ordered up to 25 percent of bid quantity at the time of placement of contract. The purchaser also reserves the right to increase the ordered quantity up to 25% of the contracted quantity during the currency of the contract at the contracted rates. The delivery period of quantity shall commence from the last date of original delivery order and in cases where option clause is exercised during the extended delivery period the additional time shall commence from the last date of extended delivery period. The additional delivery time shall be (Increased quantity ÷ Original quantity) × Original delivery period (in days), subject to minimum of 30 days. If the original delivery period is less than 30 days, the additional time equals the original delivery period. The Purchaser may extend this calculated delivery duration up to the original delivery period while exercising the option clause. Bidders must comply with these terms.\n\n2. Generic\n\nBidder shall submit the following documents along with their bid for Vendor Code Creation:\n\na. Copy of PAN Card.\nb. Copy of GSTIN.\nc. Copy of Cancelled Cheque.\nd. Copy of EFT Mandate duly certified by Bank.\n\n3. Generic\n\nActual delivery (and Installation &amp; Commissioning (if covered in scope of supply)) is to be done at following address\n\nINS HANSA\nINS GOMANTAK\nINHS JEEVANTI\nINS MANDOVI\n\n4. Generic\n\nBidder financial standing: The bidder should not be under liquidation, court receivership or similar proceedings, should not be bankrupt. Bidder to upload undertaking to this effect with bid.\n\n5. Generic\n\nExperience Criteria: The Bidder or its OEM {themselves or through reseller(s)} should have regularly, manufactured and supplied same or similar Category Products to any Central / State Govt Organization / PSU for 3 years before the bid opening date. Copies of relevant contracts to be submitted along with bid in support of having supplied some quantity during each of the year. In case of bunch bids, the primary product having highest value should meet this criterion.\n\n6. Turnover\n\n## Buyer Added Bid Specific Additional Terms and Conditions\n\n\n### 1. Generic\n\nOPTION CLAUSE: The Purchaser reserves the right to increase or decrease the quantity to be ordered up\nto 25 percent of bid quantity at the time of placement of contract. The purchaser also reserves the right to\nincrease the ordered quantity up to 25% of the contracted quantity during the currency of the contract at\nthe contracted rates. The delivery period of quantity shall commence from the last date of original\ndelivery order and in cases where option clause is exercised during the extended delivery period the\nadditional time shall commence from the last date of extended delivery period. The additional delivery\ntime shall be (Increased quantity ÷ Original quantity) × Original delivery period (in days), subject to\nminimum of 30 days. If the original delivery period is less than 30 days, the additional time equals the\noriginal delivery period. The Purchaser may extend this calculated delivery duration up to the original\ndelivery period while exercising the option clause. Bidders must comply with these terms.\n\n### 2. Generic\n\nBidder shall submit the following documents along with their bid for Vendor Code Creation:\n* a. Copy of PAN Card.\n* b. Copy of GSTIN.\n* c. Copy of Cancelled Cheque.\n* d. Copy of EFT Mandate duly certified by Bank.\n\n### 3. Generic\n\nActual delivery (and Installation & Commissioning (if covered in scope of supply)) is to be done at\nfollowing address\nINS HANSA\nINS GOMANTAK\nINHS JEEVANTI\nINS MANDOVI\n.\n.\n\n### 4. Generic\n\nBidder financial standing: The bidder should not be under liquidation, court receivership or similar\nproceedings, should not be bankrupt. Bidder to upload undertaking to this effect with bid.\n\n### 5. Generic\n\nExperience Criteria: The Bidder or its OEM {themselves or through reseller(s)} should have regularly,\nmanufactured and supplied same or similar Category Products to any Central / State Govt Organization /\nPSU for 3 years before the bid opening date. Copies of relevant contracts to be submitted along with bid\nin support of having supplied some quantity during each of the year. In case of bunch bids, the primary\nproduct having highest value should meet this criterion.\n\n### 6. Turnover\n\n28 / 31\nBidder Turn Over Criteria: The minimum average annual financial turnover of the bidder during the last\nthree years, ending on 31st March of the previous financial year, should be as indicated in the bid\ndocument. Documentary evidence in the form of certified Audited Balance Sheets of relevant periods or a\ncertificate from the Chartered Accountant / Cost Accountant indicating the turnover details for the\nrelevant period shall be uploaded with the bid. In case the date of constitution / incorporation of the\nbidder is less than 3 year old, the average turnover in respect of the completed financial years after the\ndate of constitution shall be taken into account for this criteria.\n\n### 7. Purchase Preference (Centre)\n\nPurchase preference to Micro and Small Enterprises (MSEs): Purchase preference will be given to MSEs as\ndefined in Public Procurement Policy for Micro and Small Enterprises (MSEs) Order, 2012 dated\n23.03.2012 issued by Ministry of Micro, Small and Medium Enterprises and its subsequent\nOrders/Notifications issued by concerned Ministry. If the bidder wants to avail the Purchase preference,\nthe bidder must be the manufacturer of the offered product in case of bid for supply of goods. Traders are\nexcluded from the purview of Public Procurement Policy for Micro and Small Enterprises. In respect of bid\nfor Services, the bidder must be the Service provider of the offered Service. Relevant documentary\nevidence in this regard shall be uploaded along with the bid in respect of the offered product or service. If\nL-1 is not an MSE and MSE Seller (s) has/have quoted price within L-1+ 15% of margin of purchase\npreference /price band defined in relevant policy, such Seller shall be given opportunity to match L-1\nprice and contract will be awarded for percentage of 15% of total value.\n\n### 8. Inspection\n\nNominated Inspection Agency: On behalf of the Buyer organization, any one of the following\nInspection Agency would be conducting inspection of stores before acceptance:\nPre-dispatch Inspection at Seller Premises (applicable only if pre-dispatch inspection clause has been\nselected in ATC):\nDIRECT DEMANDING OFFICERS\nPost Receipt Inspection at consignee site before acceptance of stores:\nDIRECT DEMANDING OFFICERS\n\n### 9. Inspection\n\nTesting of Sample: The testing of advance sample and bulk sample during PDI will be carried at the\ndesignated AHSP labs.When testing facilities are not available, the facilities of Govt labs/NABL/Accredited\nlabs will be utilized. The testing charges outside the designated AHSP labs to be borne by seller's.\n\n### 10. Certificates\n\nBidder's offer is liable to be rejected if they don't upload any of the certificates / documents sought in the\nBid document, ATC and Corrigendum if any.\n\n### 11. Certificates\n\nMaterial Test Certificate Should Be Sent Along with The Supply. The Material Will Be Checked by Buyer’s\nLab & the Results of the Lab will be the Sole Criteria for Acceptance of the Item.\n\n### 12. Forms of EMD and PBG\n\nBidders can also submit the EMD with Account Payee Demand Draft in favour of\nACCOUNT OFFICE NAVY\npayable at\nVASCO-DA-GAMA, GOA\n.\nBidder has to upload scanned copy / proof of the DD along with bid and has to ensure delivery of hardcopy\nto the Buyer within 5 days of Bid End date / Bid Opening date.\n\n### 13. Ration Item ATCs\n\n29 / 31\nPacking Material The items will be supplied by the successful bidder in its original packing material and\nthe packing material will not be returned. Weight of packing material will not be included in quantity\nsupplied and only net weight of the items will be counted. The packing should be of standardized weights\nof appropriate size. Item will not be accepted in non-standardized weights.Packing Material. The items will\nbe supplied by the successful bidder in its original packing material and the packing material will not be\nreturned. Weight of packing material will not be included in quantity supplied and only net weight of the\nitems will be counted. The packing should be of standardized weights of appropriate size. Item will not be\naccepted in non-standardized weights.\n\n### 14. Ration Item ATCs\n\nShelf Life The supplier shall declare the shelf life/best before use for a minimum period equal to the\nwarranty period as given in the DFS for the item. The item should be of the latest manufacture,\nconforming to the current production standard and having 100% defined life at the time of delivery.\n\n### 15. Rate Contract\n\nBidders are advised to check applicable GST on their own before quoting. Buyer will not take any\nresponsibility in this regards. GST reimbursement will be as per actuals or as per applicable rates\n(whichever is lower), subject to the maximum of quoted GST %.\n\n### 16. Buyer Added Bid Specific ATC\n\nBuyer uploaded ATC document Click here to view the file.\nअ'वीकरण/Disclaimer\nThe Additional Terms and Conditions (ATC) have been incorporated by the Buyer after approval of their\nCompetent Authority. The Buyer ,is solely responsible for the impact of these clauses on the bidding process, its\noutcome, and consequences thereof including any restriction arising in the bidding process due to these ATCs\nand including the modification of technical specifications and / or terms and conditions governing the bid.All\nrepresentations / grievances pertaining to the ATC clauses shall be raised with the buyer organization directly\nand not with GeM.If any of the clause(s) is/are incorporated by the Buyer regarding the following, the bid &\nresultant contract shall be treated as null & void. Further, GeM reserves the right, at its sole discretion, to cancel\nthe bid forthwith, without issuance of any prior notice or intimation :-\n\n### 1. Publishing Custom / BOQ bids for items for which regular GeM categories are available (unless such\n\nCustom / BOQ item is bunched with the major regular product Category Item).\n\n### 2. Mandating procurement of / from specific Brand / Make / Model / Manufacturer / Dealer except in case of\n\nSingle Bid / Proprietary Article Certificate (PAC) Buying.\n\n### 3. Inclusion of disqualification criteria related to suspension of seller / service provider, where such\n\nsuspension period has already expired.\n\n### 4. Mandating submission of documents in physical form as a pre-requisite to qualify bidders.\n\n\n### 5. Publishing bids on GeM for procurement of works.\n\n\n### 6. Procurement of Goods by creating a Service bid on GeM & vice-versa.\n\n\n### 7. Seeking sample with bid or approval of samples during bid evaluation process. However, trial / sample, as\n\nthe case may be, shall be permitted in cases where trial / sample are allowed as per approved and\npublished procurement policy of the Buyers’ controlling Ministry / Department / State / Public Sector\nEnterprises Headquarters. If there is any violation of trial / sample clause with regard to approved policy\nof the Buyers’ Ministry / Department / State / Public Sector Enterprises Headquarters, then this is to be\ndetermined and redressed by the concerned Buyer Organisation only.\n\n### 8. Seeking experience from specific organization / department / institute only or from foreign / export\n\nexperience.\n\n### 9. Creating bid for items from incorrect categories.\n\n\n### 10. Reference of conditions published on any external site or reference to external documents/clauses.\n\n\n### 11. Asking for any Tender fee / Bid Participation fee, as the case may be.\n\n\n### 12. Buyer added ATC Clauses which are in contravention of clauses defined in bid detail section, including\n\nspecifications, EMD Detail, ePBG Detail and MII and MSE Purchase Preference sections of the bid, unless\notherwise allowed by the applicable GeM GTC.\n30 / 31\n\n### 13. Any ATC clause in contravention with GeM GTC Clause 4 (xiii) (h) will be invalid. In case of multiple L1\n\nbidders against a service bid, the buyer shall place the Contract by selection of a bidder amongst the L-1\nbidders through a Random Algorithm executed by GeM system.\n\n### 14. In a category based bid, adding additional items, through buyer added, additional scope of work/\n\nadditional terms and conditions/or any other document. If buyer needs more items along with the main\nitem, the same must be added through bunching category based items or by bunching custom catalogues\nor bunching a BoQ with the main category based item, the same must not be done through ATC or Scope\nof Work.\nFurther, if any seller has any objection/grievance against these additional clauses or otherwise on any aspect of\nthis bid, they can raise their representation against the same by using the Representation window provided in\nthe bid details field in Seller dashboard after logging in as a seller. Buyer is duty bound to reply to all such\nrepresentations and would not be allowed to open bids if he fails to reply to such representations.\nAll GeM Sellers/Service Providers shall ensure full compliance with all applicable labour laws,\nincluding the provisions, rules, schemes and guidelines under the four Labour Codes i.e. the Code\non Wages, 2019; the Industrial Relations Code, 2020; the Occupational Safety, Health and Working\nConditions Code, 2020; and the Code on Social Security, 2020 as and when notified and brought into\nforce by the Government of India.\nFor all provisions of the Labour Codes that are pending operationalisation through rules, schemes or\nnotifications, the corresponding provisions of the pre-existing labour enactments (such as The\nMinimum Wages Act, 1948, The Payment of Wages Act, 1936, The Payment of Bonus Act, 1965, The\nEqual Remuneration Act, 1976, The Payment of Gratuity Act, 1972, etc. and relevant State Rules)\nshall continue to remain applicable.\nThe Seller/ Service Providers shall, therefore, be responsible for ensuring compliance under:\nAll notified and enforceable provisions of the new Labour Codes as mentioned hereinabove;\nand\nAll operative provisions of the erstwhile Labour Laws until their complete substitution.\nAll obligations relating to wages, social security, safety, working conditions, industrial relations etc.\nand any other statutory requirements shall be strictly met by the Seller/ Service Provider. Any non-\ncompliance shall constitute a breach of the contract and shall entitle the Buyer to take appropriate\naction in accordance with the contract and applicable law.\nThis Bid is governed by the General Terms and Conditions, conditions stipulated in Bid and Service\nLevel Agreement specific to the Service, as the case may be, as provided in the Marketplace.\nHowever, in case of Service, if any condition specified in General Terms and Conditions is\ncontradicted by the conditions stipulated in Service Level Agreement specific to said Service, then it\nwill over-ride the conditions in the General Terms and Conditions.\nयह \u0001बड सामाEय शतH के अंतग%त भी शािसत है /This Bid is also governed by the General Terms and Conditions\nजेम क\u0010 सामाEय शतH के खंड 26 के संदभ% म* भारत के साथ भूिम सीमा साझा करने वाले देश के \u0001बडर से खर\u0013द पर 5ितबंध के संबंध म*\nभारत के साथ भूिम सीमा साझा करने वाले देश का कोई भी \u0001बडर इस िन\u0001वदा म* \u0001बड देने के िलए तभी पा  होगा जब वह \u0001बड देने वाला\nसJम 5ािधकार\u0013 के पास पंजीकृत हो।\u0001बड म* भाग लेते समय \u0001बडर को इसका अनुपालन करना होगा और कोई भी गलत घोषणा :कए जाने\nव इसका अनुपालन न करने पर अनुबंध को तZकाल समाL करने और कानून के अनुसार आगे क\u0010 कानूनी कार%वाई का आधार होगा।/In terms\nof GeM GTC clause 26 regarding Restrictions on procurement from a bidder of a country which shares a land border with India, any bidder from a country which shares a\nland border with India will be eligible to bid in this tender only if the bidder is registered with the Competent Authority. While participating in bid, Bidder has to undertake\ncompliance of this and any false declaration and non-compliance of this would be a ground for immediate termination of the contract and further legal action in\naccordance with the laws.\n---धEयवाद/Thank You---\n31 / 31\n\n\n## Hyperlinks\n\n- [OM_No.1_4_2021_PPD_dated_18.05.2023](https://bidplus.gem.gov.in/bidding/downloadOmppdfile/)  <!-- page 5 -->\n- **Specification Document**: [View File](https://mkp.gem.gov.in/uploaded_documents/51/16/877/OrderItem/BoqDocument/2026/5/29/scope_of_work_ngi_2026-05-29-11-31-43_d1605fda825ec344409fea2e9966c2cf.pdf)  <!-- page 8 -->\n- **BOQ Detail Document**: [View File](https://mkp.gem.gov.in/uploaded_documents/51/16/877/OrderItem/BoqLineItemsDocument/2026/5/29/boqngi_2026-05-29-11-31-43_fa283e94f09ace8a89dca22a17990ba3.csv)  <!-- page 8 -->\n- **Buyer uploaded ATC document**: [Click here to view the file](https://fulfilment.gem.gov.in/contract/slafds?fileDownloadPath=SLA_UPLOAD_PATH/2026/Jun/GEM_2026_B_7597526/CLM0010/NGIATC_96637922-e499-4a34-9b551782374022929_hqgna.lap.socontract.pdf)  <!-- page 30 -->\n- [यह �बड सामा�य शत� के अंतग�त भी शािसत है /This Bid is also governed by the General Terms and Conditions](https://admin.gem.gov.in/apis/v1/gtc/pdfByDate/?date=20260625)  <!-- page 31 -->"
+}

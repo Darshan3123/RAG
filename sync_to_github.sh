@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the target branch
-BRANCH="development"
+BRANCH="development_v3"
 
 echo "🔄 Starting Git sync process for the '$BRANCH' branch..."
 
