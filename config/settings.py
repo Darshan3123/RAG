@@ -131,27 +131,38 @@ RAG_BM25_WEIGHT   = _float("RAG_BM25_WEIGHT", 0.4)
 RAG_USE_RERANKER  = _str("RAG_USE_RERANKER", "true").lower() in ("1", "true", "yes", "on")
 RAG_RERANKER_MODEL = _str("RAG_RERANKER_MODEL", "BAAI/bge-reranker-base")
 
-RAG_LLM_PROVIDER = _str("RAG_LLM_PROVIDER", "ollama")
+# ---------------------------------------------------------
+# LLM CREDENTIALS & DEFAULTS (Shared across RAG & ATC)
+# ---------------------------------------------------------
+# Google Gemini
+GEMINI_API_KEY      = _str("GEMINI_API_KEY", "")
+GEMINI_MODEL        = _str("GEMINI_MODEL", "gemini-2.5-flash")
 
-# OpenAI  (used only when RAG_LLM_PROVIDER=openai)
-OPENAI_API_KEY = _str("OPENAI_API_KEY", "")
-OPENAI_MODEL   = _str("OPENAI_MODEL",   "gpt-4o-mini")
+# OpenAI
+OPENAI_API_KEY      = _str("OPENAI_API_KEY", "")
+OPENAI_MODEL        = _str("OPENAI_MODEL", "gpt-4o-mini")
 
-# Ollama  (used only when RAG_LLM_PROVIDER=ollama)
-OLLAMA_BASE_URL = _str("OLLAMA_BASE_URL", "http://localhost:11434")
-OLLAMA_MODEL    = _str("OLLAMA_MODEL",    "llama3")
+# Ollama (Local)
+OLLAMA_BASE_URL     = _str("OLLAMA_BASE_URL", "http://localhost:11434")
+OLLAMA_MODEL        = _str("OLLAMA_MODEL", "llama3")
+
+# ---------------------------------------------------------
+# RAG — LLM PROVIDER
+# Options: ollama | openai | gemini | (leave empty for retrieval-only)
+# ---------------------------------------------------------
+RAG_LLM_PROVIDER    = _str("RAG_LLM_PROVIDER", "ollama")
 
 # ---------------------------------------------------------
 # OCR / DOCUMENT INTELLIGENCE CONFIG
 # Options: mistral | gemini | openai
 # ---------------------------------------------------------
-OCR_PROVIDER       = _str("OCR_PROVIDER", "mistral").lower()
-MISTRAL_API_KEY    = _str("MISTRAL_API_KEY", "")
-MISTRAL_OCR_MODEL  = _str("MISTRAL_OCR_MODEL", "mistral-ocr-3-0")
-GEMINI_OCR_MODEL   = _str("GEMINI_OCR_MODEL", "gemini-2.5-flash")
-OPENAI_OCR_MODEL   = _str("OPENAI_OCR_MODEL", "gpt-4o-mini")
-USD_TO_INR_RATE    = _float("USD_TO_INR_RATE", 86.50)
-ENABLE_PDF_ATC_SPLIT = _str("ENABLE_PDF_ATC_SPLIT", "true").lower() in ("1", "true", "yes", "on")
+OCR_PROVIDER        = _str("OCR_PROVIDER", "mistral").lower()
+MISTRAL_API_KEY     = _str("MISTRAL_API_KEY", "")
+MISTRAL_OCR_MODEL   = _str("MISTRAL_OCR_MODEL", "mistral-ocr-3-0")
+GEMINI_OCR_MODEL    = _str("GEMINI_OCR_MODEL", "gemini-2.5-flash")
+OPENAI_OCR_MODEL    = _str("OPENAI_OCR_MODEL", "gpt-4o-mini")
+USD_TO_INR_RATE     = _float("USD_TO_INR_RATE", 86.50)
+ENABLE_PDF_ATC_SPLIT= _str("ENABLE_PDF_ATC_SPLIT", "true").lower() in ("1", "true", "yes", "on")
 
 # ---------------------------------------------------------
 # ATC EXTRACTOR CONFIG
@@ -159,10 +170,6 @@ ENABLE_PDF_ATC_SPLIT = _str("ENABLE_PDF_ATC_SPLIT", "true").lower() in ("1", "tr
 # ---------------------------------------------------------
 ENABLE_ATC_ANALYSIS = _str("ENABLE_ATC_ANALYSIS", "true").lower() in ("1", "true", "yes", "on")
 ATC_LLM_PROVIDER    = _str("ATC_LLM_PROVIDER", "gemini").lower()
-GEMINI_API_KEY      = _str("GEMINI_API_KEY", "")
-GEMINI_MODEL        = _str("GEMINI_MODEL", "gemini-3.1-flash-lite")
-OPENAI_API_KEY      = _str("OPENAI_API_KEY", "")
-OPENAI_MODEL        = _str("OPENAI_MODEL", "gpt-4o-mini")
 
 os.makedirs(CHROMA_DIR, exist_ok=True)
 
