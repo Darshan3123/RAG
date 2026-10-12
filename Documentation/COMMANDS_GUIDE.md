@@ -234,10 +234,41 @@ USD_TO_INR_RATE=86.50
 
 ---
 
-## 📌 8. Quick Task-to-Command Reference
+---
+
+## 🖥️ 8. Linux Server Deployment & Worker Capacity Profiling
+
+When deploying to remote Linux servers (such as **Hostinger KVM 4 VPS** with 4 vCPUs / 16 GB RAM or Ubuntu systems) where other projects and services are already running, use these scripts to assess capacity and measure concurrent worker limits:
+
+### A. Server Health & Running Projects Audit
+Scans CPU cores, available RAM, swap, active Docker containers, PM2 apps, databases, and existing Python processes, then calculates theoretical worker capacity:
+```bash
+chmod +x server_audit.sh
+./server_audit.sh
+```
+
+### B. Live Concurrent Worker Stress Benchmark
+Performs real Playwright headless browser stress tests at concurrency levels (1, 2, 4, 6, 8 workers), measures exact RAM increase per worker, detects missing Linux Chromium libraries, and recommends the safe `MAX_CONCURRENT_WORKERS` value for `.env`:
+```bash
+python benchmark_workers.py
+```
+> **Quick Mode:**
+> ```bash
+> python benchmark_workers.py --quick
+> ```
+> **Custom Max Workers:**
+> ```bash
+> python benchmark_workers.py --max-workers 6
+> ```
+
+---
+
+## 📌 9. Quick Task-to-Command Reference
 
 | What You Want to Do | Exact Command to Run |
 | :--- | :--- |
+| **Audit server & running projects** | `./server_audit.sh` |
+| **Benchmark worker load on server** | `python benchmark_workers.py` |
 | **Scrape a specific tender** | `python main.py --bid "GEM/2026/B/7768206"` |
 | **Run a single full scrape pass** | `python main.py --once` |
 | **Run continuous hourly scraper** | `python main.py` |
@@ -256,3 +287,4 @@ USD_TO_INR_RATE=86.50
 | **Run full automated test suite** | `python test_all_phases.py` |
 | **Run OCR architecture test suite** | `python test_ocr_providers.py` |
 | **View CLI help menu** | `python main.py --help` |
+

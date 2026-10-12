@@ -29,3 +29,6 @@ commnad and prompat.txt
 # ATC Extractor binaries and output artifacts
 ATC EXTRACTOR - Standlone/
 *.zip
+
+
+ATC EXTRACTOR/llama-cpp-binary/
