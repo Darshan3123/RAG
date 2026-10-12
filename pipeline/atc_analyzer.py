@@ -3,24 +3,25 @@
 # High-Accuracy ATC (Additional Terms and Conditions) Compliance Analyzer
 # =========================================================================
 """
-Modular ATC Compliance Analysis Module for GeM Bids.
+Modular ATC Compliance Analysis Module for GeM Bids (v3 Architecture).
 
-Extracts:
-  1. Standard Documents Required
-  2. Clarified ATC Documents & Mandatory Uploads
-  3. Exemption Documents Required (MSE & Startup)
-  4. Physical Submissions (Offline Instruments, Payee, Payable At, Deadlines)
-  5. Key Commercial Terms & Conditions
+Extracts (8-Category Deep Compliance Schema):
+  1. STANDARD_DOCS: Standard documents required from seller (excluding * notes)
+  2. ATC_DOCUMENTS_AND_UPLOADS: Mandatory certificates, undertakings, annexures, uploads
+  3. EXEMPTIONS_AND_RELAXATIONS: Precise exemption rules and required proofs
+  4. PHYSICAL_SUBMISSIONS: Offline instruments (EMD, PBG, samples, payee, payable at, deadlines)
+  5. ELIGIBILITY_AND_QUALIFICATION: Prior experience, turnover, past performance, land border
+  6. SCOPE_DELIVERY_WARRANTY_AND_SUPPORT: Scope of supply, quantities, delivery, warranty, CMC
+  7. PRICING_TAX_AND_PAYMENT: Price basis, evaluation, GST/ITC, payment cycles, deductions
+  8. PENALTIES_REJECTION_AND_LEGAL_TERMS: LD, PBG forfeiture, risk purchase, arbitration, jurisdiction
 
 Supports:
-  - Multi-LLM provider execution (Gemini API, OpenAI Chat Completions API)
+  - Multi-LLM provider execution (Gemini API with thinking config & OpenAI API)
   - PyMuPDF in-memory parsing for digital pages
-  - Multi-OCR provider fallback for non-digital/scanned pages (Mistral, Gemini, OpenAI via DocumentOCRFactory)
-  - Dedicated workspace temp_storage for transient OCR sub-PDFs
+  - Multi-OCR provider fallback for non-digital/scanned pages (Mistral, Gemini, OpenAI)
   - External DOCX extraction using python-docx
   - Local Vertex AI tokenizer for offline token budgeting and cost calculation
-  - Page-boundary token budgeting: single-shot execution up to 1,000,000 tokens,
-    dynamic Map-Reduce when exceeding budget
+  - Unified single-shot execution context (up to 1,000,000 tokens)
   - Automatic persistence of <bid_no>_ATC.md and downloaded external files in the bid directory
 """
 
@@ -69,18 +70,17 @@ log = get_logger("atc_analyzer")
 _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # ---------------------------------------------------------------------------
-# TOKEN BUDGETING & MODEL LIMITS
+# MODEL LIMITS & GENERATION PARAMS
 # ---------------------------------------------------------------------------
-CHUNK_CATEGORIZING_MAX_INPUT_TOKENS = 1000000
-CHUNK_CATEGORIZING_MAX_OUTPUT_TOKENS = 65536
-FINAL_STAGE_INPUT_TOKENS = 1000000
 FINAL_STAGE_OUTPUT_TOKENS = 65536
+GEN_THINKING_LEVEL = os.getenv("GEMINI_THINKING_LEVEL", "MINIMAL").strip().upper()
+
 
 # Local Vertex AI Tokenizer for Gemini models
 _tokenizer_model_id = "gemini-1.5-flash-002" if "flash" in (GEMINI_MODEL or "").lower() else "gemini-1.5-pro-002"
 _gemini_tokenizer = tokenization.get_tokenizer_for_model(_tokenizer_model_id)
 
-# Local tiktoken tokenizer for OpenAI models (gpt-4o tokenizer covers gpt-4o, gpt-4o-mini and higher models)
+# Local tiktoken tokenizer for OpenAI models (gpt-4o covers gpt-4o and mini variants)
 _openai_tokenizer = tiktoken.encoding_for_model("gpt-4o")
 
 
@@ -108,143 +108,133 @@ ATC_PDF_LINK_NAME = "Buyer uploaded ATC document"
 
 
 # ---------------------------------------------------------------------------
-# PROMPT DEFINITIONS
+# PROMPT DEFINITION (v3 ARCHITECTURE)
 # ---------------------------------------------------------------------------
-ANALYSIS_SYSTEM_PROMPT = """Role & Objective:
-You are an expert Procurement and Tender Document Analyst. Your task is to analyze government bid documents, clarify exact document requirements by cross-referencing placeholders with the ATC text, and extract actionable requirements into a highly structured, scannable checklist.
+ANALYSIS_SYSTEM_PROMPT = """You are an expert procurement analyst extracting bidder compliance requirements from Indian Government e-Marketplace (GeM) tender texts into strict JSON format.
 
-Input Format:
-You will be provided with text divided into two sections, separated by a line of equals signs (======):
-1. Top Section: "Document required from seller" (a comma-separated list of required documents).
-2. Bottom Section: "Additional Terms and Conditions" (ATC) text — this may be the raw ATC text, or a compacted set of evidence sentences extracted from it. Treat it the same either way.
+GLOBAL EXTRACTION PRINCIPLES:
+1. STRICT SECTION ISOLATION (ZERO HEADER LEAK):
+   - The text under "Document required from seller:" is used ONLY for "STANDARD_DOCS".
+   - NEVER extract any document, requirement, condition, or exemption from the "Document required from seller:" section into "ATC_DOCUMENTS_AND_UPLOADS" or "EXEMPTIONS_AND_RELAXATIONS".
+   - Discard all text lines beginning with or containing "*".
+   - All entries for categories other than "STANDARD_DOCS" must come EXCLUSIVELY from the body of "Additional Terms and Conditions:".
 
-Internal Process (do this before writing any output — do not show these steps in your final answer):
+2. PRESERVE ALL CONFLICTS AND DISCREPANCIES ACROSS ALL CATEGORIES:
+   - Government tenders frequently contain contradictory clauses across the main ATC, uploaded PDFs, specifications, and annexures.
+   - NEVER resolve, reconcile, merge, or choose between conflicting terms.
+   - If ANY parameter, requirement, duration (e.g., conflicting warranty periods), deadline, frequency, or quantity has differing values across different sections of the text, extract every single variation as an independent entry in its respective category.
+   - NEVER omit an earlier clause simply because a later clause appears to update or override it.
 
-STEP 1 — ENUMERATE: Read the entire ATC text from start to finish, clause by clause. List every distinct obligation, instruction, requirement, deadline, or document mention placed on the bidder, in the order it appears — including anything embedded inside a clause about a different main topic. Capture everything, including minor procedural instructions.
+3. FIDELITY & EXTRACTION DEPTH:
+   - Extract factual, standalone requirement statements.
+   - Do not hallucinate external policies or GeM standard rules.
+   - Include specific item numbers, mandatory spare quantities, and accessories listed in schedules/annexures.
+   - Exclude clause numbers, page markers, and editorial comments.
+   - Return raw, valid JSON only without markdown formatting.
 
-STEP 2 — CATEGORIZE: Using the full list from Step 1, sort every item into exactly one of the five sections below. Every item enumerated in Step 1 must appear somewhere in the final output. Each item belongs in exactly one section — do not repeat the same item across multiple sections.
+4. STRICT JSON DATA TYPE RULES:
+   - "PHYSICAL_SUBMISSIONS" is the ONLY category that contains JSON objects.
+   - ALL OTHER categories (including "EXEMPTIONS_AND_RELAXATIONS") MUST be flat arrays of strings. Never output objects inside "EXEMPTIONS_AND_RELAXATIONS".
 
-STEP 3 — SILENT FIX-UP (mandatory, before writing final output — perform silently, output nothing about this step):
-a. Section 1: delete any bullet containing "(Requested in ATC)". If none remain, Section 1's body is just "* None specified in the provided text."
-b. Section 2: any placeholder tagged "(Requested in ATC)" — whatever its name (Certificate, Additional Doc 1, Additional Doc 2, or any other label) — is never resolved using the exemption-eligibility sentence that follows the top-section list. That sentence belongs to Section 3 only.
-c. Section 3: always output the exact document name without any annotations or parenthetical tags like (Explicit) or (Inferred).
-d. Section 4: "In Favor Of" = payee on the instrument only, never a mailing recipient.
-These four corrections happen silently in your draft. They are never described, explained, or mentioned in the output.
-
-Formatting & Output Rules:
-- CRITICAL CONCISENESS: Do NOT write full sentences for document lists. Do NOT use conversational filler (e.g., "Here is the summary...", "This placeholder requires..."). Output the data directly.
-- ABSOLUTE RULE — NO META-COMMENTARY: Output STRICTLY valid JSON without markdown wrapping (no ```json or ```). Never include conversational explanations, decision reasoning, or symbols like ❌ or ✅. Never explain why something was included, excluded, or inferred. Do NOT include annotations like "(Explicit)" or "(Inferred)". If you catch yourself about to write a sentence explaining your own reasoning, delete that sentence before outputting.
-- Do NOT output Steps 1-3 or any internal reasoning.
-- Output a single JSON object containing EXACTLY the five keys specified below. Each key must map to an array of clean string items.
-- If a section has no relevant data in the provided text, its array must contain strictly one string: ["None specified in the provided text."] — except Section 3, which follows its own rule below and must never use this fallback when an exemption category is present in the top section.
-
-Required Output Structure:
-Output strictly a valid JSON object matching this exact schema:
+JSON SCHEMA:
 {
-  "1. Standard Documents Required": [
-    "string"
+  "STANDARD_DOCS": [
+    // Items taken EXCLUSIVELY from the "Document required from seller:" list.
+    // Exclude any item containing "(Requested in ATC)" and any line starting with "*".
+    // If nothing remains, return [].
   ],
-  "2. Clarified ATC Documents & Mandatory Uploads": [
-    "Placeholder Name (Requested in ATC): Exact Document Name"
+  "ATC_DOCUMENTS_AND_UPLOADS": [
+    // Every certificate, undertaking, annexure format, datasheet, test report, or document explicitly mandated for upload in the "Additional Terms and Conditions:" body.
   ],
-  "3. Exemption Documents Required": [
-    "Proof for Exemption (MSEs): Exact Certificate Name",
-    "Proof for Exemption (Start-ups): Exact Certificate Name"
+  "EXEMPTIONS_AND_RELAXATIONS": [
+    // Flat array of strings ONLY (format: "Exemption: <details> | Proof: <proof document>").
+    // Must originate strictly from the ATC text.
+    // If no document is named in the text, append: "supporting document not specified in text".
   ],
-  "4. Physical Submissions (Offline)": [
-    {
-      "Item": "string",
-      "Deadline": "string",
-      "In Favor Of": "string",
-      "Payable At": "string",
-      "Delivery Address": "string"
-    }
+  "PHYSICAL_SUBMISSIONS": [
+    // Every offline/hard-copy requirement (EMD DD/FDR/BG, notarized agreements, physical samples).
+    // If different clauses state different submission deadlines or addresses for the same item, output a separate object for each variation.
+    // Schema:
+    // {
+    //   "Item": "Name of physical submission item",
+    //   "Deadline": "Submission deadline or 'Not specified in source text.'",
+    //   "In Favor Of": "Payee/Beneficiary or 'Not specified in source text.'",
+    //   "Payable At": "Payable location/bank or 'Not specified in source text.'",
+    //   "Delivery Address": "Office/location address or 'Not specified in source text.'",
+    //   "Original Text": "Brief verbatim sentence stating this physical requirement."
+    // }
   ],
-  "5. Key Commercial Terms & Conditions to Follow": [
-    "Topic: Clear, concise explanation of the rule, penalty, or requirement"
+  "ELIGIBILITY_AND_QUALIFICATION": [
+    // Prior turnover, past experience period, past performance ratio, authorization criteria, land border rule, or bidder exclusion clause.
+  ],
+  "SCOPE_DELIVERY_WARRANTY_AND_SUPPORT": [
+    // Scope of work/supply, quantities, required accessories/spares/consumables, delivery schedules, Option Clause terms, testing/inspection, all stated warranty durations, all stated CMC terms, uptime percentages, and service center terms.
+  ],
+  "PRICING_TAX_AND_PAYMENT": [
+    // Price basis, evaluation methodology, GST/statutory variation rules, ITC terms, all stated payment cycles/schedules, bill passing prerequisites, deductions.
+  ],
+  "PENALTIES_REJECTION_AND_LEGAL_TERMS": [
+    // EMD/PBG forfeiture, Liquidated Damages (LD), risk purchase, abnormally low bid terms, rejection grounds, Integrity Pact, arbitration, jurisdiction, governing law.
   ]
-}
-
-Category Rules & Examples:
-
-1. Standard Documents Required
-From the top section's comma-separated list, output only items that do NOT contain "(Requested in ATC)". Items containing that phrase are never output here (they belong in Section 2 only).
-Example Input: "PAN Card, GSTIN Copy, Certificate (Requested in ATC)" → Output in array: ["PAN Card", "GSTIN Copy"]
-Example Input: "Certificate (Requested in ATC)" → Output in array: ["None specified in the provided text."]
-
-2. Clarified ATC Documents & Mandatory Uploads
-Analyze the top section for every placeholder tagged "(Requested in ATC)" — regardless of its label (e.g. "Certificate", "Additional Doc 1", "Additional Doc 2", or any other name). For each one, read the bottom ATC text and deduce EXACTLY what specific certificate or document is being requested, based on a clause that actually describes a document — not the exemption-eligibility sentence. Also, list any other mandatory certificates, registrations, declarations, undertakings, or digital uploads mentioned anywhere in the ATC text, even if mentioned only in passing within a clause about another topic.
-Format each item as a string:
-- "Placeholder Name (Requested in ATC): Exact Document Name"
-- "Other Upload Required in ATC: Brief description/criteria (e.g., last 3 years, CA certified)"
-
-3. Exemption Documents Required
-Look for exemption clauses in the top list (e.g., "*In case any bidder is seeking exemption from Experience / Turnover Criteria..."). Determine what document is required to claim each exemption:
-- If the ATC text explicitly names the required document, use that exact name.
-- If the ATC text mentions the exemption category but does not specify a document, you MUST name the standard document conventionally required under GeM/government procurement practice (e.g. "Udyam Registration Certificate" for MSE exemption, "DPIIT Startup Recognition Certificate" for Start-up exemption). A named document is always required in this section when the exemption clause is present in the top section; "None specified" is never a valid entry here in that case.
-- Do NOT append "(Explicit)" or "(Inferred)" tags to the certificate name. Output ONLY the clean certificate name.
-Format each item as a string:
-- "Proof for Exemption (MSEs): Exact Certificate Name"
-- "Proof for Exemption (Start-ups): Exact Certificate Name"
-
-4. Physical Submissions (Offline)
-Extract any physical items, hard copies, or financial instruments (like EMD/PBG) mentioned in the ATC text that must be mailed or delivered offline. If multiple clauses describe the same underlying financial instrument or submission, treat them as ONE item and combine all details into a single JSON object — do not split one submission into multiple entries.
-- "Payable At" must always be a bank name or bank location tied to the instrument itself — never a mailing/delivery address.
-- "In Favor Of" must always be the payee named on the instrument itself — never a mailing/delivery recipient. If the payee and the delivery recipient are different parties, keep them in separate fields.
-Format:
-- Each submission must be a structured JSON object:
-  {
-    "Item": "e.g. Original EMD Demand Draft / PBG / Hard copy sample",
-    "Deadline": "e.g. Within 5 days of bid end date",
-    "In Favor Of": "Payee name from instrument",
-    "Payable At": "Bank / Branch location",
-    "Delivery Address": "Mailing / physical office address"
-  }
-- If no physical submissions are required in the text, output strictly: ["None specified in the provided text."]
-
-5. Key Commercial Terms & Conditions to Follow
-Extract strict operational, pricing, or compliance rules the bidder must adhere to from the ATC text. Include minor procedural instructions as well (e.g. required envelope superscription, required fields in a payment portal's remarks section, specific codes to be used) — these can cause bid rejection if missed and must not be summarized away.
-Format each item as:
-- "Topic (e.g. GST / Option Clause / Scope of Supply): Clear, concise explanation of the rule, penalty, or requirement"
-"""
-
-MAP_SYSTEM_PROMPT = """You are extracting raw evidence sentences from ONE OR MORE PAGES of a larger government tender ATC document. Do NOT summarize, interpret, categorize with judgment, or infer anything — copy exact sentences/clauses verbatim (or near-verbatim if a sentence is broken across a page boundary) into the correct bucket. If a bucket has nothing relevant in these pages, its list must be empty.
-
-Reference — "Document required from seller" list (top section), for spotting which placeholders/documents/exemptions are being discussed. Do NOT re-output this list, it is context only:
-{table_result}
-
-Buckets:
-1. STANDARD_DOCS — sentences naming/describing standard required documents (not "(Requested in ATC)" placeholders).
-2. ATC_PLACEHOLDER_CLARIFICATION — sentences defining what a "(Requested in ATC)" placeholder actually is, OR mentioning any other mandatory certificate/registration/declaration/digital upload.
-3. EXEMPTION — sentences about exemption eligibility (MSE, Startup, etc.) and/or the document required to claim an exemption.
-4. PHYSICAL_SUBMISSION — sentences about EMD/PBG/hard copy/physical delivery, payee, payable-at bank, delivery address, deadlines for physical submission.
-5. COMMERCIAL_TERMS — sentences describing operational/pricing/compliance rules, penalties, envelope superscription, portal remarks fields, specific codes, etc.
-
-Output STRICTLY as minified JSON, no markdown fences, no commentary, with exactly these keys:
-{{"STANDARD_DOCS": [], "ATC_PLACEHOLDER_CLARIFICATION": [], "EXEMPTION": [], "PHYSICAL_SUBMISSION": [], "COMMERCIAL_TERMS": []}}
-Each value is a list of extracted sentence strings. Use an empty list if nothing on these pages belongs in that bucket."""
-
-COMPRESS_SYSTEM_PROMPT = """You are merging duplicate/overlapping evidence sentences that were extracted from different pages of the same tender document, for a single category: {category}.
-Remove exact or near-exact duplicates (e.g. repeated boilerplate/headers). Keep every distinct fact, deadline, name, amount, or condition. Do not summarize away specifics or invent anything not present in the input. Output ONE sentence per line, plain text, no numbering, no commentary."""
+}"""
 
 
 # ---------------------------------------------------------------------------
 # EXTRACTION HELPERS
 # ---------------------------------------------------------------------------
 def extract_required_docs_text(parsed_pdf_data: Optional[Dict[str, Any]] = None) -> str:
-    """Extract 'Document required from seller' strictly from in-memory parsed_pdf_data."""
+    """
+    Extract 'Document required from seller' strictly from in-memory parsed_pdf_data,
+    stripping trailing inline notes that begin with '*' (e.g. *In case any bidder...).
+    """
     if parsed_pdf_data and isinstance(parsed_pdf_data, dict):
         docs = (
             parsed_pdf_data.get("documents", {}).get("required_from_seller", [])
             or parsed_pdf_data.get("pdf", {}).get("documents", {}).get("required_from_seller", [])
         )
         if isinstance(docs, list) and docs:
-            items_str = ", ".join([str(d).strip() for d in docs if str(d).strip()])
-            return f"Document required from seller : {items_str}"
+            cleaned_items = []
+            for d in docs:
+                text = str(d).strip()
+                text = re.split(r'\*', text)[0].strip()
+                if text:
+                    cleaned_items.append(f"- {text}")
+            return "Document required from seller:\n" + ("\n".join(cleaned_items) if cleaned_items else "None specified")
         elif isinstance(docs, str) and docs.strip():
-            return f"Document required from seller : {docs.strip()}"
+            cleaned_text = re.split(r'\*', docs.strip())[0].strip()
+            return f"Document required from seller:\n{cleaned_text}"
 
-    return "Document required from seller : None specified in main document"
+    return "Document required from seller:\nNone specified"
+
+
+def extract_required_docs_from_json(json_filepath: str) -> str:
+    """Extract required documents list from tender JSON structure, stripping inline notes."""
+    if not os.path.exists(json_filepath):
+        return "Document required from seller:\nNone specified"
+
+    try:
+        with open(json_filepath, "r", encoding="utf-8") as jf:
+            data = json.load(jf)
+
+        docs = data.get("pdf", {}).get("documents", {}).get("required_from_seller", [])
+        if not docs:
+            docs = data.get("documents", {}).get("required_from_seller", [])
+
+        if isinstance(docs, list) and docs:
+            cleaned_items = []
+            for d in docs:
+                text = str(d).strip()
+                text = re.split(r'\*', text)[0].strip()
+                if text:
+                    cleaned_items.append(f"- {text}")
+            return "Document required from seller:\n" + ("\n".join(cleaned_items) if cleaned_items else "None specified")
+        elif isinstance(docs, str) and docs.strip():
+            cleaned_text = re.split(r'\*', docs.strip())[0].strip()
+            return f"Document required from seller:\n{cleaned_text}"
+        else:
+            return "Document required from seller:\nNone specified"
+    except Exception as e:
+        return f"Document required from seller:\nError reading JSON: {e}"
 
 
 def extract_embedded_atc_text(markdown_text: str) -> str:
@@ -329,7 +319,7 @@ def download_external_doc_bytes(url: str, safe_bid_no: str, save_dir: Optional[s
 
 
 def extract_docx_in_memory(docx_bytes: bytes, base_name: str) -> List[Tuple[str, str]]:
-    """Extract text from DOCX in memory using python-docx."""
+    """Extract text and tables from DOCX in memory using python-docx."""
     try:
         doc = docx.Document(io.BytesIO(docx_bytes))
         extracted_elements = []
@@ -352,7 +342,7 @@ def extract_docx_in_memory(docx_bytes: bytes, base_name: str) -> List[Tuple[str,
         full_docx_text = "\n\n".join(extracted_elements).strip()
         if full_docx_text:
             log.info(f"Successfully extracted text from DOCX ({len(full_docx_text)} chars)")
-            return [(f"{base_name}_ATC_DOCX_CHUNK_1", full_docx_text)]
+            return [(f"{base_name}_BUYER_UPLOADED_DOC", full_docx_text)]
         return []
     except Exception as e:
         log.error(f"Error extracting text from DOCX: {e}")
@@ -442,7 +432,7 @@ def extract_pdf_pages_in_memory(pdf_bytes: bytes, base_name: str) -> List[Tuple[
     - Digital pages: PyMuPDF.
     - Non-digital / scanned pages: In-memory sub-PDF bytes sent directly to configured OCR_PROVIDER.
     - Interleaved in exact document page order.
-    - Packed into chunks bounded by the token budget.
+    - Merged into a single consolidated BUYER_UPLOADED_DOC chunk.
     """
     doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
     total_pages = len(doc)
@@ -458,13 +448,11 @@ def extract_pdf_pages_in_memory(pdf_bytes: bytes, base_name: str) -> List[Tuple[
             non_digital_page_indices.append(page_idx)
     doc.close()
 
-    page_items = []
-    for page_idx, page_text in digital_page_texts.items():
-        page_items.append((page_idx + 1, page_text))
+    page_items = [(page_idx + 1, page_text) for page_idx, page_text in digital_page_texts.items()]
 
     # Process non-digital pages in-memory if any
     if non_digital_page_indices:
-        log.info(f"Found {len(non_digital_page_indices)} non-digital page(s): {[p + 1 for p in non_digital_page_indices]}. Sending in-memory sub-PDF to OCR...")
+        log.info(f"Found {len(non_digital_page_indices)} non-digital page(s): {[p + 1 for p in non_digital_page_indices]}. Running in-memory OCR...")
         try:
             src_doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
             non_digital_doc = pymupdf.open()
@@ -498,37 +486,9 @@ def extract_pdf_pages_in_memory(pdf_bytes: bytes, base_name: str) -> List[Tuple[
     if not page_items:
         return []
 
-    # Pack into token-budgeted chunks
-    max_chunk_tokens = CHUNK_CATEGORIZING_MAX_INPUT_TOKENS
-    chunks = []
-    current_pages = []
-    current_tokens = 0
-    current_start_p = page_items[0][0]
-
-    for p_num, p_text in page_items:
-        page_block = f"--- [Page {p_num}] ---\n{p_text}\n"
-        page_tokens = count_tokens(page_block)
-
-        if current_tokens + page_tokens > max_chunk_tokens and current_pages:
-            end_p = current_pages[-1][0]
-            label = f"{base_name}_ATC_PDF_PAGES_{current_start_p}_TO_{end_p}" if current_start_p != end_p else f"{base_name}_ATC_PDF_PAGE_{current_start_p}"
-            combined_text = "\n\n".join(txt for _, txt in current_pages).strip()
-            chunks.append((label, combined_text))
-
-            current_pages = [(p_num, page_block)]
-            current_tokens = page_tokens
-            current_start_p = p_num
-        else:
-            current_pages.append((p_num, page_block))
-            current_tokens += page_tokens
-
-    if current_pages:
-        end_p = current_pages[-1][0]
-        label = f"{base_name}_ATC_PDF_PAGES_{current_start_p}_TO_{end_p}" if current_start_p != end_p else f"{base_name}_ATC_PDF_PAGE_{current_start_p}"
-        combined_text = "\n\n".join(txt for _, txt in current_pages).strip()
-        chunks.append((label, combined_text))
-
-    return chunks
+    combined_text = "\n\n".join(f"--- [Page {p_num}] ---\n{p_text}\n" for p_num, p_text in page_items).strip()
+    label = f"{base_name}_BUYER_UPLOADED_DOC"
+    return [(label, combined_text)]
 
 
 # ---------------------------------------------------------------------------
@@ -537,12 +497,11 @@ def extract_pdf_pages_in_memory(pdf_bytes: bytes, base_name: str) -> List[Tuple[
 def call_gemini(
     system_prompt: str,
     user_prompt: str,
-    max_tokens: int = 4000,
-    temperature: float = 0.1,
-    require_json: bool = False,
+    max_tokens: int = FINAL_STAGE_OUTPUT_TOKENS,
+    require_json: bool = True,
     retries: int = 3
 ) -> Tuple[str, int, int]:
-    """Call Google Gemini API. Returns (output_text, input_tokens, output_tokens)."""
+    """Call Google Gemini API with v3 thinking-mode support. Returns (output_text, input_tokens, output_tokens)."""
     if not GEMINI_API_KEY:
         log.error("GEMINI_API_KEY is not set.")
         return "", 0, 0
@@ -551,10 +510,13 @@ def call_gemini(
     payload = {
         "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
         "generationConfig": {
-            "temperature": temperature,
             "maxOutputTokens": max_tokens,
         }
     }
+
+    if GEN_THINKING_LEVEL:
+        payload["generationConfig"]["thinkingConfig"] = {"thinkingLevel": GEN_THINKING_LEVEL}
+
     if system_prompt:
         payload["system_instruction"] = {"parts": [{"text": system_prompt}]}
     if require_json:
@@ -573,9 +535,11 @@ def call_gemini(
 
                 candidates = data.get("candidates", [])
                 if candidates:
+                    if candidates[0].get("finishReason") == "MAX_TOKENS":
+                        log.warning("Gemini hit the output token cap; the JSON may be truncated.")
                     parts = candidates[0].get("content", {}).get("parts", [])
                     if parts:
-                        text_val = parts[0].get("text", "").strip()
+                        text_val = "".join(p.get("text", "") for p in parts if not p.get("thought")).strip()
                         if not out_tok:
                             out_tok = count_tokens(text_val)
                         return text_val, in_tok, out_tok
@@ -603,9 +567,9 @@ def call_gemini(
 def call_openai(
     system_prompt: str,
     user_prompt: str,
-    max_tokens: int = 4000,
-    temperature: float = 0.1,
-    require_json: bool = False,
+    max_tokens: int = FINAL_STAGE_OUTPUT_TOKENS,
+    temperature: float = 0.0,
+    require_json: bool = True,
     retries: int = 3
 ) -> Tuple[str, int, int]:
     """Call OpenAI API. Returns (output_text, input_tokens, output_tokens)."""
@@ -669,8 +633,8 @@ def call_openai(
 def call_atc_llm(
     system_prompt: str,
     user_prompt: str,
-    max_tokens: int = 4000,
-    require_json: bool = False
+    max_tokens: int = FINAL_STAGE_OUTPUT_TOKENS,
+    require_json: bool = True
 ) -> Tuple[str, int, int]:
     """Dispatch LLM request to configured ATC_LLM_PROVIDER (gemini | openai)."""
     provider = (ATC_LLM_PROVIDER or "gemini").lower()
@@ -683,152 +647,22 @@ def calculate_llm_cost(provider: str, model_name: str, in_tokens: int, out_token
     """Calculate USD and INR cost dynamically from PRICING_CATALOG."""
     catalog = PRICING_CATALOG.get(provider.lower(), {})
     model_pricing = catalog.get(model_name, {})
-    in_rate = model_pricing.get("input_per_million", 0.0)
-    out_rate = model_pricing.get("output_per_million", 0.0)
+    in_rate = model_pricing.get("input_per_million", 0.15)
+    out_rate = model_pricing.get("output_per_million", 1.50)
 
     usd = (in_tokens * in_rate / 1_000_000) + (out_tokens * out_rate / 1_000_000)
     inr = usd * USD_TO_INR_RATE
     return usd, inr
 
 
-# ---------------------------------------------------------------------------
-# MAP-REDUCE & SINGLE-SHOT STAGES
-# ---------------------------------------------------------------------------
-def map_extract_chunk(table_result: str, chunk_label: str, atc_text: str) -> Tuple[dict, int, int]:
-    categories = (
-        "STANDARD_DOCS",
-        "ATC_PLACEHOLDER_CLARIFICATION",
-        "EXEMPTION",
-        "PHYSICAL_SUBMISSION",
-        "COMMERCIAL_TERMS",
-    )
-    empty = {c: [] for c in categories}
-    system_prompt = MAP_SYSTEM_PROMPT.format(table_result=table_result)
-
-    budget_check = count_tokens(system_prompt) + count_tokens(atc_text)
-    if budget_check > CHUNK_CATEGORIZING_MAX_INPUT_TOKENS:
-        allowed_chars = int(len(atc_text) * (CHUNK_CATEGORIZING_MAX_INPUT_TOKENS / budget_check) * 0.95)
-        atc_text = atc_text[:allowed_chars]
-
-    raw, in_tok, out_tok = call_atc_llm(
-        system_prompt,
-        atc_text,
-        max_tokens=CHUNK_CATEGORIZING_MAX_OUTPUT_TOKENS,
-        require_json=True
-    )
-    if not raw:
-        return empty, in_tok, out_tok
-
-    raw_clean = re.sub(r"^```(json)?|```$", "", raw.strip(), flags=re.MULTILINE).strip()
-    try:
-        parsed = json.loads(raw_clean)
-        result = {}
-        for c in categories:
-            v = parsed.get(c, [])
-            result[c] = v if isinstance(v, list) else [str(v)]
-        return result, in_tok, out_tok
-    except Exception:
-        fallback = empty
-        fallback["COMMERCIAL_TERMS"] = [f"[UNPARSED EVIDENCE - {chunk_label}] {raw_clean[:1500]}"]
-        return fallback, in_tok, out_tok
-
-
-def dedupe_preserve_order(items: list) -> list:
-    seen = set()
-    out = []
-    for it in items:
-        key = re.sub(r"\s+", " ", str(it).strip().lower())
-        if key and key not in seen:
-            seen.add(key)
-            out.append(str(it).strip())
-    return out
-
-
-def compress_category(category: str, lines: list) -> Tuple[list, int, int]:
-    joined = "\n".join(lines)
-    system_prompt = COMPRESS_SYSTEM_PROMPT.format(category=category)
-    out, in_tok, out_tok = call_atc_llm(
-        system_prompt,
-        joined,
-        max_tokens=CHUNK_CATEGORIZING_MAX_OUTPUT_TOKENS
-    )
-    if not out:
-        return lines, in_tok, out_tok
-    return [l.strip("- ").strip() for l in out.splitlines() if l.strip()], in_tok, out_tok
-
-
-def build_reduced_evidence_text(merged: dict) -> str:
-    categories = (
-        "STANDARD_DOCS",
-        "ATC_PLACEHOLDER_CLARIFICATION",
-        "EXEMPTION",
-        "PHYSICAL_SUBMISSION",
-        "COMMERCIAL_TERMS",
-    )
-    cat_headers = {
-        "STANDARD_DOCS": "Standard Documents Evidence",
-        "ATC_PLACEHOLDER_CLARIFICATION": "ATC Placeholder Clarification & Mandatory Uploads",
-        "EXEMPTION": "Exemption Eligibility & Documents",
-        "PHYSICAL_SUBMISSION": "Physical Submissions (Offline)",
-        "COMMERCIAL_TERMS": "Key Commercial Terms & Compliance Rules",
-    }
-    blocks = []
-    for c in categories:
-        lines = merged.get(c, [])
-        if lines:
-            header = cat_headers.get(c, c)
-            bullets = "\n".join(f"- {l}" for l in lines)
-            blocks.append(f"[{header}]\n{bullets}")
-    return "\n\n".join(blocks).strip()
-
-
-def reduce_stage(table_result: str, merged: dict) -> Tuple[str, int, int]:
-    categories = (
-        "STANDARD_DOCS",
-        "ATC_PLACEHOLDER_CLARIFICATION",
-        "EXEMPTION",
-        "PHYSICAL_SUBMISSION",
-        "COMMERCIAL_TERMS",
-    )
-    evidence_text = build_reduced_evidence_text(merged)
-    total_in = 0
-    total_out = 0
-
-    budget_check = count_tokens(ANALYSIS_SYSTEM_PROMPT) + count_tokens(table_result) + count_tokens(evidence_text)
-    attempts = 0
-    while budget_check > FINAL_STAGE_INPUT_TOKENS and attempts < 3:
-        attempts += 1
-        biggest_cat = max(categories, key=lambda c: sum(len(str(l)) for l in merged.get(c, [])))
-        if not merged.get(biggest_cat):
-            break
-        compressed_lines, c_in, c_out = compress_category(biggest_cat, merged[biggest_cat])
-        total_in += c_in
-        total_out += c_out
-        merged[biggest_cat] = compressed_lines
-        evidence_text = build_reduced_evidence_text(merged)
-        budget_check = count_tokens(ANALYSIS_SYSTEM_PROMPT) + count_tokens(table_result) + count_tokens(evidence_text)
-
+def single_shot_stage(req_docs: str, unified_atc_body: str) -> Tuple[str, int, int]:
+    """Sends the fully unified prompt to the active LLM."""
     user_prompt = (
-        f"Document required from seller:\n{table_result}\n\n"
+        f"{req_docs}\n\n"
         f"======\n\n"
-        f"Additional Terms and Conditions (compacted evidence extracted from all pages):\n{evidence_text}\n"
-    )
-
-    final_res, f_in, f_out = call_atc_llm(
-        ANALYSIS_SYSTEM_PROMPT,
-        user_prompt,
-        max_tokens=FINAL_STAGE_OUTPUT_TOKENS,
-        require_json=True
-    )
-    return final_res, total_in + f_in, total_out + f_out
-
-
-def single_shot_stage(table_result: str, atc_text: str) -> Tuple[str, int, int]:
-    user_prompt = (
-        f"Document required from seller:\n{table_result}\n\n"
-        f"======\n\n"
-        f"Additional Terms and Conditions:\n{atc_text}\n"
-    )
+        f"Additional Terms and Conditions:\n"
+        f"{unified_atc_body}"
+    ).strip()
     return call_atc_llm(
         ANALYSIS_SYSTEM_PROMPT,
         user_prompt,
@@ -837,87 +671,8 @@ def single_shot_stage(table_result: str, atc_text: str) -> Tuple[str, int, int]:
     )
 
 
-# ---------------------------------------------------------------------------
-# OUTPUT FORMATTING CONVERTERS
-# ---------------------------------------------------------------------------
-def json_output_to_markdown_checklist(json_obj: Dict[str, Any]) -> str:
-    """Convert the 5-key structured JSON output into clean, formatted markdown checklist."""
-    md_lines = []
 
-    # 1. Standard Documents
-    sec1 = json_obj.get("1. Standard Documents Required", [])
-    md_lines.append("### 1. Standard Documents Required")
-    if sec1 and not (len(sec1) == 1 and "none specified" in str(sec1[0]).lower()):
-        for doc in sec1:
-            clean_d = re.sub(r"^[\*\-]\s*", "", str(doc)).strip()
-            md_lines.append(f"* **{clean_d}**")
-    else:
-        md_lines.append("* None specified in the provided text.")
-    md_lines.append("")
 
-    # 2. Clarified ATC Documents
-    sec2 = json_obj.get("2. Clarified ATC Documents & Mandatory Uploads", [])
-    md_lines.append("### 2. Clarified ATC Documents & Mandatory Uploads")
-    if sec2 and not (len(sec2) == 1 and "none specified" in str(sec2[0]).lower()):
-        for doc in sec2:
-            d_str = str(doc).strip()
-            if ":" in d_str:
-                k, v = d_str.split(":", 1)
-                md_lines.append(f"* **{k.strip()}**: {v.strip()}")
-            else:
-                md_lines.append(f"* {d_str}")
-    else:
-        md_lines.append("* None specified in the provided text.")
-    md_lines.append("")
-
-    # 3. Exemption Documents
-    sec3 = json_obj.get("3. Exemption Documents Required", [])
-    md_lines.append("### 3. Exemption Documents Required")
-    if sec3 and not (len(sec3) == 1 and "none specified" in str(sec3[0]).lower()):
-        for doc in sec3:
-            d_str = str(doc).strip()
-            if ":" in d_str:
-                k, v = d_str.split(":", 1)
-                md_lines.append(f"* **{k.strip()}**: {v.strip()}")
-            else:
-                md_lines.append(f"* {d_str}")
-    else:
-        md_lines.append("* None specified in the provided text.")
-    md_lines.append("")
-
-    # 4. Physical Submissions
-    sec4 = json_obj.get("4. Physical Submissions (Offline)", [])
-    md_lines.append("### 4. Physical Submissions (Offline)")
-    if sec4 and not (len(sec4) == 1 and "none specified" in str(sec4[0]).lower()):
-        for item in sec4:
-            if isinstance(item, dict):
-                item_name = item.get("Item") or item.get("item") or "Physical Submission"
-                md_lines.append(f"* **{item_name}**")
-                for k in ["Deadline", "In Favor Of", "Payable At", "Delivery Address"]:
-                    v = item.get(k) or item.get(k.lower().replace(" ", "_"))
-                    if v:
-                        md_lines.append(f"  * {k}: {v}")
-            else:
-                md_lines.append(f"* {item}")
-    else:
-        md_lines.append("* None specified in the provided text.")
-    md_lines.append("")
-
-    # 5. Commercial Terms
-    sec5 = json_obj.get("5. Key Commercial Terms & Conditions to Follow", [])
-    md_lines.append("### 5. Key Commercial Terms & Conditions to Follow")
-    if sec5 and not (len(sec5) == 1 and "none specified" in str(sec5[0]).lower()):
-        for rule in sec5:
-            r_str = str(rule).strip()
-            if ":" in r_str:
-                k, v = r_str.split(":", 1)
-                md_lines.append(f"* **{k.strip()}**: {v.strip()}")
-            else:
-                md_lines.append(f"* {r_str}")
-    else:
-        md_lines.append("* None specified in the provided text.")
-
-    return "\n".join(md_lines).strip()
 
 
 # ---------------------------------------------------------------------------
@@ -931,13 +686,13 @@ def analyze_bid_atc(
     parsed_pdf_data: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Any]:
     """
-    Run end-to-end ATC compliance analysis on a bid.
+    Run end-to-end ATC compliance analysis on a bid using the v3 single-shot engine.
 
     Args:
         bid_no (str): Bid identification number.
         markdown_text (str): Full markdown conversion of the tender bid.
         hyperlinks (list, optional): List of hyperlink dicts with 'name' and 'url'.
-        save_dir (str, optional): Target directory to save the <bid_no>_ATC.md artifact.
+        save_dir (str, optional): Target directory to save the <bid_no>_ATC.md and JSON artifacts.
         parsed_pdf_data (dict, optional): In-memory parsed PDF dictionary from the scraper.
 
     Returns:
@@ -945,11 +700,15 @@ def analyze_bid_atc(
               structured parsed dictionary, token telemetry, and calculated costs.
     """
     safe_bid_no = (bid_no or "UNKNOWN").replace("/", "_")
-    log.info(f"Starting ATC compliance analysis for {safe_bid_no}...")
+    log.info(f"Starting ATC compliance analysis (v3) for {safe_bid_no}...")
     t0 = time.time()
 
-    # 1. Extract Document Required From Seller strictly from in-memory parsed_pdf_data
+    # 1. Extract Document Required From Seller
     req_docs = extract_required_docs_text(parsed_pdf_data=parsed_pdf_data)
+    if "none specified" in req_docs.lower() and save_dir:
+        json_candidate = os.path.join(save_dir, f"{safe_bid_no}.json")
+        if os.path.exists(json_candidate):
+            req_docs = extract_required_docs_from_json(json_candidate)
 
     # 2. Extract Embedded Tender ATC text
     embedded_atc = extract_embedded_atc_text(markdown_text)
@@ -983,7 +742,7 @@ def analyze_bid_atc(
             except Exception as e:
                 log.error(f"Failed extracting text from external DOCX: {e}")
 
-    # 4. Merge Main Tender ATC + Downloaded Buyer ATC into ONE final unified document
+    # 4. Merge Main Tender ATC + Downloaded Buyer ATC into ONE unified payload
     all_content_parts = []
     if atc_parts:
         all_content_parts.append(f"=== [MAIN BID ATC CLAUSES] ===\n{atc_parts[0][1]}")
@@ -992,9 +751,9 @@ def analyze_bid_atc(
         downloaded_combined = "\n\n".join(txt for _, txt in downloaded_chunks)
         all_content_parts.append(f"=== [BUYER UPLOADED ATC DOCUMENT] ===\n{downloaded_combined}")
 
-    final_unified_text = "\n\n".join(all_content_parts).strip()
+    unified_body = "\n\n".join(all_content_parts).strip()
 
-    if not final_unified_text:
+    if not unified_body:
         log.info(f"No ATC content found for {safe_bid_no}. Skipping LLM analysis.")
         return {
             "status": "skipped_no_atc",
@@ -1004,57 +763,18 @@ def analyze_bid_atc(
             "cost_usd": 0.0,
             "cost_inr": 0.0,
             "tokens": {"input": 0, "output": 0},
-            "raw_markdown": "",
             "checklist": {},
             "error": None
         }
 
-    # 5. Token-Aware Chunking: Single-Shot vs Map-Reduce
-    total_tokens = count_tokens(final_unified_text)
-    total_in_tokens = 0
-    total_out_tokens = 0
-    final_json_str = ""
-
-    if total_tokens <= CHUNK_CATEGORIZING_MAX_INPUT_TOKENS:
-        log.info(f"Running single-shot analysis ({total_tokens} tokens) via [{ATC_LLM_PROVIDER.upper()}]...")
-        final_json_str, total_in_tokens, total_out_tokens = single_shot_stage(req_docs, final_unified_text)
-    else:
-        log.info(f"Document exceeds 1M tokens ({total_tokens} tokens). Running Map-Reduce pipeline via [{ATC_LLM_PROVIDER.upper()}]...")
-        reduce_categories = (
-            "STANDARD_DOCS",
-            "ATC_PLACEHOLDER_CLARIFICATION",
-            "EXEMPTION",
-            "PHYSICAL_SUBMISSION",
-            "COMMERCIAL_TERMS",
-        )
-        merged = {c: [] for c in reduce_categories}
-
-        # Process main bid ATC
-        if atc_parts:
-            m_res, m_in, m_out = map_extract_chunk(req_docs, f"{safe_bid_no}_MAIN_ATC", atc_parts[0][1])
-            total_in_tokens += m_in
-            total_out_tokens += m_out
-            for c in reduce_categories:
-                merged[c].extend(m_res.get(c, []))
-
-        # Process downloaded chunks
-        for chunk_name, chunk_txt in downloaded_chunks:
-            p_res, p_in, p_out = map_extract_chunk(req_docs, chunk_name, chunk_txt)
-            total_in_tokens += p_in
-            total_out_tokens += p_out
-            for c in reduce_categories:
-                merged[c].extend(p_res.get(c, []))
-
-        for c in reduce_categories:
-            merged[c] = dedupe_preserve_order(merged[c])
-
-        final_json_str, r_in, r_out = reduce_stage(req_docs, merged)
-        total_in_tokens += r_in
-        total_out_tokens += r_out
+    # 5. Execute Single-Shot Inference (Context Budget up to 1,000,000 tokens)
+    total_tokens = count_tokens(unified_body)
+    log.info(f"Running single-shot analysis ({total_tokens} tokens) via [{ATC_LLM_PROVIDER.upper()}]...")
+    final_json_str, total_in_tokens, total_out_tokens = single_shot_stage(req_docs, unified_body)
 
     elapsed = round(time.time() - t0, 2)
 
-    # 6. Parse Native Model JSON & Generate Markdown Checklist
+    # 6. Parse Native Model JSON
     clean_json_body = re.sub(r"^```(json)?|```$", "", (final_json_str or "").strip(), flags=re.MULTILINE).strip()
     parsed_json_obj = {}
     try:
@@ -1062,24 +782,19 @@ def analyze_bid_atc(
     except Exception as e:
         log.warning(f"Could not parse LLM response as JSON: {e}")
 
-    if parsed_json_obj:
-        raw_markdown = json_output_to_markdown_checklist(parsed_json_obj)
-    else:
-        raw_markdown = clean_json_body
-
     # 7. Calculate Pricing
     active_model = OPENAI_MODEL if (ATC_LLM_PROVIDER or "").lower() == "openai" else GEMINI_MODEL
     cost_usd, cost_inr = calculate_llm_cost(ATC_LLM_PROVIDER, active_model, total_in_tokens, total_out_tokens)
 
-    # 8. Save Artifact (<safe_bid_no>_ATC.md)
-    if save_dir and os.path.exists(save_dir):
-        atc_md_path = os.path.join(save_dir, f"{safe_bid_no}_ATC.md")
+    # 8. Save Artifact (<safe_bid_no>_INFER_OUTPUT.json)
+    if save_dir and os.path.exists(save_dir) and parsed_json_obj:
+        atc_json_path = os.path.join(save_dir, f"{safe_bid_no}_INFER_OUTPUT.json")
         try:
-            with open(atc_md_path, "w", encoding="utf-8") as f:
-                f.write(raw_markdown)
-            log.info(f"Saved ATC compliance checklist markdown to {atc_md_path}")
+            with open(atc_json_path, "w", encoding="utf-8") as f:
+                json.dump(parsed_json_obj, f, indent=2, ensure_ascii=False)
+            log.info(f"Saved ATC compliance structured JSON to {atc_json_path}")
         except Exception as e:
-            log.warning(f"Could not save ATC markdown to {atc_md_path}: {e}")
+            log.warning(f"Could not save ATC JSON to {atc_json_path}: {e}")
 
     log.info(f"ATC analysis completed for {safe_bid_no} in {elapsed}s. Tokens: {total_in_tokens} in, {total_out_tokens} out | Cost: ${cost_usd:.5f} (₹{cost_inr:.3f})")
 
@@ -1094,7 +809,6 @@ def analyze_bid_atc(
             "input": total_in_tokens,
             "output": total_out_tokens,
         },
-        "raw_markdown": raw_markdown,
         "checklist": parsed_json_obj,
         "error": None
     }
