@@ -1,330 +1,584 @@
-# 🏛️ GeMBridge: Finalized Production Server Architecture & Worker Deployment Plan
+# 🏛️ GeMBridge: Finalized Production Server Architecture, Resource Sizing & Worker Deployment Plan
+
+> **Document Reference:** `SERVER_DEPLOYMENT_PLAN.md`  
+> **Target Production Host:** Hostinger KVM 4 VPS (`srv1701681`) — Ubuntu 24.04 LTS (AMD EPYC 9355P, 16 GB RAM, 200 GB NVMe)  
+> **Co-Existing Server Workload:** 46 Active Docker Containers (Dokploy, Traefik, Supabase Suite, PostgreSQL 17 pgvector, Redis, MinIO)  
+> **Local Development OS:** Windows 10/11 (with Docker Desktop / WSL 2)  
+> **Document Version:** 2.0.0 — Production & Local Hybrid Standard  
 
 ---
 
-## 1. Executive Blueprint: Finalized System Architecture
+## 📑 Table of Contents
 
-This blueprint documents the production-grade architecture of the **GeMBridge Data Engine** for Linux / Ubuntu VPS deployment. The system consolidates all physical files into server-hosted **MinIO** object storage, unifies all structured tender data and semantic vector embeddings into **PostgreSQL** (managed visually via **pgAdmin**), and decouples workloads into an asynchronous **3-tier Celery queue** executing on a recurring **30-minute schedule**, fronted by a high-performance **FastAPI** gateway for multi-project data sharing.
+1. [Executive Blueprint: System Architecture](#1-executive-blueprint-system-architecture)
+2. [Server Sizing & Hardware Resource Ceiling (Hostinger KVM 4)](#2-server-sizing--hardware-resource-ceiling-hostinger-kvm-4)
+3. [Worker Queues & End-to-End Process Flow](#3-worker-queues--end-to-end-process-flow)
+4. [Windows OS Local Development vs. Production Linux Deployment](#4-windows-os-local-development-vs-production-linux-deployment)
+5. [Complete Environment Variables Specification (`.env`)](#5-complete-environment-variables-specification-env)
+6. [Database (v3.0 Schema) & MinIO Object Storage Integration](#6-database-v30-schema--minio-object-storage-integration)
+7. [FastAPI Gateway & Celery Synergy](#7-fastapi-gateway--celery-synergy)
+8. [Docker Compose Specifications (Local Dev & Dokploy Production)](#8-docker-compose-specifications-local-dev--dokploy-production)
+9. [Operational Runbook & CLI Execution Guide](#9-operational-runbook--cli-execution-guide)
 
-### 📐 Finalized Target System Blueprint
+---
+
+## 1. Executive Blueprint: System Architecture
+
+The **GeMBridge Data Engine** is an enterprise-grade procurement pipeline designed to run 24/7 without degrading host server stability. It decouples high-RAM browser automation, cloud API calls, and local CPU vector embeddings into an asynchronous **3-tier Celery queue** connected via **Redis 7**, orchestrated by **Celery Beat** on a 30-minute interval, persisted into **PostgreSQL 16/17** (with `pgvector`) and server-hosted **MinIO** object storage, and fronted by a high-speed **FastAPI** gateway.
 
 ```mermaid
 flowchart TD
-    subgraph Scheduler_Layer ["⏰ Schedule & Queue Management"]
-        Beat["Celery Beat Scheduler\n(Fires every 30 minutes)"] -->|Dispatches Periodic Crawl Task| Redis[("Redis 7 Message Broker\n(Task Queues & State Store)")]
+    subgraph Scheduler_Layer ["⏰ Schedule & Message Broker"]
+        Beat["Celery Beat Scheduler\n(Clock daemon firing every 30m)"] -->|Dispatches Category Crawl Tasks| Redis[("Redis 7 Message Broker\n(Task Queues & Unacknowledged Buffer)")]
     end
 
     subgraph Tier1 ["Tier 1: Portal Crawling (scraping_queue)"]
-        Redis -->|Pulls Crawl Task| WScraper["Playwright Crawler Workers (2 Concurrency)\n• Navigates bidplus.gem.gov.in\n• Downloads Bid & RA PDFs to memory buffer\n• Immediately uploads PDFs to MinIO\n• Enqueues document processing task"]
+        Redis -->|Pulls Crawl Task| WScraper["Playwright Crawler Workers (2 Concurrency)\n• Navigates bidplus.gem.gov.in\n• Downloads Bid & RA PDFs to in-memory buffer\n• Streams raw PDFs directly to MinIO\n• Enqueues document processing task\n• Frees browser in ~6s!"]
     end
 
     subgraph Tier2 ["Tier 2: Document OCR & Structuring (document_queue)"]
-        Redis -->|Pulls Processing Task| WProcessor["Document Processing Workers (2 Concurrency)\n• PyMuPDF Selective Slicing (<0.2s)\n• Mistral Cloud OCR API (~7s)\n• Regex & Table Parser\n• Uploads Markdown & JSON to MinIO\n• Upserts Tender into PostgreSQL (data JSONB)"]
+        Redis -->|Pulls Processing Task| WProcessor["Document Processing Workers (2 Concurrency)\n• PyMuPDF Selective Slicing (<0.2s, ₹0 cost)\n• Mistral Cloud OCR API (~7s)\n• Hybrid Markdown Stitching & Regex Normalizer\n• Uploads document.md & metadata.json to MinIO\n• Upserts Tender into PostgreSQL (v3.0 Schema)\n• Enqueues ATC & Vectorization task"]
     end
 
     subgraph Tier3 ["Tier 3: AI Compliance & Embeddings (atc_rag_queue)"]
-        Redis -->|Pulls AI & Vector Task| WATC["ATC & Vector Workers (2 Concurrency)\n• Gemini 2.5 Flash 5-Section Compliance (~4s)\n• Uploads Compliance Markdown to MinIO\n• Updates PostgreSQL atc_analysis field\n• BGE Dense Vectorization (~10s)\n• Inserts Vectors into PostgreSQL (pgvector HNSW)"]
+        Redis -->|Pulls AI/Vector Task| WATC["ATC & Vector Workers (2 Concurrency)\n• Google Gemini 2.5 Flash 8-Domain Audit (~4s)\n• Streams atc_compliance.md & INFER_OUTPUT.json to MinIO\n• Inserts clauses into PostgreSQL checklist tables\n• BGE-base-en-v1.5 Dense Embeddings (~6s)\n• Inserts 768-dim Vectors into PostgreSQL (pgvector HNSW)"]
     end
 
     subgraph Storage_Layer ["🪣 Server-Hosted MinIO Object Storage (Bucket: 'gem-tenders')"]
-        MinIO[("MinIO Service\n• bids/{bid_no}/bid.pdf\n• bids/{bid_no}/ra.pdf\n• bids/{bid_no}/document.md\n• bids/{bid_no}/atc_compliance.md")]
+        MinIO[("MinIO S3 Service\n• bids/{bid_no}/bid.pdf\n• bids/{bid_no}/ra.pdf\n• bids/{bid_no}/document.md\n• bids/{bid_no}/atc_compliance.md")]
         WScraper -->|Streams Raw PDFs| MinIO
         WProcessor -->|Streams Markdowns| MinIO
-        WATC -->|Streams ATC Reports| MinIO
+        WATC -->|Streams Compliance Reports| MinIO
     end
 
-    subgraph Database_Layer ["🐘 PostgreSQL 16 (Unified & Managed in pgAdmin)"]
-        Postgres[("PostgreSQL Database\n──────────────────────────────\n1. Table: gem_bids\n   • Queryable Columns (bid_no, dates, value)\n   • Complete data JSONB (Schema-Free)\n   • MinIO Object Keys\n2. Table: gem_bid_chunks\n   • Text Chunks\n   • 768-dim Vectors (pgvector)\n   • HNSW Vector Index")]
-        WProcessor -->|Upserts Tender Data| Postgres
-        WATC -->|Inserts Chunks & Vectors| Postgres
+    subgraph Database_Layer ["🐘 PostgreSQL 16/17 (v3.0 Hybrid Schema in pgAdmin)"]
+        Postgres[("PostgreSQL Database\n──────────────────────────────\n1. Table: bids (Scalars + TEXT[] + raw_data JSONB)\n2. Table: bid_items, bid_consignees, bid_schedules\n3. Table: bid_atc_checklist_items & physical_submissions\n4. Table: bid_terms (1:1 Decoupled Heavy Markdown)\n5. Table: gem_bid_chunks (vector(768) + HNSW)")]
+        WProcessor -->|Upserts Bids & Items| Postgres
+        WATC -->|Inserts Clauses & Vectors| Postgres
         pgAdmin["pgAdmin 4 GUI Console\n(Inspect tables, verify JSONB, query vectors)"] <--> Postgres
     end
 
     subgraph Gateway_Layer ["⚡ Fast Engine API Gateway (FastAPI)"]
-        FastAPIGateway["FastAPI Service (Port 8000)\n• Swagger UI (/docs) for external developers\n• Sub-5ms async JSON queries\n• Streaming AI responses for RAG\n• Dispatches on-demand Celery jobs via Redis"]
+        FastAPIGateway["FastAPI Service (Port 8000)\n• Swagger UI (/docs) for external developers\n• Sub-5ms async JSON queries\n• Streaming AI responses for RAG\n• S3 Presigned URL Redirection for PDFs\n• Dispatches on-demand Celery jobs via Redis"]
         Postgres <--> FastAPIGateway
         MinIO <-->|Generates Presigned S3 URLs| FastAPIGateway
         FastAPIGateway -.->|On-Demand Scrape Tasks| Redis
     end
 
-    subgraph Consumer_Layer ["🌐 Multi-Project Integration (External Consumers)"]
-        ExtProjectA["External Website A\n(Vendor Web Portal)"]
-        ExtProjectB["External Project B\n(Mobile App / Analytics)"]
-        ExtWebhooks["Webhook Consumers\n(Instant Tender Alerts)"]
-        FlowerDashboard["Flower Dashboard (Port 5555)\n(Real-time Celery Monitoring)"]
+    subgraph Consumer_Layer ["🌐 External Consumers & Telemetry"]
+        WebPortal["Vendor Web Portal (Django + Next.js)"]
+        MobileApp["Mobile App & Analytics Engine"]
+        FlowerDashboard["Flower Dashboard (Port 5555)\n(Real-time Celery Worker Telemetry)"]
 
-        FastAPIGateway <-->|REST API /docs| ExtProjectA
-        FastAPIGateway <-->|REST API /docs| ExtProjectB
-        FastAPIGateway -->|Push Webhook Events| ExtWebhooks
+        FastAPIGateway <-->|REST API /docs| WebPortal
+        FastAPIGateway <-->|REST API /docs| MobileApp
         Redis <--> FlowerDashboard
     end
 ```
 
 ---
 
-## 2. Complete Production Technology Stack
+## 2. Server Sizing & Hardware Resource Ceiling (Hostinger KVM 4)
 
-| Layer / Domain | Technology & Framework | Purpose & Implementation Role |
-| :--- | :--- | :--- |
-| **Server OS & Environment** | **Ubuntu Linux (22.04 LTS / Hostinger KVM 4)** | Host operating system with kernel swap cushioning, POSIX process management, and headless graphics libraries. |
-| **Containerization & Orchestration** | **Docker & Docker Compose** | Containerized microservice topology isolating workers, database, cache, and monitoring tools. |
-| **Web Crawling & Anti-Bot Evasion** | **Playwright (Python)** | Headless Chromium automation with anti-bot evasion, dynamic JavaScript DOM evaluation, and randomized user-agent/viewport pools. |
-| **Document Harvesting & Slicing** | **PyMuPDF (`fitz`)** | High-speed PDF hyperlink extraction, table boundary identification, and selective ATC page slicing (cutting 30%-50% of OCR overhead). |
-| **Document OCR Engine** | **Mistral OCR Cloud API (`mistral-ocr-3-0`)** | High-fidelity document conversion into Markdown, retaining complex nested Indian Government procurement tables and formatting. |
-| **AI Compliance Engine** | **Google Gemini 2.5 Flash** *(Fallback: GPT-4o-mini)* | Zero-shot 5-section Buyer ATC compliance analysis (EMD/ePBG, technical qualifications, mandatory uploads, exemptions, commercial terms). |
-| **Dense Vector Embeddings** | **BAAI/bge-base-en-v1.5 (Hugging Face / PyTorch)** | 768-dimensional dense semantic vectors tuned for technical, commercial, and procurement specifications. |
-| **Cross-Encoder Reranker** | **BAAI/bge-reranker-base (Sentence-Transformers)** | Deep cross-encoder reranking of top search candidates to maximize hybrid retrieval precision. |
-| **Relational & JSON Database** | **PostgreSQL 16 (`JSONB`)** | ACID primary database storing high-level columns for fast sorting/pagination alongside the complete schema-free tender payload (`data JSONB`). |
-| **Vector Database Extension** | **`pgvector` (PostgreSQL Extension)** | Native vector similarity engine using Hierarchical Navigable Small World (HNSW) indexing with cosine distance (`<=>`). |
-| **Database Management GUI** | **pgAdmin 4** | Web-based visual console to inspect tender rows, review JSONB documents, monitor HNSW indexes, and test SQL queries. |
-| **Object Storage** | **MinIO (Server-Hosted, S3-Compatible)** | Persistent object storage for Bid PDFs, RA PDFs, Markdown files, and JSON artifacts; issues time-limited S3 Presigned URLs. |
-| **Task Queue & Message Broker** | **Celery + Redis 7** | Distributed asynchronous task queue separating workloads into `scraping_queue`, `document_queue`, and `atc_rag_queue`. |
-| **Periodic Scheduler** | **Celery Beat** | Background clock daemon triggering recurring scrape cycles every 30 minutes without CPU overhead. |
-| **Queue Monitoring Dashboard** | **Flower** | Real-time web dashboard for Celery worker tracking, queue depths, task latencies, and retry telemetry. |
-| **Engine REST API Gateway** | **FastAPI / Uvicorn (Python 3.11+)** | High-performance asynchronous ASGI REST API exposing auto-documented Swagger endpoints (`/docs`) to external projects. |
-| **Vendor Web Application** | **Django 5.1.4 REST Backend + Next.js 16 Frontend** | Vendor onboarding audit wizard, readiness scoring, and dual-view tender exploration interface. |
+From our empirical benchmark report ([`HOSTINGER_KVM4_BENCHMARK_AND_DEPLOYMENT_REPORT.md`](file:///c:/Projects/GeM/Scrapper%20&%20RAG%20Pipeline/Documentation/HOSTINGER_KVM4_BENCHMARK_AND_DEPLOYMENT_REPORT.md)), our VPS server (`srv1701681`) runs **46 active Docker containers** consuming **8.5 GB out of 16 GB RAM** with an ambient CPU load of **1.0 to 1.65**.
 
----
+To eliminate the risk of Linux kernel Out-Of-Memory (OOM) termination and CPU throttling, the pipeline operates under strictly enforced hardware ceilings.
 
-## 3. How the Workers Are Implemented
+### 2.1 Concurrency & Memory Budget Summary
 
-Instead of a single monolithic script that runs sequentially, the workload is distributed into **three specialized Celery worker queues** communicating through **Redis**. Each queue handles a specific resource type (Browser RAM, Cloud Network I/O, or CPU Vectorization), preventing bottlenecks and eliminating server crashes.
-
-### 3.1 The Three Specialized Worker Queues
-
-#### 1. Tier 1: Scraper Workers (`scraping_queue`)
-* **Role:** Dedicated Playwright headless Chromium crawlers.
-* **Responsibilities:**
-  - Navigates the GeM portal (`bidplus.gem.gov.in`) using anti-bot stealth parameters.
-  - Applies filters across all bid categories (Product, Service, BOQ, Custom, etc.).
-  - Extracts card metadata, downloads the Bid PDF and RA PDF into a temporary scratch buffer, and streams them immediately into **MinIO**.
-  - Dispatches a task to Redis for the next tier and **immediately frees the browser** to scrape the next tender.
-* **Concurrency:** **2 Workers**.
-* **Memory Target:** ~400 MB per process (~800 MB total).
-* **Process Recycling:** Browser processes are configured to restart after every 20 completed tenders to flush any internal Chromium memory cache.
-
-#### 2. Tier 2: Document Processing & OCR Workers (`document_queue`)
-* **Role:** Lightweight document parsing and Cloud OCR client.
-* **Responsibilities:**
-  - Slices the PDF using PyMuPDF to isolate core technical pages and skip repetitive legal boilerplate.
-  - Sends the core pages to the Mistral OCR Cloud API.
-  - Reassembles the high-fidelity Markdown and parses structured fields (departments, consignees, quantities, financial values).
-  - Streams `document.md` and `metadata.json` to **MinIO**.
-  - Upserts the tender record into PostgreSQL `gem_bids`, saving the full parsed document inside the `data JSONB` column.
-  - *At this moment, the tender is fully live and queryable in pgAdmin and external applications.*
-* **Concurrency:** **2 Workers**.
-* **Memory Target:** ~200 MB per process (~400 MB total).
-
-#### 3. Tier 3: AI Compliance & Vector Embeddings Workers (`atc_rag_queue`)
-* **Role:** AI compliance auditing and semantic vector embedding.
-* **Responsibilities:**
-  - Calls Gemini 2.5 Flash with the domain rulebook to extract the 5-section compliance checklist (EMD/ePBG, technical qualifications, mandatory uploads, physical submissions, and commercial terms).
-  - Uploads `atc_compliance.md` to **MinIO** and updates the PostgreSQL record.
-  - Chunks the document into overlapping semantic passages.
-  - Generates 768-dimensional dense vectors using the `BAAI/bge-base-en-v1.5` model.
-  - Inserts the vectors directly into PostgreSQL table `gem_bid_chunks` with an HNSW cosine similarity index.
-* **Concurrency:** **2 Workers**.
-* **Memory Target:** ~450 MB per process (~900 MB total, keeping model weights warm in memory).
-
-#### 4. The Conductor: Celery Beat Scheduler
-* **Role:** Ultra-lightweight background clock daemon.
-* **Responsibilities:** Fires a crawl trigger every **30 minutes**, enqueuing the scrape cycle to Redis without consuming measurable CPU or RAM (~60 MB).
-
----
-
-### 3.2 Worker Concurrency & Memory Budget Summary
+$$\text{Optimal Worker Concurrency} = \mathbf{6\text{ Total Workers}}$$
 
 ```
-┌───────────────────────────┬──────────────┬──────────────┬──────────────┐
-│ Worker Tier               │ Concurrency  │ RAM / Worker │ Total Memory │
-├───────────────────────────┼──────────────┼──────────────┼──────────────┤
-│ Tier 1: Scraper           │ 2 Workers    │ ~400 MB      │ ~800 MB      │
-│ Tier 2: Document/OCR      │ 2 Workers    │ ~200 MB      │ ~400 MB      │
-│ Tier 3: ATC & pgvector    │ 2 Workers    │ ~450 MB      │ ~900 MB      │
-│ Celery Beat Scheduler     │ 1 Daemon     │ ~60 MB       │ ~60 MB       │
-├───────────────────────────┼──────────────┼──────────────┼──────────────┤
-│ TOTAL SYSTEM LOAD         │ 6 Processes  │ —            │ ~2.16 GB RAM │
-└───────────────────────────┴──────────────┴──────────────┴──────────────┘
+┌─────────────────────────────────────┬──────────────┬──────────────┬──────────────┐
+│ Worker Tier & Queue                 │ Concurrency  │ RAM / Worker │ Total Memory │
+├─────────────────────────────────────┼──────────────┼──────────────┼──────────────┤
+│ Tier 1: Scraper (`scraping_queue`)   │ 2 Workers    │ ~400 MB      │ ~800 MB      │
+│ Tier 2: OCR/Doc (`document_queue`)   │ 2 Workers    │ ~200 MB      │ ~400 MB      │
+│ Tier 3: ATC/RAG (`atc_rag_queue`)    │ 2 Workers    │ ~450 MB      │ ~900 MB      │
+│ Celery Beat (Scheduler Daemon)      │ 1 Daemon     │ ~60 MB       │ ~60 MB       │
+├─────────────────────────────────────┼──────────────┼──────────────┼──────────────┤
+│ TOTAL PIPELINE RUNTIME FOOTPRINT    │ 6 Processes  │ —            │ ~2.16 GB RAM │
+└─────────────────────────────────────┴──────────────┴──────────────┴──────────────┘
 ```
-> **Server Safety Guarantee:** Consuming only ~2.16 GB of RAM leaves **13+ GB of free memory** on a 16 GB server, ensuring absolute safety from Linux Out-Of-Memory (OOM) process termination.
+
+### 2.2 Host Hardening Guarantees
+1. **4 GB Swap Cushion:** A permanent `/swapfile` of 4,096 MB is active on the host, preventing sudden memory spikes from triggering `SIGKILL` (exit code 137).
+2. **CPU Ceiling:** Hard-capped at **`cpus: '2.0'`** in Docker. The scraper can never consume more than 2 vCPUs, guaranteeing that **2 full vCPUs remain 100% free** for Supabase, Traefik, and Dokploy.
+3. **RAM Ceiling:** Hard memory ceiling at **`memory: 3500M`** (3.5 GB). Operating at ~2.16 GB leaves over 1.3 GB of safety buffer before Docker limits are reached.
+4. **Shared Memory Partition (`shm_size: 2gb`):** Chromium writes IPC buffers to `/dev/shm`. Expanding Docker's default 64 MB to 2 GB prevents browser bus errors under concurrent loads.
+5. **Zombie Process Reaping (`init: true`):** Playwright continually spawns and tears down Chromium tabs. Docker's built-in Tini init system automatically reaps zombie child PIDs.
 
 ---
 
-## 4. Exact Lifecycle of How the Server Runs Every 30 Minutes
+## 3. Worker Queues & End-to-End Process Flow
 
-The entire system operates as a continuous, automated assembly line. Below is the precise chronological sequence of events occurring every 30 minutes.
+### 3.1 Tier 1: Scraper & Portal Crawler (`scraping_queue`)
+* **Role:** Playwright headless Chromium browser crawler.
+* **Responsibilities:**
+  1. Spawns stealth Chromium instances with randomized User-Agents and real screen viewports.
+  2. Traverses `bidplus.gem.gov.in/all-bids` or queries targeted tender numbers.
+  3. Extracts card DOM attributes (`bid_no`, `ra_no`, `card_dates`, `card.departments`, `card.items`).
+  4. Checks Redis cache `gem:seen:{bid_no}`. If already scraped and unchanged, skips in < 1ms.
+  5. Downloads Bid PDF and RA PDF directly into an in-memory `io.BytesIO` buffer (**no disk I/O**).
+  6. Streams the buffer to MinIO bucket `gem-tenders` under `bids/{bid_no}/bid.pdf`.
+  7. Enqueues `task_process_document(bid_no, s3_key, card_meta)` into Redis `document_queue`.
+  8. **Immediately releases the browser** to process the next card (~6s per tender).
+  9. Recycles Chromium contexts every 20 tenders to flush V8/Blink memory caches.
 
-### 🔄 30-Minute Lifecycle Sequence Diagram
+### 3.2 Tier 2: Document Processing & OCR (`document_queue`)
+* **Role:** High-speed document slicing, cloud OCR client, and relational database loader.
+* **Responsibilities:**
+  1. Pulls raw PDF stream from MinIO into memory.
+  2. Scans `page.get_links()` via PyMuPDF to extract all clickable external URLs, BOQs, and specs.
+  3. **Selective PDF Slicing:** Extracts digital front pages (1..N) via PyMuPDF in < 0.2s at **₹0 cost**. Slices out only the custom scanned Buyer Added ATC annexures into a temporary sub-PDF.
+  4. Calls **Mistral Cloud OCR API** (`mistral-ocr-3-0`) on the sliced annexure (~7s).
+  5. Merges digital text with Mistral Markdown and injects extracted hyperlinks.
+  6. Regex parses 17 GFR sections (consignees, schedules, EMD/ePBG, relaxations, dates).
+  7. Streams `bids/{bid_no}/document.md` and `metadata.json` to MinIO.
+  8. **Database Milestone (PostgreSQL v3.0 Schema):**
+     - Upserts master tender into `bids` (scalars + `required_documents TEXT[]` + `raw_data JSONB`).
+     - Inserts line items into `bid_items` (with `specifications JSONB`).
+     - Inserts delivery locations into `bid_consignees`.
+     - Inserts lot schedules into `bid_evaluation_schedules`.
+     - Inserts raw Markdown into `bid_terms`.
+     - *At this milestone (T+16s), the tender is 100% visible and queryable on the web dashboard and REST API.*
+  9. Enqueues `task_atc_and_embed(bid_no)` into Redis `atc_rag_queue`.
+
+### 3.3 Tier 3: AI Compliance & Embeddings (`atc_rag_queue`)
+* **Role:** AI compliance checklist extraction and semantic vector embedding.
+* **Responsibilities:**
+  1. Checks `buyer_atc_text` from PostgreSQL. If no buyer clauses exist, marks `atc_status = 'skipped_no_atc'` and jumps straight to vectorization.
+  2. Calls **Google Gemini 2.5 Flash** with the 8-domain prompt rulebook (`Prompt.txt`) in a single-shot context (~4s).
+  3. Extracts compliance clauses across 7 text domains and structured physical submissions (EMD DD, samples, PBG).
+  4. Streams `bids/{bid_no}/atc_compliance.md` and `INFER_OUTPUT.json` to MinIO.
+  5. Inserts compliance rules into `bid_atc_checklist_items` (with full-text search index).
+  6. Inserts physical instruments into `bid_atc_physical_submissions`.
+  7. Updates `bid_atc_analyses` with latency, tokens, and cost telemetry.
+  8. **Vectorization:** Chunks tender text by domain (`item`, `compliance`, `general_pdf`), passes chunks through `BAAI/bge-base-en-v1.5` (held warm in RAM), and bulk-inserts 768-dim vectors into `gem_bid_chunks` with HNSW cosine similarity.
+  9. *At this milestone (T+26s), the tender is 100% indexed for semantic RAG question-answering.*
+
+### 3.4 Celery Beat Scheduler Daemon
+* **Role:** Ultra-lightweight background clock daemon (~60 MB RAM).
+* **Responsibilities:** Fires a single periodic trigger `task_dispatch_periodic_crawl.delay()` every **30 minutes**, enqueuing category crawl tasks to Redis without consuming CPU.
+
+---
+
+## 4. Windows OS Local Development vs. Production Linux Deployment
+
+> [!WARNING]
+> ### ⚠️ The Microsoft Windows Celery Concurrency Pitfall
+> On Windows operating systems, Python does **not** support the POSIX `os.fork()` system call. Consequently:
+> * Running Celery with the default `prefork` process pool on native Windows causes crashes, freezing, or errors like `ValueError: not enough values to unpack`.
+> * On native Windows, Celery workers typically only function in **`solo` mode** (`--pool=solo`), which restricts each worker process to handling only 1 task at a time sequentially, eliminating true concurrency.
+> * Thread pools (`--pool=threads` or `gevent`) often suffer from event-loop conflicts with Playwright's synchronous Chromium drivers.
+
+To resolve this, we adopt a **Dual-Mode Strategy**:
+
+```
+┌─────────────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────────┐
+│ 🐳 Mode 1: Local Docker Compose (RECOMMENDED FOR LOCAL DEV) │ 💻 Mode 2: Native Windows OS (SOLO MODE / RAPID DEBUGGING)  │
+├─────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ • Runs Redis, Celery Workers, Beat, & FastAPI inside Docker  │ • Runs Redis via standalone container                       │
+│ • Uses Linux containers (WSL 2 backend)                     │ • Runs Celery workers directly in PowerShell using -P solo  │
+│ • Full prefork multi-worker concurrency (6 workers)         │ • Restricts each worker to solo execution                   │
+│ • 100% identical environment to production VPS               │ • Ideal for isolated script debugging and unit tests        │
+└─────────────────────────────────────────────────────────────┴─────────────────────────────────────────────────────────────┘
+```
+
+### 4.1 Running Locally with Docker (Recommended)
+Running through Docker on Windows (via Docker Desktop with WSL 2) gives you true Linux `prefork` multi-worker concurrency with zero Windows-specific bugs:
+
+```powershell
+# 1. Navigate to project root
+cd "c:\Projects\GeM\Scrapper & RAG Pipeline"
+
+# 2. Build and launch all services (Redis, Workers, Beat, FastAPI)
+docker compose -f docker-compose.local.yml up --build
+```
+
+### 4.2 Running Locally on Native Windows (PowerShell Solo Fallback)
+If developing outside Docker on native Windows, run Redis via Docker and spawn each Celery worker explicitly specifying `-P solo`:
+
+```powershell
+# 1. Start Redis in Docker (one-liner)
+docker run -d --name gem-local-redis -p 6379:6379 redis:7-alpine
+
+# 2. Activate virtual environment
+.\venv\Scripts\activate
+
+# 3. Terminal 1: Start Tier 1 Scraper Worker (Solo Mode)
+celery -A tasks.celery_app worker -Q scraping_queue -l info -P solo -n scraper_worker@%h
+
+# 4. Terminal 2: Start Tier 2 Document Worker (Solo Mode)
+celery -A tasks.celery_app worker -Q document_queue -l info -P solo -n doc_worker@%h
+
+# 5. Terminal 3: Start Tier 3 ATC & RAG Worker (Solo Mode)
+celery -A tasks.celery_app worker -Q atc_rag_queue -l info -P solo -n atc_worker@%h
+
+# 6. Terminal 4: Start Celery Beat Scheduler Daemon
+celery -A tasks.celery_app beat -l info
+
+# 7. Terminal 5: Start FastAPI Gateway
+uvicorn gateway.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+---
+
+## 5. Complete Environment Variables Specification (`.env`)
+
+```env
+# ==============================================================================
+# GeMBridge Engine — Unified Environment Configuration
+# ==============================================================================
+
+# ── 1. REDIS & CELERY BROKER ──────────────────────────────────────────────────
+REDIS_URL=redis://localhost:6379/0
+CELERY_BROKER_URL=redis://localhost:6379/0
+CELERY_RESULT_BACKEND=redis://localhost:6379/1
+
+# ── 2. POSTGRESQL & PGVECTOR DATABASE ─────────────────────────────────────────
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=gem_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_postgres_password_here
+DATABASE_URL=postgresql://postgres:your_postgres_password_here@localhost:5432/gem_db
+
+# ── 3. MINIO OBJECT STORAGE (S3-Compatible) ───────────────────────────────────
+MINIO_ENDPOINT=localhost:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+MINIO_BUCKET=gem-tenders
+MINIO_SECURE=false
+
+# ── 4. WORKER CONCURRENCY & SCHEDULING ────────────────────────────────────────
+MAX_CONCURRENT_WORKERS=6
+SCRAPE_INTERVAL_MINUTES=30
+MAX_RETRIES_PER_BID=3
+RETRY_DELAY_SECONDS=10
+
+# ── 5. CLOUD OCR & PARSER ENGINES ─────────────────────────────────────────────
+OCR_PROVIDER=mistral
+MISTRAL_API_KEY=your_mistral_api_key_here
+ENABLE_PDF_ATC_SPLIT=true
+
+# ── 6. AI COMPLIANCE & LLM CREDENTIALS ────────────────────────────────────────
+ATC_LLM_PROVIDER=gemini
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-2.5-flash
+GEMINI_THINKING_LEVEL=low
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4o-mini
+
+# ── 7. RAG EMBEDDINGS & CROSS-ENCODER ─────────────────────────────────────────
+RAG_EMBEDDING_MODEL=BAAI/bge-base-en-v1.5
+RAG_RERANKER_MODEL=BAAI/bge-reranker-base
+RAG_USE_RERANKER=true
+RAG_TOP_K=5
+HF_TOKEN=your_huggingface_token_here
+
+# ── 8. ANTI-BOT DELAYS & PORTAL SETTINGS ──────────────────────────────────────
+GEM_BASE_URL=https://bidplus.gem.gov.in
+TARGET_PER_TYPE=5
+MAX_EMPTY_PAGES=3
+PAGE_LOAD_WAIT_MIN=4
+PAGE_LOAD_WAIT_MAX=8
+BETWEEN_CARDS_WAIT_MIN=1
+BETWEEN_CARDS_WAIT_MAX=3
+```
+
+---
+
+## 6. Database (v3.0 Schema) & MinIO Object Storage Integration
+
+### 6.1 Database Architecture (`ER-Diagram-V3.md`)
+The system unifies all relational tender columns, native PostgreSQL arrays, JSONB payloads, and vector embeddings into a cohesive schema:
+* **`bids` (Master Table):** Queryable scalars (dates, value, EMD, status, department) + `required_documents TEXT[]` + complete `raw_data JSONB`.
+* **`bid_items`:** 1:N line items with `specifications JSONB` and Trigram fuzzy search index (`gin_trgm_ops`).
+* **`bid_consignees`:** 1:N delivery locations with `pincode CHAR(6)` index and `quantity_raw TEXT` for lumpsum contracts.
+* **`bid_evaluation_schedules`:** 1:N lot-wise schedules with `grouped_items JSONB` for nested group tenders.
+* **`bid_atc_checklist_items`:** 1:N compliance rules across 7 domains with full-text search index (`tsvector`).
+* **`bid_atc_physical_submissions`:** 1:N offline instruments (samples, DDs, PBGs).
+* **`bid_hyperlinks`:** 1:N extracted clickable URLs.
+* **`bid_terms`:** 1:1 decoupled storage for heavy full-text Markdown.
+* **`bid_atc_analyses`:** 1:1 telemetry tracking latency, token usage, and AI execution costs.
+* **`gem_bid_chunks`:** 1:N semantic vector store with 768-dim embeddings and HNSW cosine distance index (`<=>`).
+
+### 6.2 MinIO Object Storage Key Structure
+Bucket: `gem-tenders` (Private access; files accessed via presigned URLs):
+```
+gem-tenders/
+ └── bids/
+      └── {bid_no}/
+           ├── bid.pdf                 (Original Portal Tender Document)
+           ├── ra.pdf                  (Reverse Auction PDF, if present)
+           ├── document.md             (OCR Parsed Full Markdown)
+           ├── metadata.json           (Normalized Structured JSON)
+           ├── atc_compliance.md       (5-Section AI Compliance Checklist)
+           └── INFER_OUTPUT.json       (Raw LLM Inference Response)
+```
+
+---
+
+## 7. FastAPI Gateway & Celery Synergy
+
+The FastAPI gateway operates on **port 8000**, exposing high-speed endpoints to external web applications and background dispatchers:
 
 ```mermaid
-sequenceDiagram
-    autonumber
-    participant Beat as ⏰ Celery Beat (Scheduler)
-    participant Redis as 📬 Redis Message Broker
-    participant W1 as 🌐 Worker 1: Scraper (scraping_queue)
-    participant MinIO as 🪣 MinIO Object Storage
-    participant W2 as 📄 Worker 2: OCR/Parser (document_queue)
-    participant PG as 🐘 PostgreSQL & pgAdmin
-    participant W3 as 🤖 Worker 3: ATC/RAG (atc_rag_queue)
-    participant Ext as 💻 Other Projects / Websites
+flowchart LR
+    Client["External Web / Mobile App"] --> Gateway["FastAPI Service (Port 8000)"]
+    Gateway -->|Sub-5ms Query| DB[("PostgreSQL 16")]
+    Gateway -->|Presigned S3 URL Redirect| S3[("MinIO Storage")]
+    Gateway -->|Dispatch Scrape Task in 3ms| Redis[("Redis 7 Broker")]
+    Redis --> Workers["Celery Worker Queues"]
+```
 
-    Note over Beat: [T = 00:00] 30-Minute Schedule Triggers
-    Beat->>Redis: Enqueue 'task_scrape_all_categories'
-    
-    %% Tier 1: Crawling
-    Redis->>W1: Worker 1 picks up crawl task
-    Note over W1: Playwright launches stealth Chromium
-    loop For Each Category & Bid Card
-        W1->>W1: Extract card metadata & download PDF (~6s)
-        W1->>MinIO: Stream raw PDF to bids/{bid_no}/bid.pdf
-        W1->>Redis: Enqueue 'task_process_doc(bid_no, s3_key)'
-        Note over W1: Browser immediately moves to next tender!
-    end
+### 7.1 Key Endpoints
+1. **`GET /api/v1/bids`:** Paginated tender search with scalar filters (`department`, `estimated_value`, `closing_date`, `status`). Responds in < 5ms.
+2. **`GET /api/v1/bids/{bid_no}`:** Returns tender scalar metadata, full `raw_data JSONB`, and parsed compliance checklists.
+3. **`GET /api/v1/bids/{bid_no}/pdf`:** Issues an HTTP 307 redirect to a time-limited (24-hour) MinIO S3 Presigned URL, offloading file download bandwidth from the application server.
+4. **`POST /api/v1/bids/ask`:** Natural language semantic RAG query executing cosine similarity search against `gem_bid_chunks` with cross-encoder reranking.
+5. **`POST /api/v1/bids/scrape-ondemand`:** Dispatches an immediate scrape job to Celery via Redis in ~3ms, returning a `task_id` for background status polling.
 
-    %% Tier 2: OCR & DB Upsert
-    Redis->>W2: Worker 2 picks up 'task_process_doc'
-    Note over W2: PyMuPDF Selective Slicing (<0.2s)
-    W2->>W2: Mistral OCR Cloud API (~7s)
-    W2->>MinIO: Upload document.md & metadata.json
-    W2->>PG: INSERT / UPDATE gem_bids (data JSONB)
-    Note over PG: 🟢 Tender is immediately visible in pgAdmin & APIs!
-    W2->>Redis: Enqueue 'task_atc_and_embed(bid_no)'
+---
 
-    %% Tier 3: AI Compliance & Vectors
-    Redis->>W3: Worker 3 picks up 'task_atc_and_embed'
-    W3->>W3: Gemini 2.5 Flash ATC Analysis (~4s)
-    W3->>MinIO: Upload atc_compliance.md
-    W3->>PG: UPDATE gem_bids.atc_analysis
-    Note over W3: BGE Dense Vectorization (~10s)
-    W3->>PG: INSERT into gem_bid_chunks (vector(768) + HNSW)
-    Note over PG: 🟢 Tender is now searchable via Semantic RAG!
+## 8. Docker Compose Specifications
 
-    %% External Project Consumption
-    Note over Ext,PG: External websites query the engine
-    Ext->>PG: Fetch tender JSON or run semantic search
-    Ext->>MinIO: Download PDF using S3 Presigned URL
+### 8.1 Production Stack (`docker-compose.prod.yml`) — For Dokploy & Hostinger KVM 4
+
+```yaml
+version: '3.8'
+
+services:
+  # ── 1. REDIS MESSAGE BROKER ─────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: gem-engine-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy noeviction
+    volumes:
+      - gem_redis_data:/data
+    networks:
+      - gem_network
+
+  # ── 2. TIER 1: PLAYWRIGHT SCRAPER WORKER ─────────────────────────────────────
+  worker-scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-worker-scraper
+    restart: unless-stopped
+    command: celery -A tasks.celery_app worker -Q scraping_queue -c 2 -l info -n scraper_worker@%h
+    init: true
+    shm_size: '2gb'
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1200M
+    networks:
+      - gem_network
+
+  # ── 3. TIER 2: DOCUMENT PROCESSING & OCR WORKER ──────────────────────────────
+  worker-document:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-worker-document
+    restart: unless-stopped
+    command: celery -A tasks.celery_app worker -Q document_queue -c 2 -l info -n doc_worker@%h
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 600M
+    networks:
+      - gem_network
+
+  # ── 4. TIER 3: ATC COMPLIANCE & VECTOR WORKER ───────────────────────────────
+  worker-atc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-worker-atc
+    restart: unless-stopped
+    command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 2 -l info -n atc_worker@%h
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1200M
+    networks:
+      - gem_network
+
+  # ── 5. CELERY BEAT SCHEDULER DAEMON ──────────────────────────────────────────
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-celery-beat
+    restart: unless-stopped
+    command: celery -A tasks.celery_app beat -l info
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 150M
+    networks:
+      - gem_network
+
+  # ── 6. FASTAPI REST GATEWAY ──────────────────────────────────────────────────
+  fastapi-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-fastapi-gateway
+    restart: unless-stopped
+    command: uvicorn gateway.main:app --host 0.0.0.0 --port 8000 --workers 2
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 350M
+    networks:
+      - gem_network
+
+  # ── 7. FLOWER QUEUE MONITORING DASHBOARD ─────────────────────────────────────
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-flower-telemetry
+    restart: unless-stopped
+    command: celery -A tasks.celery_app flower --port=5555
+    ports:
+      - "5555:5555"
+    env_file: .env
+    depends_on:
+      - redis
+    networks:
+      - gem_network
+
+networks:
+  gem_network:
+    name: gem_engine_network
+
+volumes:
+  gem_redis_data:
+    name: gem_redis_data
+```
+
+### 8.2 Local Development Stack (`docker-compose.local.yml`) — For Windows Docker Desktop
+
+```yaml
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: gem-local-redis
+    ports:
+      - "6379:6379"
+
+  worker-scraper:
+    build: .
+    command: celery -A tasks.celery_app worker -Q scraping_queue -c 2 -l info
+    init: true
+    shm_size: '2gb'
+    env_file: .env
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+
+  worker-document:
+    build: .
+    command: celery -A tasks.celery_app worker -Q document_queue -c 2 -l info
+    env_file: .env
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+
+  worker-atc:
+    build: .
+    command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 2 -l info
+    env_file: .env
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+
+  celery-beat:
+    build: .
+    command: celery -A tasks.celery_app beat -l info
+    env_file: .env
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+
+  fastapi-gateway:
+    build: .
+    command: uvicorn gateway.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
 ```
 
 ---
 
-### ⏱️ Timeline of a Single Tender from Discovery to Storage
+## 9. Operational Runbook & CLI Execution Guide
 
-```
-Time Marker   Milestone Event                                             System State
-─────────────────────────────────────────────────────────────────────────────────────────────────
-T + 00:00     Worker 1 discovers new tender on GeM portal card list.       Crawling active
-T + 00:06     PDF downloaded to memory buffer & streamed to MinIO.         Stored in MinIO
-T + 00:07     Worker 1 dispatches task to Redis & moves to next tender.    Browser freed!
-T + 00:08     Worker 2 slices PDF with PyMuPDF (< 0.2 seconds).           Boilerplate removed
-T + 00:15     Mistral Cloud OCR returns high-fidelity Markdown.            OCR finished
-T + 00:16     Tender metadata & full payload upserted to PostgreSQL.      🟢 Live in pgAdmin!
-T + 00:20     Worker 3 completes Gemini ATC compliance analysis.           ATC finished
-T + 00:26     Text chunks embedded with BGE & stored with HNSW index.     🟢 RAG Search Ready!
-─────────────────────────────────────────────────────────────────────────────────────────────────
-TOTAL TIME:   Only 26 seconds from portal discovery to fully queryable across all databases!
-```
+### 9.1 Local Testing Commands (Windows PowerShell)
 
----
+```powershell
+# Run Celery Beat manually (Dry Run check):
+celery -A tasks.celery_app beat --loglevel=debug
 
-### 🛡️ Failure Isolation & Auto-Recovery Mechanics
+# Inspect active Celery queues via CLI:
+celery -A tasks.celery_app inspect active
 
-* **If Mistral OCR or Gemini API Experiences Latency:**  
-  The Playwright crawler is **never paused**. It continues crawling at full speed and filling the Redis queue. Tasks simply queue up in Redis and process as API responses return.
-* **If a Playwright Browser Hangs or Crashes:**  
-  Celery automatically kills the child process, spawns a clean browser instance, and retries the specific tender without interrupting any other running worker.
-* **If the Server Boots or Restarts:**  
-  Redis persists the message queue to disk. When the system restarts, workers resume processing right where they left off without missing or duplicating tenders.
+# Trigger an immediate on-demand crawl of a specific tender:
+curl -X POST "http://localhost:8000/api/v1/bids/scrape-ondemand" -H "Content-Type: application/json" -d '{"bid_no": "GEM/2026/B/8019323"}'
 
----
-
-## 5. Why PostgreSQL with `pgvector` is Vastly Superior to ChromaDB
-
-For an enterprise server deployment where you already have PostgreSQL and pgAdmin hosted, **PostgreSQL with `pgvector` is far superior to ChromaDB**.
-
-### 📊 Comparative Analysis
-
-```
-┌──────────────────────────────┬──────────────────────────────┬──────────────────────────────┐
-│ Feature / Capability         │ PostgreSQL 16 + pgvector     │ Standalone ChromaDB          │
-│                              │ (Managed in pgAdmin) 🥇      │ (Local Disk / Container) ❌  │
-├──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤
-│ 1. Graphical Management      │ Full visual GUI in pgAdmin   │ No official GUI; requires    │
-│                              │ (inspect rows, edit, query)  │ custom code or 3rd-party UI  │
-├──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤
-│ 2. System Architecture       │ 1 Unified Database Engine    │ 2 Separate Databases         │
-│                              │ (Relational + JSONB + Vector)│ (PostgreSQL + ChromaDB)      │
-├──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤
-│ 3. Hybrid Search Power       │ Native SQL: Join filters,    │ Primitive metadata filters;  │
-│                              │ dates, price & vector in 1Q  │ slow on complex conditions   │
-├──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤
-│ 4. Server RAM Footprint      │ 0 MB extra RAM               │ Consumes 400 MB – 800 MB     │
-│                              │ (Reuses Postgres buffers)    │ additional VPS memory        │
-├──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤
-│ 5. Backup & Recovery         │ Standard 1-click pg_dump     │ Complex multi-storage sync;  │
-│                              │ guarantees snapshot ACID     │ risk of orphaned vectors     │
-├──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤
-│ 6. Multi-Project Access      │ Standard PostgreSQL drivers  │ Requires proprietary         │
-│                              │ for Node, Python, PHP, Go    │ ChromaDB client library      │
-└──────────────────────────────┴──────────────────────────────┴──────────────────────────────┘
+# Test Semantic RAG search endpoint:
+curl -X POST "http://localhost:8000/api/v1/bids/ask" -H "Content-Type: application/json" -d '{"query": "What are the EMD requirements and past experience turnover?", "top_k": 3}'
 ```
 
-### Key Architectural Advantages:
+### 9.2 Hostinger Production Management Commands (`srv1701681`)
 
-1. **Everything Under One Roof in pgAdmin:**
-   You open pgAdmin in your browser and see both tables side by side:
-   - `gem_bids`: Containing the human-readable columns and the complete `data JSONB` document.
-   - `gem_bid_chunks`: Containing the 768-dimensional vector embeddings with HNSW indexing.
-2. **Unified Relational & Semantic Queries:**
-   In ChromaDB, filtering by multiple criteria (such as *closing date > today*, *estimated value > ₹50 Lakhs*, and *product type = 'Product'*) before vector search is slow and awkward. In PostgreSQL, the query optimizer evaluates relational indexes and the vector HNSW index simultaneously in a single query plan.
-3. **Data Integrity & Consistency:**
-   With ChromaDB, deleting or updating a tender requires synchronizing two separate databases. In PostgreSQL, foreign keys (`ON DELETE CASCADE`) ensure that deleting or updating a tender automatically maintains chunk and vector consistency.
+```bash
+# Check status of all engine containers:
+docker ps --filter "name=gem-"
 
----
+# Inspect real-time CPU and Memory consumption across all workers:
+docker stats gem-worker-scraper gem-worker-document gem-worker-atc gem-fastapi-gateway
 
-## 6. Multi-Project Engine Integration (FastAPI Gateway & Celery Synergy)
+# View streaming logs of the Scraper worker:
+docker logs -f gem-worker-scraper
 
-Because this system acts as the core procurement engine for external websites, mobile apps, and client dashboards, the interface layer is designed around **FastAPI** connected natively to **Celery**:
-
-### 6.1 Why FastAPI over Flask for this Engine
-1. **Automatic Interactive Documentation (`/docs`):**  
-   FastAPI automatically generates an interactive Swagger UI dashboard at `/docs`. External developers can open the page in their browser, inspect all request/response models, and test API endpoints directly without needing Postman.
-2. **Native Async ASGI Concurrency:**  
-   FastAPI operates asynchronously. While one request waits for PostgreSQL `pgvector` or MinIO, the event loop handles dozens of other incoming requests without consuming additional worker threads or CPU.
-3. **Pydantic v2 Performance:**  
-   GeM tender payloads contain deep, nested schemas. Pydantic v2 parses, validates, and serializes these complex documents at native Rust speed.
-4. **Streaming AI / RAG Responses:**  
-   FastAPI natively supports real-time token streaming. External portals can stream Gemini AI compliance answers token-by-token as they are generated.
-
----
-
-### 6.2 How FastAPI and Celery Collaborate
-* **Fast Queries (< 5ms):** When external projects request tender data, category listings, or PDF links, FastAPI queries PostgreSQL and MinIO directly and responds in sub-5ms latency.
-* **On-Demand Background Scraping:** When an external project requests an immediate crawl of a specific bid number, FastAPI dispatches the task to Celery via Redis in 3 milliseconds and returns a tracking `task_id`. The client is never subjected to an HTTP gateway timeout.
-* **Real-Time Task Telemetry (Flower):** Flower runs alongside Celery on port 5555, providing live operational visibility into worker health, queue lengths, task success rates, and execution runtimes.
-
----
-
-### 6.3 Data Access Patterns for External Consumers
-
-#### Pattern 1: High-Speed Engine REST API
-* **Endpoint: Tender Details (`GET /api/v1/bids/{bid_no}`):**  
-  Returns high-level metadata, the full parsed `data JSONB` tree, and the AI compliance checklist.
-* **Endpoint: Document Access (`GET /api/v1/bids/{bid_no}/pdf`):**  
-  Generates and redirects to a time-limited MinIO S3 Presigned URL, allowing external users to download original PDFs directly from MinIO without routing file bytes through your application server.
-* **Endpoint: Semantic RAG Search (`POST /api/v1/bids/ask`):**  
-  Accepts natural language queries with optional relational filters and returns ranked clause citations with cosine similarity scores.
-
-#### Pattern 2: Direct Database Read (Backend-to-Backend)
-For applications co-hosted within the server network, external backends connect directly to PostgreSQL using read-only credentials:
-* Query the `gem_bids.data` JSONB column for instant detail page rendering.
-* Execute direct vector distance searches against `gem_bid_chunks` using standard SQL.
-
----
-
-## 7. Execution Plan & Next Steps
-
-1. **Storage Layer:** Configure the server-hosted MinIO bucket (`gem-tenders`) and activate streaming uploads for raw PDFs, OCR Markdown, and ATC checklists.
-2. **Database Layer:** Enable the `vector` extension in PostgreSQL via pgAdmin and initialize the `gem_bids` (JSONB) and `gem_bid_chunks` (pgvector) tables.
-3. **Task Decoupling:** Wire the scraper pipeline into the 3 Celery worker queues (`scraping_queue`, `document_queue`, `atc_rag_queue`).
-4. **Daemon Launch:** Start Celery Beat on the 30-minute interval and verify live tender ingestion inside pgAdmin.
-5. **Gateway Deployment:** Launch the FastAPI service on port 8000 and verify the interactive documentation at `/docs`.
+# View live Flower queue telemetry:
+# Open browser at: http://srv1701681:5555
+```
