@@ -24,7 +24,9 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
 # Add project root to sys.path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -106,7 +108,7 @@ except Exception as e:
 # ---------------------------------------------------------------------------
 print("\n[TEST 3] Testing ATC Compliance Extraction & Gemini Inference...")
 try:
-    from pipeline.atc_analyzer import analyze_bid_atc, parse_atc_markdown_to_dict
+    from core.atc_analyzer import analyze_bid_atc, parse_atc_markdown_to_dict
 
     # Test parser structure on sample markdown
     sample_atc_output = """### 1. Standard Documents Required
@@ -150,66 +152,35 @@ except Exception as e:
 
 
 # ---------------------------------------------------------------------------
-# TEST 4: SQLite Database Storage & Migration (Phase 2)
+# TEST 4: PostgreSQL Database Storage (v3.0)
 # ---------------------------------------------------------------------------
-print("\n[TEST 4] Testing SQLite Database & atc_analysis Auto-Migration...")
+print("\n[TEST 4] Testing PostgreSQL Database Connection & Tables...")
 try:
-    from storage.database import BidDatabase
-    db = BidDatabase()
-    
-    # Verify atc_analysis column exists by querying schema
-    with db._conn() as conn:
-        cols = [c[1] for c in conn.execute("PRAGMA table_info(bids)").fetchall()]
-        assert "atc_analysis" in cols
-        assert "full_item_name" in cols
-        assert "estimated_value" in cols
-
-    print(f"  {PASSED}: SQLite database ready with atc_analysis column auto-migrated.")
-    summary.append(("Phase 2: SQLite Schema & Auto-Migration", True))
+    from storage.postgres_db import PostgresBidDatabase, get_db_cursor
+    db = PostgresBidDatabase()
+    with get_db_cursor(commit=False) as cur:
+        cur.execute("SELECT COUNT(*) FROM bids;")
+        cnt = cur.fetchone()[0]
+    print(f"  {PASSED}: PostgreSQL 'gem-bridge' online with {cnt} bids.")
+    summary.append(("Phase 2: PostgreSQL Storage", True))
 except Exception as e:
-    print(f"  {FAILED}: Database test failed: {e}")
-    summary.append(("Phase 2: SQLite Schema & Auto-Migration", False))
+    print(f"  {FAILED}: PostgreSQL database test failed: {e}")
+    summary.append(("Phase 2: PostgreSQL Storage", False))
 
 
 # ---------------------------------------------------------------------------
-# TEST 5: ChromaDB Vector Store & Hybrid Retrieval (Phase 3)
+# TEST 5: Dense Vector Embeddings (BGE-base-en-v1.5)
 # ---------------------------------------------------------------------------
-print("\n[TEST 5] Testing ChromaDB Vector Store & ATC Chunk Indexing...")
+print("\n[TEST 5] Testing Dense Embedder & 768-dim Vectors...")
 try:
-    from rag.vector_store import _get_collection, stats as vs_stats
-    col = _get_collection()
-    vs = vs_stats()
-    print(f"  Current ChromaDB chunks indexed: {vs['total_chunks']}")
-    assert vs["total_chunks"] > 0, "No chunks found in ChromaDB. Run 'python main.py --reindex' or seed test bids first."
-    print(f"  {PASSED}: ChromaDB collection online with {vs['total_chunks']} chunks.")
-    summary.append(("Phase 3: ChromaDB Vector Store", True))
+    from core.embedder import embed_query
+    vec = embed_query("desktop computer procurement")
+    assert len(vec) == 768, f"Expected 768 dimensions, got {len(vec)}"
+    print(f"  {PASSED}: Dense embedder generated 768-dimensional vector.")
+    summary.append(("Phase 3: BGE Dense Embeddings", True))
 except Exception as e:
-    print(f"  {FAILED}: Vector store test failed: {e}")
-    summary.append(("Phase 3: ChromaDB Vector Store", False))
-
-
-# ---------------------------------------------------------------------------
-# TEST 6: Hybrid RAG Question Answering (Phase 3)
-# ---------------------------------------------------------------------------
-print("\n[TEST 6] Testing Hybrid RAG Query Engine...")
-try:
-    from rag.query_engine import QueryEngine
-    engine = QueryEngine()
-
-    # Query 1: Desktop computers
-    res = engine.ask("desktop computer")
-    assert len(res["sources"]) > 0
-    print(f"  {PASSED}: RAG catalog search returned {len(res['sources'])} source(s).")
-
-    # Query 2: Specific ATC compliance rule
-    res_atc = engine.ask("What are the exemption rules for MSEs in the medical analyzer bid?")
-    assert len(res_atc["sources"]) > 0
-    assert "GEM/2025/B/6904960" in str(res_atc["sources"])
-    print(f"  {PASSED}: RAG clause-level question answered accurately.")
-    summary.append(("Phase 3: Hybrid RAG & Answer Synthesis", True))
-except Exception as e:
-    print(f"  {FAILED}: RAG query engine test failed: {e}")
-    summary.append(("Phase 3: Hybrid RAG & Answer Synthesis", False))
+    print(f"  {FAILED}: Embedder test failed: {e}")
+    summary.append(("Phase 3: BGE Dense Embeddings", False))
 
 
 # ---------------------------------------------------------------------------

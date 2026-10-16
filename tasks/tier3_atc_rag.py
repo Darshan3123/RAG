@@ -17,7 +17,7 @@ from config.settings import (
     OPENAI_API_KEY,
     REDIS_URL,
 )
-from pipeline.atc_analyzer import analyze_bid_atc
+from core.atc_analyzer import analyze_bid_atc
 from storage.postgres_db import PostgresBidDatabase, get_db_cursor
 from utils.logger import get_logger
 
