@@ -187,3 +187,37 @@ PRODUCT_TYPE_MAP = {
     "Limited Tender":         "Limited Tender",
     "Single Tender":          "Single Tender",
 }
+
+# ---------------------------------------------------------
+# POSTGRESQL & PGVECTOR CONFIGURATION
+# ---------------------------------------------------------
+POSTGRES_HOST     = _str("POSTGRES_HOST", "localhost")
+POSTGRES_PORT     = _int("POSTGRES_PORT", 5432)
+POSTGRES_DB       = _str("POSTGRES_DB", "gem-bridge")
+POSTGRES_USER     = _str("POSTGRES_USER", "postgres")
+POSTGRES_PASSWORD = _str("POSTGRES_PASSWORD", "postgres")
+DATABASE_URL      = _str(
+    "DATABASE_URL",
+    f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+)
+
+# ---------------------------------------------------------
+# REDIS & CELERY CONFIGURATION
+# ---------------------------------------------------------
+REDIS_URL             = _str("REDIS_URL", "redis://localhost:6379/0")
+CELERY_BROKER_URL     = _str("CELERY_BROKER_URL", REDIS_URL)
+CELERY_RESULT_BACKEND = _str("CELERY_RESULT_BACKEND", "redis://localhost:6379/1")
+
+# ---------------------------------------------------------
+# MINIO S3 OBJECT STORAGE
+# ---------------------------------------------------------
+MINIO_ENDPOINT   = _str("MINIO_ENDPOINT", "localhost:9000")
+MINIO_ACCESS_KEY = _str("MINIO_ACCESS_KEY", "minioadmin")
+MINIO_SECRET_KEY = _str("MINIO_SECRET_KEY", "minioadmin")
+MINIO_BUCKET     = _str("MINIO_BUCKET", "gem-tenders")
+MINIO_SECURE     = _str("MINIO_SECURE", "false").lower() in ("1", "true", "yes", "on")
+
+# ---------------------------------------------------------
+# CONCURRENCY CEILINGS
+# ---------------------------------------------------------
+MAX_CONCURRENT_WORKERS = _int("MAX_CONCURRENT_WORKERS", 6)

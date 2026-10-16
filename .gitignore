@@ -19,9 +19,11 @@ downloads/
 # Standalone test scripts and scrape data
 STANDLONE TEST SCRIPTS/Scrape_Data/
 
-# Storage (database, vector store, etc.)
-storage/
-*storage/
+# Storage data files (SQLite database, JSON dump, vector store)
+storage/*.db
+storage/*.json
+storage/*.png
+storage/chroma_db/
 
 # Specific files
 commnad and prompat.txt

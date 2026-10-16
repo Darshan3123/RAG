@@ -1,0 +1,103 @@
+version: '3.8'
+
+# =========================================================================
+# docker-compose.local.yml
+# Local Development Stack with Multi-Process Linux Prefork Workers
+# Automatically connects to Windows Desktop PostgreSQL via host.docker.internal
+# =========================================================================
+
+services:
+  # 1. Redis 7 Broker & Result Backend
+  redis:
+    image: redis:7-alpine
+    container_name: redis-server-gem
+    ports:
+      - "6379:6379"
+    restart: always
+
+  # 2. MinIO S3 Object Storage
+  minio:
+    image: alpine/minio:latest-release
+    container_name: minio-server-gem
+    user: "0:0"
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - gem_minio_data:/data
+    restart: always
+
+  # 3. Tier 1: Scraper Worker (Prefork Linux Concurrency = 2)
+  worker-scraper:
+    build: .
+    container_name: gem-worker-scraper
+    command: celery -A tasks.celery_app worker -Q scraping_queue -c 2 -n scraper@local --loglevel=INFO
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/gem-bridge
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET=gem-tenders
+      - MINIO_SECURE=false
+    depends_on:
+      - redis
+      - minio
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    mem_limit: 512M
+
+  # 4. Tier 2: Document & OCR Worker (Prefork Linux Concurrency = 2)
+  worker-document:
+    build: .
+    container_name: gem-worker-document
+    command: celery -A tasks.celery_app worker -Q document_queue -c 2 -n document@local --loglevel=INFO
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/gem-bridge
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET=gem-tenders
+      - MINIO_SECURE=false
+    depends_on:
+      - redis
+      - minio
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    mem_limit: 512M
+
+  # 5. Tier 3: ATC Compliance & RAG Worker (Prefork Linux Concurrency = 2)
+  worker-atc:
+    build: .
+    container_name: gem-worker-atc
+    command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 2 -n atc@local --loglevel=INFO
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/gem-bridge
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET=gem-tenders
+      - MINIO_SECURE=false
+    depends_on:
+      - redis
+      - minio
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    mem_limit: 512M
+
+volumes:
+  gem_minio_data:
+

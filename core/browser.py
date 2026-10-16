@@ -4,7 +4,9 @@
 # =========================================================
 import os
 import time
+from typing import Optional
 from playwright.sync_api import sync_playwright, Page
+
 from config.settings import DOWNLOAD_DIR, GEM_ALL_BIDS
 from utils.antibot import (
     stealth_launch_options,
@@ -236,6 +238,38 @@ class GemBrowser:
                 )
                 time.sleep(5 * attempt)
         return None
+
+    # -------------------------------------------------------
+    # DOWNLOAD PDF IN-MEMORY STREAM (MinIO S3 Zero-Disk)
+    # -------------------------------------------------------
+    def download_pdf_to_memory(self, document_url: str, retries: int = 3) -> Optional[bytes]:
+        """
+        Download a PDF file directly into in-memory bytes without saving to local disk.
+        Enables Tier 1 workers to stream directly to MinIO S3.
+        
+        Args:
+            document_url (str): Target PDF URL.
+            retries (int): Number of retry attempts.
+            
+        Returns:
+            bytes | None: Raw PDF byte stream or None on failure.
+        """
+        for attempt in range(1, retries + 1):
+            try:
+                with self.dl_page.expect_download(timeout=60_000) as dl_info:
+                    self.dl_page.evaluate(f'window.location.href = "{document_url}"')
+                download = dl_info.value
+                tmp_path = download.path()
+                if tmp_path and os.path.exists(tmp_path):
+                    with open(tmp_path, "rb") as f:
+                        data = f.read()
+                    sleep_pdf_download()
+                    return data
+            except Exception as e:
+                log.warning(f"Download to memory attempt {attempt}/{retries} failed for {document_url}: {e}")
+                time.sleep(3 * attempt)
+        return None
+
 
     # -------------------------------------------------------
     # CLICK NEXT PAGE
