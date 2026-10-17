@@ -18,6 +18,7 @@ from config.settings import (
     REDIS_URL,
 )
 from core.atc_analyzer import analyze_bid_atc
+from core.embedder import generate_bid_embeddings
 from storage.postgres_db import PostgresBidDatabase, get_db_cursor
 from utils.logger import get_logger
 
@@ -66,11 +67,11 @@ def process_atc_and_embed(
         atc_result = {"status": "skipped_disabled", "has_atc": False}
 
     # 1. Update PostgreSQL with ATC results
+    full_doc = None
     try:
         db = PostgresBidDatabase()
         # Read existing bid record if available to preserve full document
         final_json_path = os.path.join(bid_dir, f"{safe_bid_no}.json")
-        full_doc = None
         if os.path.exists(final_json_path):
             with open(final_json_path, "r", encoding="utf-8") as fp:
                 full_doc = json.load(fp)
@@ -118,7 +119,33 @@ def process_atc_and_embed(
     except Exception as db_err:
         log.error(f"[Tier 3] Failed to update PostgreSQL with ATC results for {safe_bid_no}: {db_err}", exc_info=True)
 
-    # 2. Upload ATC results to MinIO S3
+    # 2. Domain Vector Embedding Generation & pgvector Indexing
+    total_chunks_indexed = 0
+    try:
+        log.info(f"[Tier 3] Generating vector embeddings for {safe_bid_no}...")
+        bid_dict = full_doc if full_doc else {
+            "_id": safe_bid_no,
+            "bid": {"bid_no": safe_bid_no.replace("_", "/")},
+            "pdf": parsed_pdf_data,
+            "hyperlinks": bid_hyperlinks,
+            "full_pdf_text": pdf_text,
+            "atc_analysis": atc_result,
+        }
+        chunks_with_embeddings = generate_bid_embeddings(
+            bid_data=bid_dict,
+            atc_result=atc_result,
+            pdf_text=pdf_text,
+        )
+        if chunks_with_embeddings:
+            db_inst = PostgresBidDatabase()
+            total_chunks_indexed = db_inst.insert_chunks(safe_bid_no, chunks_with_embeddings)
+            log.info(f"[Tier 3] Successfully indexed {total_chunks_indexed} vector chunks into gem_bid_chunks for {safe_bid_no}")
+        else:
+            log.warning(f"[Tier 3] No vector chunks produced for {safe_bid_no}")
+    except Exception as emb_err:
+        log.error(f"[Tier 3] Vector embedding generation failed for {safe_bid_no}: {emb_err}", exc_info=True)
+
+    # 3. Upload ATC results to MinIO S3
     try:
         from utils.s3_storage import upload_bytes as s3_upload_bytes
         s3_upload_bytes(f"bids/{safe_bid_no}/atc_compliance.json", json.dumps(atc_result, default=str).encode("utf-8"), content_type="application/json")
@@ -126,8 +153,7 @@ def process_atc_and_embed(
     except Exception as s3_err:
         log.warning(f"[Tier 3] MinIO upload failed for {safe_bid_no}: {s3_err}")
 
-    # 3. Mark Redis key as completed
-
+    # 4. Mark Redis key as completed
     try:
         r = _get_redis_client()
         r.set(f"gem:seen:{safe_bid_no}", "completed", ex=86400 * 30)
@@ -135,4 +161,9 @@ def process_atc_and_embed(
         log.warning(f"[Tier 3] Redis status update failed: {redis_err}")
 
     log.info(f"[Tier 3] Tender {safe_bid_no} 100% processed and indexed.")
-    return {"status": "completed", "bid_no": safe_bid_no, "has_atc": atc_result.get("has_atc", False)}
+    return {
+        "status": "completed",
+        "bid_no": safe_bid_no,
+        "has_atc": atc_result.get("has_atc", False),
+        "chunks_indexed": total_chunks_indexed,
+    }

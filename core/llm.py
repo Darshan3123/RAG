@@ -128,7 +128,7 @@ def call_llm(question: str, chunks: list[dict]) -> str:
 
 def _call_gemini(prompt: str) -> str:
     try:
-        from pipeline.atc_analyzer import call_gemini
+        from core.atc_analyzer import call_gemini
         ans = call_gemini(
             system_prompt=SYSTEM_PROMPT,
             user_prompt=prompt,

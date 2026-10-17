@@ -700,6 +700,7 @@ class PostgresBidDatabase:
     def insert_chunks(self, bid_id: str, chunks: List[Dict[str, Any]]) -> int:
         """
         Bulk-insert semantic text passages with 768-dim embeddings into gem_bid_chunks.
+        Idempotent: Purges previous chunks for `bid_id` prior to inserting.
         """
         if not chunks:
             return 0
@@ -711,12 +712,14 @@ class PostgresBidDatabase:
             meta = c.get("metadata", {})
             emb = c.get("embedding")
             if text and emb:
-                rows.append((bid_id, ctype, text, Json(meta), emb))
+                emb_str = str(emb) if not isinstance(emb, str) else emb
+                rows.append((bid_id, ctype, text, Json(meta), emb_str))
 
         if not rows:
             return 0
 
         with get_db_cursor(commit=True) as cur:
+            cur.execute("DELETE FROM gem_bid_chunks WHERE bid_id = %s;", (bid_id,))
             execute_values(
                 cur,
                 """
@@ -724,14 +727,16 @@ class PostgresBidDatabase:
                 VALUES %s;
                 """,
                 rows,
+                template="(%s, %s, %s, %s, %s::vector)",
             )
         log.info(f"Inserted {len(rows)} vector chunks for bid: {bid_id}")
         return len(rows)
 
-    def search_chunks(self, query_embedding: List[float], top_k: int = 5, bid_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    def search_chunks(self, query_embedding: Union[List[float], str], top_k: int = 5, bid_id: Optional[str] = None) -> List[Dict[str, Any]]:
         """
         Sub-5ms Cosine Similarity search over gem_bid_chunks using the HNSW index.
         """
+        emb_str = str(query_embedding) if not isinstance(query_embedding, str) else query_embedding
         with get_db_cursor(commit=False) as cur:
             if bid_id:
                 cur.execute(
@@ -743,7 +748,7 @@ class PostgresBidDatabase:
                     ORDER BY distance ASC
                     LIMIT %s;
                     """,
-                    (query_embedding, bid_id, top_k),
+                    (emb_str, bid_id, top_k),
                 )
             else:
                 cur.execute(
@@ -756,7 +761,7 @@ class PostgresBidDatabase:
                     ORDER BY distance ASC
                     LIMIT %s;
                     """,
-                    (query_embedding, top_k),
+                    (emb_str, top_k),
                 )
 
             columns = [desc[0] for desc in cur.description]
