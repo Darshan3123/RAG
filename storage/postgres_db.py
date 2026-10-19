@@ -6,7 +6,7 @@
 import json
 import re
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -240,6 +240,9 @@ class PostgresBidDatabase:
         norm_dates = norm.get("dates", {})
         start_datetime = _to_timestamptz(norm_dates.get("start_date_iso") or card.get("start_datetime"))
         end_datetime = _to_timestamptz(norm_dates.get("end_date_iso") or pdf.get("timing", {}).get("bid_end_datetime") or card.get("end_datetime"))
+        if not end_datetime:
+            base_dt = start_datetime or datetime.now(timezone.utc)
+            end_datetime = base_dt + timedelta(days=21)
         bid_opening_datetime = _to_timestamptz(pdf.get("timing", {}).get("bid_opening_datetime"))
         card_start_datetime = card.get("start_datetime")
         card_end_datetime = card.get("end_datetime")

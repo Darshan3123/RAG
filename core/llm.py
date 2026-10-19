@@ -230,3 +230,7 @@ def _format_retrieval_only(question: str, chunks: list[dict]) -> str:
         )
     lines.append("\n" + "─" * 70)
     return "\n".join(lines)
+
+
+# Backwards compatibility and test alias
+generate_answer = call_llm

@@ -12,7 +12,7 @@
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│ 🚀 Overall Migration Progress: 100% Complete                           │
+│ 🚀 Overall Migration Progress: ~98% Complete                           │
 ├───────────────────────────────────────────────────┬────────────────────┤
 │ 1. PostgreSQL v3.0 Database Schema & Ingestion     │ ✅ 100% COMPLETED  │
 │ 2. MinIO S3 Object Storage Client Module          │ ✅ 100% COMPLETED  │
@@ -22,8 +22,8 @@
 │ 6. Ingestion & Storage Verification Test Scripts  │ ✅ 100% COMPLETED  │
 │ 7. Vector Embedding Linking in Tier 3 Worker      │ ✅ 100% COMPLETED  │
 │ 8. FastAPI REST Gateway (Port 8000 Endpoints)     │ ✅ 100% COMPLETED  │
-│ 9. Production Dokploy Stack (docker-compose.prod) │ ✅ 100% COMPLETED  │
-│ 10. Live Data Backfill & Cloud Verification Run   │ ✅ 100% COMPLETED  │
+│ 9. End-to-End Master Test Suite (51/51 Checks)    │ ✅ 100% OPERATIONAL│
+│ 10. Production Dokploy Stack & VPS Backfill       │ ⏳  READY / NEXT   │
 └───────────────────────────────────────────────────┴────────────────────┘
 ```
 
@@ -131,99 +131,85 @@ Three major commits reshaped the repository:
   * `Testing Scripts/test_rag_search.py` (Complete verification test for domain chunking, BGE vector embeddings, and sub-5ms cosine retrieval).
   * `Documentation/SETUP_AND_DEPLOYMENT_GUIDE.md` (Detailed deployment guide).
 
-### F. FastAPI REST API Gateway (26 Routes across 7 Groups)
-* [x] **Specification Alignment:** Fully aligned with [`Documentation/API_SPECIFICATION_AND_PARTITION_GUIDE.md`](file:///F:/Projects/gem_scraper/Documentation/API_SPECIFICATION_AND_PARTITION_GUIDE.md).
-* [x] **`gateway/main.py` & `gateway/__init__.py`:** FastAPI application on port 8000 with lifespan connection pooling, standardized error handler, CORS middleware, `/health`, and root redirect to `/docs`.
-* [x] **`gateway/schemas.py`:** Comprehensive Pydantic models for all 10 tender partitions, search queries, discovery aggregations, async task status, and telemetry.
-* [x] **`gateway/routes/bids.py`:**
-  * Group 1: Master Dossier (`GET /api/v1/bids`, `GET /api/v1/bids/{bid_no_or_id}?include=...`, `GET /api/v1/bids/{bid_no_or_id}/raw`).
-  * Group 2: 9 Sub-Resource Partitions (`/header`, `/buyer`, `/items`, `/consignees`, `/financials`, `/policy`, `/documents`, `/atc`, `/submissions`).
-* [x] **`gateway/routes/discovery.py`:**
-  * Group 3: Metadata aggregations (`GET /types`, `GET /organizations`, `GET /locations/states`, `GET /locations/states/{state}/bids`, `GET /locations/pincode/{pin}/bids`).
-* [x] **`gateway/routes/search.py`:**
-  * Group 4: Quick search (`GET /search/quick`), multi-field keyword search (`GET /search/keyword`), and sub-5ms cosine semantic search (`POST /search/semantic`).
-* [x] **`gateway/routes/documents.py`:**
-  * Group 5: S3 Presigned PDF URL generator (`GET /documents/{bid_no}/pdf`).
-* [x] **`gateway/routes/tasks.py`:**
-  * Group 6: Celery background scrape task dispatch (`POST /tasks/scrape-bid`) and status polling (`GET /tasks/{task_id}`).
-* [x] **`gateway/routes/analytics.py`:**
-  * Group 7: High-level overview metrics (`GET /analytics/overview`) and AI token/cost telemetry (`GET /analytics/ai-telemetry`).
+### F. FastAPI REST Gateway (Port 8000 Endpoints — v3.0 Production Standard)
+* [x] **`gateway/main.py` (Created):**
+  * FastAPI ASGI application with connection pool lifespan management, CORS middleware, global standard exception handlers, interactive Swagger UI (`/docs`), ReDoc (`/redoc`), and `/health` probe.
+* [x] **`gateway/schemas.py` (Created):**
+  * Comprehensive Pydantic v2 schemas defining master dossiers, 10 partitioned sub-resource modules, discovery feeds, search responses, S3 streaming presigned responses, Celery tasks, and analytics telemetry.
+* [x] **`gateway/routes/bids.py` (Created):**
+  * Master dossier (`GET /api/v1/bids/{bid_no}`), paginated & multi-filter table (`GET /api/v1/bids`), raw backup (`GET /api/v1/bids/{bid_no}/raw`), and all 10 isolated tab partitions (`/header`, `/buyer`, `/items`, `/consignees`, `/financials`, `/policy`, `/documents`, `/atc`, `/submissions`).
+* [x] **`gateway/routes/discovery.py` (Created):**
+  * Category counts (`/types`), organizations directory (`/organizations`), state explorer (`/locations/states`), and logistics freight pincode explorer (`/locations/pincode/{pin}/bids`).
+* [x] **`gateway/routes/search.py` (Created):**
+  * Quick auto-complete (`/search/quick`), trigram fuzzy keyword matching (`/search/keyword`), and sub-5ms 768-dim BGE vector semantic search (`/search/semantic`).
+* [x] **`gateway/routes/documents.py` (Created):**
+  * MinIO S3 presigned PDF and compliance JSON download streaming with optional HTTP 307 temporary redirect.
+* [x] **`gateway/routes/tasks.py` (Created):**
+  * Asynchronous crawling dispatch (`POST /tasks/scrape-bid`) to Celery `scraping_queue` and real-time task polling (`GET /tasks/{task_id}`).
+* [x] **`gateway/routes/analytics.py` (Created):**
+  * System overview KPI counters (`/analytics/overview`) and Gemini AI / Mistral OCR token and cost audit (`/analytics/ai-telemetry`).
+* [x] **`Testing Scripts/test_api_gateway.py` (Created & Verified):**
+  * 27 integration tests covering all 7 API groups — 27 PASSED, 0 FAILED.
 
-### G. Production Dokploy Deployment Configuration
-* [x] **`docker-compose.prod.yml` (Created):**
-  * Production Docker stack for Dokploy on Hostinger KVM 4 VPS (`srv1701681`).
-  * Strict resource ceilings configured:
+---
+
+## ⏳ 4. WHAT WE STILL HAVE PENDING (Remaining Work)
+
+The following components from [`SERVER_DEPLOYMENT_PLAN.md`](file:///F:/Projects/gem_scraper/SERVER_DEPLOYMENT_PLAN.md) remain to be completed:
+
+### 1. ⏳ Production Docker Compose (`docker-compose.prod.yml`) — Dokploy Ready
+* [ ] **Finalize `docker-compose.prod.yml`:**
+  * Compose stack configured for **Dokploy** on Hostinger KVM 4 VPS (`srv1701681`) enforcing hard resource limits:
     * Scraper worker: `cpus: '1.0'`, `memory: 1200M`, `shm_size: '2gb'`, `init: true`
     * Document worker: `cpus: '0.5'`, `memory: 600M`
     * ATC worker: `cpus: '0.5'`, `memory: 1200M`
     * Celery Beat daemon: `cpus: '0.1'`, `memory: 150M`
-    * FastAPI Gateway: `cpus: '0.4'`, `memory: 350M` (Port 8000)
-    * Flower Monitoring Dashboard: `cpus: '0.2'`, `memory: 200M` (Port 5555)
-    * Redis Broker: `cpus: '0.5'`, `memory: 512M` (Port 6379)
-  * Isolated Docker bridge network `gem_engine_network` and persistent Redis volume `gem_redis_data`.
+    * FastAPI Gateway: `cpus: '0.4'`, `memory: 350M`
+    * Flower Monitoring Dashboard: port 5555
+    * Bridge network connecting to host's existing Redis, PostgreSQL, and MinIO services.
 
-### H. Verification, Live Backfill & Test Suite
-* [x] **PostgreSQL Ingestion Test (`Testing Scripts/test_postgres_ingestion.py`):**
-  * All 61 downloaded tenders successfully backfilled into PostgreSQL `gem-bridge` across all 10 tables in 0.76s (0.012s/tender).
-  * Table row counts verified: 71 bids, 435 items, 141 consignees, 36 evaluation schedules, 2,633 compliance checklist items, 76 physical submissions, 502 hyperlinks, 71 terms, 62 AI analyses, 635 vector chunks.
-* [x] **MinIO S3 Storage Test (`Testing Scripts/test_minio_storage.py`):**
-  * Bucket `gem-tenders` verified, in-memory stream tested, 24-hr presigned URLs verified, PDF streaming verified with SHA256 integrity match.
-* [x] **RAG Vector Search Test (`Testing Scripts/test_rag_search.py`):**
-  * BGE vector embeddings generated (768-dim), HNSW index queried with sub-5ms latency (1.94ms - 2.82ms).
-* [x] **API Gateway Test Suite (`Testing Scripts/test_api_gateway.py`):**
-  * All 26 endpoints tested: **27 passed, 0 failed**.
-* [x] **Legacy Artifacts Cleanup:**
-  * Deprecated SQLite files and monolith folders purged (`storage/gem_bids.db`, `storage/gem_bids.json`, `pipeline/`, `rag/`).
+### 2. ⏳ Database Backfill Execution & MinIO Verification Run
+* [ ] **Run Ingestion on the 61 Existing Tenders:**
+  * Execute `Testing Scripts/test_postgres_ingestion.py` against a running PostgreSQL database to backfill all 61 JSON documents from `downloads/` into the V3 schema.
+* [ ] **Run MinIO Verification:**
+  * Execute `Testing Scripts/test_minio_storage.py` to confirm bucket creation and presigned URL access.
 
----
-
-## 🎉 4. MIGRATION STATUS & VERIFICATION RESULTS
-
-All 10 core enterprise architecture milestones defined in [`SERVER_DEPLOYMENT_PLAN.md`](file:///F:/Projects/gem_scraper/SERVER_DEPLOYMENT_PLAN.md) and [`ER-Diagram-V3.md`](file:///F:/Projects/gem_scraper/Documentation/ER-Diagram-V3.md) are **100% complete and fully verified**.
-
-### Summary of System Health:
-* **Database (PostgreSQL 16 + pgvector):** Connected, pooled (1-10 connections), 10 tables active, HNSW cosine vector index functional.
-* **Storage (MinIO S3):** Connected, private bucket `gem-tenders` initialized, presigned URL generator verified.
-* **Queues (Celery 5 + Redis 7):** 3-Tier architecture configured with explicit routing (`scraping_queue`, `document_queue`, `atc_rag_queue`), beat scheduler configured.
-* **REST API Gateway (FastAPI):** 26 routes live across 7 endpoint groups, fully tested with 27/27 test cases passing.
-* **Containerization:** `docker-compose.local.yml` for Windows development, `docker-compose.prod.yml` for Hostinger Dokploy deployment with hard CPU/memory ceilings.
+### 3. ⏳ Deprecate / Remove Leftover Legacy Files
+* [ ] Remove obsolete files in `storage/`:
+  * `storage/gem_bids.db` (4.6 MB legacy SQLite file)
+  * `storage/gem_bids.json` (129 KB legacy export)
+* [ ] Clean up empty legacy folders:
+  * `pipeline/` (all files moved to `core/` or `tasks/`)
+  * `rag/` (all files moved to `core/`)
 
 ---
 
-## 🚀 5. Deployment Runbook & Operational Commands
+## 5. Step-by-Step Action Plan for Next Implementation
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│ 💻 LOCAL DEVELOPMENT (WINDOWS POWERSHELL)                              │
-├────────────────────────────────────────────────────────────────────────┤
-│ 1. Start Redis & MinIO:                                                │
-│    docker compose -f docker-compose.local.yml up -d redis minio        │
-│                                                                        │
-│ 2. Start Celery 3-Tier Workers:                                        │
-│    .\start_workers.ps1                                                 │
-│                                                                        │
-│ 3. Start FastAPI REST Gateway:                                         │
-│    uvicorn gateway.main:app --host 0.0.0.0 --port 8000 --reload        │
-│                                                                        │
-│ 4. Run Test Suites:                                                    │
-│    python "Testing Scripts/test_api_gateway.py"                        │
-│    python "Testing Scripts/test_rag_search.py"                         │
-└────────────────────────────────────────────────────────────────────────┘
-
+│ ✅ STEP 1: Connect Vector Embedding in Tier 3 Worker (COMPLETED)       │
+│ • Domain chunking, BGE vectorization, and pgvector HNSW search verified│
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│ 🌐 PRODUCTION DEPLOYMENT (HOSTINGER KVM 4 VPS / DOKPLOY)               │
-├────────────────────────────────────────────────────────────────────────┤
-│ 1. Point Dokploy project to repository branch development_v3           │
-│ 2. Use docker-compose.prod.yml as compose file                         │
-│ 3. Provide production .env with VPS PostgreSQL & MinIO credentials     │
-│ 4. Launch Stack:                                                       │
-│    docker compose -f docker-compose.prod.yml up -d --build             │
-│                                                                        │
-│ 5. Monitor Celery Queues via Flower:                                   │
-│    http://srv1701681:5555                                              │
-│                                                                        │
-│ 6. Access Interactive Swagger API Docs:                                │
-│    http://srv1701681:8000/docs                                         │
+│ ✅ STEP 2: Build the FastAPI REST Gateway (gateway/) (COMPLETED)       │
+│ • 7 API groups, 10 tab partitions, sub-5ms semantic & docs verified   │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ ✅ STEP 3: Master End-to-End Verification Test Suite (COMPLETED)       │
+│ • 51/51 automated checks passed across all 8 architectural phases     │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ 🎯 STEP 4: Live Verification & Backfill Run on VPS                     │
+│ • Execute test_postgres_ingestion.py to backfill tenders.             │
+│ • Execute test_minio_storage.py to verify S3 bucket streaming.         │
+│ • Deploy via docker-compose.prod.yml on Dokploy Hostinger VPS.         │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
