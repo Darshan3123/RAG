@@ -204,3 +204,66 @@ def crawl_all_categories(target_per_category: int = 2) -> Dict[str, Any]:
         t = scrape_category.delay(bid_type=cat, target_count=target_per_category)
         tasks.append((cat, t.id))
     return {"status": "enqueued", "tasks": tasks}
+
+
+@app.task(name="tasks.tier1_scraper.scrape_single_bid", bind=True, max_retries=2)
+def scrape_single_bid(self, bid_no: str) -> Dict[str, Any]:
+    """
+    Tier 1 Worker Task: On-demand crawl for a specific bid number.
+    1. Uses advanced_search_bid to locate the tender card.
+    2. Downloads Bid & RA PDFs and extracts hyperlinks.
+    3. Dispatches Tier 2 task to document_queue.
+    """
+    log.info(f"[Tier 1] Starting on-demand scrape for bid: '{bid_no}'")
+    safe_bid_no = bid_no.replace("/", "_")
+    r = _get_redis_client()
+    dedup_key = f"gem:seen:{safe_bid_no}"
+    r.set(dedup_key, "downloading", ex=86400 * 7)
+
+    browser = GemBrowser()
+    try:
+        browser.start()
+        browser.advanced_search_bid(bid_no)
+        browser.wait_for_cards()
+        cards = browser.get_all_cards()
+        if not cards:
+            log.warning(f"[Tier 1] No cards found for bid: {bid_no}")
+            return {"status": "not_found", "bid_no": bid_no}
+
+        card = cards[0]
+        card_data = get_card_details(card, "Direct Search")
+        doc_url, ra_url, corr_url = browser.extract_card_links(card)
+
+        bid_dir = os.path.join(DOWNLOAD_DIR, safe_bid_no)
+        os.makedirs(bid_dir, exist_ok=True)
+        pdf_path = os.path.join(bid_dir, "bid.pdf")
+
+        if doc_url:
+            browser.download_pdf(doc_url, save_dir=bid_dir, filename="bid.pdf")
+            try:
+                from utils.s3_storage import upload_file as s3_upload_file
+                s3_upload_file(f"bids/{safe_bid_no}/bid.pdf", pdf_path, content_type="application/pdf")
+            except Exception as s3_err:
+                log.warning(f"[Tier 1] MinIO upload failed for {safe_bid_no}: {s3_err}")
+
+        bid_hyperlinks = []
+        if os.path.exists(pdf_path):
+            try:
+                bid_hyperlinks = extract_hyperlinks(pdf_path)
+            except Exception as h_err:
+                log.warning(f"[Tier 1] Hyperlink extraction error: {h_err}")
+
+        card_html = card.inner_html() if hasattr(card, "inner_html") else ""
+
+        from tasks.tier2_document import process_document
+        task = process_document.delay(
+            safe_bid_no=safe_bid_no,
+            card_data=card_data,
+            pdf_path=pdf_path,
+            bid_hyperlinks=bid_hyperlinks,
+            card_html=card_html,
+        )
+
+        return {"status": "enqueued", "bid_no": bid_no, "document_task_id": task.id}
+    finally:
+        browser.close()

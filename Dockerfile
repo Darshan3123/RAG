@@ -23,6 +23,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Install Playwright browser dependencies
 RUN playwright install chromium
 
+# Create persistent cache and downloads directories
+RUN mkdir -p /app/downloads /root/.cache/huggingface
+
 # Copy full application code
 COPY . .
 

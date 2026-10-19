@@ -1,0 +1,224 @@
+# ==============================================================================
+# docker-compose.prod.yml
+# GeMBridge Enterprise Production Stack (v3.0.0)
+# Optimized for Dokploy, Traefik & Hostinger KVM 4 VPS (srv1701681)
+# ==============================================================================
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-extra-hosts: &default-extra-hosts
+  - "host.docker.internal:host-gateway"
+
+services:
+  # ── 1. REDIS MESSAGE BROKER & RESULT BACKEND ─────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: gem-engine-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy noeviction
+    volumes:
+      - gem_redis_data:/data
+    networks:
+      - gem_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 512M
+    logging: *default-logging
+
+  # ── 2. TIER 1: PLAYWRIGHT WEB CRAWLER & DOWNLOAD WORKER ──────────────────────
+  worker-scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-worker-scraper
+    restart: unless-stopped
+    command: celery -A tasks.celery_app worker -Q scraping_queue -c 2 -l info -n scraper_worker@%h
+    init: true
+    shm_size: '2gb'
+    env_file: .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - gem_network
+    extra_hosts: *default-extra-hosts
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1200M
+        reservations:
+          cpus: '0.20'
+          memory: 400M
+    logging: *default-logging
+
+  # ── 3. TIER 2: DOCUMENT PROCESSING, SLICING & OCR WORKER ─────────────────────
+  worker-document:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-worker-document
+    restart: unless-stopped
+    command: celery -A tasks.celery_app worker -Q document_queue -c 2 -l info -n doc_worker@%h
+    env_file: .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - gem_network
+    extra_hosts: *default-extra-hosts
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 600M
+        reservations:
+          cpus: '0.10'
+          memory: 200M
+    logging: *default-logging
+
+  # ── 4. TIER 3: ATC COMPLIANCE & PGVECTOR INDEXING WORKER ─────────────────────
+  worker-atc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-worker-atc
+    restart: unless-stopped
+    command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 2 -l info -n atc_worker@%h
+    env_file: .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - gem_hf_cache:/root/.cache/huggingface
+      - gem_downloads:/app/downloads
+    networks:
+      - gem_network
+    extra_hosts: *default-extra-hosts
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1200M
+        reservations:
+          cpus: '0.10'
+          memory: 400M
+    logging: *default-logging
+
+  # ── 5. CELERY BEAT PERIODIC SCHEDULER DAEMON ─────────────────────────────────
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-celery-beat
+    restart: unless-stopped
+    command: celery -A tasks.celery_app beat -l info
+    env_file: .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - gem_network
+    extra_hosts: *default-extra-hosts
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 150M
+    logging: *default-logging
+
+  # ── 6. FASTAPI REST GATEWAY (PORT 8000) ───────────────────────────────────────
+  fastapi-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-fastapi-gateway
+    restart: unless-stopped
+    command: uvicorn gateway.main:app --host 0.0.0.0 --port 8000 --workers 2
+    ports:
+      - "${GATEWAY_PORT:-8000}:8000"
+    env_file: .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - gem_hf_cache:/root/.cache/huggingface
+      - gem_downloads:/app/downloads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - gem_network
+    extra_hosts: *default-extra-hosts
+    deploy:
+      resources:
+        limits:
+          cpus: '0.40'
+          memory: 350M
+    logging: *default-logging
+    labels:
+      - "traefik.enable=${ENABLE_TRAEFIK:-false}"
+      - "traefik.http.routers.gem-gateway.rule=Host(`${GATEWAY_DOMAIN:-api.gembridge.local}`)"
+      - "traefik.http.routers.gem-gateway.entrypoints=websecure"
+      - "traefik.http.routers.gem-gateway.tls=true"
+      - "traefik.http.routers.gem-gateway.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-letsencrypt}"
+      - "traefik.http.services.gem-gateway.loadbalancer.server.port=8000"
+
+  # ── 7. FLOWER QUEUE TELEMETRY DASHBOARD (PORT 5555) ──────────────────────────
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-flower-telemetry
+    restart: unless-stopped
+    command: celery -A tasks.celery_app flower --port=5555 --basic_auth=${FLOWER_BASIC_AUTH:-admin:AdminGeMBridge2026}
+    ports:
+      - "${FLOWER_PORT:-5555}:5555"
+    env_file: .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - gem_network
+    extra_hosts: *default-extra-hosts
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 150M
+    logging: *default-logging
+    labels:
+      - "traefik.enable=${ENABLE_TRAEFIK:-false}"
+      - "traefik.http.routers.gem-flower.rule=Host(`${FLOWER_DOMAIN:-flower.gembridge.local}`)"
+      - "traefik.http.routers.gem-flower.entrypoints=websecure"
+      - "traefik.http.routers.gem-flower.tls=true"
+      - "traefik.http.routers.gem-flower.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-letsencrypt}"
+      - "traefik.http.services.gem-flower.loadbalancer.server.port=5555"
+
+# ── SHARED NETWORKS & VOLUMES ──────────────────────────────────────────────────
+networks:
+  gem_network:
+    name: gem_engine_network
+    driver: bridge
+
+volumes:
+  gem_redis_data:
+    name: gem_redis_data
+  gem_hf_cache:
+    name: gem_hf_cache
+  gem_downloads:
+    name: gem_downloads

@@ -41,42 +41,78 @@ class GemBrowser:
         self.dl_page:   Page = None
 
     # -------------------------------------------------------
-    # CONTEXT MANAGER
+    # LIFECYCLE & CONTEXT MANAGER
     # -------------------------------------------------------
-    def __enter__(self):
-        self._pw      = sync_playwright().start()
-        self._browser = self._pw.chromium.launch(
-            **stealth_launch_options()
-        )
-        self._context = self._browser.new_context(
-            **stealth_context_options()
-        )
-        self._context.set_default_timeout(60_000)
-
-        # Inject stealth JS — hides webdriver flag
-        self._context.add_init_script("""
-            Object.defineProperty(navigator, 'webdriver', {
-                get: () => undefined
-            });
-            window.chrome = { runtime: {} };
-            Object.defineProperty(navigator, 'plugins', {
-                get: () => [1, 2, 3, 4, 5]
-            });
-        """)
-
-        self.list_page = self._context.new_page()
-        self.dl_page   = self._context.new_page()
-        log.info("Browser launched (stealth mode)")
+    def start(self):
+        """Start Playwright browser and contexts."""
+        if self._pw is None:
+            self._pw = sync_playwright().start()
+            self._browser = self._pw.chromium.launch(**stealth_launch_options())
+            self._context = self._browser.new_context(**stealth_context_options())
+            self._context.set_default_timeout(60_000)
+            self._context.add_init_script("""
+                Object.defineProperty(navigator, 'webdriver', {
+                    get: () => undefined
+                });
+                window.chrome = { runtime: {} };
+                Object.defineProperty(navigator, 'plugins', {
+                    get: () => [1, 2, 3, 4, 5]
+                });
+            """)
+            self.list_page = self._context.new_page()
+            self.dl_page = self._context.new_page()
+            log.info("Browser launched (stealth mode)")
         return self
 
-    def __exit__(self, *_):
+    def close(self):
+        """Close browser and stop Playwright."""
         try:
-            self._context.close()
-            self._browser.close()
-            self._pw.stop()
+            if self._context:
+                self._context.close()
+            if self._browser:
+                self._browser.close()
+            if self._pw:
+                self._pw.stop()
             log.info("Browser closed")
         except Exception as e:
             log.warning(f"Browser close error: {e}")
+        finally:
+            self._pw = None
+            self._browser = None
+            self._context = None
+            self.list_page = None
+            self.dl_page = None
+
+    def __enter__(self):
+        return self.start()
+
+    def __exit__(self, *_):
+        self.close()
+
+    def goto(self, url: str):
+        """Navigate to URL on the listing page."""
+        if self.list_page:
+            self.list_page.goto(url, wait_until="domcontentloaded", timeout=120_000)
+            sleep_page_load()
+            human_mouse_move(self.list_page)
+
+    def select_filter(self, bid_type_name: str) -> bool:
+        """Alias for select_bid_type."""
+        try:
+            self.select_bid_type(bid_type_name)
+            return True
+        except Exception:
+            return False
+
+    def get_all_cards(self):
+        """Return list of card locators on current page."""
+        locator = self.get_cards()
+        count = locator.count()
+        return [locator.nth(i) for i in range(count)]
+
+    def click_next_page(self) -> bool:
+        """Alias for go_next_page."""
+        return self.go_next_page()
 
     # -------------------------------------------------------
     # -------------------------------------------------------

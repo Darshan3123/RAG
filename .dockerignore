@@ -1,0 +1,69 @@
+# ==============================================================================
+# .dockerignore — GeMBridge Build Context Exclusion Rules
+# Prevents heavy local directories (venv, downloads, git) from bloating Docker build
+# ==============================================================================
+
+# Git metadata & config
+.git/
+.gitignore
+.gitattributes
+
+# Python Virtual Environments (Crucial: prevents Windows venv copying into Linux container)
+venv/
+env/
+.venv/
+ENV/
+VLLM_Env/
+
+# Python Cache & Compiled Files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local Environment Secrets (Docker injects via env_file)
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Application Downloads & Heavy Data
+downloads/
+logs/
+*.log
+output/
+
+# Storage SQLite, JSON Dumps & Legacy Chroma DB
+storage/*.db
+storage/*.json
+storage/*.png
+storage/chroma_db/
+
+# Heavy Standalone & Legacy Folders
+ATC EXTRACTOR/
+ATC EXTRACTOR - Standlone/
+STANDLONE TEST SCRIPTS/
+
+# Documentation & Markdown files (not needed in container runtime)
+Documentation/
+*.md
+
+# IDE & Operating System Metadata
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archives & Installers
+*.zip
+*.tar.gz
+*.deb
