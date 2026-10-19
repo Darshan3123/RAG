@@ -2,9 +2,17 @@
 
 An end-to-end architectural specification and user guide for the **GeM Tender Ingestion, Pluggable Cloud/Local OCR Engine, ATC Compliance Analyzer, and Hybrid RAG Retrieval Pipeline**.
 
+> [!IMPORTANT]
+> **Architecture Versions & System Flow Diagrams:**
+> - **v3 (Current Enterprise Production Stack):** [`Documentation/System-Flow-Diagrams/GEMBRIDGE_V3_ARCHITECTURE_FLOW.md`](file:///c:/Projects/GeM/Scrapper%20&%20RAG%20Pipeline/Documentation/System-Flow-Diagrams/GEMBRIDGE_V3_ARCHITECTURE_FLOW.md)
+>   - **Draw.io Diagram:** [`Documentation/System-Flow-Diagrams/GeM-Bridge-v3.drawio`](file:///c:/Projects/GeM/Scrapper%20&%20RAG%20Pipeline/Documentation/System-Flow-Diagrams/GeM-Bridge-v3.drawio)
+>   - *Features:* FastAPI REST Gateway, PostgreSQL 18 with `pgvector` & `pg_trgm`, MinIO S3 Zero-Disk In-Memory pipeline, 3-Tier Celery Distributed Queues (`scraping_queue`, `document_queue`, `atc_rag_queue`), 10 Data Partitions, Dokploy Multi-Container Stack.
+> - **v2 (Distributed Celery & S3 Evolution):** [`Documentation/System-Flow-Diagrams/GeM-Bridge-v2.drawio`](file:///c:/Projects/GeM/Scrapper%20&%20RAG%20Pipeline/Documentation/System-Flow-Diagrams/GeM-Bridge-v2.drawio)
+> - **v1 (Foundational CLI & SQLite Monolith):** [`Documentation/System-Flow-Diagrams/GeM-Bridge-v1.drawio`](file:///c:/Projects/GeM/Scrapper%20&%20RAG%20Pipeline/Documentation/System-Flow-Diagrams/GeM-Bridge-v1.drawio)
+
 ---
 
-## 🗺️ 1. End-to-End System Architecture
+## 🗺️ 1. End-to-End System Architecture (Foundational Pipeline)
 
 The following diagram illustrates the complete data lifecycle—from Playwright browser ingestion to Hybrid RAG retrieval:
 

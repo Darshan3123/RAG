@@ -1,0 +1,158 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="GeMBridge-v3-Architecture" id="GeMBridge_v3_Enterprise_Architecture">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1600" pageHeight="2200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Embedded Mermaid Engine Layer -->
+        <UserObject label="" mermaidData="{&#xa;  &quot;data&quot;: &quot;flowchart TD&#xa;    subgraph CLIENTS [&quot;1. Client &amp; Integration Layer&quot;]&#xa;        WEB[&quot;React / Next.js Web App&quot;]&#xa;        MOBILE[&quot;Mobile Applications&quot;]&#xa;        B2B_CLIENTS[&quot;B2B Enterprise Consumers&quot;]&#xa;        SWAGGER_UI[&quot;Interactive Swagger UI (/docs)&quot;]&#xa;    end&#xa;&#xa;    subgraph GATEWAY [&quot;2. REST API Gateway (FastAPI Port 8000)&quot;]&#xa;        SECURITY[&quot;CORS &amp; Request Security Middleware&quot;]&#xa;        TELEMETRY_LATENCY[&quot;Latency &amp; Telemetry Middleware (X-Process-Time-Ms)&quot;]&#xa;        &#xa;        subgraph ROUTE_MODULES [&quot;Gateway Endpoint Modules (gateway/routes/)&quot;]&#xa;            R_BIDS[&quot;routes/bids.py (Master Dossier &amp; 10 Partition Slices)&quot;]&#xa;            R_SEARCH[&quot;routes/search.py (Prefix, Trigram &amp; pgvector Semantic)&quot;]&#xa;            R_DOCS[&quot;routes/documents.py (MinIO Presigned PDF Redirect)&quot;]&#xa;            R_DISCOVERY[&quot;routes/discovery.py (Aggregations by Type &amp; Org)&quot;]&#xa;            R_TASKS[&quot;routes/tasks.py (Async Scraper Triggers &amp; Task Status)&quot;]&#xa;            R_ANALYTICS[&quot;routes/analytics.py (System KPIs &amp; Token Costs)&quot;]&#xa;            R_HEALTH[&quot;routes/health.py (Postgres, Redis, MinIO Health)&quot;]&#xa;        end&#xa;    end&#xa;&#xa;    subgraph BROKER [&quot;3. Message Broker &amp; Distributed Queues (Redis 7)&quot;]&#xa;        CELERY_BEAT[&quot;Celery Beat Periodic Scheduler (Every 30 Mins)&quot;]&#xa;        Q_SCRAPING[&quot;Redis Queue: scraping_queue&quot;]&#xa;        Q_DOCUMENT[&quot;Redis Queue: document_queue&quot;]&#xa;        Q_ATC[&quot;Redis Queue: atc_rag_queue&quot;]&#xa;        DEDUP_STORE[&quot;Redis Deduplication Store (gem:seen:{bid_no} - 7 Days TTL)&quot;]&#xa;    end&#xa;&#xa;    subgraph WORKERS [&quot;4. Distributed 3-Tier Queue Worker Layer&quot;]&#xa;        subgraph TIER1 [&quot;Tier 1: Playwright Web Scraper Worker&quot;]&#xa;            CHROMIUM[&quot;Playwright Chromium Stealth (2GB /dev/shm)&quot;]&#xa;            INMEM_SCRAPE[&quot;Zero-Disk In-Memory PDF Capture&quot;]&#xa;        end&#xa;&#xa;        subgraph TIER2 [&quot;Tier 2: Document Processing &amp; OCR Worker&quot;]&#xa;            PYMUPDF_SLICE[&quot;PyMuPDF Front-Page Slicer (&lt;0.2s In-Memory)&quot;]&#xa;            MISTRAL_OCR[&quot;Mistral Cloud OCR (Scanned Annexures Fallback)&quot;]&#xa;            NORMALIZER_ENGINE[&quot;Core Normalizer &amp; Validator (ACID Schema)&quot;]&#xa;        end&#xa;&#xa;        subgraph TIER3 [&quot;Tier 3: ATC Compliance &amp; AI Vector Worker&quot;]&#xa;            GEMINI_ENGINE[&quot;Google Gemini 2.5 Flash (8-Domain Legal ATC Analyzer)&quot;]&#xa;            BGE_EMBEDDER[&quot;BAAI/bge-base-en-v1.5 (768-dim Dense Vector Engine)&quot;]&#xa;        end&#xa;    end&#xa;&#xa;    subgraph PERSISTENCE [&quot;5. Enterprise Hybrid Persistence Layer&quot;]&#xa;        subgraph S3_STORAGE [&quot;MinIO S3 Object Storage (Bucket: gem-tenders)&quot;]&#xa;            OBJ_PDF[&quot;bids/{bid_no}/bid.pdf (Raw Bid PDF)&quot;]&#xa;            OBJ_MD[&quot;bids/{bid_no}/document.md (Parsed Markdown)&quot;]&#xa;            OBJ_META[&quot;bids/{bid_no}/metadata.json (Normalized JSON Schema)&quot;]&#xa;            OBJ_ATC[&quot;bids/{bid_no}/atc_compliance.json (Compliance Checklist)&quot;]&#xa;        end&#xa;&#xa;        subgraph POSTGRES_DB [&quot;PostgreSQL 18 Hybrid Relational &amp; Vector Database&quot;]&#xa;            PG_BIDS[(&quot;bids (Master Header, Dates, Scalars, raw_data JSONB)&quot;)]&#xa;            PG_ITEMS[(&quot;bid_items (Line Items with specifications JSONB)&quot;)]&#xa;            PG_CONSIGNEES[(&quot;bid_consignees (Delivery Addresses, Officers, Pincodes)&quot;)]&#xa;            PG_SCHEDULES[(&quot;bid_evaluation_schedules (Multi-Lot Lots &amp; Matrices)&quot;)]&#xa;            PG_TERMS[(&quot;bid_terms (Payment, Delivery, Warranty Clauses)&quot;)]&#xa;            PG_HYPERLINKS[(&quot;bid_hyperlinks (Extracted Document URIs)&quot;)]&#xa;            PG_ATC[(&quot;bid_atc_checklist_items (8-Domain Categorized Clauses)&quot;)]&#xa;            PG_SUBMISSIONS[(&quot;bid_atc_physical_submissions (Demand Drafts &amp; Samples)&quot;)]&#xa;            PG_TELEMETRY[(&quot;bid_atc_analyses (AI Token Telemetry &amp; Mistral Costs)&quot;)]&#xa;            PG_CHUNKS[(&quot;gem_bid_chunks (768-dim Vectors + HNSW Cosine Index)&quot;)]&#xa;        end&#xa;    end&#xa;&#xa;    %% Edge Connections&#xa;    WEB &amp; MOBILE &amp; B2B_CLIENTS &amp; SWAGGER_UI --&gt; SECURITY --&gt; TELEMETRY_LATENCY --&gt; ROUTE_MODULES&#xa;    R_BIDS --&gt; PG_BIDS &amp; PG_ITEMS &amp; PG_CONSIGNEES&#xa;    R_SEARCH --&gt; PG_CHUNKS&#xa;    R_DOCS --&gt;|Generate 24h Presigned URL| OBJ_PDF&#xa;    R_TASKS --&gt;|Dispatch delay()| Q_SCRAPING&#xa;    R_HEALTH --&gt; PG_BIDS &amp; BROKER &amp; S3_STORAGE&#xa;&#xa;    CELERY_BEAT --&gt;|Cron Category Sweep| Q_SCRAPING&#xa;    Q_SCRAPING --&gt; CHROMIUM --&gt; INMEM_SCRAPE&#xa;    INMEM_SCRAPE --&gt;|Deduplication Check| DEDUP_STORE&#xa;    INMEM_SCRAPE --&gt;|Stream PDF Bytes| OBJ_PDF&#xa;    INMEM_SCRAPE --&gt;|Enqueue process_document| Q_DOCUMENT&#xa;&#xa;    Q_DOCUMENT --&gt; PYMUPDF_SLICE&#xa;    OBJ_PDF --&gt;|Stream into Memory| PYMUPDF_SLICE&#xa;    PYMUPDF_SLICE --&gt;|If Scanned| MISTRAL_OCR&#xa;    PYMUPDF_SLICE &amp; MISTRAL_OCR --&gt; NORMALIZER_ENGINE&#xa;    NORMALIZER_ENGINE --&gt;|Upload Artifacts| OBJ_MD &amp; OBJ_META&#xa;    NORMALIZER_ENGINE --&gt;|ACID Multi-Table Upsert| PG_BIDS &amp; PG_ITEMS &amp; PG_CONSIGNEES &amp; PG_SCHEDULES &amp; PG_TERMS&#xa;    NORMALIZER_ENGINE --&gt;|Enqueue process_atc_and_embed| Q_ATC&#xa;&#xa;    Q_ATC --&gt; GEMINI_ENGINE&#xa;    OBJ_META --&gt;|Legal Boundary Context| GEMINI_ENGINE&#xa;    GEMINI_ENGINE --&gt;|Populate 8 Domains| PG_ATC &amp; PG_SUBMISSIONS &amp; PG_TELEMETRY&#xa;    GEMINI_ENGINE --&gt;|Upload Checklist| OBJ_ATC&#xa;    GEMINI_ENGINE --&gt; BGE_EMBEDDER&#xa;    BGE_EMBEDDER --&gt;|Bulk Insert Chunks| PG_CHUNKS&quot;,&#xa;  &quot;config&quot;: null,&#xa;  &quot;version&quot;: &quot;12&quot;&#xa;}" id="v3_mermaid_container">
+          <mxCell connectable="0" parent="1" style="group;transparentBounds=1;editIcon=1;lockedGroup=0;groupPadding=10;" vertex="1">
+            <mxGeometry as="geometry" />
+          </mxCell>
+        </UserObject>
+
+        <!-- Visual High-Level Containers -->
+        <!-- Layer 1: Client & Integration Layer -->
+        <mxCell id="box_layer1" value="1. CLIENT &amp; INTEGRATION LAYER" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=15;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontColor=#1E3A8A;spacingTop=10;" vertex="1">
+          <mxGeometry x="80" y="40" width="1440" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="node_web" value="React / Next.js Web App&#xa;(Port 3000)" parent="box_layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;strokeWidth=1.5;fontStyle=1;fontSize=12;" vertex="1">
+          <mxGeometry x="50" y="50" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="node_mobile" value="Mobile Apps &amp; Notifications&#xa;(iOS / Android)" parent="box_layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;strokeWidth=1.5;fontStyle=1;fontSize=12;" vertex="1">
+          <mxGeometry x="380" y="50" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="node_b2b" value="B2B Enterprise Data Feeds&#xa;(Commercial Webhook Feeds)" parent="box_layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;strokeWidth=1.5;fontStyle=1;fontSize=12;" vertex="1">
+          <mxGeometry x="710" y="50" width="280" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="node_docs" value="Interactive Swagger &amp; ReDoc&#xa;(/docs &amp; /redoc)" parent="box_layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;strokeWidth=1.5;fontStyle=1;fontSize=12;" vertex="1">
+          <mxGeometry x="1060" y="50" width="280" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 2: FastAPI REST Gateway Layer -->
+        <mxCell id="box_layer2" value="2. REST API GATEWAY LAYER (FastAPI Port 8000)" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=15;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontColor=#14532D;spacingTop=10;" vertex="1">
+          <mxGeometry x="80" y="220" width="1440" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_mw" value="Middleware Engine: CORS Validation | Latency Telemetry (X-Process-Time-Ms) | Lifespan DB Pool Manager" parent="box_layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=1;fontSize=11;fontStyle=2;" vertex="1">
+          <mxGeometry x="50" y="45" width="1340" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="r_bids" value="/api/v1/bids&#xa;(Master Dossier &amp; 10 Partitions)" parent="box_layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;strokeWidth=1.5;fontSize=11;fontStyle=1;" vertex="1">
+          <mxGeometry x="50" y="100" width="200" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="r_search" value="/api/v1/search&#xa;(Prefix, Trigram &amp; pgvector)" parent="box_layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;strokeWidth=1.5;fontSize=11;fontStyle=1;" vertex="1">
+          <mxGeometry x="280" y="100" width="200" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="r_docs" value="/api/v1/documents&#xa;(MinIO S3 Presigned Streaming)" parent="box_layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;strokeWidth=1.5;fontSize=11;fontStyle=1;" vertex="1">
+          <mxGeometry x="510" y="100" width="200" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="r_disc" value="/api/v1/discovery&#xa;(Types, Ministries, Depts)" parent="box_layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;strokeWidth=1.5;fontSize=11;fontStyle=1;" vertex="1">
+          <mxGeometry x="740" y="100" width="200" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="r_tasks" value="/api/v1/tasks&#xa;(Async Scrape Enqueue &amp; Poll)" parent="box_layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;strokeWidth=1.5;fontSize=11;fontStyle=1;" vertex="1">
+          <mxGeometry x="970" y="100" width="200" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="r_analytics" value="/api/v1/analytics &amp; /health&#xa;(System Health, KPIs &amp; Costs)" parent="box_layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;strokeWidth=1.5;fontSize=11;fontStyle=1;" vertex="1">
+          <mxGeometry x="1190" y="100" width="200" height="85" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 3: Message Broker & Distributed Queues -->
+        <mxCell id="box_layer3" value="3. MESSAGE BROKER &amp; DISTRIBUTED QUEUES (Redis 7)" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=15;fillColor=#FEF2F2;strokeColor=#EF4444;strokeWidth=2;fontColor=#991B1B;spacingTop=10;" vertex="1">
+          <mxGeometry x="80" y="480" width="1440" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="q_beat" value="Celery Beat Scheduler&#xa;(Periodic Cron: Every 30 Mins)" parent="box_layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#DC2626;strokeWidth=1.5;fontStyle=1;fontSize=12;" vertex="1">
+          <mxGeometry x="50" y="55" width="270" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="q_scrape" value="Queue: scraping_queue&#xa;(Playwright Web Crawler)" parent="box_layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DC2626;strokeWidth=1.5;fontStyle=1;fontSize=12;" vertex="1">
+          <mxGeometry x="370" y="55" width="260" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="q_doc" value="Queue: document_queue&#xa;(PyMuPDF, OCR &amp; Normalizer)" parent="box_layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DC2626;strokeWidth=1.5;fontStyle=1;fontSize=12;" vertex="1">
+          <mxGeometry x="680" y="55" width="260" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="q_atc" value="Queue: atc_rag_queue&#xa;(Gemini ATC &amp; pgvector)" parent="box_layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DC2626;strokeWidth=1.5;fontStyle=1;fontSize=12;" vertex="1">
+          <mxGeometry x="990" y="55" width="260" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="q_dedup" value="Deduplication&#xa;gem:seen:<built-in function id>" parent="box_layer3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#FFFFFF;strokeColor=#DC2626;strokeWidth=1;fontSize=10;" vertex="1">
+          <mxGeometry x="1300" y="45" width="90" height="85" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 4: 3-Tier Distributed Queue Worker Layer -->
+        <mxCell id="box_layer4" value="4. DISTRIBUTED 3-TIER QUEUE WORKER LAYER" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=15;fillColor=#FAF5FF;strokeColor=#A855F7;strokeWidth=2;fontColor=#581C87;spacingTop=10;" vertex="1">
+          <mxGeometry x="80" y="680" width="1440" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="w_tier1" value="TIER 1: Web Scraper Worker&#xa;(Playwright Chromium Stealth | 2GB /dev/shm)&#xa;&#xa;• Bypasses anti-bot rate limits with randomized jitter&#xa;• Captures bid and RA tender PDFs directly in-memory&#xa;• Streams raw PDF bytes to MinIO S3 (Zero local disk)" parent="box_layer4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9333EA;strokeWidth=1.5;verticalAlign=top;align=left;spacing=12;fontSize=11;fontStyle=0;" vertex="1">
+          <mxGeometry x="50" y="50" width="410" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="w_tier2" value="TIER 2: Document Processing Worker&#xa;(PyMuPDF In-Memory Slicing &amp; Mistral Cloud OCR)&#xa;&#xa;• Selective front-page slicing in &lt;0.2s without local disk&#xa;• Mistral Cloud OCR fallback on scanned image annexures&#xa;• Cleanses financials (Lakhs/Crores) and validates ISO timestamps&#xa;• Executes ACID relational multi-table upsert into PostgreSQL" parent="box_layer4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9333EA;strokeWidth=1.5;verticalAlign=top;align=left;spacing=12;fontSize=11;fontStyle=0;" vertex="1">
+          <mxGeometry x="510" y="50" width="420" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="w_tier3" value="TIER 3: ATC Compliance &amp; Vector Worker&#xa;(Google Gemini 2.5 Flash &amp; BAAI/bge-base-en-v1.5)&#xa;&#xa;• Extracts 8 legal compliance domains (LD, warranties, exemptions)&#xa;• Extracts offline hardcopy submissions (Demand Drafts, samples)&#xa;• Chunks text into Item, Compliance &amp; General PDF passages&#xa;• Generates 768-dim embeddings into PostgreSQL HNSW cosine index" parent="box_layer4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9333EA;strokeWidth=1.5;verticalAlign=top;align=left;spacing=12;fontSize=11;fontStyle=0;" vertex="1">
+          <mxGeometry x="980" y="50" width="410" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 5: Enterprise Persistence Layer -->
+        <mxCell id="box_layer5" value="5. ENTERPRISE HYBRID PERSISTENCE LAYER (MinIO S3 + PostgreSQL 18)" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=15;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=2;fontColor=#78350F;spacingTop=10;" vertex="1">
+          <mxGeometry x="80" y="970" width="1440" height="340" as="geometry" />
+        </mxCell>
+        
+        <!-- MinIO S3 -->
+        <mxCell id="box_s3" value="MinIO S3 Object Storage (Bucket: gem-tenders)" parent="box_layer5" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=13;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=1.5;fontColor=#92400E;spacingTop=8;" vertex="1">
+          <mxGeometry x="50" y="50" width="530" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_pdf" value="bids/{bid_no}/bid.pdf&#xa;(Raw PDF Document Stream)" parent="box_s3" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=10;fontStyle=1;" vertex="1">
+          <mxGeometry x="30" y="50" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_md" value="bids/{bid_no}/document.md&#xa;(Parsed Markdown Text)" parent="box_s3" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=10;fontStyle=1;" vertex="1">
+          <mxGeometry x="290" y="50" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_meta" value="bids/{bid_no}/metadata.json&#xa;(Full Relational Schema Backup)" parent="box_s3" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=10;fontStyle=1;" vertex="1">
+          <mxGeometry x="30" y="150" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_atc" value="bids/{bid_no}/atc_compliance.json&#xa;(8-Domain AI Legal Checklist)" parent="box_s3" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=10;fontStyle=1;" vertex="1">
+          <mxGeometry x="290" y="150" width="200" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- PostgreSQL 18 -->
+        <mxCell id="box_pg" value="PostgreSQL 18 Hybrid Database (gem-bridge with pgvector &amp; pg_trgm)" parent="box_layer5" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=13;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=1.5;fontColor=#92400E;spacingTop=8;" vertex="1">
+          <mxGeometry x="630" y="50" width="760" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="pg_relational" value="10 Relational ACID Tables:&#xa;• bids (Master Header &amp; Dates)&#xa;• bid_items (Specs JSONB)&#xa;• bid_consignees (Locations &amp; Pins)&#xa;• bid_evaluation_schedules (Lots)&#xa;• bid_terms &amp; bid_hyperlinks" parent="box_pg" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=11;align=left;spacing=8;" vertex="1">
+          <mxGeometry x="40" y="50" width="320" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="pg_vector" value="AI &amp; Semantic Vector Engine:&#xa;• gem_bid_chunks (768-dim BGE Vectors)&#xa;• HNSW Cosine Index (vector_cosine_ops)&#xa;• bid_atc_checklist_items (8 Domains)&#xa;• bid_atc_physical_submissions (DDs)&#xa;• bid_atc_analyses (Token Telemetry)" parent="box_pg" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=11;align=left;spacing=8;" vertex="1">
+          <mxGeometry x="400" y="50" width="320" height="180" as="geometry" />
+        </mxCell>
+
+        <!-- Inter-Layer Connecting Edges -->
+        <mxCell id="edge1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2563EB;" edge="1" parent="1" source="node_web" target="box_layer2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#16A34A;" edge="1" parent="1" source="r_tasks" target="q_scrape">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#DC2626;" edge="1" parent="1" source="q_scrape" target="w_tier1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9333EA;" edge="1" parent="1" source="w_tier1" target="q_doc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#DC2626;" edge="1" parent="1" source="q_doc" target="w_tier2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9333EA;" edge="1" parent="1" source="w_tier2" target="q_atc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#DC2626;" edge="1" parent="1" source="q_atc" target="w_tier3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9333EA;" edge="1" parent="1" source="w_tier2" target="box_layer5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9333EA;" edge="1" parent="1" source="w_tier3" target="pg_vector">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
