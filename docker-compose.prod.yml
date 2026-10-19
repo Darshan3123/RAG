@@ -1,0 +1,152 @@
+version: '3.8'
+
+# ==============================================================================
+# docker-compose.prod.yml — Production Dokploy Stack for Hostinger KVM 4 VPS
+# Target Host: srv1701681 (Ubuntu 24.04 LTS, 16 GB RAM, 4 vCPUs)
+# Enforces strict CPU and memory resource ceilings per service
+# ==============================================================================
+
+services:
+  # ── 1. REDIS MESSAGE BROKER & RESULT BACKEND ────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: gem-engine-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy noeviction
+    volumes:
+      - gem_redis_data:/data
+    networks:
+      - gem_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ── 2. TIER 1: PLAYWRIGHT SCRAPER WORKER ────────────────────────────────────
+  worker-scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-worker-scraper
+    restart: unless-stopped
+    command: celery -A tasks.celery_app worker -Q scraping_queue -c 2 -l info -n scraper_worker@%h
+    init: true
+    shm_size: '2gb'
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1200M
+    networks:
+      - gem_network
+
+  # ── 3. TIER 2: DOCUMENT PROCESSING & OCR WORKER ─────────────────────────────
+  worker-document:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-worker-document
+    restart: unless-stopped
+    command: celery -A tasks.celery_app worker -Q document_queue -c 2 -l info -n doc_worker@%h
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 600M
+    networks:
+      - gem_network
+
+  # ── 4. TIER 3: ATC COMPLIANCE & VECTOR WORKER ──────────────────────────────
+  worker-atc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-worker-atc
+    restart: unless-stopped
+    command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 2 -l info -n atc_worker@%h
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1200M
+    networks:
+      - gem_network
+
+  # ── 5. CELERY BEAT SCHEDULER DAEMON ─────────────────────────────────────────
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-celery-beat
+    restart: unless-stopped
+    command: celery -A tasks.celery_app beat -l info
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 150M
+    networks:
+      - gem_network
+
+  # ── 6. FASTAPI REST GATEWAY ─────────────────────────────────────────────────
+  fastapi-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-fastapi-gateway
+    restart: unless-stopped
+    command: uvicorn gateway.main:app --host 0.0.0.0 --port 8000 --workers 2
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 350M
+    networks:
+      - gem_network
+
+  # ── 7. FLOWER QUEUE MONITORING DASHBOARD ────────────────────────────────────
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gem-flower-telemetry
+    restart: unless-stopped
+    command: celery -A tasks.celery_app flower --port=5555
+    ports:
+      - "5555:5555"
+    env_file: .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 200M
+    networks:
+      - gem_network
+
+networks:
+  gem_network:
+    name: gem_engine_network
+
+volumes:
+  gem_redis_data:
+    name: gem_redis_data
