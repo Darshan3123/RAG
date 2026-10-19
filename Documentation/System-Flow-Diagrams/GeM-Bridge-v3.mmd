@@ -1,0 +1,125 @@
+flowchart TD
+    %% =========================================================================
+    %% GeM-Bridge v3 Enterprise Production Architecture
+    %% Decoupled In-Memory Distributed Stream Pipeline & FastAPI REST Gateway
+    %% =========================================================================
+
+    subgraph CLIENTS ["1. Client & Integration Layer"]
+        WEB["React / Next.js Web App (Port 3000)"]
+        MOBILE["Mobile Applications (iOS / Android)"]
+        B2B["B2B Enterprise Consumers (Webhooks / Feeds)"]
+        DOCS["Interactive OpenAPI / Swagger UI (/docs)"]
+    end
+
+    subgraph GATEWAY ["2. REST API Gateway (FastAPI Port 8000)"]
+        GW_SEC["Security & CORS Middleware"]
+        GW_TEL["Telemetry & Latency Middleware (X-Process-Time-Ms)"]
+        
+        subgraph ROUTES ["Gateway Endpoint Modules (gateway/routes/)"]
+            R_BIDS["routes/bids.py<br/>(Master Dossier & 10 Partitions)"]
+            R_SEARCH["routes/search.py<br/>(Prefix, Trigram & pgvector)"]
+            R_DOCS["routes/documents.py<br/>(MinIO S3 Presigned PDF Streaming)"]
+            R_DISCOVERY["routes/discovery.py<br/>(Real-Time Ministry Aggregations)"]
+            R_TASKS["routes/tasks.py<br/>(Async Scraper Job Triggers & Status)"]
+            R_ANALYTICS["routes/analytics.py<br/>(System KPIs, Totals & Token Costs)"]
+            R_HEALTH["routes/health.py<br/>(PostgreSQL, Redis & MinIO Health)"]
+        end
+    end
+
+    subgraph BROKER ["3. Message Broker & Distributed Queues (Redis 7)"]
+        BEAT["Celery Beat Periodic Scheduler (Every 30 Mins)"]
+        Q1["Redis Queue: scraping_queue"]
+        Q2["Redis Queue: document_queue"]
+        Q3["Redis Queue: atc_rag_queue"]
+        DEDUP["Redis Deduplication Store<br/>(gem:seen:bid_no - 7-Day TTL)"]
+    end
+
+    subgraph WORKERS ["4. Distributed 3-Tier Celery Worker Layer"]
+        subgraph T1 ["Tier 1: Playwright Web Scraper Worker"]
+            CHROMIUM["Playwright Chromium Stealth (2GB /dev/shm)"]
+            INMEM_SCRAPE["Zero-Disk In-Memory PDF Capture"]
+        end
+
+        subgraph T2 ["Tier 2: Document Processing & OCR Worker"]
+            PYMUPDF["PyMuPDF Front-Page Slicer (&lt;0.2s In-Memory)"]
+            OCR_ENGINE["Mistral Cloud OCR (Scanned Annexures Fallback)"]
+            NORMALIZER["Core Normalizer & Validator (ACID Schema)"]
+        end
+
+        subgraph T3 ["Tier 3: ATC Compliance & AI Vector Worker"]
+            LLM_ENGINE["Google Gemini 2.5 Flash (8-Domain Legal ATC Analyzer)"]
+            EMBEDDER["BAAI/bge-base-en-v1.5 (768-dim Dense Vector Engine)"]
+        end
+    end
+
+    subgraph STORAGE ["5. MinIO S3 Object Storage (Bucket: gem-tenders)"]
+        S3_PDF["bids/{bid_no}/bid.pdf<br/>(Original Raw PDF Stream)"]
+        S3_MD["bids/{bid_no}/document.md<br/>(Parsed Markdown Text)"]
+        S3_META["bids/{bid_no}/metadata.json<br/>(Full Relational Schema Backup)"]
+        S3_ATC["bids/{bid_no}/atc_compliance.json<br/>(8-Domain AI Legal Checklist)"]
+    end
+
+    subgraph DATABASE ["6. PostgreSQL 18 Hybrid Relational & Vector DB (gem-bridge)"]
+        subgraph DB_REL ["ACID Relational Core (10 Tables)"]
+            T_BIDS[("bids<br/>(Master Header & Dates)")]
+            T_ITEMS[("bid_items<br/>(Specs JSONB)")]
+            T_CONSIGNEES[("bid_consignees<br/>(Locations & PINs)")]
+            T_SCHEDULES[("bid_evaluation_schedules<br/>(Multi-Lot Evaluation)")]
+            T_TERMS[("bid_terms & bid_hyperlinks<br/>(Contractual Terms)")]
+        end
+
+        subgraph DB_AI ["AI Legal Compliance & Semantic Engine"]
+            T_ATC[("bid_atc_checklist_items<br/>(8 Legal Domains)")]
+            T_SUB[("bid_atc_physical_submissions<br/>(DDs & Samples)")]
+            T_TEL[("bid_atc_analyses<br/>(LLM Token & Cost Telemetry)")]
+            T_CHUNKS[("gem_bid_chunks<br/>(768-dim HNSW Cosine Index)")]
+        end
+    end
+
+    %% Client Traffic
+    CLIENTS -->|HTTP / JSON Requests| GATEWAY
+    GATEWAY --> GW_SEC --> GW_TEL --> ROUTES
+
+    %% Gateway Operations
+    R_TASKS -->|POST /trigger-scrape| Q1
+    R_DOCS -->|Generate Presigned URL &lt;15ms| S3_PDF
+    R_BIDS & R_DISCOVERY & R_ANALYTICS -->|Indexed SQL Queries| DB_REL
+    R_SEARCH -->|Prefix Match & pg_trgm Fuzzy Search| DB_REL
+    R_SEARCH -->|pgvector Cosine Distance Retrieval| T_CHUNKS
+    R_HEALTH -->|Ping Check| BROKER & STORAGE & DATABASE
+
+    %% Distributed Ingestion Pipeline Flow
+    BEAT -->|Enqueue Scheduled Run| Q1
+    Q1 --> T1
+    T1 -->|1. Check Seen Bloom Filter| DEDUP
+    T1 -->|2. Stream Raw PDF Bytes| S3_PDF
+    T1 -->|3. Enqueue process_bid_document| Q2
+
+    Q2 --> T2
+    S3_PDF -->|Stream In-Memory Bytes| T2
+    T2 --> PYMUPDF --> OCR_ENGINE --> NORMALIZER
+    NORMALIZER -->|Upload Artifacts| S3_MD & S3_META
+    NORMALIZER -->|ACID Multi-Table Upsert| DB_REL
+    NORMALIZER -->|Enqueue process_atc_and_embed| Q3
+
+    Q3 --> T3
+    S3_META -->|Context Assembly| LLM_ENGINE
+    LLM_ENGINE -->|Populate 8 Legal Domains| T_ATC & T_SUB & T_TEL
+    LLM_ENGINE -->|Upload Legal Checklist| S3_ATC
+    LLM_ENGINE --> EMBEDDER
+    EMBEDDER -->|Bulk Insert 768-dim Chunks| T_CHUNKS
+
+    %% Styling & Classes
+    classDef clientStyle fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1E3A8A;
+    classDef gatewayStyle fill:#F0FDF4,stroke:#22C55E,stroke-width:2px,color:#14532D;
+    classDef brokerStyle fill:#F5F3FF,stroke:#8B5CF6,stroke-width:2px,color:#5B21B6;
+    classDef workerStyle fill:#FDF4FF,stroke:#D946EF,stroke-width:2px,color:#701A75;
+    classDef s3Style fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#78350F;
+    classDef dbStyle fill:#ECFDF5,stroke:#059669,stroke-width:2px,color:#064E3B;
+
+    class CLIENTS clientStyle;
+    class GATEWAY gatewayStyle;
+    class BROKER brokerStyle;
+    class WORKERS workerStyle;
+    class STORAGE s3Style;
+    class DATABASE dbStyle;

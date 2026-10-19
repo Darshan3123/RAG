@@ -1,0 +1,64 @@
+sequenceDiagram
+    autonumber
+    actor Client as User / Frontend (Next.js)
+    participant Gateway as FastAPI Gateway (Port 8000)
+    participant Redis as Redis 7 Broker & Queues
+    participant WorkerT1 as Tier 1: Scraper Worker (Playwright)
+    participant S3 as MinIO S3 Object Store (gem-tenders)
+    participant WorkerT2 as Tier 2: Document Worker (PyMuPDF)
+    participant PG as PostgreSQL 18 (gem-bridge)
+    participant WorkerT3 as Tier 3: ATC & Vector Worker (Gemini/BGE)
+
+    %% Trigger & Ingestion Phase
+    Note over Client,WorkerT1: Phase 1: Triggering & Zero-Disk In-Memory Ingestion
+    Client->>Gateway: POST /api/v1/tasks/trigger-scrape?bid_type=all
+    Gateway->>Redis: Enqueue task to 'scraping_queue'
+    Gateway-->>Client: 202 Accepted (task_id, status=queued)
+    
+    Redis->>WorkerT1: Dispatch scrape task
+    WorkerT1->>WorkerT1: Launch Stealth Chromium (/dev/shm)
+    WorkerT1->>Redis: Check Bloom Filter (gem:seen:{bid_no})
+    alt Bid is New / Not Seen
+        WorkerT1->>S3: Stream raw PDF directly to bids/{bid_no}/bid.pdf
+        WorkerT1->>Redis: Enqueue process_bid_document to 'document_queue'
+    else Bid Already Processed
+        WorkerT1->>WorkerT1: Skip download (Deduplicated)
+    end
+
+    %% Document Normalization Phase
+    Note over WorkerT2,PG: Phase 2: High-Speed In-Memory Parsing & ACID Persistence
+    Redis->>WorkerT2: Dispatch process_bid_document
+    WorkerT2->>S3: Stream raw PDF bytes into memory
+    WorkerT2->>WorkerT2: PyMuPDF slices front pages (<0.2s)
+    WorkerT2->>WorkerT2: Parse structured tables & normalize values
+    WorkerT2->>S3: Upload document.md & metadata.json
+    WorkerT2->>PG: ACID Multi-Table Upsert (bids, items, consignees, schedules, terms)
+    WorkerT2->>Redis: Enqueue process_atc_and_embed to 'atc_rag_queue'
+
+    %% AI Compliance & Semantic Indexing Phase
+    Note over WorkerT3,PG: Phase 3: AI Legal Compliance & pgvector Indexing
+    Redis->>WorkerT3: Dispatch process_atc_and_embed
+    WorkerT3->>S3: Fetch metadata.json boundary context
+    WorkerT3->>WorkerT3: Gemini 2.5 Flash analyzes 8 Legal Domains
+    WorkerT3->>PG: Upsert bid_atc_checklist_items & physical_submissions
+    WorkerT3->>PG: Log LLM token consumption in bid_atc_analyses
+    WorkerT3->>S3: Upload atc_compliance.json
+    WorkerT3->>WorkerT3: BAAI/bge-base-en-v1.5 chunks text & embeds 768-dim vectors
+    WorkerT3->>PG: Bulk insert gem_bid_chunks (HNSW Cosine Index)
+
+    %% Retrieval & Client Consumption
+    Note over Client,PG: Phase 4: Fast Client Retrieval & Document Streaming
+    Client->>Gateway: GET /api/v1/bids/{bid_no}/items
+    Gateway->>PG: SELECT * FROM bid_items WHERE bid_no = :bid_no
+    PG-->>Gateway: Return items slice
+    Gateway-->>Client: 200 OK (Clean Pydantic JSON)
+
+    Client->>Gateway: GET /api/v1/search?q=laptops&mode=semantic
+    Gateway->>WorkerT3: Compute query embedding (768-dim)
+    Gateway->>PG: Cosine distance search on gem_bid_chunks (<=>)
+    PG-->>Gateway: Top-K semantic chunks + metadata
+    Gateway-->>Client: 200 OK (Ranked search results)
+
+    Client->>Gateway: GET /api/v1/documents/{bid_no}/pdf
+    Gateway->>S3: Generate presigned GET URL (<15ms)
+    Gateway-->>Client: 307 Temporary Redirect (Direct MinIO CDN stream)
