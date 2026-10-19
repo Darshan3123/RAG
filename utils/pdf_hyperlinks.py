@@ -150,9 +150,12 @@ def extract_hyperlinks(pdf_path: str, source: str = "bid") -> list[dict]:
     seen_urls: set[str] = set()          # deduplicate identical URLs
 
     try:
-        doc = pymupdf.open(pdf_path)
+        if isinstance(pdf_path, (bytes, bytearray)):
+            doc = pymupdf.open(stream=pdf_path, filetype="pdf")
+        else:
+            doc = pymupdf.open(pdf_path)
     except Exception as e:
-        log.warning(f"PyMuPDF could not open '{pdf_path}': {e}")
+        log.warning(f"PyMuPDF could not open PDF: {e}")
         return []
 
     try:
@@ -197,12 +200,14 @@ def extract_hyperlinks(pdf_path: str, source: str = "bid") -> list[dict]:
                     "url":    uri,
                     "source": source,
                 })
+        doc_label = f"<in-memory PDF: {len(pdf_path)} bytes>" if isinstance(pdf_path, (bytes, bytearray)) else str(pdf_path)
     except Exception as e:
-        log.error(f"Error while reading links from '{pdf_path}': {e}")
+        doc_label = f"<in-memory PDF: {len(pdf_path)} bytes>" if isinstance(pdf_path, (bytes, bytearray)) else str(pdf_path)
+        log.error(f"Error while reading links from '{doc_label}': {e}")
     finally:
         doc.close()
 
-    log.info(f"Extracted {len(results)} unique hyperlinks from '{pdf_path}'")
+    log.info(f"Extracted {len(results)} unique hyperlinks from '{doc_label}'")
     return results
 
 

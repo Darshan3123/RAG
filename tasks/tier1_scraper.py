@@ -97,75 +97,49 @@ def scrape_category(self, bid_type: str = "Product Bid/RAs", target_count: int =
                     r.set(dedup_key, "downloading", ex=86400 * 7)
 
                     # Create local folder
-                    bid_dir = os.path.join(DOWNLOAD_DIR, safe_bid_no)
-                    os.makedirs(bid_dir, exist_ok=True)
-
-                    # Save HTML snippet
+                    # Save HTML snippet to MinIO S3
                     card_html = card.inner_html()
-                    card_html_path = os.path.join(bid_dir, f"{safe_bid_no}.html")
                     try:
-                        with open(card_html_path, "w", encoding="utf-8") as f:
-                            f.write(card_html)
+                        from utils.s3_storage import upload_bytes as s3_upload_bytes
+                        s3_upload_bytes(f"bids/{safe_bid_no}/card.html", card_html.encode("utf-8"), content_type="text/html")
                     except Exception as e:
-                        log.warning(f"Could not save card HTML for {safe_bid_no}: {e}")
+                        log.warning(f"Could not save card HTML to MinIO for {safe_bid_no}: {e}")
 
-                    # Download Main Bid PDF
-                    pdf_path = browser.download_pdf(
-                        document_url=doc_url,
-                        save_dir=bid_dir,
-                        filename=f"{safe_bid_no}.pdf",
-                        retries=MAX_RETRIES_PER_BID,
-                    )
-
-                    if not pdf_path or not os.path.exists(pdf_path):
+                    # Download Main Bid PDF directly into memory
+                    pdf_bytes = browser.download_pdf_to_memory(doc_url, retries=MAX_RETRIES_PER_BID)
+                    if not pdf_bytes:
                         log.warning(f"[Tier 1] Download failed for {safe_bid_no}")
                         r.delete(dedup_key)
                         continue
 
+                    # Stream PDF to MinIO S3
+                    s3_pdf_key = f"bids/{safe_bid_no}/bid.pdf"
+                    from utils.s3_storage import upload_bytes as s3_upload_bytes
+                    s3_upload_bytes(s3_pdf_key, pdf_bytes, content_type="application/pdf")
+
                     # Download RA PDF if available
                     if ra_url:
-                        browser.download_pdf(
-                            document_url=ra_url,
-                            save_dir=bid_dir,
-                            filename=f"{safe_bid_no}_RA.pdf",
-                            retries=MAX_RETRIES_PER_BID,
-                        )
+                        ra_bytes = browser.download_pdf_to_memory(ra_url, retries=MAX_RETRIES_PER_BID)
+                        if ra_bytes:
+                            s3_upload_bytes(f"bids/{safe_bid_no}/bid_RA.pdf", ra_bytes, content_type="application/pdf")
 
-                    # Extract Hyperlinks
+                    # Extract Hyperlinks in memory
                     bid_hyperlinks: List[Dict[str, Any]] = []
                     try:
-                        bid_hyperlinks = extract_hyperlinks(pdf_path, source="bid")
+                        bid_hyperlinks = extract_hyperlinks(pdf_bytes, source="bid")
                     except Exception as e:
                         log.warning(f"Hyperlink extraction failed for {safe_bid_no}: {e}")
-
-                    ra_pdf_path = os.path.join(bid_dir, f"{safe_bid_no}_RA.pdf")
-                    if ra_url and os.path.exists(ra_pdf_path):
-                        try:
-                            ra_links = extract_hyperlinks(ra_pdf_path, source="ra")
-                            bid_hyperlinks.extend(ra_links)
-                        except Exception as e:
-                            log.warning(f"RA hyperlink extraction failed for {safe_bid_no}: {e}")
-
-                    # Upload to MinIO S3
-                    try:
-                        from utils.s3_storage import upload_file as s3_upload_file
-                        s3_upload_file(f"bids/{safe_bid_no}/bid.pdf", pdf_path, content_type="application/pdf")
-                        if ra_url and os.path.exists(ra_pdf_path):
-                            s3_upload_file(f"bids/{safe_bid_no}/bid_RA.pdf", ra_pdf_path, content_type="application/pdf")
-                    except Exception as s3_err:
-                        log.warning(f"[Tier 1] MinIO upload failed for {safe_bid_no}: {s3_err}")
 
                     if "card" in card_data:
                         card_data["card"]["bid_pdf_url"] = doc_url
                         card_data["card"]["ra_pdf_url"] = ra_url
-
 
                     # Dispatch to Tier 2 (document_queue)
                     from tasks.tier2_document import process_document
                     process_document.delay(
                         safe_bid_no=safe_bid_no,
                         card_data=card_data,
-                        pdf_path=pdf_path,
+                        pdf_path=f"s3://gem-tenders/{s3_pdf_key}",
                         bid_hyperlinks=bid_hyperlinks,
                         card_html=card_html,
                     )
@@ -234,32 +208,37 @@ def scrape_single_bid(self, bid_no: str) -> Dict[str, Any]:
         card_data = get_card_details(card, "Direct Search")
         doc_url, ra_url, corr_url = browser.extract_card_links(card)
 
-        bid_dir = os.path.join(DOWNLOAD_DIR, safe_bid_no)
-        os.makedirs(bid_dir, exist_ok=True)
-        pdf_path = os.path.join(bid_dir, "bid.pdf")
-
+        s3_pdf_key = f"bids/{safe_bid_no}/bid.pdf"
+        pdf_bytes = None
         if doc_url:
-            browser.download_pdf(doc_url, save_dir=bid_dir, filename="bid.pdf")
-            try:
-                from utils.s3_storage import upload_file as s3_upload_file
-                s3_upload_file(f"bids/{safe_bid_no}/bid.pdf", pdf_path, content_type="application/pdf")
-            except Exception as s3_err:
-                log.warning(f"[Tier 1] MinIO upload failed for {safe_bid_no}: {s3_err}")
+            pdf_bytes = browser.download_pdf_to_memory(doc_url, retries=MAX_RETRIES_PER_BID)
+            if pdf_bytes:
+                try:
+                    from utils.s3_storage import upload_bytes as s3_upload_bytes
+                    s3_upload_bytes(s3_pdf_key, pdf_bytes, content_type="application/pdf")
+                except Exception as s3_err:
+                    log.warning(f"[Tier 1] MinIO upload failed for {safe_bid_no}: {s3_err}")
 
         bid_hyperlinks = []
-        if os.path.exists(pdf_path):
+        if pdf_bytes:
             try:
-                bid_hyperlinks = extract_hyperlinks(pdf_path)
+                bid_hyperlinks = extract_hyperlinks(pdf_bytes)
             except Exception as h_err:
                 log.warning(f"[Tier 1] Hyperlink extraction error: {h_err}")
 
         card_html = card.inner_html() if hasattr(card, "inner_html") else ""
+        if card_html:
+            try:
+                from utils.s3_storage import upload_bytes as s3_upload_bytes
+                s3_upload_bytes(f"bids/{safe_bid_no}/card.html", card_html.encode("utf-8"), content_type="text/html")
+            except Exception:
+                pass
 
         from tasks.tier2_document import process_document
         task = process_document.delay(
             safe_bid_no=safe_bid_no,
             card_data=card_data,
-            pdf_path=pdf_path,
+            pdf_path=f"s3://gem-tenders/{s3_pdf_key}",
             bid_hyperlinks=bid_hyperlinks,
             card_html=card_html,
         )

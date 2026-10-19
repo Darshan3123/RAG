@@ -299,9 +299,17 @@ def download_external_doc_bytes(url: str, safe_bid_no: str, save_dir: Optional[s
             log.warning(f"Unsupported external document format '{content_type}' at {url}")
             return None, None
 
-        # Save downloaded external document into the bid directory
+        # Stream downloaded external document to MinIO S3 (Zero-Disk)
+        target_ext = "docx" if file_type == "docx" else "pdf"
+        try:
+            from utils.s3_storage import upload_bytes
+            mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document" if file_type == "docx" else "application/pdf"
+            upload_bytes(f"bids/{safe_bid_no}/atc_document.{target_ext}", resp.content, content_type=mime)
+        except Exception as s3_err:
+            log.warning(f"Could not stream external ATC doc to MinIO: {s3_err}")
+
+        # Optionally save downloaded external document into local directory if requested
         if save_dir and os.path.exists(save_dir):
-            target_ext = "docx" if file_type == "docx" else "pdf"
             saved_file_name = f"{safe_bid_no}_ATC_{target_ext.upper()}.{target_ext}"
             saved_file_path = os.path.join(save_dir, saved_file_name)
             try:

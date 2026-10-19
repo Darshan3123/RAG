@@ -54,6 +54,19 @@ def process_document(
     bid_dir = os.path.join(DOWNLOAD_DIR, safe_bid_no)
     os.makedirs(bid_dir, exist_ok=True)
 
+    # 0. Ensure PDF exists locally; if missing, retrieve from MinIO S3
+    if not os.path.exists(pdf_path):
+        s3_key = f"bids/{safe_bid_no}/bid.pdf"
+        try:
+            from utils.s3_storage import object_exists, download_file
+            if object_exists(s3_key):
+                local_pdf = os.path.join(bid_dir, f"{safe_bid_no}.pdf")
+                download_file(s3_key, local_pdf)
+                pdf_path = local_pdf
+                log.info(f"[Tier 2] Restored PDF from MinIO: {s3_key} -> {local_pdf}")
+        except Exception as s3_fetch_err:
+            log.warning(f"[Tier 2] Could not fetch PDF from MinIO: {s3_fetch_err}")
+
     # 1. Selective PDF Slicing
     split_info = None
     target_ocr_pdf = pdf_path
@@ -108,7 +121,18 @@ def process_document(
             f"Cost: ${ocr_result.usage.estimated_cost_usd:.4f} (₹{ocr_result.usage.estimated_cost_inr:.2f})"
         )
     except Exception as e:
-        log.error(f"[Tier 2] Document OCR failed for {safe_bid_no}: {e}", exc_info=True)
+        log.error(f"[Tier 2] Document OCR failed for {safe_bid_no}: {e}")
+
+    # 2b. High-Speed PyMuPDF Fallback if OCR returned empty or failed
+    if not pdf_text.strip() and os.path.exists(pdf_path):
+        try:
+            import pymupdf as fitz
+            doc = fitz.open(pdf_path)
+            pdf_text = "\n".join([page.get_text() for page in doc])
+            doc.close()
+            log.info(f"[Tier 2] PyMuPDF fallback extracted {len(pdf_text)} characters for {safe_bid_no}")
+        except Exception as fitz_err:
+            log.error(f"[Tier 2] PyMuPDF text fallback error: {fitz_err}")
 
     # 3. Stitch PyMuPDF ATC markdown if sliced
     if split_info and split_info.pages_saved > 0 and pdf_text:

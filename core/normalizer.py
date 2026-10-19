@@ -500,7 +500,7 @@ def validate_bid_data(
         })
 
     # 6. PDF file check
-    if pdf_path:
+    if pdf_path and not pdf_path.startswith(("s3://", "http://", "https://")):
         import os
         if not os.path.exists(pdf_path):
             issues.append({

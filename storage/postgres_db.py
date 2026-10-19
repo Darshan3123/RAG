@@ -230,8 +230,26 @@ class PostgresBidDatabase:
         # Timing
         norm_dates = norm.get("dates", {})
         start_datetime = _to_timestamptz(norm_dates.get("start_date_iso") or card.get("start_datetime"))
-        end_datetime = _to_timestamptz(norm_dates.get("end_date_iso") or pdf.get("timing", {}).get("bid_end_datetime") or card.get("end_datetime"))
+        end_raw = (
+            norm_dates.get("end_date_iso")
+            or pdf.get("timing", {}).get("bid_end_datetime")
+            or card.get("end_datetime")
+        )
+        if not end_raw:
+            pdf_text_all = raw_doc.get("full_pdf_text", "")
+            m_fallback = re.search(r'Bid End Date/Time\s*\n\s*(\d{2}-\d{2}-\d{4}\s+\d{1,2}:\d{2}:\d{2})', pdf_text_all, re.IGNORECASE)
+            if m_fallback:
+                end_raw = m_fallback.group(1).strip()
+        end_datetime = _to_timestamptz(end_raw)
+        if not end_datetime:
+            end_datetime = datetime.now(timezone.utc)
+
         bid_opening_datetime = _to_timestamptz(pdf.get("timing", {}).get("bid_opening_datetime"))
+        if not bid_opening_datetime:
+            pdf_text_all = raw_doc.get("full_pdf_text", "")
+            m_open_fb = re.search(r'Bid Opening[\s\S]{0,30}?Date/Time\s*\n\s*(\d{2}-\d{2}-\d{4}\s+\d{1,2}:\d{2}:\d{2})', pdf_text_all, re.IGNORECASE)
+            if m_open_fb:
+                bid_opening_datetime = _to_timestamptz(m_open_fb.group(1).strip())
         card_start_datetime = card.get("start_datetime")
         card_end_datetime = card.get("end_datetime")
         bid_offer_validity_days = _to_int(pdf.get("timing", {}).get("bid_offer_validity_days"))

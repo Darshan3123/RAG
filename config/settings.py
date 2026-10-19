@@ -191,15 +191,32 @@ PRODUCT_TYPE_MAP = {
 # ---------------------------------------------------------
 # POSTGRESQL & PGVECTOR CONFIGURATION
 # ---------------------------------------------------------
-POSTGRES_HOST     = _str("POSTGRES_HOST", "localhost")
-POSTGRES_PORT     = _int("POSTGRES_PORT", 5432)
-POSTGRES_DB       = _str("POSTGRES_DB", "gem-bridge")
-POSTGRES_USER     = _str("POSTGRES_USER", "postgres")
-POSTGRES_PASSWORD = _str("POSTGRES_PASSWORD", "postgres")
-DATABASE_URL      = _str(
-    "DATABASE_URL",
-    f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
-)
+_db_url_env = os.getenv("DATABASE_URL", "")
+if _db_url_env:
+    try:
+        from urllib.parse import urlparse
+        _p = urlparse(_db_url_env)
+        POSTGRES_HOST     = _p.hostname or "localhost"
+        POSTGRES_PORT     = _p.port or 5432
+        POSTGRES_USER     = _p.username or "postgres"
+        POSTGRES_PASSWORD = _p.password or "postgres"
+        POSTGRES_DB       = _p.path.lstrip("/") or "gem-bridge"
+        DATABASE_URL      = _db_url_env
+    except Exception:
+        POSTGRES_HOST     = _str("POSTGRES_HOST", "localhost")
+        POSTGRES_PORT     = _int("POSTGRES_PORT", 5432)
+        POSTGRES_DB       = _str("POSTGRES_DB", "gem-bridge")
+        POSTGRES_USER     = _str("POSTGRES_USER", "postgres")
+        POSTGRES_PASSWORD = _str("POSTGRES_PASSWORD", "postgres")
+        DATABASE_URL      = _db_url_env
+else:
+    POSTGRES_HOST     = _str("POSTGRES_HOST", "localhost")
+    POSTGRES_PORT     = _int("POSTGRES_PORT", 5432)
+    POSTGRES_DB       = _str("POSTGRES_DB", "gem-bridge")
+    POSTGRES_USER     = _str("POSTGRES_USER", "postgres")
+    POSTGRES_PASSWORD = _str("POSTGRES_PASSWORD", "postgres")
+    DATABASE_URL      = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+
 
 # ---------------------------------------------------------
 # REDIS & CELERY CONFIGURATION

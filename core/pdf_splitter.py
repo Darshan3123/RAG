@@ -21,7 +21,7 @@ This module:
 import os
 import re
 from dataclasses import dataclass, field
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Union
 from utils.logger import get_logger
 
 try:
@@ -69,12 +69,12 @@ class SplitBoundary:
     matched_query: str = ""        # The phrase that triggered the split
 
 
-def detect_atc_boundary(pdf_path: str) -> Optional[SplitBoundary]:
+def detect_atc_boundary(pdf_path: Union[str, bytes, bytearray]) -> Optional[SplitBoundary]:
     """
     Scan a Bid PDF to locate the first page containing the ATC section heading.
     
     Args:
-        pdf_path: Filepath to the tender PDF document.
+        pdf_path: Filepath or raw bytes of the tender PDF document.
         
     Returns:
         SplitBoundary object if heading is found and saves at least 1 page, else None.
@@ -83,12 +83,19 @@ def detect_atc_boundary(pdf_path: str) -> Optional[SplitBoundary]:
         log.warning("PyMuPDF (fitz) is not installed; skipping PDF slicing.")
         return None
 
-    if not os.path.exists(pdf_path):
-        log.warning(f"PDF not found for boundary detection: {pdf_path}")
-        return None
+    if isinstance(pdf_path, (bytes, bytearray)):
+        doc_label = "in_memory_pdf"
+    else:
+        if not os.path.exists(pdf_path):
+            log.warning(f"PDF not found for boundary detection: {pdf_path}")
+            return None
+        doc_label = os.path.basename(pdf_path)
 
     try:
-        doc = fitz.open(pdf_path)
+        if isinstance(pdf_path, (bytes, bytearray)):
+            doc = fitz.open(stream=pdf_path, filetype="pdf")
+        else:
+            doc = fitz.open(pdf_path)
         total_pages = len(doc)
 
         # 1-page documents cannot be sliced
@@ -202,7 +209,7 @@ def create_core_pdf_for_ocr(
 
 
 def extract_atc_markdown_pymupdf(
-    pdf_path: str,
+    pdf_path: Union[str, bytes, bytearray],
     split_page_index: int,
     heading_y0: float
 ) -> str:
@@ -211,7 +218,7 @@ def extract_atc_markdown_pymupdf(
     down to the end of the document.
     
     Args:
-        pdf_path: Path to the original full Bid PDF.
+        pdf_path: Path or raw bytes of the original full Bid PDF.
         split_page_index: 0-indexed page number where ATC begins.
         heading_y0: Vertical position (y0) where the heading starts on split_page_index.
         
@@ -222,7 +229,10 @@ def extract_atc_markdown_pymupdf(
         return ""
 
     try:
-        doc = fitz.open(pdf_path)
+        if isinstance(pdf_path, (bytes, bytearray)):
+            doc = fitz.open(stream=pdf_path, filetype="pdf")
+        else:
+            doc = fitz.open(pdf_path)
         total_pages = len(doc)
         atc_parts: List[str] = []
 

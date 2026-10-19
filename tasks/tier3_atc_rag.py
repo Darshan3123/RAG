@@ -45,8 +45,8 @@ def process_atc_and_embed(
     4. Marks tender completion status in Redis.
     """
     log.info(f"[Tier 3] Starting ATC analysis & indexing for: {safe_bid_no}")
-    bid_dir = os.path.join(DOWNLOAD_DIR, safe_bid_no)
-    os.makedirs(bid_dir, exist_ok=True)
+    candidate_dir = os.path.join(DOWNLOAD_DIR, safe_bid_no)
+    bid_dir = candidate_dir if os.path.exists(candidate_dir) else None
 
     atc_result: Dict[str, Any] = {}
     if ENABLE_ATC_ANALYSIS and (GEMINI_API_KEY or OPENAI_API_KEY):
@@ -75,16 +75,45 @@ def process_atc_and_embed(
         if os.path.exists(final_json_path):
             with open(final_json_path, "r", encoding="utf-8") as fp:
                 full_doc = json.load(fp)
+        elif not full_doc:
+            # Check MinIO S3 for metadata.json if not on local disk
+            s3_meta_key = f"bids/{safe_bid_no}/metadata.json"
+            try:
+                from utils.s3_storage import object_exists, download_bytes
+                if object_exists(s3_meta_key):
+                    raw_meta_bytes = download_bytes(s3_meta_key)
+                    full_doc = json.loads(raw_meta_bytes.decode("utf-8"))
+                    log.info(f"[Tier 3] Restored metadata.json from MinIO: {s3_meta_key}")
+            except Exception as meta_err:
+                log.warning(f"[Tier 3] Could not fetch metadata from MinIO: {meta_err}")
+
+        # Verify parent record exists in PostgreSQL 'bids' table to satisfy Foreign Key constraints
+        bid_exists_in_db = False
+        with get_db_cursor(commit=False) as cur:
+            cur.execute("SELECT 1 FROM bids WHERE id = %s;", (safe_bid_no,))
+            bid_exists_in_db = bool(cur.fetchone())
+
+        if not bid_exists_in_db:
+            log.warning(f"[Tier 3] Parent record for {safe_bid_no} not present in 'bids' table! Performing self-healing upsert...")
+            parent_to_upsert = full_doc if full_doc else {
+                "_id": safe_bid_no,
+                "bid": {"bid_no": safe_bid_no.replace("_", "/")},
+                "card": {"bid_no": safe_bid_no.replace("_", "/")},
+                "pdf": parsed_pdf_data or {},
+                "hyperlinks": bid_hyperlinks or [],
+                "normalized": {},
+                "atc_analysis": atc_result,
+                "full_pdf_text": pdf_text,
+            }
+            db.upsert_bid(parent_to_upsert)
 
         if full_doc:
             full_doc["atc_analysis"] = atc_result
-            # Write updated JSON to disk
-            with open(final_json_path, "w", encoding="utf-8") as fp:
-                json.dump(full_doc, fp, ensure_ascii=False, indent=4, default=str)
-            # Re-sync to PostgreSQL (updates bid_atc_analyses, checklist, physical submissions)
+            if os.path.exists(final_json_path):
+                with open(final_json_path, "w", encoding="utf-8") as fp:
+                    json.dump(full_doc, fp, ensure_ascii=False, indent=4, default=str)
             db.upsert_bid(full_doc)
         else:
-            # Standalone table update if JSON artifact was not on disk
             with get_db_cursor(commit=True) as cur:
                 cur.execute(
                     """
