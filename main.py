@@ -225,9 +225,40 @@ def run_offline_benchmark():
     return 1
 
 
+def run_workers_job(categories: list, target_per_type: int = 1):
+    """
+    Dispatches crawling tasks to Celery worker queues and tracks their completion.
+    """
+    from tasks.tier1_scraper import scrape_category
+    from tasks.celery_app import app as celery_app
+
+    print(f"[*] Enqueuing {len(categories)} category tasks to Celery scraping_queue...")
+    task_handles = []
+    for cat in categories:
+        res = scrape_category.delay(bid_type=cat, target_count=target_per_type)
+        print(f"  -> Dispatched [{cat}] (Target: {target_per_type}) | Task ID: {res.id}")
+        task_handles.append((cat, res))
+
+    print(f"\n[*] Waiting for Celery workers to finish processing...")
+    completed = 0
+    poll_start = time.time()
+    while completed < len(task_handles):
+        time.sleep(2)
+        done_now = sum(1 for cat, t in task_handles if t.ready())
+        if done_now != completed:
+            completed = done_now
+            print(f"  --> Progress: {completed}/{len(task_handles)} categories completed...")
+        if time.time() - poll_start > 300:  # 5 mins timeout
+            print("  [!] Timeout waiting for worker completion.")
+            break
+    print("[*] All dispatched worker tasks have finished.")
+    return completed
+
+
 def main():
     parser = argparse.ArgumentParser(description="GeMBridge Unified Pipeline Runner & Benchmarking CLI")
     parser.add_argument("--once", action="store_true", help="Run once and exit cleanly (required for benchmark.ps1)")
+    parser.add_argument("--workers", action="store_true", help="Execute via distributed Celery workers instead of in-process")
     parser.add_argument("--all-types", action="store_true", help="Scrape 1 tender for each of the 9 GeM categories")
     parser.add_argument("--bid-type", type=str, default="Product Bid/RAs", help="Specific GeM category to scrape (default: 'Product Bid/RAs')")
     parser.add_argument("--target", type=int, default=1, help="Number of bids to extract per type (default: 1)")
@@ -237,9 +268,10 @@ def main():
     args = parser.parse_args()
 
     t_start = time.time()
+    mode_str = "Workers Distributed" if args.workers else ("Offline Benchmark" if args.offline else "Live In-Process")
     print("=" * 70)
     print(" GeMBridge Pipeline Execution: Zero-Disk In-Memory Architecture")
-    print(f" Mode: {'Offline Benchmark' if args.offline else 'Live Crawl'} | Once: {args.once} | Target Per Type: {args.target}")
+    print(f" Mode: {mode_str} | Once: {args.once} | Target Per Type: {args.target}")
     print("=" * 70)
 
     total_processed = 0
@@ -248,12 +280,15 @@ def main():
     else:
         if args.all_types:
             categories = BID_TYPES
-            print(f"[*] Multi-Type Mode: Will scrape {args.target} bid(s) for ALL {len(categories)} categories")
+            print(f"[*] Multi-Type Mode: Processing {args.target} bid(s) for ALL {len(categories)} categories")
         else:
             categories = [args.bid_type]
-            print(f"[*] Single-Type Mode: Will scrape {args.target} bid(s) for category '{args.bid_type}'")
+            print(f"[*] Single-Type Mode: Processing {args.target} bid(s) for category '{args.bid_type}'")
 
-        total_processed = run_live_scrape(categories, target_per_type=args.target)
+        if args.workers:
+            total_processed = run_workers_job(categories, target_per_type=args.target)
+        else:
+            total_processed = run_live_scrape(categories, target_per_type=args.target)
 
     # Verification RAG query
     if args.query_test or total_processed > 0:
@@ -275,3 +310,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
