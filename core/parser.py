@@ -144,14 +144,84 @@ def yesno(value) -> Optional[str]:
 
 
 # ---------------------------------------------------------------------------
-# Markdown Table Helpers
+# Markdown & Table Extraction Helpers
 # ---------------------------------------------------------------------------
-def md_table_kv(soup: BeautifulSoup) -> dict[str, str]:
+def markdown_tables_to_html(content: str) -> str:
     """
-    Extract key-value pairs from HTML/Markdown 2-column tables in BeautifulSoup parsed document.
+    Convert markdown tables (| col1 | col2 |) into standard HTML <table> blocks
+    so that BeautifulSoup can parse tabular data accurately.
+    """
+    if not content or "|" not in content:
+        return content
+
+    lines = content.splitlines()
+    new_lines = []
+    in_table = False
+    table_rows = []
+
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("|") and stripped.endswith("|"):
+            # Check if it's a separator line like |---|---|
+            if re.match(r"^\|(?:\s*:?-+:?\s*\|)+$", stripped):
+                continue
+            cells = [c.strip() for c in stripped.split("|")[1:-1]]
+            table_rows.append(cells)
+            in_table = True
+        else:
+            if in_table:
+                new_lines.append("<table>" + "".join("<tr>" + "".join(f"<td>{html.escape(c)}</td>" for c in r) + "</tr>" for r in table_rows) + "</table>")
+                table_rows = []
+                in_table = False
+            new_lines.append(line)
+
+    if in_table:
+        new_lines.append("<table>" + "".join("<tr>" + "".join(f"<td>{html.escape(c)}</td>" for c in r) + "</tr>" for r in table_rows) + "</table>")
+
+    return "\n".join(new_lines)
+
+
+def extract_pdf_rich_content(pdf_input: str | bytes | bytearray) -> str:
+    """
+    Extract full text from a PDF (file path or in-memory bytes) and convert all detected
+    tables into structured HTML <table> blocks. This ensures 100% field coverage for
+    both narrative text (RAG embeddings) and tabular data (consignees, schedules, financials).
+    """
+    import pymupdf
+    if isinstance(pdf_input, (bytes, bytearray)):
+        doc = pymupdf.open(stream=pdf_input, filetype="pdf")
+    else:
+        doc = pymupdf.open(pdf_input)
+
+    full_content = []
+    try:
+        for page in doc:
+            full_content.append(page.get_text())
+            try:
+                tabs = page.find_tables()
+                for tab in tabs:
+                    grid = tab.extract()
+                    rows_html = []
+                    for r in grid:
+                        cells_html = "".join("<td>" + html.escape(str(c or "")) + "</td>" for c in r)
+                        rows_html.append(f"<tr>{cells_html}</tr>")
+                    full_content.append("<table>" + "".join(rows_html) + "</table>")
+            except Exception:
+                pass
+    finally:
+        doc.close()
+
+    return "\n\n".join(full_content)
+
+
+def md_table_kv(soup: BeautifulSoup, raw_text: str = "") -> dict[str, str]:
+    """
+    Extract key-value pairs from HTML/Markdown 2-column tables in BeautifulSoup parsed document,
+    with robust plain-text regex fallback for standard GeM bilingual fields if tables are missing.
     
     Args:
         soup (BeautifulSoup): BeautifulSoup object of PDF HTML/Markdown content.
+        raw_text (str): Optional plain-text fallback string.
         
     Returns:
         dict[str, str]: Map of extracted key-value header/cell text pairs.
@@ -165,6 +235,39 @@ def md_table_kv(soup: BeautifulSoup) -> dict[str, str]:
                 val = clean(cells[1].get_text())
                 if key:
                     kv[key] = val
+
+    # Plain-text regex augmentation for standard GeM bilingual fields if kv is sparse
+    if raw_text:
+        _PATTERNS = [
+            (r"(?:Bid End Date\/Time|बिड बंद होने)[^\d\n]*(\d{2}-\d{2}-\d{4}\s+\d{1,2}:\d{2}:\d{2})", "Bid End Date/Time"),
+            (r"(?:Bid Opening[\s\S]{0,30}?Date\/Time|बिड खुलने)[^\d\n]*(\d{2}-\d{2}-\d{4}\s+\d{1,2}:\d{2}:\d{2})", "Bid Opening Date/Time"),
+            (r"(?:Bid Offer Validity|बिड पेशकश वैधता)[^\d\n]*(\d+)\s*(?:\(Days\)|days)?", "Bid Offer Validity"),
+            (r"(?:Ministry\/State Name|मंत्रालय\/राज्य का नाम)\s*\n\s*([^\n]+)", "Ministry/State Name"),
+            (r"(?:Department Name|विभाग का नाम)\s*\n\s*([^\n]+)", "Department Name"),
+            (r"(?:Organisation Name|संगठन का नाम)\s*\n\s*([^\n]+)", "Organisation Name"),
+            (r"(?:Office Name|कार्यालय का नाम)\s*\n\s*([^\n]+)", "Office Name"),
+            (r"(?:Total Quantity|कुल मात्रा)\s*\n\s*(\d+)", "Total Quantity"),
+            (r"(?:Item Category|वस्तु श्रेणी)\s*\n\s*([^\n]+)", "Item Category"),
+            (r"(?:Minimum Average Annual Turnover[^\n]*|न्यूनतम औसत वार्षिक टर्नओवर[^\n]*)\s*\n\s*([^\n]+)", "Minimum Average Annual Turnover"),
+            (r"(?:OEM Average Turnover[^\n]*|मूल उपकरण निर्माता का औसत[^\n]*)\s*\n\s*([^\n]+)", "OEM Average Turnover"),
+            (r"(?:Years of Past Experience Required[^\n]*|विगत अनुभव के वर्ष)\s*\n\s*([^\n]+)", "Years of Past Experience"),
+            (r"(?:Estimated Bid Value|अनुमानित बिड मूल्य)\s*\n\s*([\d,]+(?:\.\d+)?)", "Estimated Bid Value"),
+            (r"(?:EMD Amount|ईएमडी राशि)\s*\n\s*([\d,]+(?:\.\d+)?)", "EMD Amount"),
+            (r"(?:Advisory Bank|एडवाईजरी बैंक|एडवाईजर\s*बKक)\s*\n\s*([^\n]+)", "Advisory Bank"),
+            (r"(?:Past Performance|विगत प्रदर्शन)\s*\n\s*(\d+\s*%)", "Past Performance"),
+            (r"(?:Bid to RA enabled|बिड से रिवर्स नीलामी)\s*\n\s*(Yes|No)", "Bid to RA enabled"),
+            (r"(?:RA Quali[fﬁ]cation Rule|रिवर्स नीलामी योग्यता)\s*\n\s*([^\n]+)", "RA Qualification Rule"),
+            (r"(?:Type of Bid|बिड का प्रकार)\s*\n\s*([^\n]+)", "Type of Bid"),
+            (r"(?:Evaluation Method|मूल्यांकन पद्धति)\s*\n\s*([^\n]+)", "Evaluation Method"),
+            (r"(?:MSE Relaxation[^\n]*|एमएसएमई के लिए अनुभव[^\n]*)\s*\n\s*(Yes|No)", "MSE Relaxation"),
+            (r"(?:Startup Relaxation[^\n]*|स्टार्टअप के लिए अनुभव[^\n]*)\s*\n\s*(Yes|No)", "Startup Relaxation"),
+        ]
+        for pat, target_key in _PATTERNS:
+            if target_key not in kv:
+                m = re.search(pat, raw_text, re.IGNORECASE)
+                if m:
+                    kv[target_key] = clean(m.group(1))
+
     return kv
 
 
@@ -729,13 +832,14 @@ def parse_evaluation_section(docling: dict, kv: dict, soup: BeautifulSoup = None
 # ---------------------------------------------------------------------------
 # Section 4 — Documents
 # ---------------------------------------------------------------------------
-def parse_documents_section(docling: dict, kv: dict) -> dict:
+def parse_documents_section(docling: dict, kv: dict, raw_text: str = "") -> dict:
     """
     Extract required seller documents and visibility flags from parsed data or key-value table.
     
     Args:
         docling (dict): Parsed JSON dictionary.
         kv (dict): Key-value dictionary.
+        raw_text (str): Optional plain text string for regex fallback.
         
     Returns:
         dict: Required documents list, document visibility flag, and attachments.
@@ -745,7 +849,15 @@ def parse_documents_section(docling: dict, kv: dict) -> dict:
     def _docs_fallback():
         raw = md_get(kv, "Document required from seller",
                       "विक्रेता से मांगे गए", "विकेता से") or ""
-        return [clean(x) for x in re.split(r",\s*(?=[A-Z*])", raw) if clean(x)]
+        if not raw and raw_text:
+            m_doc = re.search(
+                r"(?:Document required from seller|विक्रेता से मांगे गए दस्तावेज़)\s*\n\s*([\s\S]+?)(?=\n\s*(?:\*|Do you want to show|क्या आप|\d+\s*\/))",
+                raw_text, re.IGNORECASE
+            )
+            if m_doc:
+                raw = m_doc.group(1)
+        raw = re.sub(r"\*In case any bidder.*$", "", raw, flags=re.DOTALL | re.IGNORECASE).strip()
+        return [clean(x) for x in re.split(r",\s*(?=[A-Z*])|\n+", raw) if clean(x)]
 
     docs_list = docling_first(d, "required_from_seller", _docs_fallback)
 
@@ -771,7 +883,7 @@ def _col_idx(hdr_cells: list[str], *kws: str) -> Optional[int]:
     return None
 
 
-def parse_consignees_section(docling: dict, soup: BeautifulSoup = None) -> list:
+def parse_consignees_section(docling: dict, soup: BeautifulSoup = None, raw_text: str = "") -> list:
     """
     Parse consignees, reporting officers, delivery addresses, quantities, and delivery schedules.
     
@@ -904,6 +1016,28 @@ def parse_consignees_section(docling: dict, soup: BeautifulSoup = None) -> list:
                 "quantity":                    quantity,
                 "delivery_days":               delivery,
             })
+
+    # Plain text fallback if HTML tables did not capture consignees
+    if not result and raw_text:
+        m_consignee_block = re.search(
+            r"(?:Consignees\/Reporting Officer|परेषिती\/रिपोर्टिंग अधिकारी)[\s\S]+?(?=Buyer Added Bid Specific|क्रेता द्वारा जोड़ी गई|अस्वीकरण|Disclaimer|$)",
+            raw_text, re.IGNORECASE
+        )
+        if m_consignee_block:
+            block = m_consignee_block.group(0)
+            rows = re.findall(
+                r"(\d+)\s*\n\s*([^\n]+)\s*\n\s*([\s\S]+?\d{6}[^\n]*)\s*\n\s*(\d+)\s*\n\s*(\d+)",
+                block
+            )
+            for sno, off, addr, qty, d_days in rows:
+                if not any(kw in off.lower() for kw in ["officer", "consignee", "reporting", "अधिकारी"]):
+                    result.append({
+                        "consignee_reporting_officer": clean(off),
+                        "consignee_address": clean(addr),
+                        "quantity": clean(qty),
+                        "delivery_days": clean(d_days),
+                    })
+
     return result
 
 
@@ -1068,30 +1202,48 @@ def parse_financials_section(docling: dict, kv: dict = None, md_content: str = "
 
     emd_bank = docling_first(
         emd, "advisory_bank", lambda: md_get(kv, "Advisory Bank", "एडवाईजरी बैंक") or "")
-    epbg_bank = docling_first(
-        epbg, "advisory_bank", lambda: md_get(kv, "Advisory Bank", "एडवाइजरी बैंक") or "")
 
     def _emd_amount_fallback():
-        total = 0
+        direct_amt = md_get(kv, "EMD Amount", "ईएमडी राशि")
+        if direct_amt:
+            amt = to_int(direct_amt)
+            if amt:
+                return amt
         for k, v in kv.items():
             if "emd amount" in k.lower() or "ईएमडी राशि" in k.lower():
                 amt = to_int(v)
                 if amt:
-                    total += amt
-        return total if total else None
+                    return amt
+        return None
 
     emd_amount = docling_first(emd, "amount_total", _emd_amount_fallback)
 
     emd_required = docling_first(
         emd, "required", lambda: bool(emd_bank or emd_amount))
 
-    epbg_required = docling_first(epbg, "required", lambda: bool(epbg_bank))
     epbg_pct = docling_first(
         epbg, "percent",
         lambda: to_float(md_get(kv, "ePBG Percentage", "ईपीबीजी प्रतिशत") or ""))
     epbg_dur = docling_first(
         epbg, "duration_months",
         lambda: to_int(md_get(kv, "Duration of ePBG", "ईपीबीजी की आवश्यक अवधि") or ""))
+
+    def _epbg_required_fallback():
+        req_val = md_get(kv, "Required", "आवश्यकता", "आवOयकता")
+        if req_val:
+            rv = req_val.strip().lower()
+            if rv in ("no", "नहीं"):
+                return False
+            if rv in ("yes", "हाँ", "हां"):
+                return True
+        return bool(epbg_pct or epbg_dur)
+
+    epbg_required = docling_first(epbg, "required", _epbg_required_fallback)
+    if not epbg_required:
+        epbg_bank = ""
+    else:
+        epbg_bank = docling_first(
+            epbg, "advisory_bank", lambda: md_get(kv, "Advisory Bank", "एडवाइजरी बैंक") or "")
 
     def _emd_exempt_fallback():
         text = md_get(kv, "EMD EXEMPTION", "emd exemption", "ईएमडी छूट") or ""
@@ -1244,20 +1396,22 @@ def parse_bid_data(md_content: str | dict, product_type: str = "PRODUCT") -> dic
         process_kind = "CATALOGUE"
         base_type = product_type.upper()
 
-    soup = BeautifulSoup(md_content, "html.parser")
-    kv   = md_table_kv(soup)
+    raw_text = md_content
+    html_content = markdown_tables_to_html(md_content)
+    soup = BeautifulSoup(html_content, "html.parser")
+    kv   = md_table_kv(soup, raw_text=raw_text)
     docling = {}
 
     timing, departments                       = parse_pdf_section(docling, kv)
     items                                     = parse_items_section(docling, kv, soup)
     evaluation                                = parse_evaluation_section(docling, kv, soup)
-    documents                                 = parse_documents_section(docling, kv)
-    consignees                                = parse_consignees_section(docling, soup)
+    documents                                 = parse_documents_section(docling, kv, raw_text=raw_text)
+    consignees                                = parse_consignees_section(docling, soup=soup, raw_text=raw_text)
     relaxations, auto_extension, ra, bid_type = parse_relaxations_auto_extension_ra_bid_type(docling, kv)
     inspection, clauses                       = parse_inspection_and_clauses(docling, kv)
     mii, mse                                  = parse_mii_mse_section(docling, kv)
-    financials                                = parse_financials_section(docling, kv, md_content)
-    terms                                     = parse_terms_buyer_atc(docling, md_content)
+    financials                                = parse_financials_section(docling, kv, raw_text)
+    terms                                     = parse_terms_buyer_atc(docling, raw_text)
 
     return {
         "process_kind":   process_kind,

@@ -148,10 +148,8 @@ def run_pipeline(live_scrape: bool = False, bid_no: str = None):
 
     if pdf_bytes:
         print(f"  --> Parsing in-memory PDF ({len(pdf_bytes):,} bytes) with PyMuPDF & Core Parser...")
-        import fitz
-        doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-        pdf_text = "\n".join([page.get_text() for page in doc])
-        doc.close()
+        from core.parser import extract_pdf_rich_content
+        pdf_text = extract_pdf_rich_content(pdf_bytes)
 
         try:
             bid_hyperlinks = extract_hyperlinks(pdf_bytes, source="bid")

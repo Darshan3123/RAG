@@ -126,10 +126,8 @@ def process_document(
     # 2b. High-Speed PyMuPDF Fallback if OCR returned empty or failed
     if not pdf_text.strip() and os.path.exists(pdf_path):
         try:
-            import pymupdf as fitz
-            doc = fitz.open(pdf_path)
-            pdf_text = "\n".join([page.get_text() for page in doc])
-            doc.close()
+            from core.parser import extract_pdf_rich_content
+            pdf_text = extract_pdf_rich_content(pdf_path)
             log.info(f"[Tier 2] PyMuPDF fallback extracted {len(pdf_text)} characters for {safe_bid_no}")
         except Exception as fitz_err:
             log.error(f"[Tier 2] PyMuPDF text fallback error: {fitz_err}")
