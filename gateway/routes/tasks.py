@@ -51,6 +51,24 @@ def trigger_scrape(request: ScrapeTaskRequest):
         )
 
 
+@router.post("/scrape-category", summary="Trigger Category Portal Crawl")
+def trigger_scrape_category(bid_type: str = "Product Bid/RAs", target_count: int = 1):
+    """
+    Enqueues an online crawl of GeM portal for a specific category into Celery's `scraping_queue`.
+    """
+    from tasks.tier1_scraper import scrape_category
+    async_result = scrape_category.delay(bid_type=bid_type, target_count=target_count)
+    return {
+        "success": True,
+        "task_id": async_result.id,
+        "status": "QUEUED",
+        "queue": "scraping_queue",
+        "category": bid_type,
+        "target_count": target_count,
+    }
+
+
+
 @router.get("/{task_id}", response_model=TaskStatusResponse, summary="Check Celery Task Execution Status")
 def get_task_status(task_id: str):
     """

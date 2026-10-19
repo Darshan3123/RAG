@@ -94,10 +94,50 @@ services:
     depends_on:
       - redis
       - minio
+    mem_limit: 512M
+
+  # 6. FastAPI REST Gateway (Port 8000)
+  fastapi-gateway:
+    build: .
+    container_name: gem-local-gateway
+    command: uvicorn gateway.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/gem-bridge
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET=gem-tenders
+      - MINIO_SECURE=false
+    depends_on:
+      - redis
+      - minio
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - .:/app
     mem_limit: 512M
+
+  # 7. Flower Queue Telemetry Dashboard (Port 5555)
+  flower:
+    build: .
+    container_name: gem-local-flower
+    command: celery -A tasks.celery_app flower --port=5555
+    ports:
+      - "5555:5555"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+    depends_on:
+      - redis
+    mem_limit: 256M
 
 volumes:
   gem_minio_data:
+
 

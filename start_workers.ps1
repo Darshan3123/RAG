@@ -7,8 +7,12 @@ param (
     [switch]$Stop,
     [switch]$WithBeat,
     [switch]$WithFlower,
+    [switch]$WithGateway,
+    [switch]$NoScraper,
     [switch]$Background
 )
+
+
 
 $ProjectRoot = $PSScriptRoot
 $VenvPython = Join-Path $ProjectRoot "venv\Scripts\python.exe"
@@ -16,13 +20,13 @@ $VenvCelery = Join-Path $ProjectRoot "venv\Scripts\celery.exe"
 
 # If -Stop is requested, kill all active celery worker processes
 if ($Stop) {
-    Write-Host "[*] Stopping all running Celery worker and beat processes..." -ForegroundColor Yellow
+    Write-Host "[*] Stopping all running Celery worker, beat, and gateway processes..." -ForegroundColor Yellow
     Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
-        $_.CommandLine -match "tasks\.celery_app" -or ($_.CommandLine -match "celery" -and $_.Name -eq "python.exe")
+        $_.CommandLine -match "tasks\.celery_app" -or ($_.CommandLine -match "celery" -and $_.Name -eq "python.exe") -or ($_.CommandLine -match "gateway\.main:app")
     } | ForEach-Object {
         Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue
     }
-    Write-Host "[OK] All GeMBridge Celery workers stopped." -ForegroundColor Green
+    Write-Host "[OK] All GeMBridge Celery workers and gateway stopped." -ForegroundColor Green
     exit 0
 }
 
@@ -104,7 +108,13 @@ $WorkerCommands = @(
     }
 )
 
+if ($NoScraper) {
+    Write-Host "  [*] Offline / No-Scrape Mode: Skipping Tier 1 Scraper Worker." -ForegroundColor DarkGray
+    $WorkerCommands = $WorkerCommands | Where-Object { $_.Queue -ne 'scraping_queue' }
+}
+
 foreach ($w in $WorkerCommands) {
+
     Write-Host "  -> Starting $($w.Name)..." -ForegroundColor $w.Color
     $cmd = "cd '$ProjectRoot'; & '$VenvCelery' -A tasks.celery_app worker -Q $($w.Queue) -n $($w.WorkerName) -P solo --loglevel=INFO"
     
@@ -129,6 +139,18 @@ if ($WithFlower) {
     $flowerCmd = "cd '$ProjectRoot'; & '$VenvCelery' -A tasks.celery_app flower --port=5555"
     Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", $flowerCmd
 }
+
+# Optional FastAPI REST Gateway
+if ($WithGateway) {
+    Write-Host "  -> Starting FastAPI REST Gateway on http://localhost:8000..." -ForegroundColor Cyan
+    $gatewayCmd = "cd '$ProjectRoot'; & '$VenvPython' -m uvicorn gateway.main:app --host 0.0.0.0 --port 8000 --reload"
+    if ($Background) {
+        Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", $gatewayCmd -WindowStyle Hidden
+    } else {
+        Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", $gatewayCmd
+    }
+}
+
 
 Write-Host "`n[OK] All requested services dispatched successfully!" -ForegroundColor Green
 Write-Host "To stop all workers anytime, run: .\start_workers.ps1 -Stop`n" -ForegroundColor Yellow

@@ -78,6 +78,45 @@ class GemBrowser:
         except Exception as e:
             log.warning(f"Browser close error: {e}")
 
+    def start(self):
+        """Explicitly start browser context outside of with-block."""
+        return self.__enter__()
+
+    def close(self):
+        """Explicitly close browser context."""
+        return self.__exit__(None, None, None)
+
+    def goto(self, url: str):
+        """Navigate list_page to URL."""
+        if not self.list_page:
+            self.start()
+        self.list_page.goto(url, wait_until="domcontentloaded", timeout=120_000)
+        try:
+            self.list_page.wait_for_selector(".by_type, div.card, #product, #ongoing_bids", state="attached", timeout=20_000)
+        except Exception:
+            pass
+        sleep_page_load()
+        human_mouse_move(self.list_page)
+
+    def select_filter(self, bid_type_name: str) -> bool:
+        """Select bid type category filter with fallback."""
+        try:
+            self.select_bid_type(bid_type_name)
+            return True
+        except Exception as e:
+            log.warning(f"select_filter failed for {bid_type_name}: {e}")
+            return False
+
+    def get_all_cards(self):
+        """Return list of individual card locators on current page."""
+        loc = self.get_cards()
+        count = loc.count()
+        return [loc.nth(i) for i in range(count)]
+
+    def click_next_page(self) -> bool:
+        """Alias for go_next_page."""
+        return self.go_next_page()
+
     # -------------------------------------------------------
     # -------------------------------------------------------
     # OPEN GEM LISTING PAGE
