@@ -246,3 +246,34 @@ def scrape_single_bid(self, bid_no: str) -> Dict[str, Any]:
         return {"status": "enqueued", "bid_no": bid_no, "document_task_id": task.id}
     finally:
         browser.close()
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="GeMBridge Tier 1 Playwright Crawler CLI")
+    parser.add_argument("--once", action="store_true", help="Run once and exit cleanly")
+    parser.add_argument("--bid-type", type=str, default="Product Bid/RAs", help="GeM category/bid type to scrape (e.g. 'Product Bid/RAs', 'Service Bid/RAs', 'BOQ Bids')")
+    parser.add_argument("--target", type=int, default=2, help="Target count of new tenders to scrape (default: 2)")
+    parser.add_argument("--bid-no", type=str, default=None, help="Scrape a specific tender on-demand by Bid Number")
+    parser.add_argument("--enqueue", action="store_true", help="Dispatch asynchronously to Celery scraping_queue instead of running directly")
+
+    args = parser.parse_args()
+
+    if args.bid_no:
+        print(f"[*] Starting on-demand scrape for bid: {args.bid_no}")
+        if args.enqueue:
+            res = scrape_single_bid.delay(args.bid_no)
+            print(f"[+] Task enqueued to Celery scraping_queue! Task ID: {res.id}")
+        else:
+            res = scrape_single_bid(args.bid_no)
+            print(f"[+] Direct scrape result: {res}")
+    else:
+        print(f"[*] Starting crawl for category: '{args.bid_type}' (Target: {args.target})")
+        if args.enqueue:
+            res = scrape_category.delay(bid_type=args.bid_type, target_count=args.target)
+            print(f"[+] Task enqueued to Celery scraping_queue! Task ID: {res.id}")
+        else:
+            res = scrape_category(bid_type=args.bid_type, target_count=args.target)
+            print(f"[+] Direct crawl result: {res}")
+

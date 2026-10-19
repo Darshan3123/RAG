@@ -1,17 +1,20 @@
 # =========================================================================
 # docker-compose.local.yml
-# Local Development Stack with Multi-Process Linux Prefork Workers
+# GeMBridge Local Development Stack with Multi-Process Linux Workers
 # Automatically connects to Windows Desktop PostgreSQL via host.docker.internal
 # =========================================================================
 
 services:
-  # 1. Redis 7 Broker & Result Backend
+  # 1. Redis 7 Message Broker & Result Backend
   redis:
     image: redis:7-alpine
     container_name: redis-server-gem
     ports:
       - "6379:6379"
-    restart: always
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy noeviction
+    volumes:
+      - gem_redis_data:/data
 
   # 2. MinIO S3 Object Storage
   minio:
@@ -27,13 +30,16 @@ services:
       - "9001:9001"
     volumes:
       - gem_minio_data:/data
-    restart: always
+    restart: unless-stopped
 
-  # 3. Tier 1: Scraper Worker (Prefork Linux Concurrency = 2)
+  # 3. Tier 1: Scraper Worker (Playwright Chromium)
   worker-scraper:
     build: .
     container_name: gem-worker-scraper
     command: celery -A tasks.celery_app worker -Q scraping_queue -c 2 -n scraper@local --loglevel=INFO
+    init: true
+    shm_size: '2gb'
+    env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -52,16 +58,18 @@ services:
     depends_on:
       - redis
       - minio
-
+    volumes:
+      - ./downloads:/app/downloads
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    mem_limit: 1G
+    mem_limit: 1200M
 
-  # 4. Tier 2: Document & OCR Worker (Prefork Linux Concurrency = 2)
+  # 4. Tier 2: Document & Mistral OCR Worker
   worker-document:
     build: .
     container_name: gem-worker-document
     command: celery -A tasks.celery_app worker -Q document_queue -c 2 -n document@local --loglevel=INFO
+    env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -80,15 +88,18 @@ services:
     depends_on:
       - redis
       - minio
+    volumes:
+      - ./downloads:/app/downloads
     extra_hosts:
       - "host.docker.internal:host-gateway"
     mem_limit: 1536M
 
-  # 5. Tier 3: ATC Compliance & RAG Worker (Prefork Linux Concurrency = 2)
+  # 5. Tier 3: ATC Compliance & pgvector Worker
   worker-atc:
     build: .
     container_name: gem-worker-atc
     command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 2 -n atc@local --loglevel=INFO
+    env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -107,17 +118,39 @@ services:
     depends_on:
       - redis
       - minio
+    volumes:
+      - gem_hf_cache:/root/.cache/huggingface
+      - ./downloads:/app/downloads
     extra_hosts:
       - "host.docker.internal:host-gateway"
     mem_limit: 2G
 
-  # 6. FastAPI REST Gateway (Port 8000)
+  # 6. Celery Beat Periodic Scheduler (Every 30 Minutes)
+  celery-beat:
+    build: .
+    container_name: gem-celery-beat
+    command: celery -A tasks.celery_app beat -l info
+    env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/gem-bridge
+      - MINIO_ENDPOINT=minio:9000
+    depends_on:
+      - redis
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    mem_limit: 250M
+
+  # 7. FastAPI REST Gateway (Port 8000)
   gateway:
     build: .
     container_name: gem-fastapi-gateway
     command: uvicorn gateway.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
+    env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -136,11 +169,14 @@ services:
     depends_on:
       - redis
       - minio
+    volumes:
+      - gem_hf_cache:/root/.cache/huggingface
+      - ./downloads:/app/downloads
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    mem_limit: 1536M
+    mem_limit: 1000M
 
 volumes:
+  gem_redis_data:
   gem_minio_data:
-
-
+  gem_hf_cache:
