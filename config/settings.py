@@ -93,7 +93,8 @@ BID_TYPES = [
     "Single Tender",
 ]
 
-TARGET_PER_TYPE = _int("TARGET_PER_TYPE", 10)
+TARGET_PER_TYPE = _int("TARGET_PER_TYPE", 2)
+MAX_CONSECUTIVE_SEEN = _int("MAX_CONSECUTIVE_SEEN", 10)
 MAX_EMPTY_PAGES = _int("MAX_EMPTY_PAGES", 5)
 
 # ---------------------------------------------------------

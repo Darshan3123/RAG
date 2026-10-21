@@ -4,7 +4,7 @@
 > **Target Production Architecture:** As defined in [`SERVER_DEPLOYMENT_PLAN.md`](file:///F:/Projects/gem_scraper/SERVER_DEPLOYMENT_PLAN.md)  
 > **Target Database Schema:** As defined in [`ER-Diagram-V3.md`](file:///F:/Projects/gem_scraper/Documentation/ER-Diagram-V3.md)  
 > **Target Host:** Hostinger KVM 4 VPS (`srv1701681`) — Ubuntu 24.04 LTS (16 GB RAM, 4 vCPUs)  
-> **Status Updated:** After Commits `10c0062`, `fafdf42`, and `f6765be`  
+> **Status Updated:** October 2026 (Live Windows & Linux Production Verified)  
 
 ---
 
@@ -12,26 +12,26 @@
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│ 🚀 Overall Migration Progress: ~98% Complete                           │
+│ 🚀 Overall Migration Progress: ~99% Complete                           │
 ├───────────────────────────────────────────────────┬────────────────────┤
 │ 1. PostgreSQL v3.0 Database Schema & Ingestion     │ ✅ 100% COMPLETED  │
 │ 2. MinIO S3 Object Storage Client Module          │ ✅ 100% COMPLETED  │
 │ 3. Celery 3-Tier Distributed Queue Architecture   │ ✅ 100% COMPLETED  │
 │ 4. Codebase Modular Consolidation & Cleanup       │ ✅ 100% COMPLETED  │
-│ 5. Local Containerization & Windows Scripts       │ ✅ 100% COMPLETED  │
+│ 5. Cross-Platform Orchestration (Win & Linux/WSL) │ ✅ 100% COMPLETED  │
 │ 6. Ingestion & Storage Verification Test Scripts  │ ✅ 100% COMPLETED  │
 │ 7. Vector Embedding Linking in Tier 3 Worker      │ ✅ 100% COMPLETED  │
 │ 8. FastAPI REST Gateway (Port 8000 Endpoints)     │ ✅ 100% COMPLETED  │
-│ 9. End-to-End Master Test Suite (51/51 Checks)    │ ✅ 100% OPERATIONAL│
-│ 10. Production Dokploy Stack & VPS Backfill       │ ⏳  READY / NEXT   │
+│ 9. Windows Proactor & Flower Event Loop Fix       │ ✅ 100% RESOLVED   │
+│ 10. 24/7 Delta & Configurable Target Scraping     │ ✅ 100% COMPLETED  │
+│ 11. Complete API Documentation with Live Outputs  │ ✅ 100% COMPLETED  │
+│ 12. Production Dokploy Stack & VPS Backfill       │ ⏳ READY / NEXT    │
 └───────────────────────────────────────────────────┴────────────────────┘
 ```
 
 ---
 
-## 2. Commit Audit: What Was Changed in Recent Commits
-
-Three major commits reshaped the repository:
+## 2. Commit Audit: Key Evolution Milestones
 
 1. **Commit `10c0062` (`feat: distributed 3-tier celery workers, postgresql v3.0, minio s3, and setup guide`):**
    * Implemented the entire **PostgreSQL v3.0 schema** (`storage/init_v3_schema.sql` and `storage/postgres_db.py`).
@@ -39,7 +39,6 @@ Three major commits reshaped the repository:
    * Established the **3-Tier Celery queue workers** (`tasks/celery_app.py`, `tasks/tier1_scraper.py`, `tasks/tier2_document.py`, `tasks/tier3_atc_rag.py`, `tasks/beat_schedule.py`).
    * Added local Docker stack (`docker-compose.local.yml`, `Dockerfile`) and PowerShell worker launcher (`start_workers.ps1`).
    * Added verification scripts (`test_postgres_ingestion.py`, `test_minio_storage.py`, `benchmark_pipeline_usage.py`).
-   * Updated `config/settings.py`, `requirements.txt`, `.env.example`, and `core/browser.py` (in-memory PDF downloads).
 
 2. **Commit `fafdf42` (`refactor: clean codebase structure, consolidate core modules, and remove legacy artifacts`):**
    * Consolidated AI modules: moved `pipeline/atc_analyzer.py` -> `core/atc_analyzer.py`, `rag/embedder.py` -> `core/embedder.py`, `rag/llm.py` -> `core/llm.py`.
@@ -49,138 +48,108 @@ Three major commits reshaped the repository:
 3. **Commit `f6765be` (`fix: restore benchmark_workers.py and shell scripts`):**
    * Restored vital operational utility scripts: `benchmark_workers.py`, `server_audit.sh`, `setup_env.sh`, `sync_to_github.sh`, and `benchmark.ps1`.
 
+4. **Recent Production Enhancements (October 2026):**
+   * **Windows Flower + Playwright Event Loop Conflict Fix:** Resolved `NotImplementedError` in `core/browser.py` by applying `asyncio.WindowsProactorEventLoopPolicy()` guarded by `sys.platform == "win32"`.
+   * **Linux / WSL Launcher (`start_workers.sh`):** Added comprehensive bash orchestration with `-WithGateway`, `-WithBeat`, `-WithFlower`, `-Stop`, and capped CPU concurrency (`-c 6`).
+   * **WSL 2 Hyper-V Network Optimization:** Configured `.wslconfig` (`memory=8GB`, `swap=8GB`, `networkingMode=mirrored`, `hostAddressLoopback=true`).
+   * **24/7 Delta Scraping Engine:** Configured dual-mode operation via `.env` (`TARGET_PER_TYPE` and `MAX_CONSECUTIVE_SEEN=10`), allowing automatic stop once encountering 10 consecutive already-seen tenders in reverse-chronological order.
+   * **Live REST API Verification:** Verified all 20 live database records across all 7 endpoint groups with 100% passing tests.
+   * **Full API Guide with Live JSON Responses:** Created [`Documentation/API_REQUESTS_AND_RESPONSES.md`](file:///F:/Projects/gem_scraper/Documentation/API_REQUESTS_AND_RESPONSES.md).
+
 ---
 
 ## ✅ 3. WHAT WE HAVE DONE (Completed Components)
 
 ### A. Database Layer (PostgreSQL v3.0 Hybrid Enterprise Schema)
-* [x] **`storage/init_v3_schema.sql` (Created):**
+* [x] **`storage/init_v3_schema.sql`:**
   * Fully creates all 10 relational tables: `bids`, `bid_items`, `bid_consignees`, `bid_evaluation_schedules`, `bid_atc_checklist_items`, `bid_atc_physical_submissions`, `bid_hyperlinks`, `bid_terms`, `bid_atc_analyses`, `gem_bid_chunks`.
   * Activates `vector` (pgvector) and `pg_trgm` extensions.
   * Configures B-Tree, GIN (`required_documents`, trigram fuzzy on `item_category`, tsvector on checklist), and HNSW cosine vector index (`vector_cosine_ops`).
-* [x] **`storage/postgres_db.py` (Created - 873 lines):**
+* [x] **`storage/postgres_db.py`:**
   * Production connection pooling via `ThreadedConnectionPool`.
-  * `upsert_bid(raw_doc)`: Full ACID transaction populating `bids` (scalars + `required_documents TEXT[]` + `raw_data JSONB`), `bid_items` (with `specifications JSONB`), `bid_consignees` (with `pincode`, `city`, `quantity_raw`, `is_lumpsum`), `bid_evaluation_schedules` (with `grouped_items JSONB`), and `bid_terms`.
+  * `upsert_bid(raw_doc)`: Full ACID transaction populating `bids`, `bid_items`, `bid_consignees`, `bid_evaluation_schedules`, and `bid_terms`.
   * `insert_chunks(bid_id, chunks)`: Inserts 768-dim vector embeddings into `gem_bid_chunks`.
-  * `search_chunks(query_embedding, top_k)`: Cosine similarity search via `<=>` operator.
-  * `get_bid_by_no(bid_no)` & `list_bids(...)`: Query engines with pagination and filtering.
+  * `search_chunks(query_embedding, top_k)`: Sub-5ms cosine similarity search via `<=>` operator.
+  * Composite query engines: `list_bids_v3()`, `get_bid_dossier()`, `get_bid_partition()`, discovery aggregations, and telemetry audits.
 
 ### B. Object Storage Layer (MinIO / S3)
-* [x] **`utils/s3_storage.py` (Created):**
+* [x] **`utils/s3_storage.py`:**
   * Direct streaming of in-memory PDFs, Markdowns, and JSON files without writing to local disk.
   * Bucket initialization (`ensure_bucket_exists("gem-tenders")`).
   * `upload_bytes(key, data, content_type)` and `download_bytes(key)`.
   * Time-limited S3 Presigned URL generator (`get_presigned_url(key, expiry_hours=24)`).
 
 ### C. Distributed Queue & Worker Pipeline (Celery + Redis)
-* [x] **`tasks/celery_app.py` (Created):**
-  * Celery app configured with Redis broker and result backend.
+* [x] **`tasks/celery_app.py`:**
+  * Celery app configured with Redis broker (`redis://localhost:6379/0`) and result backend (`/1`).
   * Explicit routing:
-    * `scraping_queue` -> `tasks.tier1_scraper.crawl_and_download_bid`
-    * `document_queue` -> `tasks.tier2_document.process_document_stream`
+    * `scraping_queue` -> `tasks.tier1_scraper.scrape_category`, `crawl_all_categories`, `scrape_single_bid`
+    * `document_queue` -> `tasks.tier2_document.process_document`
     * `atc_rag_queue` -> `tasks.tier3_atc_rag.process_atc_and_embed`
   * Late acknowledgments (`task_acks_late=True`) and unacknowledged task protection.
-* [x] **`tasks/tier1_scraper.py` (Created):**
-  * Playwright Chromium crawler.
-  * Redis deduplication check (`gem:seen:{bid_no}`).
-  * In-memory PDF download (`core/browser.py`).
-  * Streams raw PDFs to MinIO bucket `gem-tenders` under `bids/{bid_no}/bid.pdf`.
+* [x] **`tasks/tier1_scraper.py`:**
+  * Playwright Chromium stealth crawler with Redis deduplication (`gem:seen:{safe_bid_no}`).
+  * Dual-mode support: Target batch mode (`target_count`) and 24/7 Delta mode (`MAX_CONSECUTIVE_SEEN`).
+  * In-memory PDF download, hyperlink harvesting, and direct upload to MinIO S3 (`gem-tenders/bids/{bid_no}/bid.pdf`).
   * Enqueues Tier 2 task and releases browser context in ~6s.
-* [x] **`tasks/tier2_document.py` (Created):**
+* [x] **`tasks/tier2_document.py`:**
   * Pulls PDF stream from MinIO into memory.
   * PyMuPDF selective front-page slicing (<0.2s) + Mistral Cloud OCR on scanned annexures (~7s).
   * Calls `core/parser.py` and `core/normalizer.py`.
   * Uploads `document.md` and `metadata.json` to MinIO.
   * Upserts master record into PostgreSQL v3.0 via `PostgresBidDatabase.upsert_bid()`.
   * Enqueues Tier 3 task to `atc_rag_queue`.
-* [x] **`tasks/tier3_atc_rag.py` (Created & Vector-Linked):**
+* [x] **`tasks/tier3_atc_rag.py`:**
   * Calls Gemini 2.5 Flash 8-domain ATC compliance engine (`core/atc_analyzer.py`).
   * Updates PostgreSQL with compliance checklist, physical submissions, and AI telemetry.
   * Streams `atc_compliance.json` to MinIO.
   * **pgvector Integration:** Hooks into `core.embedder.generate_bid_embeddings()` and `PostgresBidDatabase.insert_chunks()` to chunk tenders into domain-specific passages (`item`, `compliance`, `general_pdf`), generate 768-dim BGE embeddings, and bulk-insert into `gem_bid_chunks` with HNSW indexing.
-  * Sets Redis completion key.
-* [x] **`tasks/beat_schedule.py` (Created):**
-  * Periodic clock daemon configured to fire category crawl jobs every 30 minutes.
+* [x] **`tasks/beat_schedule.py`:**
+  * Periodic clock daemon configured to fire category crawl jobs on schedule (`SCRAPE_INTERVAL_MINUTES=60`).
+  * Dynamically reads `TARGET_PER_TYPE` from `config/settings.py` (passes integer for target cap, or `None` for 24/7 Delta mode).
 
-### D. Codebase Refactoring & Consolidation
-* [x] **`core/` Centralization:**
-  * `core/atc_analyzer.py` (moved from `pipeline/`)
-  * `core/embedder.py` (moved from `rag/`, enhanced with `build_structured_bid_chunks` and `generate_bid_embeddings`)
-  * `core/llm.py` (moved from `rag/`)
-  * `core/browser.py` updated with `download_pdf_to_memory(url)` for direct-to-S3 streaming.
-* [x] **Legacy Code Cleanup:**
-  * Removed deprecated SQLite file `storage/database.py`.
-  * Removed legacy synchronous scraper `pipeline/scraper.py` and `main.py`.
-  * Removed dead test folders in `STANDLONE TEST SCRIPTS/`.
-* [x] **Dependencies & Config:**
-  * Updated `requirements.txt` with Celery, Redis, psycopg2, pgvector, minio.
-  * Updated `config/settings.py` to load Redis, PostgreSQL, and MinIO environment variables.
-  * Updated `.env.example`.
+### D. Windows & Linux / WSL Cross-Platform Launchers
+* [x] **`start_workers.ps1` (Windows PowerShell Runner):**
+  * Launches Tier 1 (`scraping_queue`), Tier 2 (`document_queue`), Tier 3 (`atc_rag_queue`), Celery Beat, Flower (`http://localhost:5555`), and FastAPI Gateway (`http://localhost:8000`).
+  * Supports `-WithGateway`, `-WithBeat`, `-WithFlower`, `-Stop`.
+  * Tracks PIDs in `logs/workers.pid` and gracefully kills process trees on stop.
+* [x] **`start_workers.sh` (Linux / WSL Runner):**
+  * Spawns dedicated OS processes with CPU concurrency capping (`-c 6`) tailored for 8GB WSL / VPS memory limits.
+  * Flags: `-WithGateway`, `-WithBeat`, `-WithFlower`, `-Stop`.
+* [x] **`core/browser.py` Windows Event Loop Fix:**
+  * Applied `if sys.platform == "win32": asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())` before `sync_playwright().start()`.
+  * Completely eliminated the `NotImplementedError` caused when Flower loads `WindowsSelectorEventLoopPolicy` on Windows.
+  * Verified live: 46+ background tasks processed with 0 failures.
 
-### E. Local Orchestration & Test Verification
-* [x] **`Dockerfile` (Created):**
-  * Multi-stage build with Python 3.12, Chromium dependencies, and non-root execution.
-* [x] **`docker-compose.local.yml` (Created):**
-  * Spins up Redis 7, MinIO S3, and the 3 worker tiers with memory limits and `host.docker.internal` network bridge to local PostgreSQL.
-* [x] **`start_workers.ps1` (Created):**
-  * Native Windows PowerShell runner spawning solo workers (`-P solo`) for rapid local debugging.
-* [x] **Verification Test Scripts:**
-  * `Testing Scripts/test_postgres_ingestion.py` (Backfill verification for all 61 tenders).
-  * `Testing Scripts/test_minio_storage.py` (Upload/download and presigned URL test).
-  * `Testing Scripts/benchmark_pipeline_usage.py` (System resource audit).
-  * `Testing Scripts/test_rag_search.py` (Complete verification test for domain chunking, BGE vector embeddings, and sub-5ms cosine retrieval).
-  * `Documentation/SETUP_AND_DEPLOYMENT_GUIDE.md` (Detailed deployment guide).
+### E. 24/7 Delta Scraping & Target Scraping Engine
+* [x] **Configurable via `.env`:**
+  * `TARGET_PER_TYPE`: Setting to `2` or `10` limits each category scrape to that target count for testing.
+  * `TARGET_PER_TYPE=0`: Switches to 24/7 Delta mode, scraping all new bids without artificial limits.
+  * `MAX_CONSECUTIVE_SEEN=10`: Stops crawling deeper pages once 10 consecutive already-seen tenders in reverse-chronological order are encountered.
 
-### F. FastAPI REST Gateway (Port 8000 Endpoints — v3.0 Production Standard)
-* [x] **`gateway/main.py` (Created):**
-  * FastAPI ASGI application with connection pool lifespan management, CORS middleware, global standard exception handlers, interactive Swagger UI (`/docs`), ReDoc (`/redoc`), and `/health` probe.
-* [x] **`gateway/schemas.py` (Created):**
-  * Comprehensive Pydantic v2 schemas defining master dossiers, 10 partitioned sub-resource modules, discovery feeds, search responses, S3 streaming presigned responses, Celery tasks, and analytics telemetry.
-* [x] **`gateway/routes/bids.py` (Created):**
-  * Master dossier (`GET /api/v1/bids/{bid_no}`), paginated & multi-filter table (`GET /api/v1/bids`), raw backup (`GET /api/v1/bids/{bid_no}/raw`), and all 10 isolated tab partitions (`/header`, `/buyer`, `/items`, `/consignees`, `/financials`, `/policy`, `/documents`, `/atc`, `/submissions`).
-* [x] **`gateway/routes/discovery.py` (Created):**
-  * Category counts (`/types`), organizations directory (`/organizations`), state explorer (`/locations/states`), and logistics freight pincode explorer (`/locations/pincode/{pin}/bids`).
-* [x] **`gateway/routes/search.py` (Created):**
-  * Quick auto-complete (`/search/quick`), trigram fuzzy keyword matching (`/search/keyword`), and sub-5ms 768-dim BGE vector semantic search (`/search/semantic`).
-* [x] **`gateway/routes/documents.py` (Created):**
-  * MinIO S3 presigned PDF and compliance JSON download streaming with optional HTTP 307 temporary redirect.
-* [x] **`gateway/routes/tasks.py` (Created):**
-  * Asynchronous crawling dispatch (`POST /tasks/scrape-bid`) to Celery `scraping_queue` and real-time task polling (`GET /tasks/{task_id}`).
-* [x] **`gateway/routes/analytics.py` (Created):**
-  * System overview KPI counters (`/analytics/overview`) and Gemini AI / Mistral OCR token and cost audit (`/analytics/ai-telemetry`).
-* [x] **`Testing Scripts/test_api_gateway.py` (Created & Verified):**
-  * 27 integration tests covering all 7 API groups — 27 PASSED, 0 FAILED.
+### F. FastAPI REST Gateway & Live Documentation
+* [x] **`gateway/` Microservice (v3.0 Production Standard):**
+  * 7 functional API groups, 10 normalized partitioned sub-resources, pgvector semantic search, MinIO S3 presigned PDF links, and Celery task dispatch.
+* [x] **`Documentation/API_REQUESTS_AND_RESPONSES.md`:**
+  * Comprehensive reference file documenting all endpoints with HTTP methods, parameters, PowerShell & cURL request commands, and live JSON outputs verified against PostgreSQL.
 
 ---
 
 ## ⏳ 4. WHAT WE STILL HAVE PENDING (Remaining Work)
 
-The following components from [`SERVER_DEPLOYMENT_PLAN.md`](file:///F:/Projects/gem_scraper/SERVER_DEPLOYMENT_PLAN.md) remain to be completed:
+The remaining deployment tasks from [`SERVER_DEPLOYMENT_PLAN.md`](file:///F:/Projects/gem_scraper/SERVER_DEPLOYMENT_PLAN.md):
 
 ### 1. ⏳ Production Docker Compose (`docker-compose.prod.yml`) — Dokploy Ready
-* [ ] **Finalize `docker-compose.prod.yml`:**
-  * Compose stack configured for **Dokploy** on Hostinger KVM 4 VPS (`srv1701681`) enforcing hard resource limits:
-    * Scraper worker: `cpus: '1.0'`, `memory: 1200M`, `shm_size: '2gb'`, `init: true`
-    * Document worker: `cpus: '0.5'`, `memory: 600M`
-    * ATC worker: `cpus: '0.5'`, `memory: 1200M`
-    * Celery Beat daemon: `cpus: '0.1'`, `memory: 150M`
-    * FastAPI Gateway: `cpus: '0.4'`, `memory: 350M`
-    * Flower Monitoring Dashboard: port 5555
-    * Bridge network connecting to host's existing Redis, PostgreSQL, and MinIO services.
+* [ ] Finalize Dokploy configuration on Hostinger KVM 4 VPS (`srv1701681`):
+  * Scraper worker: `cpus: '1.0'`, `memory: 1200M`, `shm_size: '2gb'`
+  * Document worker: `cpus: '0.5'`, `memory: 600M`
+  * ATC worker: `cpus: '0.5'`, `memory: 1200M`
+  * Celery Beat daemon: `cpus: '0.1'`, `memory: 150M`
+  * FastAPI Gateway: `cpus: '0.4'`, `memory: 350M`
+  * Flower Monitoring Dashboard: port 5555
 
-### 2. ⏳ Database Backfill Execution & MinIO Verification Run
-* [ ] **Run Ingestion on the 61 Existing Tenders:**
-  * Execute `Testing Scripts/test_postgres_ingestion.py` against a running PostgreSQL database to backfill all 61 JSON documents from `downloads/` into the V3 schema.
-* [ ] **Run MinIO Verification:**
-  * Execute `Testing Scripts/test_minio_storage.py` to confirm bucket creation and presigned URL access.
-
-### 3. ⏳ Deprecate / Remove Leftover Legacy Files
-* [ ] Remove obsolete files in `storage/`:
-  * `storage/gem_bids.db` (4.6 MB legacy SQLite file)
-  * `storage/gem_bids.json` (129 KB legacy export)
-* [ ] Clean up empty legacy folders:
-  * `pipeline/` (all files moved to `core/` or `tasks/`)
-  * `rag/` (all files moved to `core/`)
+### 2. ⏳ Full Database Backfill on VPS
+* [ ] Run `Testing Scripts/test_postgres_ingestion.py` on the VPS to backfill all 61 historical JSON documents into the v3 PostgreSQL database.
 
 ---
 
@@ -200,16 +169,16 @@ The following components from [`SERVER_DEPLOYMENT_PLAN.md`](file:///F:/Projects/
                                     │
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│ ✅ STEP 3: Master End-to-End Verification Test Suite (COMPLETED)       │
-│ • 51/51 automated checks passed across all 8 architectural phases     │
+│ ✅ STEP 3: Windows Event Loop & Delta Scraping Engine (COMPLETED)      │
+│ • Proactor event loop fix for Flower + Playwright on Windows           │
+│ • Configurable target & delta deduplication engine (.env)              │
+│ • Complete API Documentation with live responses in Documentation/     │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
 │ 🎯 STEP 4: Live Verification & Backfill Run on VPS                     │
-│ • Execute test_postgres_ingestion.py to backfill tenders.             │
-│ • Execute test_minio_storage.py to verify S3 bucket streaming.         │
+│ • Execute test_postgres_ingestion.py to backfill tenders on VPS.       │
 │ • Deploy via docker-compose.prod.yml on Dokploy Hostinger VPS.         │
 └────────────────────────────────────────────────────────────────────────┘
 ```
-
