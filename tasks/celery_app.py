@@ -53,6 +53,7 @@ app.conf.update(
 import tasks.tier1_scraper  # noqa: F401
 import tasks.tier2_document  # noqa: F401
 import tasks.tier3_atc_rag  # noqa: F401
+import tasks.beat_schedule  # noqa: F401
 
 if __name__ == "__main__":
     app.start()
