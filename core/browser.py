@@ -44,6 +44,11 @@ class GemBrowser:
     # CONTEXT MANAGER
     # -------------------------------------------------------
     def __enter__(self):
+        import sys
+        if sys.platform == "win32":
+            import asyncio
+            asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+            
         self._pw      = sync_playwright().start()
         self._browser = self._pw.chromium.launch(
             **stealth_launch_options()
