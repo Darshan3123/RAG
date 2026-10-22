@@ -9,6 +9,7 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
 
+from config.settings import CORS_ALLOWED_ORIGINS
 from gateway.routes import api_v1_router
 from storage.postgres_db import close_connection_pool, get_connection_pool
 from utils.logger import get_logger
@@ -44,13 +45,15 @@ app = FastAPI(
 )
 
 # -------------------------------------------------------------------------
-# CORS MIDDLEWARE
+# CORS MIDDLEWARE (Locked to explicit allowed origins)
 # -------------------------------------------------------------------------
+origins = [o.strip() for o in CORS_ALLOWED_ORIGINS.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins if origins else [],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -61,9 +64,13 @@ app.add_middleware(
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     """Formats all HTTP errors into the standard GeMBridge error schema."""
-    error_code = "RESOURCE_NOT_FOUND" if exc.status_code == 404 else (
-        "VALIDATION_ERROR" if exc.status_code == 422 else (
-            "BAD_REQUEST" if exc.status_code == 400 else "INTERNAL_SERVER_ERROR"
+    error_code = "UNAUTHORIZED" if exc.status_code == 401 else (
+        "FORBIDDEN" if exc.status_code == 403 else (
+            "RESOURCE_NOT_FOUND" if exc.status_code == 404 else (
+                "VALIDATION_ERROR" if exc.status_code == 422 else (
+                    "BAD_REQUEST" if exc.status_code == 400 else "INTERNAL_SERVER_ERROR"
+                )
+            )
         )
     )
     return JSONResponse(
@@ -99,7 +106,7 @@ app.include_router(api_v1_router)
 
 
 # -------------------------------------------------------------------------
-# TOP-LEVEL HEALTH & ROOT ENDPOINTS
+# TOP-LEVEL HEALTH & ROOT ENDPOINTS (Open / Unauthenticated)
 # -------------------------------------------------------------------------
 @app.get("/", include_in_schema=False)
 def root_redirect():
@@ -109,7 +116,7 @@ def root_redirect():
 
 @app.get("/health", tags=["Health & Status"], summary="Gateway Health Check")
 def health_check():
-    """Returns gateway service status, version, and server timestamp."""
+    """Returns gateway service status, version, and server timestamp without authentication."""
     return {
         "status": "healthy",
         "version": "3.0.0",

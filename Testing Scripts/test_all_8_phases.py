@@ -364,7 +364,13 @@ def run_master_test_suite():
         from fastapi.testclient import TestClient
         from gateway.main import app as fastapi_app
 
-        client = TestClient(fastapi_app)
+        from config.settings import GATEWAY_INTERNAL_KEY
+        client = TestClient(fastapi_app, headers={"X-Internal-Key": GATEWAY_INTERNAL_KEY})
+
+        # 0. Auth Enforcement Verification
+        unauth_client = TestClient(fastapi_app)
+        res_unauth = unauth_client.get("/api/v1/bids")
+        p8_ok &= check("GET /api/v1/bids without X-Internal-Key -> 401 Unauthorized", res_unauth.status_code == 401)
 
         # 1. Health
         res = client.get("/health")

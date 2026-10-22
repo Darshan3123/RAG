@@ -20,7 +20,7 @@ def get_bid_pdf_link(
     redirect: bool = Query(False, description="If true, issues an HTTP 307 redirect straight to S3 download stream"),
 ):
     """
-    Returns a secure, time-limited presigned MinIO S3 URL (valid for 15 minutes)
+    Returns a secure, time-limited presigned MinIO S3 URL (valid for 15 minutes = 900 seconds)
     for direct streaming from object storage without placing bandwidth overhead on the API server.
     """
     safe_bid_id = bid_no.replace("/", "_")
@@ -35,7 +35,7 @@ def get_bid_pdf_link(
 
     try:
         from utils.s3_storage import get_presigned_url
-        download_url = get_presigned_url(f"bids/{safe_bid_id}/bid.pdf", expiry_hours=1)
+        download_url = get_presigned_url(f"bids/{safe_bid_id}/bid.pdf", expiry_seconds=900)
     except Exception as e:
         log.error(f"Failed to generate presigned URL for {safe_bid_id}: {e}")
         raise HTTPException(

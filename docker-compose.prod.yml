@@ -112,6 +112,8 @@ services:
     ports:
       - "8000:8000"
     env_file: .env
+    environment:
+      - GATEWAY_ENABLE_ADMIN_ROUTES=false
     depends_on:
       - redis
     deploy:

@@ -221,4 +221,13 @@ MINIO_SECURE     = _str("MINIO_SECURE", "false").lower() in ("1", "true", "yes",
 # ---------------------------------------------------------
 # CONCURRENCY CEILINGS
 # ---------------------------------------------------------
-MAX_CONCURRENT_WORKERS = _int("MAX_CONCURRENT_WORKERS", 6)
+MAX_CONCURRENT_WORKERS = _int("MAX_CONCURRENT_WORKERS", 6)
+
+# ---------------------------------------------------------
+# FASTAPI GATEWAY & INTERNAL AUTHENTICATION (Phase 1)
+# ---------------------------------------------------------
+GATEWAY_INTERNAL_KEY          = _str("GATEWAY_INTERNAL_KEY", "gem_internal_secret_key_prod_v4_development_2026")
+GATEWAY_INTERNAL_KEY_PREVIOUS = _str("GATEWAY_INTERNAL_KEY_PREVIOUS", "")
+GATEWAY_ENABLE_ADMIN_ROUTES   = _str("GATEWAY_ENABLE_ADMIN_ROUTES", "true").lower() in ("1", "true", "yes", "on")
+CORS_ALLOWED_ORIGINS          = _str("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000")
+MINIO_PUBLIC_ENDPOINT         = _str("MINIO_PUBLIC_ENDPOINT", "")

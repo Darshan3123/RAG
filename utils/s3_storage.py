@@ -14,6 +14,7 @@ from config.settings import (
     MINIO_ACCESS_KEY,
     MINIO_BUCKET,
     MINIO_ENDPOINT,
+    MINIO_PUBLIC_ENDPOINT,
     MINIO_SECRET_KEY,
     MINIO_SECURE,
 )
@@ -150,7 +151,8 @@ def download_file(
 
 def get_presigned_url(
     key: str,
-    expiry_hours: int = 24,
+    expiry_seconds: int = 900,
+    expiry_hours: Optional[int] = None,
     bucket_name: str = MINIO_BUCKET,
 ) -> str:
     """
@@ -158,18 +160,23 @@ def get_presigned_url(
     
     Args:
         key (str): S3 object key.
-        expiry_hours (int): Validity window in hours (default: 24h).
+        expiry_seconds (int): Validity window in seconds (default: 900s = 15m).
+        expiry_hours (Optional[int]): Optional override in hours (backward compatibility).
         bucket_name (str): S3 bucket name.
         
     Returns:
         str: Presigned HTTP download URL.
     """
     client = get_minio_client()
+    delta = timedelta(hours=expiry_hours) if expiry_hours is not None else timedelta(seconds=expiry_seconds)
     url = client.presigned_get_object(
         bucket_name=bucket_name,
         object_name=key,
-        expires=timedelta(hours=expiry_hours),
+        expires=delta,
     )
+    if MINIO_PUBLIC_ENDPOINT and MINIO_ENDPOINT != MINIO_PUBLIC_ENDPOINT:
+        url = url.replace(f"://{MINIO_ENDPOINT}/", f"://{MINIO_PUBLIC_ENDPOINT}/")
+        url = url.replace(f"//{MINIO_ENDPOINT}/", f"//{MINIO_PUBLIC_ENDPOINT}/")
     return url
 
 

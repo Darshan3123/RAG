@@ -20,7 +20,8 @@ if sys.platform == "win32":
 from fastapi.testclient import TestClient
 from gateway.main import app
 
-client = TestClient(app)
+from config.settings import GATEWAY_INTERNAL_KEY
+client = TestClient(app, headers={"X-Internal-Key": GATEWAY_INTERNAL_KEY})
 
 
 def run_tests():
