@@ -54,6 +54,16 @@ def process_document(
     bid_dir = os.path.join(DOWNLOAD_DIR, safe_bid_no)
     os.makedirs(bid_dir, exist_ok=True)
 
+    # 0. Ensure PDF exists locally; if running in isolated Docker containers, pull from MinIO S3
+    if not os.path.exists(pdf_path):
+        try:
+            from utils.s3_storage import download_file as s3_download_file
+            s3_key = f"bids/{safe_bid_no}/bid.pdf"
+            s3_download_file(s3_key, pdf_path)
+            log.info(f"[Tier 2] Successfully pulled {s3_key} from MinIO S3 to {pdf_path}")
+        except Exception as s3_err:
+            log.warning(f"[Tier 2] Could not pull PDF from MinIO for {safe_bid_no}: {s3_err}")
+
     # 1. Selective PDF Slicing
     split_info = None
     target_ocr_pdf = pdf_path

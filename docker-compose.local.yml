@@ -1,9 +1,7 @@
-version: '3.8'
-
 # =========================================================================
 # docker-compose.local.yml
-# Local Development Stack with Multi-Process Linux Prefork Workers
-# Automatically connects to Windows Desktop PostgreSQL via host.docker.internal
+# Optimized Local Development Stack for 2 Cores & 4 GB RAM
+# Resource allocation: Scraper -c 1, Doc -c 1, ATC -c 3
 # =========================================================================
 
 services:
@@ -14,6 +12,7 @@ services:
     ports:
       - "6379:6379"
     restart: always
+    mem_limit: 150M
 
   # 2. MinIO S3 Object Storage
   minio:
@@ -30,14 +29,17 @@ services:
     volumes:
       - gem_minio_data:/data
     restart: always
+    mem_limit: 250M
 
-  # 3. Tier 1: Scraper Worker (Prefork Linux Concurrency = 2)
+  # 3. Tier 1: Scraper Worker (Reduced to Concurrency = 1 to preserve CPU/RAM)
   worker-scraper:
     build: .
     container_name: gem-worker-scraper
-    command: celery -A tasks.celery_app worker -Q scraping_queue -c 2 -n scraper@local --loglevel=INFO
+    command: celery -A tasks.celery_app worker -Q scraping_queue -c 1 -n scraper@local --loglevel=INFO
     init: true
-    shm_size: '2gb'
+    shm_size: '1gb'
+    volumes:
+      - ./downloads:/app/downloads
     env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
@@ -50,18 +52,21 @@ services:
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_BUCKET=gem-tenders
       - MINIO_SECURE=false
+      - AUTO_START_SCRAPER_ON_BOOT=true
     depends_on:
       - redis
       - minio
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    mem_limit: 1200M
+    mem_limit: 600M
 
-  # 4. Tier 2: Document & OCR Worker (Prefork Linux Concurrency = 2)
+  # 4. Tier 2: Document & OCR Worker (Concurrency = 1, Fast I/O)
   worker-document:
     build: .
     container_name: gem-worker-document
-    command: celery -A tasks.celery_app worker -Q document_queue -c 2 -n document@local --loglevel=INFO
+    volumes:
+      - ./downloads:/app/downloads
+    command: celery -A tasks.celery_app worker -Q document_queue -c 1 -n document@local --loglevel=INFO
     env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
@@ -74,18 +79,21 @@ services:
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_BUCKET=gem-tenders
       - MINIO_SECURE=false
+      - AUTO_START_SCRAPER_ON_BOOT=true
     depends_on:
       - redis
       - minio
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    mem_limit: 800M
+    mem_limit: 500M
 
-  # 5. Tier 3: ATC Compliance & RAG Worker (Prefork Linux Concurrency = 2)
+  # 5. Tier 3: ATC Compliance & RAG Worker (Expanded to Concurrency = 3 for Parallel LLM / Embeddings)
   worker-atc:
     build: .
     container_name: gem-worker-atc
-    command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 2 -n atc@local --loglevel=INFO
+    volumes:
+      - ./downloads:/app/downloads
+    command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 3 -n atc@local --loglevel=INFO
     env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
@@ -98,12 +106,13 @@ services:
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_BUCKET=gem-tenders
       - MINIO_SECURE=false
+      - AUTO_START_SCRAPER_ON_BOOT=true
     depends_on:
       - redis
       - minio
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    mem_limit: 1200M
+    mem_limit: 1500M
 
   # 6. FastAPI REST Gateway (Port 8000)
   fastapi-gateway:
@@ -124,6 +133,7 @@ services:
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_BUCKET=gem-tenders
       - MINIO_SECURE=false
+      - AUTO_START_SCRAPER_ON_BOOT=true
       - GATEWAY_ENABLE_ADMIN_ROUTES=true
     depends_on:
       - redis
@@ -132,9 +142,24 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - .:/app
-    mem_limit: 512M
+    mem_limit: 350M
 
-  # 7. Flower Queue Telemetry Dashboard (Port 5555)
+  # 7. Celery Beat Periodic Scheduler Daemon
+  celery-beat:
+    build: .
+    container_name: gem-local-beat
+    command: celery -A tasks.celery_app beat --loglevel=INFO
+    env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+    depends_on:
+      - redis
+    restart: always
+    mem_limit: 350M
+
+  # 8. Flower Queue Telemetry Dashboard (Port 5555)
   flower:
     build: .
     container_name: gem-local-flower
@@ -148,7 +173,7 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379/1
     depends_on:
       - redis
-    mem_limit: 256M
+    mem_limit: 150M
 
 volumes:
   gem_minio_data:

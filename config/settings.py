@@ -43,6 +43,7 @@ def _path(key: str, default: str) -> str:
 SCRAPE_INTERVAL_MINUTES = _int("SCRAPE_INTERVAL_MINUTES", 60)
 MAX_RETRIES_PER_BID     = _int("MAX_RETRIES_PER_BID", 3)
 RETRY_DELAY_SECONDS     = _int("RETRY_DELAY_SECONDS", 10)
+AUTO_START_SCRAPER_ON_BOOT = _str("AUTO_START_SCRAPER_ON_BOOT", "true").lower() in ("1", "true", "yes", "on")
 
 # ---------------------------------------------------------
 # ANTI-BOT  (human-like delays in seconds)
