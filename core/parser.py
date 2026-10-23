@@ -329,6 +329,103 @@ def parse_items_section(docling: dict, kv: dict, soup: BeautifulSoup = None) -> 
 # ---------------------------------------------------------------------------
 # Section 3 — Evaluation
 # ---------------------------------------------------------------------------
+def _normalize_header_text(text: str) -> str:
+    """Normalize OCR artifacts, whitespace, and formatting in header text."""
+    text = text.lower()
+    text = re.sub(r"schedule\s+s\b", "schedules", text)
+    text = re.sub(r"schedule\(s\)", "schedules", text)
+    text = re.sub(r"evaluatio\s*n", "evaluation", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
+def _is_evaluation_schedule_header(header_cells: list[str]) -> bool:
+    """Match evaluation schedule headers regardless of OCR spacing, pluralization, or language."""
+    text = _normalize_header_text(" ".join(header_cells))
+    if any(kw in text for kw in ("bid details", "बिड विवरण")):
+        return False
+    patterns = (
+        "evaluation schedule", "मूल्यांकन अनुसूची", "मूल्यांकन अनुसूचियां",
+    )
+    return any(p in text for p in patterns)
+
+
+def _collect_all_schedule_tables(soup: BeautifulSoup) -> list:
+    """
+    Find the primary evaluation schedule table and any subsequent continuation tables
+    that belong to the same multi-page table across page breaks.
+    
+    Returns:
+        list of <table> BeautifulSoup Tag elements.
+    """
+    if soup is None:
+        return []
+    tables = soup.find_all("table")
+    primary_idx = -1
+    for idx, table in enumerate(tables):
+        rows = table.find_all("tr")
+        if not rows:
+            continue
+        header_cells = [clean(td.get_text()) for td in rows[0].find_all(["td", "th"])]
+        if _is_evaluation_schedule_header(header_cells):
+            primary_idx = idx
+            break
+
+    if primary_idx == -1:
+        return []
+
+    collected = [tables[primary_idx]]
+
+    stop_keywords = (
+        "specification", "विशिष्टि", "buyer specification", "क्रेता विशिष्ट",
+        "consignees / reporting", "परेषिती / रिपोर्टिंग", "delivery days", "डिलीवरी के दिन",
+        "buyer added", "क्रेता द्वारा", "disclaimer", "अस्वीकरण", "bid details", "बिड विवरण"
+    )
+
+    for next_table in tables[primary_idx + 1:]:
+        t_rows = next_table.find_all("tr")
+        if not t_rows:
+            continue
+        first_row_cells = [clean(td.get_text()) for td in t_rows[0].find_all(["td", "th"])]
+        first_row_text = _normalize_header_text(" ".join(first_row_cells))
+
+        if any(kw in first_row_text for kw in stop_keywords):
+            break
+
+        grid = _expand_table_grid(t_rows)
+        if not grid:
+            continue
+
+        looks_like_eval = False
+        for r in grid[:min(5, len(grid))]:
+            if not r or not any(c.strip() for c in r):
+                continue
+            r_text = " ".join(r).lower()
+            if any(kw in r_text for kw in stop_keywords):
+                looks_like_eval = False
+                break
+            if 2 <= len(r) <= 6:
+                looks_like_eval = True
+
+        if looks_like_eval:
+            collected.append(next_table)
+        else:
+            break
+
+    return collected
+
+
+def _headers_match_keywords(header_text: str, must_have: list[str]) -> bool:
+    """Check if header text satisfies all must_have keywords with flexible OCR matching."""
+    for kw in must_have:
+        if kw == "evaluation schedules":
+            if not any(v in header_text for v in ("evaluation schedule", "मूल्यांकन अनुसूची", "मूल्यांकन अनुसूचियां")):
+                return False
+        elif kw not in header_text:
+            return False
+    return True
+
+
 def _find_table_by_headers(soup: BeautifulSoup, must_have: list[str],
                             must_not_have: list[str] | None = None):
     """
@@ -349,8 +446,8 @@ def _find_table_by_headers(soup: BeautifulSoup, must_have: list[str],
         if not rows:
             continue
         header_cells = [clean(td.get_text()) for td in rows[0].find_all(["td", "th"])]
-        header_text = " ".join(header_cells).lower()
-        if all(kw in header_text for kw in must_have) and \
+        header_text = _normalize_header_text(" ".join(header_cells))
+        if _headers_match_keywords(header_text, must_have) and \
            not any(kw in header_text for kw in must_not_have):
             return rows, header_cells
     return None, None
@@ -463,7 +560,180 @@ def _grid_cell(row: list[str], idx: Optional[int]) -> str:
 _HEADER_ITEM_LABELS = ("item/category", "item", "वस्तु श्रेणी", "वस्तु")
 
 
-def _parse_group_wise_schedules(soup: BeautifulSoup) -> dict:
+def _parse_consignee_wise_schedules(soup: BeautifulSoup, md_text: str = "", parsed_items: dict = None) -> dict:
+    """
+    Parse item-wise consignee-wise evaluation schedules from HTML tables.
+    Collects primary and continuation tables across multi-page breaks.
+    """
+    if soup is None:
+        return {}
+    tables = _collect_all_schedule_tables(soup)
+    if not tables:
+        return {}
+    schedules: dict = {}
+    running = 0
+    for t_idx, table in enumerate(tables):
+        rows = table.find_all("tr")
+        grid = _expand_table_grid(rows)
+        start_row = 1 if t_idx == 0 else 0
+        for r in grid[start_row:]:
+            if not any(c.strip() for c in r):
+                continue
+            c0 = r[0].strip()
+            # Skip if this row repeats the header
+            if any(h in c0.lower() for h in ("evaluation", "अनुसूचियां", "schedule s")):
+                continue
+            m = re.search(r"Schedule\s+(\d+)", c0, re.IGNORECASE)
+            running += 1
+            key = m.group(1) if m else str(running)
+            item_cat = r[1].strip() if len(r) > 1 else ""
+            if not item_cat or item_cat.lower() in _HEADER_ITEM_LABELS:
+                continue
+
+            # Format detection:
+            # 4-5 cols: Schedule | Item | Consignee/Officer | Address | Quantity
+            # 3 cols:   Schedule | Item | Location of Consignee
+            if len(r) >= 4 and any(c.strip().isdigit() for c in r[3:]):
+                officer = r[2].strip() if len(r) > 2 else ""
+                addr = r[3].strip() if len(r) > 3 else ""
+                qty = r[4].strip() if len(r) > 4 else (r[3].strip() if r[3].strip().isdigit() else "")
+                schedules[key] = {
+                    "Item/Category": item_cat,
+                    "Consignee/Reporting Officer": officer,
+                    "Consignee Address": addr,
+                    "Quantity": qty,
+                }
+            else:
+                loc = r[2].strip() if len(r) > 2 else ""
+                schedules[key] = {
+                    "Item/Category": item_cat,
+                    "Location of Consignee": loc,
+                    "Quantity": "",
+                }
+
+    # Reconciliation fallback: If tender items list has more items than parsed schedules
+    if parsed_items and isinstance(parsed_items, dict):
+        item_entries = [
+            v for k, v in parsed_items.items()
+            if re.match(r"^item \d+$", k, re.IGNORECASE) and isinstance(v, dict)
+        ]
+        if len(item_entries) > len(schedules):
+            for idx, it in enumerate(item_entries, start=1):
+                key = str(idx)
+                if key not in schedules:
+                    schedules[key] = {
+                        "Item/Category": it.get("item_category", ""),
+                        "Location of Consignee": "",
+                        "Quantity": str(it.get("quantity") if it.get("quantity") is not None else ""),
+                    }
+
+    return schedules
+
+
+def _parse_group_wise_schedules(soup: BeautifulSoup, md_text: str = "") -> dict:
+    """
+    Parse group-wise / package-wise evaluation schedules from HTML tables.
+    Rowspan-safe and multi-page continuation safe across page breaks.
+    """
+    if soup is None:
+        return {}
+    tables = _collect_all_schedule_tables(soup)
+    if not tables:
+        rows, header_cells = _find_table_by_headers(
+            soup, must_have=["evaluation schedules"], must_not_have=[])
+        if rows is None:
+            return {}
+        tables = [soup.find("table")]
+
+    primary_grid = _expand_table_grid(tables[0].find_all("tr"))
+    if len(primary_grid) < 2:
+        return {}
+    header = primary_grid[0]
+    header_text = " ".join(header).lower()
+    if not any(kw in header_text for kw in ("consignee", "reporting", "officer", "मूल्यांकन")):
+        return {}
+
+    idx_sched    = _col_index(header, "evaluation schedules", "schedule", "मूल्यांकन अनुसूचियां") or 0
+    idx_item     = _col_index(header, "item/category", "item", "वस्तु") or 1
+    idx_officer  = _col_index(header, "consignee/reporting", "reporting officer", "consignee /", "officer") or 2
+    idx_address  = _col_index(header, "address", "पता") or 3
+    idx_quantity = _col_index(header, "quantity", "मात्रा") or 4
+
+    schedules: dict = {}
+    current_group: Optional[str] = None
+
+    for t_idx, table in enumerate(tables):
+        # Check text right before table for standalone group header
+        prev_txt = ""
+        node = table.previous_sibling
+        while node and node not in tables:
+            if hasattr(node, "get_text"):
+                prev_txt = node.get_text().strip() + " " + prev_txt
+            elif isinstance(node, str) and node.strip():
+                prev_txt = node.strip() + " " + prev_txt
+            node = node.previous_sibling
+        prev_txt = prev_txt.replace("---", "").strip()
+        if prev_txt and len(prev_txt) < 40 and "\n" not in prev_txt:
+            key = _normalise_group_key(prev_txt)
+            if current_group and (key.upper().rstrip("S") == current_group.upper().rstrip("S") or key.upper().startswith(current_group.upper())):
+                pass
+            else:
+                current_group = key
+                schedules.setdefault(current_group, {})
+
+        grid = _expand_table_grid(table.find_all("tr"))
+        start_row = 1 if t_idx == 0 else 0
+        for row in grid[start_row:]:
+            if not any(c.strip() for c in row):
+                continue
+            if len(row) == 4:
+                row = [""] + row
+
+            sched_raw = _grid_cell(row, idx_sched)
+            item_cat  = _grid_cell(row, idx_item)
+            officer   = _grid_cell(row, idx_officer)
+            address   = _grid_cell(row, idx_address)
+            quantity  = _grid_cell(row, idx_quantity)
+
+            if not item_cat or item_cat.lower() in _HEADER_ITEM_LABELS:
+                continue
+
+            if any(h in sched_raw.lower() for h in ("evaluation", "मूल्यांकन")):
+                continue
+
+            if sched_raw:
+                key = _normalise_group_key(sched_raw)
+                if current_group and (key.upper().rstrip("S") == current_group.upper().rstrip("S") or key.upper().startswith(current_group.upper())):
+                    key = current_group
+                elif key != current_group:
+                    current_group = key
+                    schedules.setdefault(current_group, {})
+            elif current_group is not None:
+                m_item = re.match(r"^([A-Za-z]+)\s+0*1\b", item_cat)
+                if m_item:
+                    prefix = m_item.group(1).upper()
+                    if prefix.rstrip("S") != current_group.upper().rstrip("S") and not current_group.upper().startswith(prefix[:4]):
+                        current_group = _normalise_group_key(prefix)
+                        schedules.setdefault(current_group, {})
+
+            if current_group is None:
+                current_group = _normalise_group_key(str(len(schedules) + 1))
+                schedules.setdefault(current_group, {})
+
+            if quantity and not re.fullmatch(r"\d+(\.\d+)?", quantity):
+                quantity = ""
+
+            item_no = len(schedules[current_group]) + 1
+            schedules[current_group][f"Item_{item_no}"] = {
+                "Item/Category":               item_cat,
+                "Consignee/Reporting Officer": officer,
+                "Consignee Address":           address,
+                "Quantity":                    quantity,
+            }
+    return schedules
+
+
+def _legacy_parse_group_wise_schedules(soup: BeautifulSoup, md_text: str = "") -> dict:
     """
     Parse group-wise / package-wise evaluation schedules from HTML tables.
 
@@ -736,6 +1006,22 @@ def parse_evaluation_section(docling: dict, kv: dict, soup: BeautifulSoup = None
     if "total" in method_lower:
         return {"evaluation_method": method, "schedules": {}}
 
+    if "consignee" in method_lower:
+        raw = d.get("schedules", {})
+        schedules: dict = {}
+        for key, val in raw.items():
+            if isinstance(val, dict):
+                schedules[str(key)] = val
+        if soup is not None:
+            html_sched = _parse_consignee_wise_schedules(soup, md_text=md_content, parsed_items=parsed_items)
+            if not schedules or len(html_sched) > len(schedules):
+                schedules = html_sched
+            else:
+                for k, v in html_sched.items():
+                    if k not in schedules:
+                        schedules[k] = v
+        return {"evaluation_method": method, "schedules": schedules}
+
     if "item" in method_lower:
         raw = d.get("schedules", {})
         schedules: dict = {}
@@ -798,7 +1084,18 @@ def parse_evaluation_section(docling: dict, kv: dict, soup: BeautifulSoup = None
                         schedules[new_key] = items
         # Rebuild from HTML if upstream gave us nothing, or gave us data that
         # shows the classic rowspan column shift.
-        if soup is not None and (not schedules or _schedules_look_corrupt(schedules)):
+        if soup is not None:
+            rebuilt = _parse_group_wise_schedules(soup, md_text=md_content)
+            upstream_count = sum(len(v) for v in schedules.values() if isinstance(v, dict))
+            rebuilt_count = sum(len(v) for v in rebuilt.values() if isinstance(v, dict))
+            if not schedules or _schedules_look_corrupt(schedules) or rebuilt_count > upstream_count:
+                if schedules and rebuilt_count > upstream_count:
+                    log.warning("Group-wise schedules incomplete (%d vs %d items); "
+                                "rebuilt %d schedules from HTML tables.",
+                                upstream_count, rebuilt_count, len(rebuilt))
+                if rebuilt:
+                    schedules = rebuilt
+        if False:
             rebuilt = _parse_group_wise_schedules(soup)
             if rebuilt:
                 if schedules:

@@ -39,11 +39,11 @@ echo "========================================"
 uv pip install --python "$ENV_DIR" uv "packaging>=24.2" "setuptools>=77.0.0"
 
 echo "========================================"
-echo "4. Installing Requirements for PyTorch/CUDA 130..."
+echo "4. Installing Requirements for PyTorch (CPU-optimized)..."
 echo "========================================"
 # Using --python to install into the env without activating it
 uv pip install --python "$ENV_DIR" -r requirements.txt \
-    --extra-index-url https://download.pytorch.org/whl/cu130 \
+    --extra-index-url https://download.pytorch.org/whl/cpu \
     --index-strategy unsafe-best-match \
     --no-build-isolation
 
