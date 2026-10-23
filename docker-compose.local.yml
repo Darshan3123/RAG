@@ -36,12 +36,16 @@ services:
     build: .
     container_name: gem-worker-scraper
     command: celery -A tasks.celery_app worker -Q scraping_queue -c 2 -n scraper@local --loglevel=INFO
+    init: true
+    shm_size: '2gb'
+    env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/1
       - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/gem-bridge
       - MINIO_ENDPOINT=minio:9000
+      - MINIO_PUBLIC_ENDPOINT=localhost:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_BUCKET=gem-tenders
@@ -49,22 +53,23 @@ services:
     depends_on:
       - redis
       - minio
-
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    mem_limit: 512M
+    mem_limit: 1200M
 
   # 4. Tier 2: Document & OCR Worker (Prefork Linux Concurrency = 2)
   worker-document:
     build: .
     container_name: gem-worker-document
     command: celery -A tasks.celery_app worker -Q document_queue -c 2 -n document@local --loglevel=INFO
+    env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/1
       - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/gem-bridge
       - MINIO_ENDPOINT=minio:9000
+      - MINIO_PUBLIC_ENDPOINT=localhost:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_BUCKET=gem-tenders
@@ -74,19 +79,21 @@ services:
       - minio
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    mem_limit: 512M
+    mem_limit: 800M
 
   # 5. Tier 3: ATC Compliance & RAG Worker (Prefork Linux Concurrency = 2)
   worker-atc:
     build: .
     container_name: gem-worker-atc
     command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 2 -n atc@local --loglevel=INFO
+    env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/1
       - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/gem-bridge
       - MINIO_ENDPOINT=minio:9000
+      - MINIO_PUBLIC_ENDPOINT=localhost:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_BUCKET=gem-tenders
@@ -94,7 +101,9 @@ services:
     depends_on:
       - redis
       - minio
-    mem_limit: 512M
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    mem_limit: 1200M
 
   # 6. FastAPI REST Gateway (Port 8000)
   fastapi-gateway:
@@ -103,16 +112,19 @@ services:
     command: uvicorn gateway.main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
+    env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/1
       - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/gem-bridge
       - MINIO_ENDPOINT=minio:9000
+      - MINIO_PUBLIC_ENDPOINT=localhost:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_BUCKET=gem-tenders
       - MINIO_SECURE=false
+      - GATEWAY_ENABLE_ADMIN_ROUTES=true
     depends_on:
       - redis
       - minio
@@ -129,6 +141,7 @@ services:
     command: celery -A tasks.celery_app flower --port=5555
     ports:
       - "5555:5555"
+    env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -139,5 +152,3 @@ services:
 
 volumes:
   gem_minio_data:
-
-

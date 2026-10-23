@@ -1,0 +1,61 @@
+# =========================================================================
+# .dockerignore - GeMBridge Scrapper & RAG Pipeline
+# Prevents large local artifacts from bloating the Docker build context
+# =========================================================================
+
+# 1. Python virtual environments (Massive: ~1.7 GB)
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# 2. Downloaded tender PDFs, documents & caches (~100 MB)
+downloads/
+*.pdf
+*.docx
+
+# 3. Git version control metadata (~45 MB)
+.git/
+.gitignore
+.gitattributes
+
+# 4. Logs and temporary execution state
+logs/
+*.log
+*.pid
+
+# 5. Standalone experimental extraction folders & artifacts
+ATC EXTRACTOR/
+ATC EXTRACTOR - Standlone/
+storage/*.db
+storage/*.sqlite*
+storage/chroma_db/
+storage/*.json
+
+# 6. Python bytecode and compilation caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 7. Documentation & design assets
+Documentation/
+*.md
+!README.md
+
+# 8. Local secrets and environment files (injected at runtime via env_file)
+.env
+.env.local
+.env.*.local
+
+# 9. IDE, OS, and local runner script files
+.vscode/
+.idea/
+*.ps1
+*.sh
+.DS_Store
+Thumbs.db
