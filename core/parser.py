@@ -596,7 +596,62 @@ def _cell_val(cells: list, idx: int) -> str:
     return cells[idx] if 0 <= idx < len(cells) else ""
 
 
-def _parse_item_wise_schedules(soup: BeautifulSoup) -> dict:
+def _extract_item_schedules_continuation(
+    soup: BeautifulSoup,
+    md_text: str,
+    schedules: dict,
+    idx_item: int,
+    idx_qty: int,
+    idx_value: Optional[int]
+) -> None:
+    """
+    Search for continuation schedule rows that spilled over a page break.
+    Checks subsequent headless tables and raw markdown text.
+    """
+    # 1. Check other tables for continuation rows (split across page breaks without headers)
+    if soup is not None:
+        for table in soup.find_all("table"):
+            t_rows = table.find_all("tr")
+            if not t_rows:
+                continue
+            t_grid = _expand_table_grid(t_rows)
+            for r in t_grid:
+                if not r or not any(c.strip() for c in r):
+                    continue
+                first_c = r[0].strip() if len(r) > 0 else ""
+                m_s = re.match(r"^Schedule\s+(\d+)$", first_c, re.IGNORECASE)
+                if m_s:
+                    k = m_s.group(1)
+                    if k not in schedules:
+                        item_c = _grid_cell(r, idx_item) if len(r) > idx_item else (_grid_cell(r, 1) if len(r) > 1 else "")
+                        qty_c = _grid_cell(r, idx_qty) if len(r) > idx_qty else (_grid_cell(r, len(r) - 1))
+                        val_c = _grid_cell(r, idx_value) if idx_value is not None and len(r) > idx_value else ""
+                        if item_c and item_c.lower() not in _HEADER_ITEM_LABELS:
+                            schedules[k] = {
+                                "Item/Category":   item_c,
+                                "Estimated Value": val_c,
+                                "Quantity":        qty_c,
+                            }
+
+    # 2. Check markdown text for schedule rows pushed across page breaks
+    if md_text:
+        sched_matches = re.findall(
+            r"(?:^|[\r\n|])\s*Schedule\s+(\d+)\s*[:|\-\n]?\s*([A-Za-z0-9\s/_\.\-\(\)]+?)\s*(?:[|\n\t]+|\s{2,})\s*(\d+(?:\.\d+)?)\s*(?:$|[\r\n|])",
+            md_text,
+            re.IGNORECASE | re.MULTILINE
+        )
+        for num_str, item_name, qty_str in sched_matches:
+            if num_str not in schedules:
+                cleaned_name = item_name.strip()
+                if cleaned_name.lower() not in ("evaluation schedules", "item/category") and len(cleaned_name) > 1:
+                    schedules[num_str] = {
+                        "Item/Category":   cleaned_name,
+                        "Estimated Value": "",
+                        "Quantity":        qty_str.strip(),
+                    }
+
+
+def _parse_item_wise_schedules(soup: BeautifulSoup, md_text: str = "") -> dict:
     """
     Parse item-wise evaluation schedules from HTML tables (rowspan-safe).
 
@@ -651,10 +706,16 @@ def _parse_item_wise_schedules(soup: BeautifulSoup) -> dict:
             "Estimated Value": _grid_cell(row, idx_value),
             "Quantity":        _grid_cell(row, idx_qty),
         }
+
+    # Check continuation rows across page breaks
+    _extract_item_schedules_continuation(soup, md_text, schedules, idx_item, idx_qty, idx_value)
+    if False:
+        _dummy = {
+        }
     return schedules
 
 
-def parse_evaluation_section(docling: dict, kv: dict, soup: BeautifulSoup = None) -> dict:
+def parse_evaluation_section(docling: dict, kv: dict, soup: BeautifulSoup = None, md_content: str = "", parsed_items: dict = None) -> dict:
     """
     Extract evaluation method (Total-wise, Item-wise, or Group-wise) and parse corresponding schedules.
     
@@ -686,7 +747,30 @@ def parse_evaluation_section(docling: dict, kv: dict, soup: BeautifulSoup = None
                     "Quantity":        val.get("Quantity", ""),
                 }
         if not schedules and soup is not None:
-            schedules = _parse_item_wise_schedules(soup)
+            schedules = _parse_item_wise_schedules(soup, md_text=md_content)
+        elif soup is not None:
+            # Merge any missing schedules found in continuation text across page breaks
+            cont_sched = _parse_item_wise_schedules(soup, md_text=md_content)
+            for k, v in cont_sched.items():
+                if k not in schedules:
+                    schedules[k] = v
+
+        # Reconciliation: If tender items list has more items than parsed schedules,
+        # fill in missing schedules corresponding to each item
+        if parsed_items and isinstance(parsed_items, dict):
+            item_entries = [
+                v for k, v in parsed_items.items()
+                if re.match(r"^item \d+$", k, re.IGNORECASE) and isinstance(v, dict)
+            ]
+            if len(item_entries) > len(schedules):
+                for idx, it in enumerate(item_entries, start=1):
+                    key = str(idx)
+                    if key not in schedules:
+                        schedules[key] = {
+                            "Item/Category":   it.get("item_category", ""),
+                            "Estimated Value": "",
+                            "Quantity":        str(it.get("quantity") if it.get("quantity") is not None else ""),
+                        }
         return {"evaluation_method": method, "schedules": schedules}
 
     if "group" in method_lower:
@@ -1250,7 +1334,7 @@ def parse_bid_data(md_content: str | dict, product_type: str = "PRODUCT") -> dic
 
     timing, departments                       = parse_pdf_section(docling, kv)
     items                                     = parse_items_section(docling, kv, soup)
-    evaluation                                = parse_evaluation_section(docling, kv, soup)
+    evaluation                                = parse_evaluation_section(docling, kv, soup, md_content=md_content, parsed_items=items)
     documents                                 = parse_documents_section(docling, kv)
     consignees                                = parse_consignees_section(docling, soup)
     relaxations, auto_extension, ra, bid_type = parse_relaxations_auto_extension_ra_bid_type(docling, kv)

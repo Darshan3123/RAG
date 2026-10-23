@@ -359,6 +359,20 @@ def ocr_response_to_dict(ocr_response: Any) -> Dict[str, Any]:
     return ocr_response
 
 
+def _is_ignorable_header(header_text: str) -> bool:
+    """Return True if header is just running page numbering or GeM branding banner."""
+    if not header_text or not header_text.strip():
+        return True
+    cleaned = header_text.strip()
+    # Check if page number pattern (e.g. "1 / 7", "2/7", "5 / 7")
+    if re.fullmatch(r"^\d+\s*(?:/\s*\d+)?$", cleaned):
+        return True
+    # Check if standard GeM banner header
+    if "government e marketplace" in cleaned.lower() and "bid number" in cleaned.lower():
+        return True
+    return False
+
+
 def blocks_to_markdown(page: Dict[str, Any]) -> str:
     """
     Convert a single page's content into markdown.
@@ -386,6 +400,11 @@ def blocks_to_markdown(page: Dict[str, Any]) -> str:
             if table_id:
                 markdown = markdown.replace(f"[{table_id}]({table_id})", table_content)
         
+        # Preserve content that OCR mistakenly placed into the header field across page boundaries
+        header = page.get("header", "")
+        if header and not _is_ignorable_header(header):
+            markdown = f"{header.strip()}\n\n{markdown}"
+
         return markdown
     
     # Old format (include_blocks=True): process blocks
