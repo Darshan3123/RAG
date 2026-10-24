@@ -6,6 +6,7 @@ WORKDIR /app
 # Set non-interactive debian frontend & UTF-8 encoding
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
+    PYTHONWARNINGS="ignore::FutureWarning" \
     LANG=C.UTF-8 \
     LC_ALL=C.UTF-8
 

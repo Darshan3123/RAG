@@ -4,6 +4,10 @@
 # project root.  Change values there — not here.
 # =========================================================
 import os
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore", message=".*Python version.*")
+warnings.filterwarnings("ignore", module="google")
 from pathlib import Path
 from dotenv import load_dotenv
 

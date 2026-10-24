@@ -3,6 +3,8 @@
 # Celery Application Configuration for GeMBridge Distributed Pipeline
 # =========================================================================
 import os
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 from celery import Celery
 from celery.signals import worker_ready
 from kombu import Queue

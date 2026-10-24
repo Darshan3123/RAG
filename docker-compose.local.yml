@@ -1,7 +1,7 @@
 # =========================================================================
 # docker-compose.local.yml
 # Optimized Local Development Stack for 2 Cores & 4 GB RAM
-# Resource allocation: Scraper -c 1, Doc -c 1, ATC -c 3
+# Stable balanced configuration: Scraper -c 1, Doc -c 1, ATC -c 2
 # =========================================================================
 
 services:
@@ -12,7 +12,6 @@ services:
     ports:
       - "6379:6379"
     restart: always
-    mem_limit: 150M
 
   # 2. MinIO S3 Object Storage
   minio:
@@ -29,9 +28,8 @@ services:
     volumes:
       - gem_minio_data:/data
     restart: always
-    mem_limit: 250M
 
-  # 3. Tier 1: Scraper Worker (Reduced to Concurrency = 1 to preserve CPU/RAM)
+  # 3. Tier 1: Scraper Worker (Concurrency = 1 to preserve CPU/RAM)
   worker-scraper:
     build: .
     container_name: gem-worker-scraper
@@ -58,7 +56,7 @@ services:
       - minio
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    mem_limit: 600M
+    mem_limit: 800M
 
   # 4. Tier 2: Document & OCR Worker (Concurrency = 1, Fast I/O)
   worker-document:
@@ -85,15 +83,16 @@ services:
       - minio
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    mem_limit: 500M
+    mem_limit: 600M
 
-  # 5. Tier 3: ATC Compliance & RAG Worker (Expanded to Concurrency = 3 for Parallel LLM / Embeddings)
+  # 5. Tier 3: ATC Compliance & RAG Worker (Concurrency = 2, Single-Thread PyTorch)
   worker-atc:
     build: .
     container_name: gem-worker-atc
     volumes:
       - ./downloads:/app/downloads
-    command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 3 -n atc@local --loglevel=INFO
+      - gem_hf_cache:/root/.cache/huggingface
+    command: celery -A tasks.celery_app worker -Q atc_rag_queue -c 2 -n atc@local --loglevel=INFO
     env_file: .env
     environment:
       - REDIS_URL=redis://redis:6379/0
@@ -112,7 +111,7 @@ services:
       - minio
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    mem_limit: 1500M
+    mem_limit: 1400M
 
   # 6. FastAPI REST Gateway (Port 8000)
   fastapi-gateway:
@@ -142,7 +141,6 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - .:/app
-    mem_limit: 350M
 
   # 7. Celery Beat Periodic Scheduler Daemon
   celery-beat:
@@ -157,7 +155,6 @@ services:
     depends_on:
       - redis
     restart: always
-    mem_limit: 350M
 
   # 8. Flower Queue Telemetry Dashboard (Port 5555)
   flower:
@@ -173,7 +170,8 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379/1
     depends_on:
       - redis
-    mem_limit: 150M
+    restart: always
 
 volumes:
   gem_minio_data:
+  gem_hf_cache:
